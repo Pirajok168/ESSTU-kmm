@@ -1,7 +1,8 @@
 plugins {
     kotlin("multiplatform")
-    id("com.android.library")
     kotlin("plugin.serialization")
+    id("com.android.library")
+
 }
 
 kotlin {
@@ -25,11 +26,20 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
                 //Serialization
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.0")
 
                 //Ktor
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+
+                // DI Kodein
+                implementation("org.kodein.di:kodein-di:7.12.0")
+
+                // key-value data https://github.com/russhwolf/multiplatform-settings
+                implementation("com.russhwolf:multiplatform-settings:0.9")
+
             }
         }
         val commonTest by getting {
@@ -40,7 +50,10 @@ kotlin {
         val androidMain by getting{
             dependencies{
                 //Ktor
-                implementation("io.ktor:ktor-client-android:$ktorVersion")
+                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+
+                //Initializer
+                implementation ("androidx.startup:startup-runtime:1.1.1")
             }
         }
         val androidTest by getting
@@ -77,6 +90,7 @@ kotlin {
 android {
     namespace = "ru.esstu"
     compileSdk = 32
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 21
         targetSdk = 32
