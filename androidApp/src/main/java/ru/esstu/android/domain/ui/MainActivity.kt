@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.ui.ExperimentalComposeUiApi
 
 import androidx.core.view.WindowCompat
@@ -40,8 +42,11 @@ class MainActivity : AppCompatActivity() {
 
                 //observe current destination
                 //SetupUiObserver(navController = navController, listener = uiStateObserver)
+                Surface() {
+                    SetupNavGraph(navController)
+                }
 
-                SetupNavGraph(navController)
+
             }
         }
     }

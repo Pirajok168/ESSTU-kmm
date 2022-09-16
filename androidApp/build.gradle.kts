@@ -60,4 +60,9 @@ dependencies {
 
     //system ui controller
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.23.1")
+
+    //Material
+    implementation ("com.google.android.material:material:1.6.1")
+
+    
 }

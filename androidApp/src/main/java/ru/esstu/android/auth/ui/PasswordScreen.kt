@@ -58,10 +58,3 @@ fun PasswordScreen(
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun Enp1() {
-    CompPreviewTheme {
-        PasswordScreen()
-    }
-}

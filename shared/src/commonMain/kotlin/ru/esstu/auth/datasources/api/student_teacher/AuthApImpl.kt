@@ -27,11 +27,7 @@ class AuthApImpl(
             }
 
         }
-        return Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-        }.decodeFromJsonElement(request.body())
+        return request.body()
 
     }
 
@@ -51,11 +47,7 @@ class AuthApImpl(
 
             }
         }
-        return Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-        }.decodeFromJsonElement(httpRequest.body())
+        return httpRequest.body()
 
     }
 }

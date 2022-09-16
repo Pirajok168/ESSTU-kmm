@@ -138,10 +138,3 @@ fun EntrantLoginChooseScreen(
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun Aeprev() {
-    CompPreviewTheme {
-        EntrantLoginChooseScreen()
-    }
-}

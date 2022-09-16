@@ -35,11 +35,4 @@ fun LoginScreen(
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun Enp() {
-    CompPreviewTheme {
-        LoginScreen() /*hiltViewModel()*/
-    }
-}
 

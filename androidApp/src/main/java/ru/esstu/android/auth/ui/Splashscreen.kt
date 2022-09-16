@@ -101,11 +101,3 @@ fun Splashscreen(
         )
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun spscp() {
-    CompPreviewTheme {
-        Splashscreen()
-    }
-}
