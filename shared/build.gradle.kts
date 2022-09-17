@@ -2,7 +2,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("com.android.library")
-
+    id("com.squareup.sqldelight")
 }
 
 kotlin {
@@ -20,6 +20,7 @@ kotlin {
 
     sourceSets {
         val ktorVersion = "2.1.1"
+        val sqlDelightVersion = "1.5.3"
         val commonMain by getting{
             dependencies{
                 //Coroutines
@@ -42,6 +43,9 @@ kotlin {
 
                 //Time
                 implementation ("com.soywiz.korlibs.klock:klock:3.0.1")
+
+                //SqlDelight
+                implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")
             }
         }
         val commonTest by getting {
@@ -56,6 +60,9 @@ kotlin {
 
                 //Initializer
                 implementation ("androidx.startup:startup-runtime:1.1.1")
+
+                //SqlDelight
+                implementation("com.squareup.sqldelight:android-driver:$sqlDelightVersion")
             }
         }
         val androidTest by getting
@@ -83,9 +90,18 @@ kotlin {
             dependencies{
                 //Ktor
                 implementation("io.ktor:ktor-client-ios:$ktorVersion")
+
+                //SqlDelight
+                implementation("com.squareup.sqldelight:native-driver:$sqlDelightVersion")
             }
 
         }
+    }
+}
+
+sqldelight {
+    database("NewsDatabase") {
+        packageName = "ru.esstu.student.news.datasources"
     }
 }
 

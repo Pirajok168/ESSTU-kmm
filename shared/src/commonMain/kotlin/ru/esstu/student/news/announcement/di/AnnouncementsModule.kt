@@ -11,6 +11,9 @@ import ru.esstu.student.news.announcement.datasources.repo.AnnouncementsReposito
 import ru.esstu.student.news.announcement.datasources.repo.AnnouncementsUpdateRepositoryImpl
 import ru.esstu.student.news.announcement.datasources.repo.IAnnouncementsRepository
 import ru.esstu.student.news.announcement.datasources.repo.IAnnouncementsUpdateRepository
+import ru.esstu.student.news.announcement.db.Database
+import ru.esstu.student.news.announcement.db.createDriver
+import ru.esstu.student.news.datasources.NewsDao
 
 import kotlin.native.concurrent.ThreadLocal
 
@@ -21,11 +24,18 @@ internal val announcementsModule = DI.Module("AnnouncementsModule") {
         )
     }
 
+    bind<NewsDao>() with singleton {
+        val driverFactory = createDriver()
+        Database(
+            databaseNewsFactory = driverFactory.sqlDriver
+        )
+    }
 
     bind<IAnnouncementsRepository>() with singleton{
         AnnouncementsRepositoryImpl(
             auth = instance(),
-            newsApi = instance()
+            newsApi = instance(),
+            newsDao = instance()
         )
     }
 

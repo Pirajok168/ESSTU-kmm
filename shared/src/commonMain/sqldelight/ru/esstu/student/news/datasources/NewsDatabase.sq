@@ -1,0 +1,28 @@
+import ru.esstu.student.news.datasources.NewsAttachmentEntity;
+import ru.esstu.student.news.datasources.UserEntity;
+import kotlin.collections.List;
+
+
+
+CREATE TABLE NewsEntityDatabase (
+    id INTEGER NOT NULL,
+    fromUser TEXT AS UserEntity NOT NULL,
+    date INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    message TEXT NOT NULL,
+    listAttachments TEXT AS List<NewsAttachmentEntity>
+);
+
+removeAllNews:
+    DELETE FROM NewsEntityDatabase;
+
+getNewsWithAttachments:
+    SELECT * FROM NewsEntityDatabase ORDER BY id DESC LIMIT (10) OFFSET (0);
+
+getAllNewsWithAttachments:
+    SELECT * FROM NewsEntityDatabase ORDER BY id;
+
+setNewsWithAttachments:
+    INSERT OR REPLACE INTO NewsEntityDatabase(id, fromUser,date, title, message, listAttachments)
+        VALUES(?, ?, ?, ?, ?, ?);
+

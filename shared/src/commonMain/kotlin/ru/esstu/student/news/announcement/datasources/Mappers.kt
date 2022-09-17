@@ -4,7 +4,13 @@ import com.soywiz.klock.DateTime
 import ru.esstu.domain.response.entities.DataResponse
 import ru.esstu.domain.response.toAttachment
 import ru.esstu.domain.response.toUser
+import ru.esstu.student.news.datasources.NewsAttachmentEntity
+import ru.esstu.student.news.datasources.NewsEntity
+import ru.esstu.student.news.datasources.UserEntity
+import ru.esstu.student.news.datasources.relations.NewsWithAttachments
+import ru.esstu.student.news.entities.Attachment
 import ru.esstu.student.news.entities.NewsNode
+import ru.esstu.student.news.entities.User
 
 fun DataResponse.toAnnouncements(): List<NewsNode> {
 
@@ -24,3 +30,20 @@ fun DataResponse.toAnnouncements(): List<NewsNode> {
         )
     }
 }
+
+fun User.toUserEntity() = UserEntity(
+    id = id, summary = summary, photo = photo, lastName = lastName, firstName = firstName, patronymic = patronymic
+)
+
+fun Attachment.toNewsAttachmentEntity(newsId: Long) = NewsAttachmentEntity(
+    idAttachment = id, fileUri = fileUri, ext = ext, size = size, name = name, type = type, newsId = newsId, loadProgress = loadProgress, localFileUri = localFileUri
+)
+
+fun NewsNode.toNewsWithAttachments() = NewsWithAttachments(
+    news = NewsEntity(
+        id = id,
+        from = from.toUserEntity(),
+        title = title, message = message, date = date.unixMillisLong
+    ),
+    attachments = attachments.map { it.toNewsAttachmentEntity(id) }
+)
