@@ -8,7 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import ru.esstu.android.student.TestScreen
+import ru.esstu.android.student.news.selector_screen.ui.NewsSelectorScreen
 
 
 fun NavGraphBuilder.newsNavGraph(
@@ -21,8 +21,7 @@ fun NavGraphBuilder.newsNavGraph(
         startDestination = NewsScreens.SelectorScreen.startDest()
     ) {
         composable(route = NewsScreens.SelectorScreen.passRoute()) {
-            TestScreen()
-           /* NewsSelectorScreen(
+            NewsSelectorScreen(
                 parentPadding = padding,
                 onNavToAnnouncements = {
                     navController.navigate(NewsScreens.AnnouncementsScreen.navigate())
@@ -37,13 +36,13 @@ fun NavGraphBuilder.newsNavGraph(
                     navController.navigate(NewsScreens.DetailScreen.navigate())
                 },
                 onNavToScheduleScreen = {
-                    navController.navigate(ScheduleScreen.passRoute()) {
+                    /*navController.navigate(ScheduleScreen.passRoute()) {
                         popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                         launchSingleTop = true
                         restoreState = true
-                    }
+                    }*/
                 }
-            )*/
+            )
         }
 
        /* composable(route = NewsScreens.DetailScreen.passRoute()) {

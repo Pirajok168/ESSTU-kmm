@@ -40,6 +40,8 @@ kotlin {
                 // key-value data https://github.com/russhwolf/multiplatform-settings
                 implementation("com.russhwolf:multiplatform-settings:0.9")
 
+                //Time
+                implementation ("com.soywiz.korlibs.klock:klock:3.0.1")
             }
         }
         val commonTest by getting {

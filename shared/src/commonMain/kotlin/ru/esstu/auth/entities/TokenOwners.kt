@@ -1,4 +1,4 @@
-package ru.esstu.auth.datasources.entities
+package ru.esstu.auth.entities
 
 import kotlinx.serialization.Serializable
 

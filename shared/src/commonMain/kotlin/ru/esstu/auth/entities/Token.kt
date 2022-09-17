@@ -1,7 +1,6 @@
 package ru.esstu.auth.entities
 
 import kotlinx.serialization.Serializable
-import ru.esstu.auth.datasources.entities.TokenOwners
 
 
 @Serializable

@@ -8,7 +8,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.esstu.android.auth.ui.components.AuthScreenPattern
 import ru.esstu.android.auth.viewmodel.AuthEvents
 import ru.esstu.android.auth.viewmodel.AuthViewModel
-import ru.esstu.auth.datasources.entities.TokenOwners
+import ru.esstu.auth.entities.TokenOwners
 
 @Composable
 fun EntrantPasswordScreen(

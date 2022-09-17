@@ -2,7 +2,7 @@ package ru.esstu.auth.datasources
 
 import ru.esstu.auth.datasources.api.student_teacher.Tokens
 import ru.esstu.auth.datasources.local.TokenPair
-import ru.esstu.auth.datasources.entities.TokenOwners
+import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.auth.entities.Token
 
 /*fun EntrantTokens.toToken(): Token = Token(

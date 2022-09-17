@@ -64,5 +64,9 @@ dependencies {
     //Material
     implementation ("com.google.android.material:material:1.6.1")
 
-    
+    //Time https://docs.korge.org/klock/
+    implementation ("com.soywiz.korlibs.klock:klock-android:3.0.1")
+
+    //landscapist glide
+    implementation ("com.github.skydoves:landscapist-glide:1.5.2")
 }

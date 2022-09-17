@@ -22,10 +22,11 @@ fun StudentBottomNavScreen(parentNavController: NavHostController) {
         startDestination = NewsScreens.Root,
         navItems = arrayOf(
             NavItem(
-                icon = IconResource.DrawableResource(R.drawable.ic_auth_logo),
-                label = "Main",
+                icon = IconResource.DrawableResource(R.drawable.ic_bottom_home),
+                label = "Главная",
                 route = NewsScreens.Root,
-            )
+                badges = 0
+            ),
             /*NavItem(
                 icon = IconResource.DrawableResource(R.drawable.ic_bottom_home),
                 label = "Главная",

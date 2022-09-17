@@ -9,15 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.esstu.android.R
 
 import ru.esstu.android.auth.viewmodel.AuthEvents
 import ru.esstu.android.auth.viewmodel.AuthViewModel
-import ru.esstu.android.domain.ui.theme.CompPreviewTheme
-import ru.esstu.auth.datasources.entities.TokenOwners
+import ru.esstu.auth.entities.TokenOwners
 
 @Composable
 fun Splashscreen(
