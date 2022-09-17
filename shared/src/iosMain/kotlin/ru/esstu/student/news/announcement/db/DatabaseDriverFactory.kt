@@ -1,7 +1,9 @@
 package ru.esstu.student.news.announcement.db
 
 import com.squareup.sqldelight.db.SqlDriver
+import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 import ru.esstu.student.news.datasources.NewsDatabase
+
 
 class DatabaseDriverFactory: IDatabaseDriverFactory {
 
