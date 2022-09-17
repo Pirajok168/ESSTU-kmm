@@ -2,6 +2,7 @@ package ru.esstu.auth.datasources.repo
 
 import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
@@ -19,6 +20,7 @@ import ru.esstu.auth.datasources.toTokenPair
 import ru.esstu.auth.datasources.entities.TokenOwners
 import ru.esstu.auth.datasources.local.ITokenDSManager
 import ru.esstu.auth.entities.Token
+import ru.esstu.domain.ktor.CustomResponseException
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 
@@ -53,6 +55,12 @@ class AuthRepositoryImpl constructor(
 
         } catch (e: IOException) {
             Response.Error(ResponseError(message = e.message))
+        } catch (e: CustomResponseException){
+            Response.Error(ResponseError(message = e.message, code = e.response.status.value))
+        } catch (e: ClientRequestException){
+            Response.Error(ResponseError(message = e.message))
+        } catch (e: HttpRequestTimeoutException){
+            Response.Error(ResponseError(message = e.message))
         }
     }
 
@@ -65,6 +73,12 @@ class AuthRepositoryImpl constructor(
             cache.setToken(newToken.toTokenPair())
             Response.Success(newToken)
         } catch (e: IOException) {
+            Response.Error(ResponseError(message = e.message))
+        } catch (e: CustomResponseException){
+            Response.Error(ResponseError(message = e.message, code = e.response.status.value))
+        } catch (e: ClientRequestException){
+            Response.Error(ResponseError(message = e.message))
+        } catch (e: HttpRequestTimeoutException){
             Response.Error(ResponseError(message = e.message))
         }
     }
