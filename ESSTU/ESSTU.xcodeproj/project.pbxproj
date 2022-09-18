@@ -11,6 +11,7 @@
 		292C451D28D5E0D7005F176D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292C451C28D5E0D7005F176D /* ContentView.swift */; };
 		292C451F28D5E0D8005F176D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 292C451E28D5E0D8005F176D /* Assets.xcassets */; };
 		292C452228D5E0D8005F176D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 292C452128D5E0D8005F176D /* Preview Assets.xcassets */; };
+		292C452C28D5F502005F176D /* AuthScreenPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292C452B28D5F502005F176D /* AuthScreenPattern.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		292C451C28D5E0D7005F176D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		292C451E28D5E0D8005F176D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		292C452128D5E0D8005F176D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		292C452B28D5F502005F176D /* AuthScreenPattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthScreenPattern.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +53,7 @@
 		292C451928D5E0D7005F176D /* ESSTU */ = {
 			isa = PBXGroup;
 			children = (
+				292C452928D5F497005F176D /* auth */,
 				292C451A28D5E0D7005F176D /* ESSTUApp.swift */,
 				292C451C28D5E0D7005F176D /* ContentView.swift */,
 				292C451E28D5E0D8005F176D /* Assets.xcassets */,
@@ -65,6 +68,22 @@
 				292C452128D5E0D8005F176D /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		292C452928D5F497005F176D /* auth */ = {
+			isa = PBXGroup;
+			children = (
+				292C452A28D5F4CC005F176D /* ui */,
+			);
+			path = auth;
+			sourceTree = "<group>";
+		};
+		292C452A28D5F4CC005F176D /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				292C452B28D5F502005F176D /* AuthScreenPattern.swift */,
+			);
+			path = ui;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -159,6 +178,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				292C451D28D5E0D7005F176D /* ContentView.swift in Sources */,
+				292C452C28D5F502005F176D /* AuthScreenPattern.swift in Sources */,
 				292C451B28D5E0D7005F176D /* ESSTUApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
