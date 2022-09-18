@@ -2,12 +2,16 @@ package ru.esstu.android.student.news.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.remember
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import ru.esstu.android.domain.modules.image_viewer.navigation.ImageScreen
+import ru.esstu.android.student.news.announcement_screen.ui.AnnouncementScreen
+import ru.esstu.android.student.news.selector_screen.ui.DetailNewsScreen
 import ru.esstu.android.student.news.selector_screen.ui.NewsSelectorScreen
 
 
@@ -45,7 +49,7 @@ fun NavGraphBuilder.newsNavGraph(
             )
         }
 
-       /* composable(route = NewsScreens.DetailScreen.passRoute()) {
+        composable(route = NewsScreens.DetailScreen.passRoute()) {
             val parent = remember {
                 navController.getBackStackEntry(NewsScreens.SelectorScreen.popTo())
             }
@@ -56,10 +60,25 @@ fun NavGraphBuilder.newsNavGraph(
                 onNavToImageScreen = { selected, uris ->
                     parentNavController.navigate(ImageScreen.navigate(images = uris, startImage = selected))
                 },
-                selectorViewModel = hiltViewModel(parent)
+                selectorViewModel = viewModel(parent)
             )
         }
 
+        composable(route = NewsScreens.AnnouncementsScreen.passRoute()) {
+            val parent = remember {
+                navController.getBackStackEntry(NewsScreens.SelectorScreen.popTo())
+            }
+
+            AnnouncementScreen(
+                parentPadding = padding,
+                onBackPressed = { navController.popBackStack() },
+                onNavToImageScreen = { selected, uris ->
+                    parentNavController.navigate(ImageScreen.navigate(images = uris, startImage = selected))
+                },
+                viewModel(parent)
+            )
+        }
+        /*
         composable(route = NewsScreens.NewsScreen.passRoute()) {
 
             val parent = remember {
@@ -76,20 +95,7 @@ fun NavGraphBuilder.newsNavGraph(
             )
         }
 
-        composable(route = NewsScreens.AnnouncementsScreen.passRoute()) {
-            val parent = remember {
-                navController.getBackStackEntry(NewsScreens.SelectorScreen.popTo())
-            }
 
-            AnnouncementScreen(
-                parentPadding = padding,
-                onBackPressed = { navController.popBackStack() },
-                onNavToImageScreen = { selected, uris ->
-                    parentNavController.navigate(ImageScreen.navigate(images = uris, startImage = selected))
-                },
-                hiltViewModel(parent)
-            )
-        }
 
         composable(route = NewsScreens.EventsScreen.passRoute()) {
             val parent = remember {

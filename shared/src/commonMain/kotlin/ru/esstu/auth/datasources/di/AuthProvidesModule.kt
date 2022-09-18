@@ -8,6 +8,7 @@ import org.kodein.di.singleton
 import ru.esstu.ESSTUSdk
 import ru.esstu.auth.datasources.api.student_teacher.AuthApImpl
 import ru.esstu.auth.datasources.api.student_teacher.AuthApi
+import ru.esstu.auth.datasources.local.ITokenDSManager
 import ru.esstu.auth.datasources.local.TokenDSManagerImpl
 import ru.esstu.auth.datasources.repo.AuthRepositoryImpl
 import ru.esstu.auth.datasources.repo.DataStore
@@ -42,6 +43,9 @@ internal val authProvidesModule = DI.Module(
 @ThreadLocal
 object AuthModule {
     val authModule: IAuthRepository
+        get() = ESSTUSdk.di.instance()
+
+    val tokenDSManagerImpl: ITokenDSManager
         get() = ESSTUSdk.di.instance()
 }
 

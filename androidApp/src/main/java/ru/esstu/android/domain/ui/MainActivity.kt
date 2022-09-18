@@ -14,6 +14,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.view.WindowCompat
 
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.pager.ExperimentalPagerApi
 
 import ru.esstu.android.domain.navigation.SetupNavGraph
 import ru.esstu.android.domain.ui.theme.EsstuTheme
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     //@Inject
    // lateinit var uiStateObserver: IUiObserver
-    @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class, ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+    @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class, ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class, ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

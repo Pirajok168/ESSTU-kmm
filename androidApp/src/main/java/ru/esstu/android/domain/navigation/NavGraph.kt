@@ -10,10 +10,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.flow.collectLatest
 import ru.esstu.android.auth.navigation.AuthRoutes
 import ru.esstu.android.auth.navigation.authNavGraph
 import ru.esstu.android.auth.viewmodel.LogoutViewModel
+import ru.esstu.android.domain.modules.image_viewer.navigation.ImageScreen
+import ru.esstu.android.domain.modules.image_viewer.navigation.ImageScreenArguments
+import ru.esstu.android.domain.modules.image_viewer.ui.ImageScreen
 import ru.esstu.android.student.navigation.StudentRoutes
 import ru.esstu.android.student.navigation.studentNavGraph
 
@@ -22,6 +26,7 @@ import ru.esstu.android.student.navigation.studentNavGraph
 @ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
+@ExperimentalPagerApi
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
@@ -42,15 +47,6 @@ fun SetupNavGraph(
             onNavToGuest = { /* TODO */ },
         )
         studentNavGraph(navController)
-       /* //TODO не настроен
-        guestNavGraph(navController)
-
-        //TODO не настроен
-        entrantNavGraph(navController)
-
-        studentNavGraph(navController)
-
-        teacherNavGraph(navController)
 
         //крашит, если ссылаться на этот экран в studentNavGraph (хз почему)
         composable(route = ImageScreen.passRoute(), arguments = ImageScreen.passArguments()) {
@@ -63,11 +59,22 @@ fun SetupNavGraph(
                 ?.split(", ")
 
             if (!imagesArr.isNullOrEmpty())
-                ImageScreen(
+               ImageScreen(
                     imageUris = imagesArr,
                     startImage = startImage.orEmpty(),
                     onBackPress = { navController.popBackStack() }
                 )
-        }*/
+        }
+       /* //TODO не настроен
+        guestNavGraph(navController)
+
+        //TODO не настроен
+        entrantNavGraph(navController)
+
+        studentNavGraph(navController)
+
+        teacherNavGraph(navController)
+
+        */
     }
 }

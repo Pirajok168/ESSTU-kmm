@@ -26,7 +26,7 @@ fun AnnouncementScreen(
     onNavToImageScreen: (selected: String, uris: List<String>) -> Unit = { _, _ -> },
     viewModel: AnnouncementsViewModel = viewModel()
 ) {
-   /* val uiState = viewModel.state
+    val uiState = viewModel.state
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
     Scaffold(
@@ -44,13 +44,16 @@ fun AnnouncementScreen(
             )
         }
     ) {
-       *//* LaunchedEffect(key1 = Unit, block = {
+        LaunchedEffect(key1 = Unit, block = {
             if (!uiState.isPagesLoading && uiState.pages.isEmpty())
                 viewModel.onEvent(AnnouncementsEvents.LoadAndRefresh)
 
         })
 
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(it)
+        ) {
             itemsIndexed(uiState.pages) { index, announcement ->
 
                 if (index == uiState.pages.lastIndex && !uiState.isEndReached && !uiState.isPagesLoading)
@@ -90,6 +93,6 @@ fun AnnouncementScreen(
                         CircularProgressIndicator()
                     }
                 }
-        }*//*
-    }*/
+        }
+    }
 }

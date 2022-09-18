@@ -13,7 +13,7 @@ internal class DatabaseTimestamp(databaseTimestampFactory: SqlDriver): Timestamp
     }
 
     override suspend fun setTimestamp(timestamp: TimestampEntity) {
-        TODO("Not yet implemented")
+        dbQuery.setTimestamp(appUserId = timestamp.appUserId, timestamp = timestamp.timestamp)
     }
 }
 private fun map(

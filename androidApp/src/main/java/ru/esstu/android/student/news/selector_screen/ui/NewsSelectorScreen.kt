@@ -216,7 +216,7 @@ fun NewsSelectorScreen(
                                 title = note.title,
                                 body = note.message,
                                 onClick = {
-                                    //viewModel.onEvent(SelectorScreenEvents.PassNode(note, "Объявление"))
+                                    viewModel.onEvent(SelectorScreenEvents.PassNode(note, "Объявление"))
                                     onNavToDetailScreen()
                                 }
                             )
@@ -226,7 +226,7 @@ fun NewsSelectorScreen(
                                 user = note.from,
                                 title = note.title,
                                 onClick = {
-                                    //viewModel.onEvent(SelectorScreenEvents.PassNode(note, "Объявление"))
+                                    viewModel.onEvent(SelectorScreenEvents.PassNode(note, "Объявление"))
                                     onNavToDetailScreen()
                                 }
                             )

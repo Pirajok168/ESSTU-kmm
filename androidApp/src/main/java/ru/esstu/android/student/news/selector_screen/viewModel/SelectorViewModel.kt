@@ -4,8 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.soywiz.klock.DateTime
+import kotlinx.coroutines.launch
 import ru.esstu.domain.utill.helpers.ScheduleSource
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.news.entities.Attachment
@@ -50,28 +52,28 @@ class SelectorViewModel  constructor(
 ) : ViewModel() {
     var state by mutableStateOf(SelectorScreenState())
         private set
-/*  var state by mutableStateOf(SelectorScreenState())
-        private set
+
 
     fun onEvent(event: SelectorScreenEvents) {
         when (event) {
             is SelectorScreenEvents.PassNode -> state = state.copy(title = event.title, node = event.node)
-            is SelectorScreenEvents.DownloadAttachment -> viewModelScope.launch { downloadRepository.downloadFile(event.attachment) }
+      //      is SelectorScreenEvents.DownloadAttachment -> viewModelScope.launch { downloadRepository.downloadFile(event.attachment) }
             is SelectorScreenEvents.UpdateAttachment -> onUpdateAttachment(event.attachment)
 
-            is SelectorScreenEvents.PassTodayTime -> {
+           /* is SelectorScreenEvents.PassTodayTime -> {
                 state = state.copy(today = event.time); setClosestLesson()
-            }
+            }*/
             SelectorScreenEvents.LoadAnchor -> viewModelScope.launch { onLoadAnchor() }
             SelectorScreenEvents.LoadSchedule -> viewModelScope.launch { onLoadSchedule() }
+            else -> {}
         }
     }
 
     private fun setClosestLesson() {
-        val localTime = state.today?.toLocalTime() ?: return
+       /* val localTime = state.today?.toLocalTime() ?: return
         val scList = state.schedule.toList()
         val closestLesson = scList.firstOrNull { it.first.inIt(localTime) } ?: scList.firstOrNull { it.first.startTime > localTime }
-        state = state.copy(closestLesson = closestLesson)
+        state = state.copy(closestLesson = closestLesson)*/
     }
 
     private fun onUpdateAttachment(attachment: Attachment) {
@@ -89,19 +91,19 @@ class SelectorViewModel  constructor(
 
     private suspend fun onLoadAnchor() {
 
-        scheduleRepo.getAnchor().collect { anchor ->
+        /*scheduleRepo.getAnchor().collect { anchor ->
             state = when (anchor) {
                 is FlowResponse.Error -> state.copy(anchorError = anchor.error)
                 is FlowResponse.Loading -> state.copy(isAnchorLoading = anchor.isLoading)
                 is FlowResponse.Success -> state.copy(anchor = anchor.data, anchorError = null)
             }
-        }
+        }*/
     }
 
-    private val studyPeriods = StudyPeriodDefaults().toList()
+    //private val studyPeriods = StudyPeriodDefaults().toList()
 
     private suspend fun onLoadSchedule() {
-        val anchor = state.anchor ?: return
+      /*  val anchor = state.anchor ?: return
         val today = state.today?.toLocalDate() ?: return
         val week = anchor.getTodayWeek(today)
         val weekDay = DayOfWeek.values().getOrNull(today.dayOfWeek - 1) ?: return
@@ -133,8 +135,8 @@ class SelectorViewModel  constructor(
                     }
                 }
             }
-        }
+        }*/
     }
 
 
-*/}
+}

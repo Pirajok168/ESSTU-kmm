@@ -30,6 +30,8 @@ import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.glide.GlideImage
 import com.soywiz.klock.DateFormat
 import com.soywiz.klock.DateTime
+import com.soywiz.klock.KlockLocale
+import com.soywiz.klock.locale.russian
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
@@ -266,11 +268,7 @@ fun NewsPage(
                 .padding(horizontal = horizontalPadding),
             horizontalArrangement = Arrangement.End
         ) {
-            val isCurrentYear = node.date.year.year == DateTime.now().year.year
-            val date = if (isCurrentYear)
-                node.date.format(formatter)
-            else
-                node.date.format(formatterWithYear)
+            val date = KlockLocale.russian.formatDateLong.format(node.date.local)
 
 
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
