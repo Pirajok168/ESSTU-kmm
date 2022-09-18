@@ -1,0 +1,12 @@
+CREATE TABLE TimestampEntityDatabase (
+    appUserId TEXT NOT NULL,
+    timestamp INTEGER NOT NULL
+);
+
+getTimestamp:
+    SELECT * FROM TimestampEntityDatabase WHERE appUserId == ?;
+
+
+setTimestamp:
+     INSERT OR REPLACE INTO TimestampEntityDatabase(appUserId, timestamp)
+            VALUES(?, ?);

@@ -7,11 +7,15 @@ import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.domain.api.UpdatesApi
 import ru.esstu.domain.utill.wrappers.Response
+import ru.esstu.student.news.announcement.datasources.db.timestamp.TimestampDao
 import ru.esstu.student.news.announcement.datasources.toAnnouncements
+import ru.esstu.student.news.datasources.toTimeStamp
+import ru.esstu.student.news.datasources.toTimeStampEntity
 
 class AnnouncementsUpdateRepositoryImpl(
     private val auth: IAuthRepository,
     private val api: UpdatesApi,
+    private val timestampDao: TimestampDao,
 ) : IAnnouncementsUpdateRepository{
     override fun getUpdates() = flow {
         while (true) {
@@ -20,10 +24,10 @@ class AnnouncementsUpdateRepositoryImpl(
 
                 val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Exception("unsupported User Type")
 
-               // val latestTimestamp = timestampDao.getTimestamp(appUserId)?.toTimeStamp() ?: 0L
+                val latestTimestamp = timestampDao.getTimestamp(appUserId)?.toTimeStamp() ?: 0L
 
                 val result = auth.provideToken { type, tokenVal ->
-                    api.getUpdates("$tokenVal", 0L).toAnnouncements().asReversed()
+                    api.getUpdates("$tokenVal", latestTimestamp).toAnnouncements().asReversed()
                 }
 
                 when (result) {
@@ -32,7 +36,7 @@ class AnnouncementsUpdateRepositoryImpl(
                         if (result.error.message != "timeout") delay(1000L)
                     }
                     is Response.Success -> {
-                       // timestampDao.setTimestamp(callTimestamp.toTimeStampEntity(appUserId = appUserId))
+                        timestampDao.setTimestamp(callTimestamp.toTimeStampEntity(appUserId = appUserId))
 
                         emit(Response.Success(result.data))
                     }

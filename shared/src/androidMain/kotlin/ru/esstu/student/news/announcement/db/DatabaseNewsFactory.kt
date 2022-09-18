@@ -4,14 +4,14 @@ import android.content.Context
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import ru.esstu.ContextApplication
-import ru.esstu.student.news.datasources.NewsDatabase
+import ru.esstu.student.NewsDatabase
 
 class DatabaseDriverFactory(
     private val context: Context = ContextApplication.getContextApplication().context
-):IDatabaseDriverFactory {
+):IDatabaseDriverNewsFactory {
     override val sqlDriver: SqlDriver
         get() = AndroidSqliteDriver(NewsDatabase.Schema, context, "test.db")
 
 }
 
-actual fun createDriver(): IDatabaseDriverFactory = DatabaseDriverFactory()
+actual fun driverNewsFactory(): IDatabaseDriverNewsFactory = DatabaseDriverFactory()

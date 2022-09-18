@@ -5,10 +5,10 @@ import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 import ru.esstu.student.news.datasources.NewsDatabase
 
 
-class DatabaseDriverFactory: IDatabaseDriverFactory {
+class DatabaseDriverFactory: IDatabaseDriverNewsFactory {
 
     override val sqlDriver: SqlDriver
         get() = NativeSqliteDriver(NewsDatabase.Schema, "test.db")
 }
 
-actual fun createDriver(): IDatabaseDriverFactory = DatabaseDriverFactory()
+actual fun driverNewsFactory(): IDatabaseDriverNewsFactory = DatabaseDriverFactory()

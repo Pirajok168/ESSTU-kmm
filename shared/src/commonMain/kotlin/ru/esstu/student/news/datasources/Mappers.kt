@@ -1,6 +1,7 @@
 package ru.esstu.student.news.datasources
 
 import com.soywiz.klock.DateTime
+import ru.esstu.student.news.announcement.datasources.db.timestamp.entities.TimestampEntity
 import ru.esstu.student.news.datasources.relations.NewsWithAttachments
 import ru.esstu.student.news.entities.Attachment
 import ru.esstu.student.news.entities.NewsNode
@@ -21,4 +22,11 @@ fun NewsWithAttachments.toNews() = NewsNode(
     title = news.title,
     from = news.from.toUser(),
     attachments = attachments.map { it.toAttachment() }
+)
+
+fun TimestampEntity.toTimeStamp() = timestamp
+
+fun Long.toTimeStampEntity(appUserId:String) = TimestampEntity(
+    appUserId = appUserId,
+    timestamp = this
 )

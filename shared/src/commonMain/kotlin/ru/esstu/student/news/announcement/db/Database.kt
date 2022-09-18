@@ -5,6 +5,7 @@ import com.squareup.sqldelight.db.SqlDriver
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import ru.esstu.student.NewsDatabase
 import ru.esstu.student.news.datasources.*
 import ru.esstu.student.news.datasources.relations.NewsWithAttachments
 import ru.esstu.student.news.entities.NewsNode
@@ -48,7 +49,7 @@ internal class Database(databaseNewsFactory: SqlDriver):NewsDao {
         limit: Int,
         offset: Int
     ): List<NewsWithAttachments> {
-        return dbQuery.getNewsWithAttachments(::map).executeAsList()
+        return dbQuery.getNewsWithAttachments(limit.toLong(), offset.toLong(), ::map).executeAsList()
     }
 
     override suspend fun setNewsWithAttachments(news: List<NewsWithAttachments>) {

@@ -17,7 +17,7 @@ removeAllNews:
     DELETE FROM NewsEntityDatabase;
 
 getNewsWithAttachments:
-    SELECT * FROM NewsEntityDatabase ORDER BY id DESC LIMIT (10) OFFSET (0);
+    SELECT * FROM NewsEntityDatabase ORDER BY id DESC LIMIT (:limit) OFFSET (:offset);
 
 getAllNewsWithAttachments:
     SELECT * FROM NewsEntityDatabase ORDER BY id;

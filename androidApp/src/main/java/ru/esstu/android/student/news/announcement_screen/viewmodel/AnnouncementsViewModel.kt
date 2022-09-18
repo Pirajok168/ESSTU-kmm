@@ -57,10 +57,10 @@ class AnnouncementsViewModel  constructor(
 
     init {
         viewModelScope.launch {
-            /*updates.getUpdates().collectLatest { updates ->
+            updates.getUpdates().collectLatest { updates ->
                 if (updates.data?.isNotEmpty() == true)
                     paginator.refresh()
-            }*/
+            }
         }
     }
 
