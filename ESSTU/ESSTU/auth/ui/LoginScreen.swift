@@ -7,8 +7,15 @@
 
 import SwiftUI
 
-struct AuthScreenPattern: View {
+struct LoginScreen: View {
     @State private var login: String = ""
+    @State private var firstViewIsOn = false
+    @ObservedObject private(set) var authModel: AuthViewModel
+    
+    init(){
+        authModel = AuthViewModel()
+    }
+    
     var body: some View {
         NavigationView{
             VStack(alignment: .leading){
@@ -29,19 +36,27 @@ struct AuthScreenPattern: View {
                     .font(.title2)
                     .fontWeight(.bold)
                 
-                TextField("Введите логин", text: $login)
+                TextField("Введите логин", text: $authModel.login)
                     .textFieldStyle(.roundedBorder)
                     .disableAutocorrection(true)
                     .padding(.bottom)
                 
-                Button(action: {
-                    
-                }, label: {
-                    Text("Продолжить")
-                        .frame(maxWidth: .infinity)
-                        .font(.title)
-                    
-                })
+              
+                
+                NavigationLink(isActive: $firstViewIsOn) {
+                    PasswordScreen(authModel: authModel)
+                } label: {
+                    Button(action: {
+                        firstViewIsOn.toggle()
+                    }, label: {
+                        Text("Продолжить")
+                            .frame(maxWidth: .infinity)
+                            .font(.title)
+                        
+                    })
+                }
+                
+                
                 .buttonStyle(.bordered)
                 .navigationBarTitleDisplayMode(.inline)
                 Spacer()
@@ -49,18 +64,13 @@ struct AuthScreenPattern: View {
             }.padding()
 
         }
-                
-       
-       
-    
+            
     }
        
 }
 
 struct AuthScreenPattern_Previews: PreviewProvider {
     static var previews: some View {
-        AuthScreenPattern()
-            .previewInterfaceOrientation(.portrait)
-                        .previewDevice("iPhone 7")
+        LoginScreen()
     }
 }

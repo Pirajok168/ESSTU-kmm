@@ -99,6 +99,7 @@ kotlin {
 }
 
 sqldelight {
+
     database("NewsDatabase") {
         packageName = "ru.esstu.student"
         sourceFolders = listOf("sqldelight")
