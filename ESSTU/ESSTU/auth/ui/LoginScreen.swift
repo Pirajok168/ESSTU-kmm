@@ -39,6 +39,7 @@ struct LoginScreen: View {
                 TextField("Введите логин", text: $authModel.login)
                     .textFieldStyle(.roundedBorder)
                     .disableAutocorrection(true)
+                    .textInputAutocapitalization(.never)
                     .padding(.bottom)
                 
               

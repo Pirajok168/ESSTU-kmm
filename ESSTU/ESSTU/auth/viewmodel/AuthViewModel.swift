@@ -15,6 +15,7 @@ protocol AuthState{
     var isLoading: Bool { get }
     var error: ResponseError? { get }
     var login: String { get }
+    var isError: Bool { get  set }
 }
 
 protocol AuthEvent{
@@ -22,7 +23,11 @@ protocol AuthEvent{
     func authorise()
 }
 
+
+
 class AuthViewModel: ObservableObject, AuthState{
+    @Published var isError: Bool = false
+
     private(set) var token: Token?
     @Published  var isLoading: Bool = false
     private(set) var error: ResponseError?
@@ -31,6 +36,8 @@ class AuthViewModel: ObservableObject, AuthState{
     @Published var data: String = ""
     
     private let repo: IAuthRepository = ESSTUSdk().repoAuth.authModule
+    
+   
 }
 
 extension AuthViewModel: AuthEvent{
@@ -38,18 +45,22 @@ extension AuthViewModel: AuthEvent{
         self.login = login
     }
     
+    
+    
     func authorise() {
+        
         repo.auth(login: login, Password: password) { response, error in
-            if response as? ResponseSuccess != nil {
-                let data = (response as! ResponseSuccess).data
-                
-                self.password = data!.type
-                
+            DispatchQueue.main.async {
+                if response is ResponseSuccess{
+                    
+                }else if response is ResponseError_{
+                    self.error = response?.error
+                    self.isError = true
+                }
             }
+    
         }
     }
-    
-    
 }
 
 

@@ -33,32 +33,38 @@ struct PasswordScreen: View {
                     .fontWeight(.light)
                     .padding(.bottom, 40)
                 
-                Text("Логин")
+                Text("Пароль")
                     .font(.title2)
                     .fontWeight(.bold)
                 
-                TextField("Введите логин", text: $authModel.password)
+                TextField("Введите пароль", text: $authModel.password)
                     .textFieldStyle(.roundedBorder)
                     .disableAutocorrection(true)
+                    .textInputAutocapitalization(.never)
                     .padding(.bottom)
                 
                 Button(action: {
                     authModel.authorise()
                 }, label: {
-                    Text("Продолжить")
+                    Text("Авторизироваться")
                         .frame(maxWidth: .infinity)
                         .font(.title)
                     
                 })
+                .alert(authModel.error?.message ?? "Неизвестная ошибка", isPresented: $authModel.isError) {
+                           Button("OK", role: .cancel) { }
+                       }
                 .buttonStyle(.bordered)
-                .navigationBarTitleDisplayMode(.inline)
-                
+                .navigationBarTitle("")
+                .navigationBarHidden(true)
                 
                 Spacer()
                 
             }
             .padding()
+        
         }
+        
     }
 }
 
