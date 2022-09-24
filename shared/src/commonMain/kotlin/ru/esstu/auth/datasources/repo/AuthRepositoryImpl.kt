@@ -20,15 +20,15 @@ class AuthRepositoryImpl constructor(
     private val portalApi: AuthApi,
     private val cache: ITokenDSManager,
 ) : IAuthRepository {
-    private val logoutChannel: Channel<Token?> = Channel()
-    override val logoutFlow = logoutChannel.receiveAsFlow()
+    //private val logoutChannel: Channel<Token?> = Channel()
+    //override val logoutFlow = logoutChannel.receiveAsFlow()
 
     override suspend fun refreshToken(): Response<Token> {
         return try {
             val token = cache.getToken()?.toToken()
 
             if (token == null) {
-                goToLoginScreen(null)
+               // goToLoginScreen(null)
                 return Response.Error(ResponseError(code = 401, message = "unauthorised"))
             }
 
@@ -78,7 +78,7 @@ class AuthRepositoryImpl constructor(
         TODO("Not yet implemented")
     }
 
-    private suspend fun goToLoginScreen(token: Token? = null) = logoutChannel.send(token)
+    //private suspend fun goToLoginScreen(token: Token? = null) = logoutChannel.send(token)
 
     override suspend fun <T> provideToken(call: suspend (type: String, token: String) -> T): Response<T> =
         provideToken { token -> call(token.type, token.access) }
@@ -97,7 +97,7 @@ class AuthRepositoryImpl constructor(
         val token = cache.getToken()?.toToken()
 
         if (token == null) {
-            goToLoginScreen(null)
+            //goToLoginScreen(null)
             return Response.Error(ResponseError(message = "unauthorized"))
         }
 
@@ -110,8 +110,10 @@ class AuthRepositoryImpl constructor(
                     when (val newToken = refreshToken()) {
                         is Response.Error -> {
                             val newErrorCode = newToken.error.code
-                            if (newErrorCode == 401)
-                                goToLoginScreen(token)
+                            if (newErrorCode == 401){
+                                // goToLoginScreen(token)
+                            }
+
                             result
                         }
                         is Response.Success -> {

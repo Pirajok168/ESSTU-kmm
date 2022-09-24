@@ -9,7 +9,7 @@ import ru.esstu.auth.datasources.di.authProvidesModule
 
 
 
-val featureModuleAuth = DI.Module(name = "featureModuleAuth"){
+internal val featureModuleAuth = DI.Module(name = "featureModuleAuth"){
     importAll(
         authProvidesModule,
     )

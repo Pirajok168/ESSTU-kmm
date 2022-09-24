@@ -25,7 +25,7 @@ class LogoutViewModel constructor(
     private val cache: ITokenDSManager = ESSTUSdk.repoAuth.tokenDSManagerImpl
 ) : ViewModel() {
 
-    val logoutFlow = repo.logoutFlow
+   // val logoutFlow = repo.logoutFlow
 
     var state by mutableStateOf(LogoutState())
         private set
