@@ -21,7 +21,7 @@
 		29287E4628D7373D00180DA7 /* PasswordScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordScreen.swift; sourceTree = "<group>"; };
 		29287E4828D73C6100180DA7 /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
 		29287E4A28D73C9200180DA7 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
-		292C451728D5E0D7005F176D /* Apple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Apple.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		292C451728D5E0D7005F176D /* ЛК ВСГУТУ.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ЛК ВСГУТУ.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		292C451A28D5E0D7005F176D /* ESSTUApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ESSTUApp.swift; sourceTree = "<group>"; };
 		292C451C28D5E0D7005F176D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		292C451E28D5E0D8005F176D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -59,7 +59,7 @@
 		292C451828D5E0D7005F176D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				292C451728D5E0D7005F176D /* Apple.app */,
+				292C451728D5E0D7005F176D /* ЛК ВСГУТУ.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -121,7 +121,7 @@
 			);
 			name = ESSTU;
 			productName = ESSTU;
-			productReference = 292C451728D5E0D7005F176D /* Apple.app */;
+			productReference = 292C451728D5E0D7005F176D /* ЛК ВСГУТУ.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -346,8 +346,8 @@
 					"-framework",
 					shared,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ru.esstu.Apple;
-				PRODUCT_NAME = Apple;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.esstu.ios;
+				PRODUCT_NAME = "ЛК ВСГУТУ";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -380,8 +380,8 @@
 					"-framework",
 					shared,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ru.esstu.Apple;
-				PRODUCT_NAME = Apple;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.esstu.ios;
+				PRODUCT_NAME = "ЛК ВСГУТУ";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

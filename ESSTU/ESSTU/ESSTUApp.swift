@@ -11,7 +11,7 @@ import SwiftUI
 struct ESSTUApp: App {
     var body: some Scene {
         WindowGroup {
-            LoginScreen()
+            SplashScreen()
         }
     }
 }

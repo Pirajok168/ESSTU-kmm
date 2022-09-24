@@ -10,22 +10,17 @@ import SwiftUI
 struct LoginScreen: View {
     @State private var login: String = ""
     @State private var firstViewIsOn = false
-    @ObservedObject private(set) var authModel: AuthViewModel
+    @ObservedObject private var authModel: AuthViewModel = AuthViewModel()
     
-    init(){
-        authModel = AuthViewModel()
-    }
+   
     
     var body: some View {
-        NavigationView{
+        NavigationView(){
             VStack(alignment: .leading){
                 Text("Добро пожаловать в личный кабинет ВСГУТУ")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .padding(.bottom, 10)
-                
-            
-
                 
                 Text("Выполните авторизацию")
                     .font(.title)
@@ -63,7 +58,6 @@ struct LoginScreen: View {
                 Spacer()
                 
             }.padding()
-
         }
             
     }

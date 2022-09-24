@@ -8,6 +8,9 @@
 import Foundation
 import shared
 import Combine
+import SwiftUI
+
+
 
 
 protocol AuthState{
@@ -16,24 +19,31 @@ protocol AuthState{
     var error: ResponseError? { get }
     var login: String { get }
     var isError: Bool { get  set }
+    var password: String { get }
 }
 
 protocol AuthEvent{
     func passLogin(login: String)
     func authorise()
+    func onRestoreSession()
 }
 
 
 
-class AuthViewModel: ObservableObject, AuthState{
-    @Published var isError: Bool = false
 
-    private(set) var token: Token?
-    @Published  var isLoading: Bool = false
-    private(set) var error: ResponseError?
+
+class AuthViewModel: ObservableObject, AuthState{
+    
+    @Published var isError: Bool = false
+    @Published var isLoading: Bool = false
     @Published var login: String = ""
     @Published var password: String = ""
-    @Published var data: String = ""
+    
+    @Published var routing: String = ""
+    
+    
+    private(set) var token: Token?
+    private(set) var error: ResponseError?
     
     private let repo: IAuthRepository = ESSTUSdk().repoAuth.authModule
     
@@ -45,7 +55,20 @@ extension AuthViewModel: AuthEvent{
         self.login = login
     }
     
-    
+    func onRestoreSession() {
+        isLoading = true
+        repo.refreshToken(){
+            response, error in
+            DispatchQueue.main.async {
+                if response is ResponseSuccess{
+                    self.token = response?.data
+                }else if response is ResponseError_{
+                    self.error = response?.error
+                }
+            }
+        }
+        isLoading = false
+    }
     
     func authorise() {
         
@@ -58,7 +81,6 @@ extension AuthViewModel: AuthEvent{
                     self.isError = true
                 }
             }
-    
         }
     }
 }
