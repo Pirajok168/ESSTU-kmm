@@ -9,7 +9,7 @@ import Foundation
 import shared
 import Combine
 import SwiftUI
-
+ 
 
 
 
@@ -42,7 +42,7 @@ class AuthViewModel: ObservableObject, AuthState{
     @Published var routing: String = ""
     
     
-    private(set) var token: Token?
+    @Published private(set) var token: Token?
     private(set) var error: ResponseError?
     
     private let repo: IAuthRepository = ESSTUSdk().repoAuth.authModule
@@ -70,11 +70,14 @@ extension AuthViewModel: AuthEvent{
         isLoading = false
     }
     
+    
+    
     func authorise() {
         
         repo.auth(login: login, Password: password) { response, error in
             DispatchQueue.main.async {
                 if response is ResponseSuccess{
+                    self.token = response?.data
                     
                 }else if response is ResponseError_{
                     self.error = response?.error

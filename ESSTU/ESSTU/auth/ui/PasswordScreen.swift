@@ -1,3 +1,4 @@
+
 //
 //  PasswordScreen.swift
 //  ESSTU
@@ -10,15 +11,14 @@ import SwiftUI
 
 struct PasswordScreen: View {
    
-    @ObservedObject private(set) var authModel: AuthViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var authNavigation: AuthNavigation
     
     @State var data: String = ""
     
-    init(authModel: AuthViewModel){
-        self.authModel = authModel
-    }
+    
     var body: some View {
-        NavigationView{
+        
             VStack(alignment: .leading){
                 Text("Добро пожаловать в личный кабинет ВСГУТУ")
                     .font(.largeTitle)
@@ -37,40 +37,49 @@ struct PasswordScreen: View {
                     .font(.title2)
                     .fontWeight(.bold)
                 
-                TextField("Введите пароль", text: $authModel.password)
+                TextField("Введите пароль", text: $authViewModel.password)
                     .textFieldStyle(.roundedBorder)
                     .disableAutocorrection(true)
                     .textInputAutocapitalization(.never)
                     .padding(.bottom)
                 
                 Button(action: {
-                    authModel.authorise()
+                    authViewModel.authorise()
                 }, label: {
                     Text("Авторизироваться")
                         .frame(maxWidth: .infinity)
                         .font(.title)
                     
                 })
-                .alert(authModel.error?.message ?? "Неизвестная ошибка", isPresented: $authModel.isError) {
+                .alert(authViewModel.error?.message ?? "Неизвестная ошибка", isPresented: $authViewModel.isError) {
                            Button("OK", role: .cancel) { }
                        }
                 .buttonStyle(.bordered)
-                .navigationBarTitle("")
-                .navigationBarHidden(true)
+                
                 
                 Spacer()
                 
             }
+            .navigationBarBackButtonHidden(true)
+            .toolbar{
+                ToolbarItem(placement:.navigationBarLeading){
+                    Button{
+                        authNavigation.path.removeLast()
+                    } label: {
+                        Text("Back")
+                    }
+                }
+            }
             .padding()
         
-        }
+        
         
     }
 }
 
 struct PasswordScreen_Previews: PreviewProvider {
     static var previews: some View {
-        PasswordScreen(authModel: AuthViewModel())
+        PasswordScreen()
     }
 }
 

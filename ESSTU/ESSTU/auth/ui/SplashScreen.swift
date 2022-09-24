@@ -6,22 +6,50 @@
 //
 
 import SwiftUI
+import shared
+
+
 
 struct SplashScreen: View {
-    @ObservedObject private(set) var authViewModel: AuthViewModel
+    @ObservedObject  var authViewModel: AuthViewModel = AuthViewModel()
+    @ObservedObject  var authNavigation: AuthNavigation = AuthNavigation()
     
-    init(){
-        authViewModel = AuthViewModel()
-    }
+    @ObservedObject var studentNavigation: StudentNavigation = StudentNavigation()
+   
     
     var body: some View {
         
-        
-        Image("logo_splash_screen")
-            .navigationBarHidden(true)
-            .onAppear{
-                authViewModel.onRestoreSession()
+        if authViewModel.token == nil{
+            NavigationStack(path: $authNavigation.path){
+                VStack{
+                    Image("logo_splash_screen")
+                        .navigationDestination(for: AuthDestination.self){
+                            distation in
+                            
+                            if distation == AuthDestination.LoginScreen{
+                                LoginScreen()
+                                    .environmentObject(authNavigation)
+                                    .environmentObject(authViewModel)
+                            }else if distation == AuthDestination.PasswordScreen{
+                                PasswordScreen()
+                                    .environmentObject(authNavigation)
+                                    .environmentObject(authViewModel)
+                            }
+                        }
+                    Button{
+                        authNavigation.toLoginScreen()
+                    } label:{
+                        Text("To Login")
+                    }
+                }
+                
             }
+        }else if authViewModel.token?.owner is TokenOwners.Student{
+            NavigationStack(path: $studentNavigation.path){
+                NewsScreen()
+    
+            }
+        }
     }
 }
 

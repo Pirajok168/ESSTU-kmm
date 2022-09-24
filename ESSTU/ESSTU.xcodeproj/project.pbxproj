@@ -15,6 +15,9 @@
 		292C451F28D5E0D8005F176D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 292C451E28D5E0D8005F176D /* Assets.xcassets */; };
 		292C452228D5E0D8005F176D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 292C452128D5E0D8005F176D /* Preview Assets.xcassets */; };
 		292C452C28D5F502005F176D /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292C452B28D5F502005F176D /* LoginScreen.swift */; };
+		297B9CC528DF044000A11505 /* AuthNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297B9CC428DF044000A11505 /* AuthNavigation.swift */; };
+		297B9CEB28DF110D00A11505 /* StudentNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297B9CEA28DF110D00A11505 /* StudentNavigation.swift */; };
+		297B9CEE28DF116600A11505 /* NewsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297B9CED28DF116600A11505 /* NewsScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +30,9 @@
 		292C451E28D5E0D8005F176D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		292C452128D5E0D8005F176D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		292C452B28D5F502005F176D /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
+		297B9CC428DF044000A11505 /* AuthNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNavigation.swift; sourceTree = "<group>"; };
+		297B9CEA28DF110D00A11505 /* StudentNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentNavigation.swift; sourceTree = "<group>"; };
+		297B9CED28DF116600A11505 /* NewsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +73,7 @@
 		292C451928D5E0D7005F176D /* ESSTU */ = {
 			isa = PBXGroup;
 			children = (
+				297B9CE828DF10F400A11505 /* student */,
 				292C452928D5F497005F176D /* auth */,
 				292C451A28D5E0D7005F176D /* ESSTUApp.swift */,
 				292C451C28D5E0D7005F176D /* ContentView.swift */,
@@ -87,6 +94,7 @@
 		292C452928D5F497005F176D /* auth */ = {
 			isa = PBXGroup;
 			children = (
+				297B9CC328DF040700A11505 /* navigation */,
 				29287E4528D7368700180DA7 /* viewmodel */,
 				292C452A28D5F4CC005F176D /* ui */,
 			);
@@ -103,6 +111,39 @@
 			path = ui;
 			sourceTree = "<group>";
 		};
+		297B9CC328DF040700A11505 /* navigation */ = {
+			isa = PBXGroup;
+			children = (
+				297B9CC428DF044000A11505 /* AuthNavigation.swift */,
+			);
+			path = navigation;
+			sourceTree = "<group>";
+		};
+		297B9CE828DF10F400A11505 /* student */ = {
+			isa = PBXGroup;
+			children = (
+				297B9CEC28DF115400A11505 /* ui */,
+				297B9CE928DF10FB00A11505 /* navigation */,
+			);
+			path = student;
+			sourceTree = "<group>";
+		};
+		297B9CE928DF10FB00A11505 /* navigation */ = {
+			isa = PBXGroup;
+			children = (
+				297B9CEA28DF110D00A11505 /* StudentNavigation.swift */,
+			);
+			path = navigation;
+			sourceTree = "<group>";
+		};
+		297B9CEC28DF115400A11505 /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				297B9CED28DF116600A11505 /* NewsScreen.swift */,
+			);
+			path = ui;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -110,7 +151,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 292C452528D5E0D8005F176D /* Build configuration list for PBXNativeTarget "ESSTU" */;
 			buildPhases = (
-				292C452828D5E102005F176D /* ShellScript */,
+				292C452828D5E102005F176D /* Run Script */,
 				292C451328D5E0D7005F176D /* Sources */,
 				292C451428D5E0D7005F176D /* Frameworks */,
 				292C451528D5E0D7005F176D /* Resources */,
@@ -170,7 +211,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		292C452828D5E102005F176D /* ShellScript */ = {
+		292C452828D5E102005F176D /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -179,6 +220,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Run Script";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -195,9 +237,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				29287E4928D73C6100180DA7 /* SplashScreen.swift in Sources */,
+				297B9CEB28DF110D00A11505 /* StudentNavigation.swift in Sources */,
+				297B9CEE28DF116600A11505 /* NewsScreen.swift in Sources */,
 				292C451D28D5E0D7005F176D /* ContentView.swift in Sources */,
 				29287E4B28D73C9200180DA7 /* AuthViewModel.swift in Sources */,
 				292C452C28D5F502005F176D /* LoginScreen.swift in Sources */,
+				297B9CC528DF044000A11505 /* AuthNavigation.swift in Sources */,
 				29287E4728D7373D00180DA7 /* PasswordScreen.swift in Sources */,
 				292C451B28D5E0D7005F176D /* ESSTUApp.swift in Sources */,
 			);
@@ -336,6 +381,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -348,6 +394,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.esstu.ios;
 				PRODUCT_NAME = "ЛК ВСГУТУ";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -370,6 +419,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -382,6 +432,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.esstu.ios;
 				PRODUCT_NAME = "ЛК ВСГУТУ";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
