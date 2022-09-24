@@ -101,13 +101,13 @@ kotlin {
 sqldelight {
 
     database("NewsDatabase") {
-        packageName = "ru.esstu.student"
+        packageName = "ru.esstu.student.news.datasources"
         sourceFolders = listOf("sqldelight")
     }
 
     database("TimestampDatabase"){
-        packageName ="ru.esstu.student"
-        sourceFolders = listOf("sqldelight2")
+        packageName ="ru.esstu.student.news.announcement.datasources.db"
+        sourceFolders = listOf("sqldelight")
     }
 }
 
