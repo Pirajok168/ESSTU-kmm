@@ -107,7 +107,7 @@ sqldelight {
 
     database("TimestampDatabase"){
         packageName ="ru.esstu.student.news.announcement.datasources.db"
-        sourceFolders = listOf("sqldelight")
+        sourceFolders = listOf("sqldelight2")
     }
 }
 

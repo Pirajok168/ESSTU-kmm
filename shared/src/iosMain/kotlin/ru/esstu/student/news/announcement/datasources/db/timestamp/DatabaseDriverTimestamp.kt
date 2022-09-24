@@ -5,7 +5,7 @@ import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 import platform.Foundation.NSDownloadsDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
-import ru.esstu.student.TimestampDatabase
+import ru.esstu.student.news.announcement.datasources.db.TimestampDatabase
 
 
 class DatabaseDriverTimestamp(

@@ -4,7 +4,7 @@ import android.content.Context
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import ru.esstu.ContextApplication
-import ru.esstu.student.TimestampDatabase
+import ru.esstu.student.news.announcement.datasources.db.TimestampDatabase
 
 class DatabaseDriverTimestamp(
     private val context: Context = ContextApplication.getContextApplication().context

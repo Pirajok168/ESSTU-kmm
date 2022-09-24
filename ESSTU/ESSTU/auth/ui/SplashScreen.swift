@@ -45,6 +45,7 @@ struct SplashScreen: View {
                 
             }
         }else if authViewModel.token?.owner is TokenOwners.Student{
+        
             NavigationStack(path: $studentNavigation.path){
                 NewsScreen()
     
