@@ -14,31 +14,38 @@ struct NewsScreen: View {
     
   
     var body: some View {
-        
-        ScrollView(.vertical, showsIndicators: false){
-            
-            ScrollView(.horizontal, showsIndicators: false){
-
-                LazyHStack(spacing: 20){
-                    ForEach(announcementViewModel.pages, id: \.self){ index in
-                        NewsCard(user: index.from, title: index.title, message: index.message)
-                    }
-
+        NavigationView{
+            ScrollView(.vertical, showsIndicators: false){
+                HStack(){
+                    Image("recent_news")
+                    Text("Недавние объявления")
+                        .font(.title2)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding()
+                .padding(.horizontal)
+                .padding(.top)
+                
+                ScrollView(.horizontal, showsIndicators: false){
+
+                    LazyHStack(spacing: 20){
+                        ForEach(announcementViewModel.pages, id: \.self){ index in
+                            NewsCard(user: index.from, title: index.title, message: index.message)
+                        }
+
+                    }
+                    .padding()
+                }
+
+
             }
-
-
-        }
-        .onAppear{
-            announcementViewModel.getAnnouncementsPage(offset: 0, limit: 10)
+            .onAppear{
+                announcementViewModel.getAnnouncementsPage(offset: 0, limit: 10)
+            }
+            .navigationTitle("Главная ВСГУТУ")
+            
         }
        
         
-        
-       
-        
-        .navigationBarBackButtonHidden(true)
        
     }
 }
@@ -46,5 +53,6 @@ struct NewsScreen: View {
 struct NewsScreen_Previews: PreviewProvider {
     static var previews: some View {
         NewsScreen()
+            .environmentObject(AnnouncementsViewModel())
     }
 }

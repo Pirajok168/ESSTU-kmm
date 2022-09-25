@@ -14,7 +14,6 @@ struct BottomNavigationStudent: View {
     init(){
         studentNavigation = StudentNavigation()
         announcementViewModel = AnnouncementsViewModel()
-        print("Qwerty")
     }
     
     var body: some View {
