@@ -14,7 +14,7 @@ struct SplashScreen: View {
     @ObservedObject  var authViewModel: AuthViewModel = AuthViewModel()
     @ObservedObject  var authNavigation: AuthNavigation = AuthNavigation()
     
-    @ObservedObject var studentNavigation: StudentNavigation = StudentNavigation()
+   
    
     
     var body: some View {
@@ -45,16 +45,9 @@ struct SplashScreen: View {
                 
             }
         }else if authViewModel.token?.owner is TokenOwners.Student{
-        
-            NavigationStack(path: $studentNavigation.path){
-                BottomNavigationStudent()
-                    .environmentObject(studentNavigation)
-                    .navigationDestination(for: StudentDestination.self){
-                        destation in
-                        
-                    }
-                    
-            }
+    
+            BottomNavigationStudent()
+            
         }
     }
 }

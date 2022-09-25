@@ -10,7 +10,9 @@ import shared
 
 struct NewsCard: View {
     let user: User
-    let node: NewsNode
+    let title: String
+    let message: String
+    
     
     var body: some View {
         VStack(alignment: .leading){
@@ -23,10 +25,10 @@ struct NewsCard: View {
                     subtitle: user.summary
                 )
                 
-                Text(node.title)
+                Text(title)
                     .font(.headline)
                 
-                Text(node.message)
+                Text(message)
                     .font(.body)
                     
             }
@@ -39,7 +41,7 @@ struct NewsCard: View {
         .cornerRadius(20)
         .shadow(
             color: .primary,
-            radius: 10
+            radius: 5
         )
         
     }
@@ -58,7 +60,7 @@ struct NewsCard_Previews: PreviewProvider {
             summary: "Студент 3 курса б760",
             photo: "")
         
-        NewsCard(user: user, node: NewsNode(id: 13, from: user, date: 4.5, title: "Научно-методическая конференция 2023 г.", message: "Учебно-методический совет приглашаает принять участие в Международной научно-методической конфереции на базе ВСГУТУ в январе 2023 г. Письмо  прилагается", attachments: [])
-        )
+        NewsCard(user: user, title: "", message: "")
+        
     }
 }

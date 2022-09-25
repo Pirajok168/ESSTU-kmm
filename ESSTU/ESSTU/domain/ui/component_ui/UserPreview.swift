@@ -22,6 +22,7 @@ struct UserPreview: View {
                     PlaceHolder(abbreviation: abbreviation)
                 }
                 .frame(width: 42, height: 42)
+                .clipShape(Circle())
             }else{
                 PlaceHolder(abbreviation: abbreviation)
                     

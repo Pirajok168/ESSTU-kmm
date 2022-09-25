@@ -8,19 +8,29 @@
 import SwiftUI
 
 struct BottomNavigationStudent: View {
-    @EnvironmentObject var studentNavigation: StudentNavigation
+    @ObservedObject var studentNavigation: StudentNavigation
+    @ObservedObject var announcementViewModel: AnnouncementsViewModel
+    
+    init(){
+        studentNavigation = StudentNavigation()
+        announcementViewModel = AnnouncementsViewModel()
+        print("Qwerty")
+    }
     
     var body: some View {
-        TabView(selection: $studentNavigation.screen){
+        
+        TabView(){
             NewsScreen()
-                .tag(BottomBarScreen.news)
+                .environmentObject(announcementViewModel)
+            
                 .tabItem(){
                     Image(systemName: "homekit")
                     Text("Главная")
                 }
+               
             
             MessagesScreen()
-                .tag(BottomBarScreen.message)
+                
                 .tabItem{
                     Image(systemName: "message")
                     Text("Сообщения")
@@ -32,6 +42,6 @@ struct BottomNavigationStudent: View {
 struct BottomNavigationStudent_Previews: PreviewProvider {
     static var previews: some View {
         BottomNavigationStudent()
-            .environmentObject(StudentNavigation())
+        
     }
 }

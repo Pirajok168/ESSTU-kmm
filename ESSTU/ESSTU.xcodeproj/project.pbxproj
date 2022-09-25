@@ -22,6 +22,7 @@
 		2995772628E0086D0046C467 /* MessagesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2995772528E0086D0046C467 /* MessagesScreen.swift */; };
 		2995772928E010240046C467 /* NewsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2995772828E010240046C467 /* NewsCard.swift */; };
 		2995772E28E0144F0046C467 /* UserPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2995772D28E0144F0046C467 /* UserPreview.swift */; };
+		29DF83FE28E03D6000D758E2 /* AnnouncementsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DF83FD28E03D6000D758E2 /* AnnouncementsViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		2995772528E0086D0046C467 /* MessagesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesScreen.swift; sourceTree = "<group>"; };
 		2995772828E010240046C467 /* NewsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCard.swift; sourceTree = "<group>"; };
 		2995772D28E0144F0046C467 /* UserPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreview.swift; sourceTree = "<group>"; };
+		29DF83FD28E03D6000D758E2 /* AnnouncementsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementsViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +161,7 @@
 		2995772328E008380046C467 /* news */ = {
 			isa = PBXGroup;
 			children = (
+				2995773028E03CE00046C467 /* announcement_screen */,
 				297B9CEC28DF115400A11505 /* ui */,
 			);
 			path = news;
@@ -202,6 +205,22 @@
 				2995772D28E0144F0046C467 /* UserPreview.swift */,
 			);
 			path = component_ui;
+			sourceTree = "<group>";
+		};
+		2995773028E03CE00046C467 /* announcement_screen */ = {
+			isa = PBXGroup;
+			children = (
+				2995773128E03CFF0046C467 /* viewmodel */,
+			);
+			path = announcement_screen;
+			sourceTree = "<group>";
+		};
+		2995773128E03CFF0046C467 /* viewmodel */ = {
+			isa = PBXGroup;
+			children = (
+				29DF83FD28E03D6000D758E2 /* AnnouncementsViewModel.swift */,
+			);
+			path = viewmodel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -309,6 +328,7 @@
 				2995772628E0086D0046C467 /* MessagesScreen.swift in Sources */,
 				29287E4728D7373D00180DA7 /* PasswordScreen.swift in Sources */,
 				292C451B28D5E0D7005F176D /* ESSTUApp.swift in Sources */,
+				29DF83FE28E03D6000D758E2 /* AnnouncementsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
