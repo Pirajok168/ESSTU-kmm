@@ -24,13 +24,13 @@ struct SplashScreen: View {
                 VStack{
                     Image("logo_splash_screen")
                         .navigationDestination(for: AuthDestination.self){
-                            distation in
+                            destation in
                             
-                            if distation == AuthDestination.LoginScreen{
+                            if destation == AuthDestination.LoginScreen{
                                 LoginScreen()
                                     .environmentObject(authNavigation)
                                     .environmentObject(authViewModel)
-                            }else if distation == AuthDestination.PasswordScreen{
+                            }else if destation == AuthDestination.PasswordScreen{
                                 PasswordScreen()
                                     .environmentObject(authNavigation)
                                     .environmentObject(authViewModel)
@@ -47,8 +47,13 @@ struct SplashScreen: View {
         }else if authViewModel.token?.owner is TokenOwners.Student{
         
             NavigationStack(path: $studentNavigation.path){
-                NewsScreen()
-    
+                BottomNavigationStudent()
+                    .environmentObject(studentNavigation)
+                    .navigationDestination(for: StudentDestination.self){
+                        destation in
+                        
+                    }
+                    
             }
         }
     }

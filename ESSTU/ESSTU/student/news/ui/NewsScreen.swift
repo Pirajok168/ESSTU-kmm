@@ -9,7 +9,11 @@ import SwiftUI
 
 struct NewsScreen: View {
     var body: some View {
-        Text("Hello student! This is news")
+        ScrollView(){
+            
+        }
+        .navigationBarBackButtonHidden(true)
+       
     }
 }
 

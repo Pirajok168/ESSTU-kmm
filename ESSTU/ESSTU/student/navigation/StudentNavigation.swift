@@ -11,6 +11,13 @@ enum StudentDestination: Hashable{
     case NewsScreen
 }
 
+enum BottomBarScreen: Hashable{
+    case news
+    case message
+}
+
 class StudentNavigation: ObservableObject{
     @Published var path: [StudentDestination] = [ ]
+    
+    @Published var screen: BottomBarScreen = .news
 }
