@@ -29,11 +29,11 @@ struct UserPreview: View {
             }
             VStack(alignment: .leading){
                 Text(title)
-                    .font(.system(size: 14))
+                    .font(.system(size: 18))
                     .fontWeight(.medium)
                     .lineLimit(1)
                 Text(subtitle)
-                    .font(.system(size: 12))
+                    .font(.system(size: 16))
                     .lineLimit(1)
             }
             

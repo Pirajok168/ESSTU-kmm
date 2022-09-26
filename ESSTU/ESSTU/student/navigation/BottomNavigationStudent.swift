@@ -11,11 +11,13 @@ struct BottomNavigationStudent: View {
     @ObservedObject var studentNavigation: StudentNavigation
     @ObservedObject var announcementViewModel: AnnouncementsViewModel
     @ObservedObject var selectViewModel: SelectorViewModel
+    @ObservedObject var newsNavigation: NewsNavigation
     
     init(){
         studentNavigation = StudentNavigation()
         announcementViewModel = AnnouncementsViewModel()
         selectViewModel = SelectorViewModel()
+        newsNavigation = NewsNavigation()
     }
     
     var body: some View {
@@ -25,6 +27,7 @@ struct BottomNavigationStudent: View {
             NewsScreen()
                 .environmentObject(announcementViewModel)
                 .environmentObject(selectViewModel)
+                .environmentObject(newsNavigation)
                 .tabItem(){
                     Image(systemName: "homekit")
                     Text("Главная")
@@ -39,6 +42,8 @@ struct BottomNavigationStudent: View {
                     Text("Сообщения")
                 }
         }
+        
+        
         
         
         
