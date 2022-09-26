@@ -9,6 +9,7 @@ import Foundation
 
 enum StudentDestination: Hashable{
     case NewsScreen
+    case TestScreen
 }
 
 enum BottomBarScreen: Hashable{
@@ -20,4 +21,13 @@ class StudentNavigation: ObservableObject{
     @Published var path: [StudentDestination] = [ ]
     
     @Published var screen: BottomBarScreen = .news
+    
+    
+    func click(){
+        path.append(.TestScreen)
+    }
+    
+    func back(){
+        path.removeLast()
+    }
 }

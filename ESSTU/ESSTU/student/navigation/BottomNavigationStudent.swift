@@ -16,9 +16,9 @@ struct BottomNavigationStudent: View {
         announcementViewModel = AnnouncementsViewModel()
     }
     
-    var body: s ome View {
+    var body: some View {
         
-        NavigationStack{
+        NavigationStack(path: $studentNavigation.path){
             TabView(){
                 NewsScreen()
                     .environmentObject(announcementViewModel)
@@ -30,11 +30,15 @@ struct BottomNavigationStudent: View {
                    
                 
                 MessagesScreen()
-                    
+                    .environmentObject(studentNavigation)
                     .tabItem{
                         Image(systemName: "message")
                         Text("Сообщения")
                     }
+            }
+            .navigationDestination(for: StudentDestination.self){
+                destation in
+                
             }
         }
         

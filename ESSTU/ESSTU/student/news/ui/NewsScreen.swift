@@ -23,7 +23,8 @@ struct NewsScreen: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .padding(.horizontal)
-                .padding(.top)
+                .padding(.top
+                )
                 
                 ScrollView(.horizontal, showsIndicators: false){
 
