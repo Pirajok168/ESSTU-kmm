@@ -16,25 +16,28 @@ struct BottomNavigationStudent: View {
         announcementViewModel = AnnouncementsViewModel()
     }
     
-    var body: some View {
+    var body: s ome View {
         
-        TabView(){
-            NewsScreen()
-                .environmentObject(announcementViewModel)
-            
-                .tabItem(){
-                    Image(systemName: "homekit")
-                    Text("Главная")
-                }
-               
-            
-            MessagesScreen()
+        NavigationStack{
+            TabView(){
+                NewsScreen()
+                    .environmentObject(announcementViewModel)
                 
-                .tabItem{
-                    Image(systemName: "message")
-                    Text("Сообщения")
-                }
+                    .tabItem(){
+                        Image(systemName: "homekit")
+                        Text("Главная")
+                    }
+                   
+                
+                MessagesScreen()
+                    
+                    .tabItem{
+                        Image(systemName: "message")
+                        Text("Сообщения")
+                    }
+            }
         }
+        
     }
 }
 

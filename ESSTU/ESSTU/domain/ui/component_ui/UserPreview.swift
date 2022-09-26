@@ -15,7 +15,7 @@ struct UserPreview: View {
     var body: some View {
        
         HStack{
-            if url != nil{
+            if url != nil {
                 AsyncImage(url: URL(string: url!)) { image in
                     image.resizable()
                 } placeholder: {
@@ -23,9 +23,9 @@ struct UserPreview: View {
                 }
                 .frame(width: 42, height: 42)
                 .clipShape(Circle())
+                
             }else{
                 PlaceHolder(abbreviation: abbreviation)
-                    
             }
             VStack(alignment: .leading){
                 Text(title)
