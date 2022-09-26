@@ -15,6 +15,15 @@ enum StudentDestination: Hashable{
 enum BottomBarScreen: Hashable{
     case news
     case message
+    var title: String {
+        switch self {
+            case .news:
+            return "Главная ВСГУТУ"
+            case .message:
+            return "Мессенджер"
+            
+        }
+    }
 }
 
 class StudentNavigation: ObservableObject{

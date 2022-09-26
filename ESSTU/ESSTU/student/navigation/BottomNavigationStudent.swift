@@ -10,37 +10,37 @@ import SwiftUI
 struct BottomNavigationStudent: View {
     @ObservedObject var studentNavigation: StudentNavigation
     @ObservedObject var announcementViewModel: AnnouncementsViewModel
+    @ObservedObject var selectViewModel: SelectorViewModel
     
     init(){
         studentNavigation = StudentNavigation()
         announcementViewModel = AnnouncementsViewModel()
+        selectViewModel = SelectorViewModel()
     }
     
     var body: some View {
         
-        NavigationStack(path: $studentNavigation.path){
-            TabView(){
-                NewsScreen()
-                    .environmentObject(announcementViewModel)
-                
-                    .tabItem(){
-                        Image(systemName: "homekit")
-                        Text("Главная")
-                    }
-                   
-                
-                MessagesScreen()
-                    .environmentObject(studentNavigation)
-                    .tabItem{
-                        Image(systemName: "message")
-                        Text("Сообщения")
-                    }
-            }
-            .navigationDestination(for: StudentDestination.self){
-                destation in
-                
-            }
+        
+        TabView(){
+            NewsScreen()
+                .environmentObject(announcementViewModel)
+                .environmentObject(selectViewModel)
+                .tabItem(){
+                    Image(systemName: "homekit")
+                    Text("Главная")
+                }
+            
+            
+            
+            MessagesScreen()
+                .environmentObject(studentNavigation)
+                .tabItem{
+                    Image(systemName: "message")
+                    Text("Сообщения")
+                }
         }
+        
+        
         
     }
 }
