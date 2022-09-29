@@ -8,15 +8,11 @@
 import SwiftUI
 
 struct MessagesScreen: View {
-    @EnvironmentObject var studentNavigation: StudentNavigation
+   
     var body: some View {
         
         
-        Button{
-            studentNavigation.click()
-        }label: {
-            Text("Test")
-        }
+       Text("qwe")
     }
 }
 

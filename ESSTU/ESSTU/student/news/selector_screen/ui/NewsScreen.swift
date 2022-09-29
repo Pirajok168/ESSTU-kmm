@@ -10,10 +10,9 @@ import shared
 
 struct NewsScreen: View {
     
-    @EnvironmentObject var announcementViewModel: AnnouncementsViewModel
-    @EnvironmentObject var selectViewModel: SelectorViewModel
-    
-    @EnvironmentObject var newsNavigation: NewsNavigation 
+    @ObservedObject var announcementViewModel: AnnouncementsViewModel = AnnouncementsViewModel()
+    @ObservedObject var selectViewModel: SelectorViewModel = SelectorViewModel()
+    @ObservedObject var newsNavigation: NewsNavigation = NewsNavigation()
     
     
     var body: some View {
@@ -90,14 +89,7 @@ struct SelectorNewsScreen: View {
 
             }
 
-            .navigationDestination(for: NewsDestination.self){
-                    destination in
-                if destination == NewsDestination.deatilNews {
-                    DetailNewsScreen()
-                        .environmentObject(selectViewModel)
-                        .environmentObject(newsNavigation)
-                }
-            }
+            
 
         }
 

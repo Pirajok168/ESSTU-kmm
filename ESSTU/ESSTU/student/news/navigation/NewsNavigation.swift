@@ -12,6 +12,7 @@ enum NewsDestination: Hashable{
 }
 
 
+
 class NewsNavigation: ObservableObject{
     @Published var path: [NewsDestination] = []
     
