@@ -36,11 +36,9 @@ struct SplashScreen: View {
                                     .environmentObject(authViewModel)
                             }
                         }
-                    Button{
-                        authNavigation.toLoginScreen()
-                    } label:{
-                        Text("To Login")
-                    }
+                }
+                .onAppear{
+                    authViewModel.onRestoreSession()
                 }
                 
             }

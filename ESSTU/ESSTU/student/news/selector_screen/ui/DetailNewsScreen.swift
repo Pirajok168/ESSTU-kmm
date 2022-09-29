@@ -24,12 +24,13 @@ struct DetailNewsScreen: View {
             Text(selectViewModel.node?.title ?? "")
                 .font(.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .fontWeight(.medium)
                 .padding(.horizontal)
             
             Text(selectViewModel.node?.message ?? "")
                 .font(.body)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.vertical, 5)
+                .padding(.vertical, 2)
                 .padding(.horizontal)
         }
         
