@@ -1,6 +1,7 @@
 package ru.esstu.auth.datasources.di
 
 
+import com.russhwolf.settings.Settings
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
@@ -35,7 +36,7 @@ internal val authProvidesModule = DI.Module(
         }
 
         bind<TokenDSManagerImpl>() with  singleton { TokenDSManagerImpl(
-            authDataStore = getSettings().settings.create()
+            authDataStore = Settings()
         ) }
     }
 )

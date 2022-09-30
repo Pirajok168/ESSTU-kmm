@@ -36,7 +36,7 @@ fun NavGraphBuilder.authNavGraph(
             val context = LocalContext.current
 
             Splashscreen(
-             /*   onNavToAuth = {
+                /*onNavToAuth = {
                     navController.navigate(AuthRoutes.LoginChooseScreen.navigate()) {
                         popUpTo(AuthRoutes.Splashscreen.popTo()) {
                             inclusive = true

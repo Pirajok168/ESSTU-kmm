@@ -25,6 +25,7 @@
 		29DF840228E1757500D758E2 /* DetailNewsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DF840128E1757500D758E2 /* DetailNewsScreen.swift */; };
 		29DF840628E1761900D758E2 /* SelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DF840528E1761900D758E2 /* SelectorViewModel.swift */; };
 		29DF840928E1CE1400D758E2 /* NewsNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DF840828E1CE1400D758E2 /* NewsNavigation.swift */; };
+		29DF840B28E6D3AC00D758E2 /* ImageNewsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DF840A28E6D3AC00D758E2 /* ImageNewsCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		29DF840128E1757500D758E2 /* DetailNewsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailNewsScreen.swift; sourceTree = "<group>"; };
 		29DF840528E1761900D758E2 /* SelectorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorViewModel.swift; sourceTree = "<group>"; };
 		29DF840828E1CE1400D758E2 /* NewsNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsNavigation.swift; sourceTree = "<group>"; };
+		29DF840A28E6D3AC00D758E2 /* ImageNewsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageNewsCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +186,7 @@
 			isa = PBXGroup;
 			children = (
 				2995772828E010240046C467 /* NewsCard.swift */,
+				29DF840A28E6D3AC00D758E2 /* ImageNewsCard.swift */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -348,6 +351,7 @@
 				2995772928E010240046C467 /* NewsCard.swift in Sources */,
 				2995772228E006E20046C467 /* BottomNavigationStudent.swift in Sources */,
 				29287E4928D73C6100180DA7 /* SplashScreen.swift in Sources */,
+				29DF840B28E6D3AC00D758E2 /* ImageNewsCard.swift in Sources */,
 				297B9CEB28DF110D00A11505 /* StudentNavigation.swift in Sources */,
 				297B9CEE28DF116600A11505 /* NewsScreen.swift in Sources */,
 				29287E4B28D73C9200180DA7 /* AuthViewModel.swift in Sources */,

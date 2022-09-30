@@ -4,6 +4,7 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -14,6 +15,7 @@ import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
 import org.kodein.di.singleton
+import ru.esstu.debugBuild
 import ru.esstu.domain.utill.wrappers.ResponseError
 
 @Serializable
@@ -31,7 +33,7 @@ internal val domainApi = DI.Module(
             val engine = instance<HttpEngineFactory>().createEngine()
             HttpClient(engine) {
 
-
+                debugBuild()
                 install(ContentNegotiation) {
                     json(Json {
                         prettyPrint = true
@@ -39,6 +41,11 @@ internal val domainApi = DI.Module(
                         ignoreUnknownKeys = true
                     })
                 }
+
+               /* install(Logging){
+                    logger = Logger.DEFAULT
+                    level = LogLevel.HEADERS
+                }*/
 
                 install(HttpTimeout) {
                     requestTimeoutMillis = 3000

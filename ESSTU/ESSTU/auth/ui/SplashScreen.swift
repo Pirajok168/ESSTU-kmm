@@ -36,10 +36,12 @@ struct SplashScreen: View {
                                     .environmentObject(authViewModel)
                             }
                         }
+                    Button(action: {authNavigation.toLoginScreen()}, label: {Text("авторизироваться")})
                 }
                 .onAppear{
                     authViewModel.onRestoreSession()
                 }
+                
                 
             }
         }else if authViewModel.token?.owner is TokenOwners.Student{

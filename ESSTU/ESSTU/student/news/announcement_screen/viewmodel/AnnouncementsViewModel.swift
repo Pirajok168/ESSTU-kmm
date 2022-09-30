@@ -27,19 +27,23 @@ class AnnouncementsViewModel:  ObservableObject, AnnouncementsState{
 
     private var repo: IAnnouncementsRepository = ESSTUSdk().announcementsModule.repo
     
-    
+   
    
 }
 
 extension AnnouncementsViewModel{
     func getAnnouncementsPage(offset: Int, limit: Int){
-        repo.getAnnouncementsPage(offset: Int32(offset), limit: Int32(limit)){ response, error in
-            
-            if response is ResponseSuccess{
-                self.pages = response?.data as! [NewsNode]
-               
-            }else if response is ResponseError_{
-                
+        DispatchQueue.main.async { [self] in
+            self.repo.getAnnouncementsPage(offset: Int32(offset), limit: Int32(limit)){
+                response, error in
+                DispatchQueue.main.async {
+                    if response is ResponseSuccess{
+                        self.pages = response?.data as! [NewsNode]
+                        
+                    }else if response is ResponseError_{
+                        print(response?.error)
+                    }
+                }
             }
         }
     }

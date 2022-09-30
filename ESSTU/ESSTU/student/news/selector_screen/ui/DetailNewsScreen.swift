@@ -32,6 +32,7 @@ struct DetailNewsScreen: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.vertical, 2)
                 .padding(.horizontal)
+                
         }
         
         
@@ -53,7 +54,9 @@ struct DetailNewsScreen: View {
         }
         
         
+        
     }
+
 }
 
 struct DetailNewsScreen_Previews: PreviewProvider {

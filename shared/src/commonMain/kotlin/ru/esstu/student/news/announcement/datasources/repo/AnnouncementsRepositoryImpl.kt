@@ -1,7 +1,12 @@
 package ru.esstu.student.news.announcement.datasources.repo
 
+import io.github.aakira.napier.Napier
+import io.ktor.client.plugins.*
+import io.ktor.utils.io.errors.*
 import ru.esstu.auth.datasources.repo.IAuthRepository
+import ru.esstu.domain.ktor.CustomResponseException
 import ru.esstu.domain.utill.wrappers.Response
+import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.news.announcement.datasources.api.NewsApi
 import ru.esstu.student.news.announcement.datasources.toAnnouncements
 import ru.esstu.student.news.announcement.datasources.toNewsWithAttachments
@@ -19,18 +24,35 @@ class AnnouncementsRepositoryImpl(
         if (page.isNotEmpty())
            return Response.Success(page)
 
-        val response = auth.provideToken { type, token ->
-            newsApi.getAnnouncements("$token", offset, limit).toAnnouncements().asReversed()
+        val response = auth.provideToken { token ->
+            Napier.e("Мы перез запросом - ${token.access}")
+            newsApi.getAnnouncements(token.access, offset, limit).toAnnouncements().asReversed()
+
         }
 
-        return when (response) {
-            is Response.Error -> response
-            is Response.Success -> {
-                newsDao.setNewsWithAttachments(response.data.map { it.toNewsWithAttachments() })
-                response
+        Napier.e("Запрос выполнен")
+
+        return try {
+            when (response) {
+                is Response.Error -> response
+                is Response.Success -> {
+                    Napier.e(response.data.get(0).toString())
+                    newsDao.setNewsWithAttachments(response.data.map { it.toNewsWithAttachments() })
+                    response
+                }
             }
+        } catch (e: IOException) {
+            Response.Error(ResponseError(message = e.message))
+        } catch (e: CustomResponseException){
+            Response.Error(ResponseError(message = e.message, code = e.response.status.value))
+        } catch (e: ClientRequestException){
+            Response.Error(ResponseError(message = e.message))
+        } catch (e: HttpRequestTimeoutException){
+            Response.Error(ResponseError(message = e.message))
         }
+
     }
+
 
     override suspend fun clearCache() {
         newsDao.clearAll()

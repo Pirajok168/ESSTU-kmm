@@ -26,7 +26,7 @@ kotlin {
         val commonMain by getting{
             dependencies{
                 //Coroutines
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4-native-mt")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
                 //Serialization
                 //implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.0")
@@ -36,12 +36,13 @@ kotlin {
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+                implementation("io.ktor:ktor-client-logging:$ktorVersion")
 
                 // DI Kodein
                 implementation("org.kodein.di:kodein-di:7.12.0")
 
                 // key-value data https://github.com/russhwolf/multiplatform-settings
-                implementation("com.russhwolf:multiplatform-settings:0.9")
+                implementation("com.russhwolf:multiplatform-settings-no-arg:0.9")
 
                 //Time https://docs.korge.org/klock/
                 implementation ("com.soywiz.korlibs.klock:klock:3.0.1")
@@ -49,7 +50,7 @@ kotlin {
                 //SqlDelight
                 implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")
 
-
+                implementation("io.github.aakira:napier:2.6.1")
             }
         }
         val commonTest by getting {

@@ -15,8 +15,6 @@ struct BottomNavigationStudent: View {
     init(){
         studentNavigation = StudentNavigation()
         
-        
-      
     }
     
     var body: some View {
