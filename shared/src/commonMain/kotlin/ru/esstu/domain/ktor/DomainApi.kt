@@ -26,6 +26,8 @@ class CustomResponseException(response: HttpResponse, message: String) :
     override val message: String = message
 }
 
+
+
 internal val domainApi = DI.Module(
     name =  "DomainApi",
     init = {

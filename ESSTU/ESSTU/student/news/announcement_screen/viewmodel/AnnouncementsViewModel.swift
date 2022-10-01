@@ -24,10 +24,13 @@ class AnnouncementsViewModel:  ObservableObject, AnnouncementsState{
     var pageLoadingError: ResponseError? = nil
     var isEndReached: Bool = false
     var pageSize: Int = 10
+    private(set) var error: ResponseError?
 
-    private var repo: IAnnouncementsRepository = ESSTUSdk().announcementsModule.repo
+    private var repo: IAnnouncementsRepository
     
-   
+    init(repo: IAnnouncementsRepository){
+        self.repo = repo
+    }
    
 }
 
@@ -41,7 +44,7 @@ extension AnnouncementsViewModel{
                         self.pages = response?.data as! [NewsNode]
                         
                     }else if response is ResponseError_{
-                        print(response?.error)
+                        self.error = response?.error
                     }
                 }
             }

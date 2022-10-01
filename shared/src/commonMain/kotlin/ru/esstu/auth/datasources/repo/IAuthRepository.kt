@@ -6,7 +6,7 @@ import ru.esstu.domain.utill.wrappers.Response
 
 
 interface IAuthRepository {
-   // val logoutFlow: Flow<Token?>
+    val logoutFlow: Flow<Token?>
     suspend fun refreshToken(): Response<Token>
     suspend fun auth(login: String, Password: String): Response<Token>
     suspend fun entrantAuth(login: String, Password: String): Response<Token>

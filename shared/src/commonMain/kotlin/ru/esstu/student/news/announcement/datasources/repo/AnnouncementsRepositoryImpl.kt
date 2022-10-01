@@ -25,12 +25,12 @@ class AnnouncementsRepositoryImpl(
            return Response.Success(page)
 
         val response = auth.provideToken { token ->
-            Napier.e("Мы перез запросом - ${token.access}")
+
             newsApi.getAnnouncements(token.access, offset, limit).toAnnouncements().asReversed()
 
         }
 
-        Napier.e("Запрос выполнен")
+
 
         return try {
             when (response) {

@@ -11,10 +11,16 @@ import shared
 
 
 struct SplashScreen: View {
-    @ObservedObject  var authViewModel: AuthViewModel = AuthViewModel()
-    @ObservedObject  var authNavigation: AuthNavigation = AuthNavigation()
+    @ObservedObject  var authViewModel: AuthViewModel
+    @ObservedObject  var authNavigation: AuthNavigation
     
-   
+    private var sdkESSTU:ESSTUSdk
+    
+    init(sdkESSTU: ESSTUSdk){
+        self.sdkESSTU = sdkESSTU
+        authViewModel = AuthViewModel(repo: sdkESSTU.repoAuth.authModule)
+        authNavigation = AuthNavigation()
+    }
    
     
     var body: some View {
@@ -38,23 +44,24 @@ struct SplashScreen: View {
                         }
                     Button(action: {authNavigation.toLoginScreen()}, label: {Text("авторизироваться")})
                 }
-                .onAppear{
-                    authViewModel.onRestoreSession()
-                }
-                
-                
+            
+            }
+            .onAppear{
+                authViewModel.onRestoreSession()
             }
         }else if authViewModel.token?.owner is TokenOwners.Student{
     
-            BottomNavigationStudent()
-            
+            BottomNavigationStudent(sdkESSTU: self.sdkESSTU)
+        
         }
+            
     }
+    
 }
 
 /// Description
 struct SplashScreen_Previews: PreviewProvider {
     static var previews: some View {
-        SplashScreen()
+        SplashScreen(sdkESSTU: ESSTUSdk())
     }
 }

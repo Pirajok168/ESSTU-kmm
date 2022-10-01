@@ -33,12 +33,10 @@ fun SetupNavGraph(
     logoutViewModel: LogoutViewModel = viewModel()
 ) {
     LaunchedEffect(Unit) {
-/*
         logoutViewModel.logoutFlow.collectLatest {
            navController.backQueue.clear()
            navController.navigate(AuthRoutes.LoginScreen.passRoute())
         }
-*/
     }
     NavHost(navController = navController, startDestination = AuthRoutes.Root.startDest()) {
         authNavGraph(

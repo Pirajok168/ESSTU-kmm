@@ -21,15 +21,15 @@ class AuthRepositoryImpl constructor(
     private val portalApi: AuthApi,
     private val cache: ITokenDSManager,
 ) : IAuthRepository {
-   // private val logoutChannel: Channel<Token?> = Channel()
-   // override val logoutFlow = logoutChannel.receiveAsFlow()
+    private val logoutChannel: Channel<Token?> = Channel()
+    override val logoutFlow = logoutChannel.receiveAsFlow()
 
     override suspend fun refreshToken(): Response<Token> {
         return try {
             val token = cache.getToken()?.toToken()
 
             if (token == null) {
-               // goToLoginScreen(null)
+                goToLoginScreen(null)
                 return Response.Error(ResponseError(code = 401, message = "unauthorised"))
             }
 
@@ -58,6 +58,7 @@ class AuthRepositoryImpl constructor(
 
 
     override suspend fun auth(login: String, Password: String): Response<Token> {
+
         return try {
             val response = portalApi.auth(login, Password)
             val newToken = response.toToken()
@@ -65,10 +66,12 @@ class AuthRepositoryImpl constructor(
 
 
             val tok = newToken.toTokenPair()
-            Napier.e(tok.toString(), tag = "Auth")
+
 
             cache.setToken(tok)
+
             Response.Success(newToken)
+
         } catch (e: IOException) {
             Response.Error(ResponseError(message = e.message))
         } catch (e: CustomResponseException){
@@ -84,7 +87,7 @@ class AuthRepositoryImpl constructor(
         TODO("Not yet implemented")
     }
 
-   // private suspend fun goToLoginScreen(token: Token? = null) = logoutChannel.send(token)
+    private suspend fun goToLoginScreen(token: Token? = null) = logoutChannel.send(token)
 
     override suspend fun <T> provideToken(call: suspend (type: String, token: String) -> T): Response<T> =
         provideToken { token -> call(token.type, token.access) }
@@ -95,7 +98,7 @@ class AuthRepositoryImpl constructor(
             return try {
                 Response.Success(call(token))
             } catch (e1: IOException) {
-                Napier.e("ОШИБКААААААААА")
+
                 e1.printStackTrace()
                 Response.Error(ResponseError(message = e1.message))
             }
@@ -103,10 +106,10 @@ class AuthRepositoryImpl constructor(
 
         val token = cache.getToken()?.toToken()
 
-        Napier.e(token.toString(), tag = "UpdateNews")
+
 
         if (token == null) {
-           // goToLoginScreen(null)
+            goToLoginScreen(null)
             return Response.Error(ResponseError(message = "unauthorized"))
         }
 
@@ -120,7 +123,7 @@ class AuthRepositoryImpl constructor(
                         is Response.Error -> {
                             val newErrorCode = newToken.error.code
                             if (newErrorCode == 401){
-                                //goToLoginScreen(token)
+                                goToLoginScreen(token)
                             }
 
                             result

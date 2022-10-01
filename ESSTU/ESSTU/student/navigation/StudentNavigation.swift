@@ -27,7 +27,7 @@ enum BottomBarScreen: Hashable{
 }
 
 class StudentNavigation: ObservableObject{
-    @Published var path: [StudentDestination] = [ ]
+    @Published var path: [StudentDestination] = []
     
     @Published var screen: BottomBarScreen = .news
     

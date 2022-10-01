@@ -45,8 +45,11 @@ class AuthViewModel: ObservableObject, AuthState{
     @Published private(set) var token: Token?
     private(set) var error: ResponseError?
     
-    private let repo: IAuthRepository = ESSTUSdk().repoAuth.authModule
+    private let repo: IAuthRepository
     
+    init(repo: IAuthRepository){
+        self.repo = repo
+    }
    
 }
 

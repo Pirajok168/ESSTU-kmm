@@ -10,40 +10,43 @@ import shared
 
 struct NewsScreen: View {
     
-    @ObservedObject var announcementViewModel: AnnouncementsViewModel = AnnouncementsViewModel()
-    //@ObservedObject var selectViewModel: SelectorViewModel = SelectorViewModel()
-    //@ObservedObject var newsNavigation: NewsNavigation = NewsNavigation()
+    @ObservedObject var announcementViewModel: AnnouncementsViewModel
+    @ObservedObject var selectViewModel: SelectorViewModel = SelectorViewModel()
+    @ObservedObject var newsNavigation: NewsNavigation = NewsNavigation()
+    private var sdkESSTU: ESSTUSdk
     
+    init(sdkESSTU: ESSTUSdk){
+        self.sdkESSTU = sdkESSTU
+        announcementViewModel = AnnouncementsViewModel(repo: self.sdkESSTU.announcementsModule.repo)
+    }
     
     var body: some View {
-        NavigationStack(){
+        NavigationStack(path: $newsNavigation.path){
             
+           
             
-            Text("123")
-            .onAppear{
-                announcementViewModel.getAnnouncementsPage(offset: 0, limit: 10)
-            }
+        
             
                 
-//            SelectorNewsScreen()
-//                .environmentObject(selectViewModel)
-//                .environmentObject(newsNavigation)
-//                .environmentObject(announcementViewModel)
-//                .navigationDestination(for: NewsDestination.self){
-//
-//                    destination in
-//                    if destination == NewsDestination.deatilNews {
-//                            DetailNewsScreen()
-//                                .environmentObject(selectViewModel)
-//                                .environmentObject(newsNavigation)
-//
-//                    }
-//                }
-//
-//                .navigationTitle("Главная ВСГУТУ")
-//                .onAppear{
-//                    announcementViewModel.getAnnouncementsPage(offset: 0, limit: 10)
-//                }
+            SelectorNewsScreen()
+                .environmentObject(selectViewModel)
+                .environmentObject(newsNavigation)
+                .environmentObject(announcementViewModel)
+                .navigationDestination(for: NewsDestination.self){
+
+                    destination in
+                    if destination == NewsDestination.deatilNews {
+                            DetailNewsScreen()
+                                .environmentObject(selectViewModel)
+                                .environmentObject(newsNavigation)
+
+                    }
+                }
+
+                .navigationTitle("Главная ВСГУТУ")
+                .onAppear{
+                    announcementViewModel.getAnnouncementsPage(offset: 0, limit: 10)
+                }
         }
         
         
@@ -59,7 +62,7 @@ struct SelectorNewsScreen: View {
     @EnvironmentObject var newsNavigation: NewsNavigation
     
     var body: some View {
-        VStack{
+        ScrollView(.vertical, showsIndicators: false){
             HStack(){
                 Image("recent_news")
                 Text("Недавние объявления")
@@ -86,11 +89,19 @@ struct SelectorNewsScreen: View {
                     
                     
                     ForEach(announcementViewModel.pages, id: \.self){ node in
-                        NewsCard(user: node.from, title: node.title, message: node.message)
-                            .onTapGesture {
-                                selectViewModel.passNode(title: "Объявление", node: node)
-                                newsNavigation.toDetailNews()
-                            }
+                        
+                        let preview = node.attachments.first(where: {att in att.isImage})
+                        
+                        if preview == nil{
+                            NewsCard(user: node.from, title: node.title, message: node.message)
+                                .onTapGesture {
+                                    selectViewModel.passNode(title: "Объявление", node: node)
+                                    newsNavigation.toDetailNews()
+                                }
+                        }else{
+                            ImageNewsCard(user: node.from, title: node.title, preview: preview?.closestUri ?? "")
+                        }
+                        
                        
                         
                     }
@@ -112,7 +123,7 @@ struct SelectorNewsScreen: View {
 
 struct NewsScreen_Previews: PreviewProvider {
     static var previews: some View {
-        NewsScreen()
-            .environmentObject(AnnouncementsViewModel())
+        NewsScreen(sdkESSTU: ESSTUSdk())
+           
     }
 }

@@ -6,14 +6,17 @@
 //
 
 import SwiftUI
+import shared
 
 struct BottomNavigationStudent: View {
     @ObservedObject var studentNavigation: StudentNavigation
-   
     
+    private var sdkESSTU: ESSTUSdk
     
-    init(){
+    init(sdkESSTU: ESSTUSdk){
+        self.sdkESSTU = sdkESSTU
         studentNavigation = StudentNavigation()
+        
         
     }
     
@@ -21,8 +24,8 @@ struct BottomNavigationStudent: View {
         
         
         TabView(){
-            NewsScreen()
-                
+            NewsScreen(sdkESSTU: self.sdkESSTU)
+              
                 
                
                 .tabItem(){
@@ -48,7 +51,7 @@ struct BottomNavigationStudent: View {
 
 struct BottomNavigationStudent_Previews: PreviewProvider {
     static var previews: some View {
-        BottomNavigationStudent()
+        BottomNavigationStudent(sdkESSTU: ESSTUSdk())
         
     }
 }

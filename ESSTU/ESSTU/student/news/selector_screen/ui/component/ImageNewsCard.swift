@@ -18,6 +18,7 @@ struct ImageNewsCard: View {
         
         AsyncImage(url: URL(string: preview)){ image in
             image.resizable()
+              
         } placeholder: {
             ProgressView()
         }
