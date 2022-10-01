@@ -102,6 +102,10 @@ struct SelectorNewsScreen: View {
                                 }
                         }else{
                             ImageNewsCard(user: node.from, title: node.title, preview: preview?.closestUri ?? "")
+                                .onTapGesture {
+                                    selectViewModel.passNode(title: "Объявление", node: node)
+                                    newsNavigation.toDetailNews()
+                                }
                         }
                         
                        

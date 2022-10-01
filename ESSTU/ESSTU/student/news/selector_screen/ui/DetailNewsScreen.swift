@@ -12,7 +12,7 @@ struct DetailNewsScreen: View {
     @EnvironmentObject var selectViewModel: SelectorViewModel
     @EnvironmentObject var newsNavigation: NewsNavigation
     
-    
+    @State var lineLimit = 2
     var body: some View {
         
         ScrollView(.vertical){
@@ -27,11 +27,24 @@ struct DetailNewsScreen: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fontWeight(.medium)
                 .padding(.horizontal)
+                .lineLimit(lineLimit)
+                .onTapGesture {
+                    withAnimation{
+                        if lineLimit == 2{
+                            lineLimit = Int.max
+                        }else{
+                            lineLimit = 2
+                        }
+                    }
+                    
+                    
+                }
             
             ForEach(selectViewModel.node?.attachments ?? [], id: \.self){
                     att in
                 Button(action: {
-                    
+                
+                    selectViewModel.openningLink(urlString: att.fileUri)
                 }, label: {
                     FilePreview(title: "\(att.name ?? "").\(att.ext ?? "")")
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -58,7 +71,7 @@ struct DetailNewsScreen: View {
             
            
         }
-        
+       
         
         
         .navigationTitle(selectViewModel.title)

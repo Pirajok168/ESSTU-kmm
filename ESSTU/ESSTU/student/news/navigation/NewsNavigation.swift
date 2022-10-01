@@ -9,6 +9,8 @@ import Foundation
 
 enum NewsDestination: Hashable{
     case deatilNews
+    
+    
 }
 
 
@@ -16,6 +18,7 @@ enum NewsDestination: Hashable{
 class NewsNavigation: ObservableObject{
     @Published var path: [NewsDestination] = []
     
+   
     
     func toDetailNews(){
         path.append(NewsDestination.deatilNews)

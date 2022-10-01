@@ -22,7 +22,7 @@ struct Test: View {
             }
             Text("123")
             Text("123")
-            Text("123")
+            
         }
     }
 }
