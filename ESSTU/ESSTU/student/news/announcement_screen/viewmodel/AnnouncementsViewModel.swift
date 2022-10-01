@@ -24,7 +24,7 @@ class AnnouncementsViewModel:  ObservableObject, AnnouncementsState{
     var pageLoadingError: ResponseError? = nil
     var isEndReached: Bool = false
     var pageSize: Int = 10
-    private(set) var error: ResponseError?
+    @Published  private(set) var error: ResponseError?
 
     private var repo: IAnnouncementsRepository
     

@@ -26,6 +26,8 @@
 		29DF840628E1761900D758E2 /* SelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DF840528E1761900D758E2 /* SelectorViewModel.swift */; };
 		29DF840928E1CE1400D758E2 /* NewsNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DF840828E1CE1400D758E2 /* NewsNavigation.swift */; };
 		29DF840B28E6D3AC00D758E2 /* ImageNewsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DF840A28E6D3AC00D758E2 /* ImageNewsCard.swift */; };
+		29EA3E6828E7EE61002BCE51 /* FilePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EA3E6728E7EE61002BCE51 /* FilePreview.swift */; };
+		29EA3E6A28E7FAA6002BCE51 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EA3E6928E7FAA6002BCE51 /* Test.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +51,8 @@
 		29DF840528E1761900D758E2 /* SelectorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorViewModel.swift; sourceTree = "<group>"; };
 		29DF840828E1CE1400D758E2 /* NewsNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsNavigation.swift; sourceTree = "<group>"; };
 		29DF840A28E6D3AC00D758E2 /* ImageNewsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageNewsCard.swift; sourceTree = "<group>"; };
+		29EA3E6728E7EE61002BCE51 /* FilePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePreview.swift; sourceTree = "<group>"; };
+		29EA3E6928E7FAA6002BCE51 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +99,7 @@
 				292C451A28D5E0D7005F176D /* ESSTUApp.swift */,
 				292C451E28D5E0D8005F176D /* Assets.xcassets */,
 				292C452028D5E0D8005F176D /* Preview Content */,
+				29EA3E6928E7FAA6002BCE51 /* Test.swift */,
 			);
 			path = ESSTU;
 			sourceTree = "<group>";
@@ -211,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				2995772D28E0144F0046C467 /* UserPreview.swift */,
+				29EA3E6728E7EE61002BCE51 /* FilePreview.swift */,
 			);
 			path = component_ui;
 			sourceTree = "<group>";
@@ -350,7 +356,9 @@
 			files = (
 				2995772928E010240046C467 /* NewsCard.swift in Sources */,
 				2995772228E006E20046C467 /* BottomNavigationStudent.swift in Sources */,
+				29EA3E6828E7EE61002BCE51 /* FilePreview.swift in Sources */,
 				29287E4928D73C6100180DA7 /* SplashScreen.swift in Sources */,
+				29EA3E6A28E7FAA6002BCE51 /* Test.swift in Sources */,
 				29DF840B28E6D3AC00D758E2 /* ImageNewsCard.swift in Sources */,
 				297B9CEB28DF110D00A11505 /* StudentNavigation.swift in Sources */,
 				297B9CEE28DF116600A11505 /* NewsScreen.swift in Sources */,

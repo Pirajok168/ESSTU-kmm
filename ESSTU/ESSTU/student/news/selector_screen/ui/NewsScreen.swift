@@ -13,6 +13,7 @@ struct NewsScreen: View {
     @ObservedObject var announcementViewModel: AnnouncementsViewModel
     @ObservedObject var selectViewModel: SelectorViewModel = SelectorViewModel()
     @ObservedObject var newsNavigation: NewsNavigation = NewsNavigation()
+    
     private var sdkESSTU: ESSTUSdk
     
     init(sdkESSTU: ESSTUSdk){
@@ -23,7 +24,7 @@ struct NewsScreen: View {
     var body: some View {
         NavigationStack(path: $newsNavigation.path){
             
-           
+            
             
         
             
@@ -47,6 +48,7 @@ struct NewsScreen: View {
                 .onAppear{
                     announcementViewModel.getAnnouncementsPage(offset: 0, limit: 10)
                 }
+                
         }
         
         
