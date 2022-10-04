@@ -8,6 +8,27 @@
 import Foundation
 import shared
 
+typealias Collector = Kotlinx_coroutines_coreFlowCollector
+
+class Observer: Collector{
+    func emit(value: Any?) async throws {
+        callback(value)
+    }
+
+    
+    func emit(value: Any?, completionHandler: @escaping (Error?) -> Void) {
+        callback(value)
+        completionHandler( nil)
+    }
+    
+    let callback:(Any?) -> Void
+    init(callback: @escaping(Any?) -> Void){
+        self.callback = callback
+    }
+    
+   
+}
+
 protocol AnnouncementsState{
     var pages: [NewsNode] {get }
     var isPagesLoading: Bool {get }
@@ -27,9 +48,24 @@ class AnnouncementsViewModel:  ObservableObject, AnnouncementsState{
     @Published  private(set) var error: ResponseError?
 
     private var repo: IAnnouncementsRepository
+    private var update: IAnnouncementsUpdateRepository
     
-    init(repo: IAnnouncementsRepository){
+   
+    
+   
+    
+    private lazy var collector: Observer = {
+        let collector = Observer {value in
+           
+            self.getAnnouncementsPage(offset: 0, limit: 10)
+        }
+        return collector
+    }()
+    
+    init(repo: IAnnouncementsRepository, update: IAnnouncementsUpdateRepository){
         self.repo = repo
+        self.update = update
+        update.getUpdates().collect(collector: self.collector, completionHandler: {_ in})
     }
    
 }

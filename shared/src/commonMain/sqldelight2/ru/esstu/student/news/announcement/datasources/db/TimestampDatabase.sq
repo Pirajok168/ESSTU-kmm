@@ -1,5 +1,5 @@
 CREATE TABLE TimestampEntityDatabase (
-    appUserId TEXT NOT NULL,
+     appUserId TEXT NOT NULL PRIMARY KEY,
     timestamp INTEGER NOT NULL
 );
 

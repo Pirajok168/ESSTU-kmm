@@ -9,6 +9,8 @@ internal class DatabaseTimestamp(databaseTimestampFactory: SqlDriver): Timestamp
     private val database = TimestampDatabase(databaseTimestampFactory)
     private val dbQuery = database.timestampDatabaseQueries
     override suspend fun getTimestamp(appUserId: String): TimestampEntity? {
+        val a =  dbQuery.getTimestamp(appUserId, ::map).executeAsList()
+        a
         return dbQuery.getTimestamp(appUserId, ::map).executeAsOneOrNull()
     }
 

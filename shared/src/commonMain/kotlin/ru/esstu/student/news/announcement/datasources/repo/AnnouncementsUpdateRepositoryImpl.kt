@@ -1,6 +1,7 @@
 package ru.esstu.student.news.announcement.datasources.repo
 
 import com.soywiz.klock.DateTime
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import ru.esstu.auth.entities.TokenOwners
@@ -29,7 +30,7 @@ class AnnouncementsUpdateRepositoryImpl(
                 val result = auth.provideToken { type, tokenVal ->
                     api.getUpdates("$tokenVal", latestTimestamp).toAnnouncements().asReversed()
                 }
-
+                Napier.e("ЗАПРОС УСПЕШЕН - ${result.data}")
                 when (result) {
                     is Response.Error -> {
                         emit(Response.Error(result.error))

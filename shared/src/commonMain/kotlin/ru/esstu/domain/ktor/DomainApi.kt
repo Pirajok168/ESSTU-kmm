@@ -44,10 +44,10 @@ internal val domainApi = DI.Module(
                     })
                 }
 
-               /* install(Logging){
+                install(Logging){
                     logger = Logger.DEFAULT
                     level = LogLevel.HEADERS
-                }*/
+                }
 
                 install(HttpTimeout) {
                     requestTimeoutMillis = 3000

@@ -18,7 +18,7 @@ struct NewsScreen: View {
     
     init(sdkESSTU: ESSTUSdk){
         self.sdkESSTU = sdkESSTU
-        announcementViewModel = AnnouncementsViewModel(repo: self.sdkESSTU.announcementsModule.repo)
+        announcementViewModel = AnnouncementsViewModel(repo: self.sdkESSTU.announcementsModule.repo, update:  self.sdkESSTU.announcementsModule.updates)
     }
     
     var body: some View {
