@@ -39,6 +39,24 @@ struct DetailNewsScreen: View {
                     
                     
                 }
+            let imgArr = selectViewModel.node?.attachments.filter{att in att.isImage} ?? []
+            
+            let columns = countColums(imgArr.count)
+            
+            
+            LazyVGrid(columns: columns){
+                ForEach(imgArr, id: \.self) { object in
+                    AsyncImage(url:  URL(string: object.closestUri), content: {
+                        img in
+                        img
+                        .resizable()
+                        .aspectRatio( contentMode: .fit)
+                      
+                    }, placeholder: {
+                        ProgressView()
+                    })
+                }
+            }
             
             ForEach(selectViewModel.node?.attachments ?? [], id: \.self){
                     att in
@@ -95,6 +113,16 @@ struct DetailNewsScreen: View {
         
     }
 
+}
+
+func countColums(_ size: Int) -> [GridItem]{
+    if size == 0{
+        return []
+    }else if size == 1{
+        return [GridItem(.flexible())]
+    }else{
+        return [GridItem(.flexible()), GridItem(.flexible())]
+    }
 }
 
 struct DetailNewsScreen_Previews: PreviewProvider {
