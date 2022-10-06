@@ -50,7 +50,7 @@ internal val domainApi = DI.Module(
                 }
 
                 install(HttpTimeout) {
-                    requestTimeoutMillis = 3000
+                    requestTimeoutMillis = 90000
                 }
 
                 HttpResponseValidator {

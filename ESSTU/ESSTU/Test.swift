@@ -12,18 +12,16 @@ struct Test: View {
     1,2,3,5,6,7,8,
     ]
     var body: some View {
-        VStack{
-            Text("123")
-            Text("123")
-            Text("123")
-            Text("123")
-            Form{
-              Text("1")
-            }
-            Text("123")
-            Text("123")
+        
+        Text("Гюля лучшая работница ШашлыкoFF")
+            .font(.system(size: 50))
+            .lineSpacing(90)
+            .multilineTextAlignment(.center)
+            .bold()
+            .padding()
+        
+       
             
-        }
     }
 }
 

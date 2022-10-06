@@ -5,7 +5,7 @@ import kotlin.collections.List;
 
 
 CREATE TABLE NewsEntityDatabase (
-    id INTEGER NOT NULL,
+    id INTEGER NOT NULL PRIMARY KEY,
     fromUser TEXT AS UserEntity NOT NULL,
     date INTEGER NOT NULL,
     title TEXT NOT NULL,
