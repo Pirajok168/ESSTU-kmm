@@ -26,29 +26,29 @@ struct NewsScreen: View {
             
             
             
-        
             
-                
+            
+            
             SelectorNewsScreen()
                 .environmentObject(selectViewModel)
                 .environmentObject(newsNavigation)
                 .environmentObject(announcementViewModel)
                 .navigationDestination(for: NewsDestination.self){
-
+                    
                     destination in
                     if destination == NewsDestination.deatilNews {
-                            DetailNewsScreen()
-                                .environmentObject(selectViewModel)
-                                .environmentObject(newsNavigation)
-
+                        DetailNewsScreen()
+                            .environmentObject(selectViewModel)
+                            .environmentObject(newsNavigation)
+                        
                     }
                 }
-
+            
                 .navigationTitle("Главная ВСГУТУ")
                 .onAppear{
                     announcementViewModel.getAnnouncementsPage(offset: 0, limit: 10)
                 }
-                
+            
         }
         
         
@@ -70,7 +70,7 @@ struct SelectorNewsScreen: View {
                 Text("Недавние объявления")
                     .font(.title2)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                   
+                
             }
             .padding(.horizontal)
             .padding(.top)
@@ -108,7 +108,7 @@ struct SelectorNewsScreen: View {
                                 }
                         }
                         
-                       
+                        
                         
                     }
                     
@@ -123,13 +123,13 @@ struct SelectorNewsScreen: View {
         
         
         
-       
+        
     }
 }
 
 struct NewsScreen_Previews: PreviewProvider {
     static var previews: some View {
         NewsScreen(sdkESSTU: ESSTUSdk())
-           
+        
     }
 }

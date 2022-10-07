@@ -81,7 +81,7 @@ extension AuthViewModel: AuthEvent{
             DispatchQueue.main.async {
                 if response is ResponseSuccess{
                     self.token = response?.data
-                    
+                
                 }else if response is ResponseError_{
                     self.error = response?.error
                     self.isError = true

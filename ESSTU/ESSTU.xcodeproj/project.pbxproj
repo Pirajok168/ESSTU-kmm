@@ -28,6 +28,7 @@
 		29DF840B28E6D3AC00D758E2 /* ImageNewsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DF840A28E6D3AC00D758E2 /* ImageNewsCard.swift */; };
 		29EA3E6828E7EE61002BCE51 /* FilePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EA3E6728E7EE61002BCE51 /* FilePreview.swift */; };
 		29EA3E6A28E7FAA6002BCE51 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EA3E6928E7FAA6002BCE51 /* Test.swift */; };
+		29EA3E6D28EF11BB002BCE51 /* MessageElem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EA3E6C28EF11BB002BCE51 /* MessageElem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		29DF840A28E6D3AC00D758E2 /* ImageNewsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageNewsCard.swift; sourceTree = "<group>"; };
 		29EA3E6728E7EE61002BCE51 /* FilePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePreview.swift; sourceTree = "<group>"; };
 		29EA3E6928E7FAA6002BCE51 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
+		29EA3E6C28EF11BB002BCE51 /* MessageElem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageElem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +184,7 @@
 		2995772428E008510046C467 /* messages */ = {
 			isa = PBXGroup;
 			children = (
+				29EA3E6B28EF119B002BCE51 /* componentUi */,
 				2995772528E0086D0046C467 /* MessagesScreen.swift */,
 			);
 			path = messages;
@@ -260,6 +263,14 @@
 				29DF840828E1CE1400D758E2 /* NewsNavigation.swift */,
 			);
 			path = navigation;
+			sourceTree = "<group>";
+		};
+		29EA3E6B28EF119B002BCE51 /* componentUi */ = {
+			isa = PBXGroup;
+			children = (
+				29EA3E6C28EF11BB002BCE51 /* MessageElem.swift */,
+			);
+			path = componentUi;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -358,6 +369,7 @@
 				2995772228E006E20046C467 /* BottomNavigationStudent.swift in Sources */,
 				29EA3E6828E7EE61002BCE51 /* FilePreview.swift in Sources */,
 				29287E4928D73C6100180DA7 /* SplashScreen.swift in Sources */,
+				29EA3E6D28EF11BB002BCE51 /* MessageElem.swift in Sources */,
 				29EA3E6A28E7FAA6002BCE51 /* Test.swift in Sources */,
 				29DF840B28E6D3AC00D758E2 /* ImageNewsCard.swift in Sources */,
 				297B9CEB28DF110D00A11505 /* StudentNavigation.swift in Sources */,
