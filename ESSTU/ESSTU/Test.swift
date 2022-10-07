@@ -8,19 +8,39 @@
 import SwiftUI
 
 struct Test: View {
-    let arr = [
-    1,2,3,5,6,7,8,
-    ]
+    @State var chech = false
+    @Namespace var namespace
+    @State private var selectedTab: Int = 0
     var body: some View {
         
-        Text("Гюля лучшая работница ШашлыкoFF")
-            .font(.system(size: 50))
-            .lineSpacing(90)
-            .multilineTextAlignment(.center)
-            .bold()
-            .padding()
-        
        
+        ScrollView(.horizontal){
+            HStack{
+                ForEach(1...10, id: \.self) { count in
+                    VStack{
+                        Button(action: {
+                            withAnimation{
+                                selectedTab = count
+                            }
+                            
+                        }, label: {
+                            Text("qweqe")
+                        })
+                       
+                        
+                        if count == selectedTab{
+                            Text("1")
+                                .matchedGeometryEffect(id: "1", in: namespace)
+                        }
+                    }
+                    
+                    
+                }
+            }
+            
+        }
+
+
             
     }
 }

@@ -30,7 +30,7 @@ struct MessagesScreen: View {
                
                 
                 ScrollView(.horizontal, showsIndicators: false){
-                    LazyHStack(spacing: 20){
+                    HStack(){
                         ForEach(0..<10, id: \.self){
                             index in
                             Button(action: {
@@ -40,19 +40,23 @@ struct MessagesScreen: View {
                                 
                             }, label: {
                                 Text("Element \(index)")
+                                    .overlay(
+                                        alignment: .bottom, content: {
+                                            if selectedTab == index{
+                                                Rectangle()
+                                                .frame(height: 2)
+                                    
+                                                .matchedGeometryEffect(id: "title", in: namespace, isSource: true)
+                                                .foregroundColor(.blue)
+                                               
+                                            }
+                                          
+                                    })
+                                
+                                
                             })
                             
-                            .overlay(
-                                alignment: .bottom, content: {
-                                    if(selectedTab == index){
-                                        Rectangle()
-                                        .frame(height: 2)
-                                        .matchedGeometryEffect(id: "title", in: namespace)
-                                        .foregroundColor(.blue)
-                                       
-                                    }
-                                  
-                            })
+                            
                             
                             .buttonStyle(.plain)
                             
