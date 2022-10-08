@@ -19,13 +19,13 @@ struct UserPreview: View {
                 AsyncImage(url: URL(string: url!)) { image in
                     image.resizable()
                 } placeholder: {
-                    PlaceHolder(abbreviation: abbreviation)
+                    PlaceHolderImage(abbreviation: abbreviation, size: 42)
                 }
                 .frame(width: 42, height: 42)
                 .clipShape(Circle())
                 
             }else{
-                PlaceHolder(abbreviation: abbreviation)
+                PlaceHolderImage(abbreviation: abbreviation, size: 42)
             }
             VStack(alignment: .leading){
                 Text(title)
@@ -43,15 +43,7 @@ struct UserPreview: View {
     }
 }
 
-struct PlaceHolder: View{
-    let abbreviation: String
-    var body: some View {
-        Text(abbreviation.uppercased())
-            .frame(width: 42, height: 42)
-            .background(.cyan)
-            .clipShape(Circle())
-    }
-}
+
 
 struct UserPreview_Previews: PreviewProvider {
     static var previews: some View {

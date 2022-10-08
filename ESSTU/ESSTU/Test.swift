@@ -8,33 +8,41 @@
 import SwiftUI
 
 struct Test: View {
-    @State var chech = false
+    @State private var selectedTab: TypeMessages = .dialogs
+    
     @Namespace var namespace
-    @State private var selectedTab: Int = 0
+    
+    
+    
     var body: some View {
-        ScrollView (showsIndicators: false){
-            ForEach(0 ..< 500, id: \.self) { item in
-               
-                HStack {
-                    Spacer()
-                    Text("First Tab")
-                        .frame(height: 50)
-                    Spacer()
+        
+        TabView{
+            NavigationStack{
+                ScrollView{
+                    
+                    ScrollView(.horizontal, showsIndicators: false){
+                        
+                    }
+                    .frame(height: 30)
+                    switch(selectedTab) {
+                    case .dialogs: MessagesScreen()
+        
+                    case .discussions: MessagesScreen()
+                    case .support: MessagesScreen()
+                    default:
+                        Text("2")
+                    }
                     
                 }
-                .onTapGesture {
-                    withAnimation(.spring()){
-                        selectedTab = item
-                    }
-                }
-                .background(
-                    selectedTab == item ? .red : .white
-                )
-              
                 
-                
+                .navigationTitle("Мессенджер")
+            }
+           
+            .tabItem{
+                Text("qwe")
             }
         }
+        
 
 
             

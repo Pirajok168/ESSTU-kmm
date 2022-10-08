@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2922EB4728F16D3D00F73B21 /* AvatarPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2922EB4628F16D3D00F73B21 /* AvatarPreview.swift */; };
+		2922EB4928F16FA400F73B21 /* PlaceHolderImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2922EB4828F16FA400F73B21 /* PlaceHolderImage.swift */; };
+		2922EB4B28F1741600F73B21 /* MessagesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2922EB4A28F1741600F73B21 /* MessagesScreen.swift */; };
 		29287E4728D7373D00180DA7 /* PasswordScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29287E4628D7373D00180DA7 /* PasswordScreen.swift */; };
 		29287E4928D73C6100180DA7 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29287E4828D73C6100180DA7 /* SplashScreen.swift */; };
 		29287E4B28D73C9200180DA7 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29287E4A28D73C9200180DA7 /* AuthViewModel.swift */; };
@@ -18,7 +21,7 @@
 		297B9CEB28DF110D00A11505 /* StudentNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297B9CEA28DF110D00A11505 /* StudentNavigation.swift */; };
 		297B9CEE28DF116600A11505 /* NewsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297B9CED28DF116600A11505 /* NewsScreen.swift */; };
 		2995772228E006E20046C467 /* BottomNavigationStudent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2995772128E006E20046C467 /* BottomNavigationStudent.swift */; };
-		2995772628E0086D0046C467 /* MessagesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2995772528E0086D0046C467 /* MessagesScreen.swift */; };
+		2995772628E0086D0046C467 /* SelectorMessageScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2995772528E0086D0046C467 /* SelectorMessageScreen.swift */; };
 		2995772928E010240046C467 /* NewsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2995772828E010240046C467 /* NewsCard.swift */; };
 		2995772E28E0144F0046C467 /* UserPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2995772D28E0144F0046C467 /* UserPreview.swift */; };
 		29DF83FE28E03D6000D758E2 /* AnnouncementsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DF83FD28E03D6000D758E2 /* AnnouncementsViewModel.swift */; };
@@ -32,6 +35,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2922EB4628F16D3D00F73B21 /* AvatarPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarPreview.swift; sourceTree = "<group>"; };
+		2922EB4828F16FA400F73B21 /* PlaceHolderImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceHolderImage.swift; sourceTree = "<group>"; };
+		2922EB4A28F1741600F73B21 /* MessagesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesScreen.swift; sourceTree = "<group>"; };
 		29287E4628D7373D00180DA7 /* PasswordScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordScreen.swift; sourceTree = "<group>"; };
 		29287E4828D73C6100180DA7 /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
 		29287E4A28D73C9200180DA7 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
@@ -44,7 +50,7 @@
 		297B9CEA28DF110D00A11505 /* StudentNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentNavigation.swift; sourceTree = "<group>"; };
 		297B9CED28DF116600A11505 /* NewsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsScreen.swift; sourceTree = "<group>"; };
 		2995772128E006E20046C467 /* BottomNavigationStudent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNavigationStudent.swift; sourceTree = "<group>"; };
-		2995772528E0086D0046C467 /* MessagesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesScreen.swift; sourceTree = "<group>"; };
+		2995772528E0086D0046C467 /* SelectorMessageScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorMessageScreen.swift; sourceTree = "<group>"; };
 		2995772828E010240046C467 /* NewsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCard.swift; sourceTree = "<group>"; };
 		2995772D28E0144F0046C467 /* UserPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreview.swift; sourceTree = "<group>"; };
 		29DF83FD28E03D6000D758E2 /* AnnouncementsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementsViewModel.swift; sourceTree = "<group>"; };
@@ -185,7 +191,8 @@
 			isa = PBXGroup;
 			children = (
 				29EA3E6B28EF119B002BCE51 /* componentUi */,
-				2995772528E0086D0046C467 /* MessagesScreen.swift */,
+				2995772528E0086D0046C467 /* SelectorMessageScreen.swift */,
+				2922EB4A28F1741600F73B21 /* MessagesScreen.swift */,
 			);
 			path = messages;
 			sourceTree = "<group>";
@@ -220,6 +227,8 @@
 			children = (
 				2995772D28E0144F0046C467 /* UserPreview.swift */,
 				29EA3E6728E7EE61002BCE51 /* FilePreview.swift */,
+				2922EB4628F16D3D00F73B21 /* AvatarPreview.swift */,
+				2922EB4828F16FA400F73B21 /* PlaceHolderImage.swift */,
 			);
 			path = component_ui;
 			sourceTree = "<group>";
@@ -367,8 +376,10 @@
 			files = (
 				2995772928E010240046C467 /* NewsCard.swift in Sources */,
 				2995772228E006E20046C467 /* BottomNavigationStudent.swift in Sources */,
+				2922EB4B28F1741600F73B21 /* MessagesScreen.swift in Sources */,
 				29EA3E6828E7EE61002BCE51 /* FilePreview.swift in Sources */,
 				29287E4928D73C6100180DA7 /* SplashScreen.swift in Sources */,
+				2922EB4728F16D3D00F73B21 /* AvatarPreview.swift in Sources */,
 				29EA3E6D28EF11BB002BCE51 /* MessageElem.swift in Sources */,
 				29EA3E6A28E7FAA6002BCE51 /* Test.swift in Sources */,
 				29DF840B28E6D3AC00D758E2 /* ImageNewsCard.swift in Sources */,
@@ -379,7 +390,8 @@
 				292C452C28D5F502005F176D /* LoginScreen.swift in Sources */,
 				297B9CC528DF044000A11505 /* AuthNavigation.swift in Sources */,
 				2995772E28E0144F0046C467 /* UserPreview.swift in Sources */,
-				2995772628E0086D0046C467 /* MessagesScreen.swift in Sources */,
+				2922EB4928F16FA400F73B21 /* PlaceHolderImage.swift in Sources */,
+				2995772628E0086D0046C467 /* SelectorMessageScreen.swift in Sources */,
 				29DF840928E1CE1400D758E2 /* NewsNavigation.swift in Sources */,
 				29287E4728D7373D00180DA7 /* PasswordScreen.swift in Sources */,
 				292C451B28D5E0D7005F176D /* ESSTUApp.swift in Sources */,
