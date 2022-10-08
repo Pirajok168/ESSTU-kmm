@@ -7,76 +7,99 @@
 
 import SwiftUI
 
-enum Flavor: String, CaseIterable, Identifiable {
-    case chocolate, vanilla, strawberry
-    var id: Self { self }
-}
 
-enum Topping: String, CaseIterable, Identifiable {
-    case nuts, cookies, blueberries
+
+enum TypeMessages: String, CaseIterable, Identifiable{
+    case dialogs, discussions, support, appeals
+    var title: String{
+        switch self{
+        case.dialogs:
+            return "Диалоги"
+        case.discussions:
+            return "Обсуждения"
+        case.support:
+            return "Тех. поддержка"
+        case.appeals:
+            return "Обращения"
+        }
+    }
     var id: Self { self }
 }
 
 struct MessagesScreen: View {
-    @State private var selectedTab: Int = 0
+    @State private var selectedTab: TypeMessages = .dialogs
+    
     @Namespace var namespace
     
-    @Namespace var page
+
     
     var body: some View {
         NavigationStack{
-            ScrollView(.vertical, showsIndicators: false){
-                
-               
+            VStack{
                 
                 ScrollView(.horizontal, showsIndicators: false){
+                    
                     HStack(){
-                        ForEach(0..<10, id: \.self){
+                        ForEach(TypeMessages.allCases, id: \TypeMessages.self){
                             index in
-                            Button(action: {
-                                withAnimation{
-                                    selectedTab = index
-                                }
-                                
-                            }, label: {
-                                Text("Element \(index)")
-                                    .overlay(
-                                        alignment: .bottom, content: {
-                                            if selectedTab == index{
-                                                Rectangle()
-                                                .frame(height: 2)
+                            
+                            VStack(){
+                                Button(action: {
+                                    withAnimation{
+                                        selectedTab = index.id
+                                    }
                                     
-                                                .matchedGeometryEffect(id: "title", in: namespace, isSource: true)
-                                                .foregroundColor(.blue)
-                                               
-                                            }
-                                          
-                                    })
+                                }, label: {
+                                    Text(index.title)
+                                    
+                                    
+                                })
                                 
                                 
-                            })
+                                if selectedTab == index{
+                                    Rectangle()
+                                    
+                                        .frame(height: 2)
+                                    
+                                        .matchedGeometryEffect(id: "title", in: namespace, isSource: true)
+                                        .foregroundColor(.blue)
+                                    
+                                    
+                                }
+                                Spacer()
+                            }
+                            .frame(height: 50)
+                            .padding(.horizontal)
                             
-                            
-                            
-                            .buttonStyle(.plain)
                             
                         }
+                        .buttonStyle(.plain)
+                        
+                        
                     }
                     
+                    
+                    
+                    
                 }
-                .padding()
-              
                 
-               
+                .padding(.top)
+                .padding(.horizontal)
+                .padding(.bottom, 5)
+                
+                
+                
+                
+                
                 Spacer()
                 switch(selectedTab) {
-                case 0: Text("1")
-                case 1: Text("2")
-                case 2: Text("3")
+                case .dialogs: Text("1")
+                case .discussions: Text("2")
+                case .support: Text("3")
                 default:
                     Text("2")
                 }
-                    
+                
             }
             .navigationTitle("Мессенджер")
         }

@@ -12,32 +12,28 @@ struct Test: View {
     @Namespace var namespace
     @State private var selectedTab: Int = 0
     var body: some View {
-        
-       
-        ScrollView(.horizontal){
-            HStack{
-                ForEach(1...10, id: \.self) { count in
-                    VStack{
-                        Button(action: {
-                            withAnimation{
-                                selectedTab = count
-                            }
-                            
-                        }, label: {
-                            Text("qweqe")
-                        })
-                       
-                        
-                        if count == selectedTab{
-                            Text("1")
-                                .matchedGeometryEffect(id: "1", in: namespace)
-                        }
-                    }
-                    
+        ScrollView (showsIndicators: false){
+            ForEach(0 ..< 500, id: \.self) { item in
+               
+                HStack {
+                    Spacer()
+                    Text("First Tab")
+                        .frame(height: 50)
+                    Spacer()
                     
                 }
+                .onTapGesture {
+                    withAnimation(.spring()){
+                        selectedTab = item
+                    }
+                }
+                .background(
+                    selectedTab == item ? .red : .white
+                )
+              
+                
+                
             }
-            
         }
 
 
