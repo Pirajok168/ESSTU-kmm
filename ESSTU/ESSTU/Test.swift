@@ -16,32 +16,8 @@ struct Test: View {
     
     var body: some View {
         
-        TabView{
-            NavigationStack{
-                ScrollView{
-                    
-                    ScrollView(.horizontal, showsIndicators: false){
-                        
-                    }
-                    .frame(height: 30)
-                    switch(selectedTab) {
-                    case .dialogs: MessagesScreen()
-        
-                    case .discussions: MessagesScreen()
-                    case .support: MessagesScreen()
-                    default:
-                        Text("2")
-                    }
-                    
-                }
-                
-                .navigationTitle("Мессенджер")
-            }
-           
-            .tabItem{
-                Text("qwe")
-            }
-        }
+        Image(systemName: "trash.fill")
+            .foregroundColor(.red)
         
 
 
