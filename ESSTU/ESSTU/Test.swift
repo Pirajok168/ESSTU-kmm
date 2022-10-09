@@ -12,18 +12,24 @@ struct Test: View {
     
     @Namespace var namespace
     
+    @State private var searchValue: String = ""
     
+    let colors: [Color] = [.red, .green, .blue]
     
     var body: some View {
         
-        Image(systemName: "trash.fill")
-            .foregroundColor(.red)
-        
-
-
+        VStack {
             
+           
+           
+            
+        }
+      
     }
+
 }
+
+
 
 struct Test_Previews: PreviewProvider {
     static var previews: some View {

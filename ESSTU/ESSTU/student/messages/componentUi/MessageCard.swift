@@ -35,6 +35,8 @@ struct MessageCard: View {
                 
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+          
+           
            
             
         }else{
