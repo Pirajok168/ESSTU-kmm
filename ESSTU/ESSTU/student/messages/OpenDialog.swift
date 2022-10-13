@@ -12,9 +12,22 @@ import SwiftUI
 struct OpenDialog: View {
   
     @State private var searchValue: String = ""
+    @State private var position: CGSize = CGSize.zero
     var body: some View {
+        
         VStack {
-            
+            HStack{
+                Button {
+                   
+                } label: {
+                    Image(systemName: "arrow.left")
+                }
+                .padding(.trailing)
+                UserPreview(url: "", abbreviation: "ED", title: "Еремин Данила Александрович", subtitle: "Студент 3 курса группы Б760",  45)
+              
+            }
+            .padding()
+            .frame(height: 50)
             ScrollViewReader{
                 scroll in
                 
@@ -27,7 +40,7 @@ struct OpenDialog: View {
                     if forMe == true{
                         MessageCard(forMe: forMe)
                             .scaleEffect(x: 1, y: -1, anchor: .center)
-                            
+                        
                         
                             .id(message)
                             .listRowSeparator(.hidden)
@@ -35,8 +48,6 @@ struct OpenDialog: View {
                     }else{
                         MessageCard(forMe: forMe, true)
                             .scaleEffect(x: 1, y: -1, anchor: .center)
-
-                        
                             .id(message)
                             .listRowSeparator(.hidden)
                     }
@@ -56,18 +67,25 @@ struct OpenDialog: View {
                 
             }
             .padding()
+            
         }
         
         
         
         
-        
+    
         
     }
 }
 
 struct OpenDialog_Previews: PreviewProvider {
     static var previews: some View {
-        OpenDialog()
+       
+            OpenDialog()
+                
+       
+        
+        
+
     }
 }

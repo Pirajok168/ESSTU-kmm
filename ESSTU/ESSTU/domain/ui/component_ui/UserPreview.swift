@@ -12,6 +12,15 @@ struct UserPreview: View {
     let abbreviation: String
     let title: String
     let subtitle: String
+    let size: CGFloat
+    
+    init(url: String?, abbreviation: String, title: String, subtitle: String, _ size: CGFloat = 42) {
+        self.url = url
+        self.abbreviation = abbreviation
+        self.title = title
+        self.subtitle = subtitle
+        self.size = size
+    }
     var body: some View {
        
         HStack{
@@ -19,13 +28,13 @@ struct UserPreview: View {
                 AsyncImage(url: URL(string: url!)) { image in
                     image.resizable()
                 } placeholder: {
-                    PlaceHolderImage(abbreviation: abbreviation, size: 42)
+                    PlaceHolderImage(abbreviation: abbreviation, size: size)
                 }
-                .frame(width: 42, height: 42)
+                .frame(width: size, height: size)
                 .clipShape(Circle())
                 
             }else{
-                PlaceHolderImage(abbreviation: abbreviation, size: 42)
+                PlaceHolderImage(abbreviation: abbreviation, size: size)
             }
             VStack(alignment: .leading){
                 Text(title)

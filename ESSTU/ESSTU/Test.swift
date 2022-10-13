@@ -8,22 +8,15 @@
 import SwiftUI
 
 struct Test: View {
-    @State private var selectedTab: TypeMessages = .dialogs
-    
-    @Namespace var namespace
-    
-    @State private var searchValue: String = ""
-    
-    let colors: [Color] = [.red, .green, .blue]
+    @State var text = ""
     
     var body: some View {
-        
-        VStack {
-            
-           
-           
-            
+        NavigationView {
+                    
+            Text( "123")
         }
+        .searchable(text: $text, placement:.navigationBarDrawer)
+       
       
     }
 
