@@ -4,6 +4,7 @@ import org.kodein.di.DI
 import org.kodein.di.DirectDI
 import org.kodein.di.direct
 import ru.esstu.domain.featureModuleDomain
+import ru.esstu.student.messaging.featureModuleMessaging
 import ru.esstu.student.news.featureModuleNews
 
 import kotlin.native.concurrent.ThreadLocal
@@ -22,7 +23,8 @@ object ESSTUSdk {
         val direct = DI {
             importAll(
                 featureModuleDomain,
-                featureModuleNews
+                featureModuleNews,
+                featureModuleMessaging
             )
         }.direct
 

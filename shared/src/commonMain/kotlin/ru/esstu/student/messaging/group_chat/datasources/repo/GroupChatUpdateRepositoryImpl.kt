@@ -14,7 +14,7 @@ class GroupChatUpdateRepositoryImpl constructor(
     private val auth: IAuthRepository,
     private val updateApi: GroupChatUpdateApi,
     private val chatApi: GroupChatApi
-) : IDialogChatUpdateRepository {
+) : IGroupChatUpdateRepository {
     override fun collectUpdates(convId: Int, lastMessageId: Long) = flow {
         var latestMessageId = lastMessageId
         while (true) {
