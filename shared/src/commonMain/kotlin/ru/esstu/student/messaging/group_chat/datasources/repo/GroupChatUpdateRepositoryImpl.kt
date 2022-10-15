@@ -1,16 +1,16 @@
-package ru.esstu.android.student.messaging.group_chat.datasources.repo
+package ru.esstu.student.messaging.group_chat.datasources.repo
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
-import ru.esstu.android.auth.datasources.repo.IAuthRepository
-import ru.esstu.android.domain.util.wrappers.Response
-import ru.esstu.android.student.messaging.entities.DeliveryStatus
-import ru.esstu.android.student.messaging.group_chat.datasources.api.GroupChatApi
-import ru.esstu.android.student.messaging.group_chat.datasources.api.GroupChatUpdateApi
-import ru.esstu.android.student.messaging.group_chat.datasources.toMessages
-import javax.inject.Inject
+import ru.esstu.auth.datasources.repo.IAuthRepository
+import ru.esstu.domain.utill.wrappers.Response
+import ru.esstu.student.messaging.entities.DeliveryStatus
+import ru.esstu.student.messaging.group_chat.datasources.api.GroupChatApi
+import ru.esstu.student.messaging.group_chat.datasources.api.GroupChatUpdateApi
+import ru.esstu.student.messaging.group_chat.datasources.toMessages
 
-class GroupChatUpdateRepositoryImpl @Inject constructor(
+
+class GroupChatUpdateRepositoryImpl constructor(
     private val auth: IAuthRepository,
     private val updateApi: GroupChatUpdateApi,
     private val chatApi: GroupChatApi

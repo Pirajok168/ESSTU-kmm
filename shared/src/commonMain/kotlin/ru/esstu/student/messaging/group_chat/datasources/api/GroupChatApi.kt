@@ -1,6 +1,7 @@
 package ru.esstu.student.messaging.group_chat.datasources.api
 
 
+import io.ktor.client.request.forms.*
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.chat_message_response.ChatMessageResponse
@@ -28,7 +29,7 @@ interface GroupChatApi {
         userId: String,
     ): UserResponse
 
-    @POST("/lk/api/v2/messenger/readHistory")
+
     suspend fun readMessages(
        authToken: String,
         body: ReadRequest
@@ -64,16 +65,16 @@ interface GroupChatApi {
 
 
     suspend fun sendMessageWithAttachments(
-         authToken: String,
-         files: List<MultipartBody.Part>,
-         requestSendMessage: ChatMessageRequestBody
+        authToken: String,
+        files: List<MultiPartFormDataContent>,
+        requestSendMessage: ChatMessageRequestBody
     ): ChatMessageResponse
 
 
     suspend fun sendAttachments(
-       authToken: String,
-       files: List<MultipartBody.Part>,
-       requestSendMessage: ChatRequestBody
+        authToken: String,
+        files: List<MultiPartFormDataContent>,
+        requestSendMessage: ChatRequestBody
     ): ChatMessageResponse
     //endregion
 }

@@ -1,8 +1,10 @@
 package ru.esstu.student.messaging.group_chat.datasources.repo
 
 
+import io.ktor.client.request.forms.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okio.Path.Companion.toPath
 
 import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.entities.TokenOwners
@@ -16,7 +18,6 @@ import ru.esstu.student.messaging.entities.Attachment
 import ru.esstu.student.messaging.entities.Message
 import ru.esstu.student.messaging.group_chat.datasources.*
 import ru.esstu.student.messaging.group_chat.datasources.api.GroupChatApi
-import ru.esstu.student.messaging.group_chat.datasources.api.request.ReadRequest
 import ru.esstu.student.messaging.group_chat.entities.CachedFile
 import ru.esstu.student.messaging.group_chat.entities.Conversation
 import ru.esstu.student.messaging.group_chat.entities.NewUserMessage
@@ -32,26 +33,26 @@ class GroupChatRepositoryImpl  constructor(
     private val groupChatApi: GroupChatApi,
 ) : IGroupChatRepository {
 
-    private val headerDao = groupChatDatabase.headerDao()
+   // private val headerDao = groupChatDatabase.headerDao()
 
     override suspend fun getHeader(id: Int): Flow<FlowResponse<Conversation>> = flow {
         auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Error("unsupported user type")
             emit(FlowResponse.Loading())
 
-            val cachedHeader = headerDao.getConversationWithParticipants(appUserId = appUserId, id = id)?.toConversation()
-            if (cachedHeader != null)
-                emit(FlowResponse.Success(cachedHeader))
+            //val cachedHeader = headerDao.getConversationWithParticipants(appUserId = appUserId, id = id)?.toConversation()
+           // if (cachedHeader != null)
+           //     emit(FlowResponse.Success(cachedHeader))
 
-            when (val response = auth.provideToken { type, access -> groupChatApi.getConversation("$type $access", id.toString()) }) {
+            when (val response = auth.provideToken { type, access -> groupChatApi.getConversation("$access", id.toString()) }) {
                 is Response.Error -> emit(FlowResponse.Error(response.error))
                 is Response.Success -> {
                     val remoteHeader = response.data.toConversation()
                     if (remoteHeader == null)
                         emit(FlowResponse.Error(ResponseError(message = "Cast Exception")))
                     else {
-                        headerDao.setConversationWithParticipants(remoteHeader.toConversationWithParticipantsEntity(appUserId))
-                        if (remoteHeader != cachedHeader)
+                       // headerDao.setConversationWithParticipants(remoteHeader.toConversationWithParticipantsEntity(appUserId))
+                       // if (remoteHeader != cachedHeader)
                             emit(FlowResponse.Success(remoteHeader))
                     }
                 }
@@ -60,10 +61,10 @@ class GroupChatRepositoryImpl  constructor(
         }
     }
 
-    private val cacheDao = groupChatDatabase.historyCacheDao()
+    //private val cacheDao = groupChatDatabase.historyCacheDao()
 
     override suspend fun getPage(convId: Int, limit: Int, offset: Int): Response<List<Message>> {
-        val cached = auth.provideToken { token ->
+        /*val cached = auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Error("unsupported user type")
 
             cacheDao.getMessageHistory(
@@ -72,20 +73,20 @@ class GroupChatRepositoryImpl  constructor(
                 conversationId = convId,
                 appUserId = appUserId
             ).map { it.toMessage() }
-        }
+        }*/
 
-        if (cached.data != null)
-            return Response.Success(cached.data!!)
+       // if (cached.data != null)
+          //  return Response.Success(cached.data!!)
 
         val remotePage = auth.provideToken { type, token ->
-            val rawPage = groupChatApi.getHistory("$type $token", convId.toString(), offset, limit)
+            val rawPage = groupChatApi.getHistory("$token", convId.toString(), offset, limit)
 
             rawPage.toMessages(
                 provideReplies = { indices ->
-                    groupChatApi.pickMessages("$type $token", indices.joinToString())
+                    groupChatApi.pickMessages("$token", indices.joinToString())
                 },
                 provideUsers = { indices ->
-                    groupChatApi.pickUsers("$type $token", indices.joinToString())
+                    groupChatApi.pickUsers("$token", indices.joinToString())
                 }
             )
         }
@@ -103,23 +104,23 @@ class GroupChatRepositoryImpl  constructor(
         auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
 
-            cacheDao.insertMessagesWithRelated(messages.map { it.toMessageWithRelated(conversationId = convId, appUserId = appUserId) })
+            //cacheDao.insertMessagesWithRelated(messages.map { it.toMessageWithRelated(conversationId = convId, appUserId = appUserId) })
         }
     }
 
     override suspend fun sendMessage(convId: Int, message: String?, replyMessage: Message?, attachments: List<CachedFile>): Response<Long> {
         val multipartBodyList = attachments.map {
-            MultipartBody.Part.createFormData(
-                "files",
-                it.source.name,
-                it.source.asRequestBody(it.type.toMediaType())
+            MultiPartFormDataContent(
+                formData{
+                    append("files", it.source.toPath().nameBytes.toByteArray())
+                }
             )
         }
 
         if (message == null && replyMessage == null && attachments.any()) {
             val result = auth.provideToken { type, token ->
                 groupChatApi.sendAttachments(
-                    authToken = "$type $token",
+                    authToken = "$token",
                     files = multipartBodyList,
                     requestSendMessage = ChatRequestBody(peer = ConversionPeer(convId))
                 )
@@ -134,7 +135,7 @@ class GroupChatRepositoryImpl  constructor(
         if ((message != null || replyMessage != null) && attachments.any()) {
             val result = auth.provideToken { type, token ->
                 groupChatApi.sendMessageWithAttachments(
-                    authToken = "$type $token",
+                    authToken = "$token",
                     files = multipartBodyList,
                     requestSendMessage = ChatMessageRequestBody(message.orEmpty(), ConversionPeer(convId), replyMessage?.id?.toInt())
                 )
@@ -148,7 +149,7 @@ class GroupChatRepositoryImpl  constructor(
         if ((message != null || replyMessage != null) && attachments.isEmpty()) {
             val result = auth.provideToken { type, token ->
                 groupChatApi.sendMessage(
-                    authToken = "$type $token",
+                    authToken = "$token",
                     body = ChatMessageRequestBody(message.orEmpty(), ConversionPeer(convId), replyMessage?.id?.toInt())
                 )
             }
@@ -161,12 +162,12 @@ class GroupChatRepositoryImpl  constructor(
         return Response.Error(ResponseError(message = "Неизвестное состояние"))
     }
 
-    private val conversationsDao = conversationDB.conversationDao()
+   /* private val conversationsDao = conversationDB.conversationDao()
     private val supportsDao = supportsDb.supportsDao()
-    private val appealsDao = appealsDB.appealDao()
+    private val appealsDao = appealsDB.appealDao()*/
 
     override suspend fun updateLastMessageOnPreview(convId: Int, message: Message) {
-        auth.provideToken { token ->
+        /*auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
 
             groupChatApi.readMessages("${token.type} ${token.access}", ReadRequest(message.id.toInt(), peer = ConversionPeer(convId)))
@@ -186,55 +187,60 @@ class GroupChatRepositoryImpl  constructor(
                 message = message.toMessageWithAttachments(),
                 convId = convId
             )
-        }
+        }*/
     }
 
-    private val erredMsgDao = groupChatDatabase.errorMessagesDao()
+    //private val erredMsgDao = groupChatDatabase.errorMessagesDao()
 
     override suspend fun getErredMessages(convId: Int): List<SentUserMessage> {
-        val messages = auth.provideToken { token ->
+       /* val messages = auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
             return@provideToken erredMsgDao.getErredMessageWithRelated(appUserId, convId).map { it.toSentUserMessage(context) }
         }.data ?: emptyList()
 
-        return messages
+        return messages*/
+        TODO()
     }
 
     override suspend fun setErredMessage(convId: Int, message: SentUserMessage) {
-        auth.provideToken { token ->
+        /*auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
             val erredMessage = message.toErredMessageEntity(appUserId, convId) ?: return@provideToken
             erredMsgDao.addMessage(erredMessage)
             erredMsgDao.addCachedFiles(message.attachments.map { it.toEntity(message.id) })
-        }
+        }*/
+        TODO()
     }
 
-    override suspend fun delErredMessage(id: Long) = erredMsgDao.removeMessage(id)
+    override suspend fun delErredMessage(id: Long){
 
-    private val userMsgDao = groupChatDatabase.userMessagesDao()
+    } //= erredMsgDao.removeMessage(id)
+
+    //private val userMsgDao = groupChatDatabase.userMessagesDao()
 
     override suspend fun getUserMessage(convId: Int): NewUserMessage {
-        val message = auth.provideToken { token ->
+       /* val message = auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
             return@provideToken userMsgDao.getUserMessageWithRelated(appUserId, convId)?.toSentUserMessage(context)
         }.data ?: NewUserMessage()
 
-        return message
+        return message*/
+        TODO()
     }
 
     override suspend fun updateUserMessage(convId: Int, message: NewUserMessage) {
-        auth.provideToken { token ->
+       /* auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
 
             userMsgDao.updateUserMessageWithRelated(
                 message = message.toUserMessageEntity(appUserId, convId),
                 files = message.attachments.map { it.toEntity(appUserId, convId) }
             )
-        }
+        }*/
     }
 
-    private val historyCache = groupChatDatabase.historyCacheDao()
+   // private val historyCache = groupChatDatabase.historyCacheDao()
     override suspend fun updateFile(messageId: Long, attachment: Attachment) {
-        historyCache.insertAttachments(listOf(attachment.toDialogChatAttachmentEntity(messageId)))
+       // historyCache.insertAttachments(listOf(attachment.toDialogChatAttachmentEntity(messageId)))
     }
 }
