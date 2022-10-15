@@ -1,12 +1,16 @@
 package ru.esstu.student.news.entities
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class User(
     val id:String,
     val firstName: String,
     val lastName: String,
     val patronymic: String,
     val summary: String,
-    val photo: String?
+    val photo: String?,
+    val sex: String? = null
 ) {
     val initials: String get() = "${lastName.take(1)}${firstName.take(1)}${patronymic.take(1)}"
     val fio: String get() = "$lastName $firstName $patronymic".trim()
