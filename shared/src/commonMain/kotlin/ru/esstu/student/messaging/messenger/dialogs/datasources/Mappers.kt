@@ -1,17 +1,12 @@
 package ru.esstu.student.messaging.messenger.dialogs.datasources
 
 
-import ru.esstu.student.messaging.entities.Attachment
-import ru.esstu.student.messaging.entities.Message
-import ru.esstu.student.messaging.entities.ReplyMessage
-import ru.esstu.student.messaging.entities.User
 import ru.esstu.student.messaging.messenger.datasources.api.response.DataResponse
 
 import ru.esstu.student.messaging.messenger.datasources.toMessage
 import ru.esstu.student.messaging.messenger.datasources.toUser
 
 import ru.esstu.student.messaging.messenger.dialogs.entities.Dialog
-import java.util.*
 
 
 fun DataResponse.toDialogs(): List<Dialog> {

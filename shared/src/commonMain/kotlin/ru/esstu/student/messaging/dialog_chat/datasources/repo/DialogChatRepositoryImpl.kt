@@ -81,7 +81,7 @@ class DialogChatRepositoryImpl constructor(
            // return Response.Success(cached.data!!)
 
         val remotePage = auth.provideToken { type, token ->
-            val rawPage = dialogChatApi.getHistory("$type $token", dialogId, offset, limit)
+            val rawPage = dialogChatApi.getHistory("$token", dialogId, offset, limit)
 
             rawPage.toMessages(
                 provideReplies = { indices ->

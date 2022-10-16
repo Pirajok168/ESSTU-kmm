@@ -63,7 +63,7 @@ fun MessageCard(
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
                         .padding(top = 8.dp),
-                    time = reply.date,
+                    time = DateTime(reply.date),
                     title = reply.from.fio,
                     subtitle = reply.message.ifBlank { "[Вложение]" })
 

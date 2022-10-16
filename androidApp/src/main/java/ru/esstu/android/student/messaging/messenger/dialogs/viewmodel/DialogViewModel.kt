@@ -73,7 +73,7 @@ class DialogViewModel  constructor(
 
     init {
         viewModelScope.launch {
-            when(val data = dialogApi.getDialogs(0,10)){
+            when(val data = dialogApi.getDialogs(10,0)){
                 is Response.Error -> {
 
                 }

@@ -45,10 +45,10 @@ class ConversationViewModel  constructor(
         onReset = { if (conversationState.cleanCacheOnRefresh) conversationDb.clear() },
         onLoad = { conversationState = conversationState.copy(isLoading = it) },
         onRequest = { key ->
-            val cachedConversations = conversationDb.getConversations(conversationState.pageSize, key)
+            val cachedConversations = conversationDb.getChats(conversationState.pageSize, key)
 
             if (cachedConversations.isEmpty()) {
-                val loadedConversations = conversationApi.getConversations(conversationState.pageSize, key)
+                val loadedConversations = conversationApi.getChats(conversationState.pageSize, key)
 
                 if (loadedConversations is Response.Success)
                     conversationDb.setConversations(loadedConversations.data.mapIndexed { index, conversation -> index + key to conversation }.toMap())

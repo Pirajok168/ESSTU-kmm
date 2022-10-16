@@ -31,6 +31,8 @@ class UserSerializer @OptIn(ExperimentalSerializationApi::class) constructor(
 
 
     override suspend fun readFrom(source: BufferedSource): UserEntity? {
+        if (source.readByteArray().isEmpty())
+            return null
         val map = try {
             ProtoBuf.decodeFromByteArray<UserEntity>(source.readByteArray())
         }catch (e: SerializationException){
@@ -41,8 +43,15 @@ class UserSerializer @OptIn(ExperimentalSerializationApi::class) constructor(
 
 
     override suspend fun writeTo(t: UserEntity?, sink: BufferedSink) {
-        val byteArray = ProtoBuf.encodeToByteArray(t)
-        sink.write(byteArray)
+        try {
+            val byteArray = ProtoBuf.encodeToByteArray(t)
+            sink.write(byteArray)
+        }catch (e: SerializationException ){
+            throw CorruptionException("Unable to parse preferences proto.", e)
+        }catch (e: IllegalArgumentException ){
+            throw CorruptionException("Unable to parse preferences proto.", e)
+        }
+
     }
 
 }

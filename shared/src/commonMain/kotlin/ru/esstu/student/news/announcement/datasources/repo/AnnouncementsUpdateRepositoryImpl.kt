@@ -30,7 +30,7 @@ class AnnouncementsUpdateRepositoryImpl(
                 val result = auth.provideToken { type, tokenVal ->
                     api.getUpdates("$tokenVal", latestTimestamp).toAnnouncements().asReversed()
                 }
-                Napier.e("ЗАПРОС УСПЕШЕН - ${result.data}")
+
                 when (result) {
                     is Response.Error -> {
                         emit(Response.Error(result.error))

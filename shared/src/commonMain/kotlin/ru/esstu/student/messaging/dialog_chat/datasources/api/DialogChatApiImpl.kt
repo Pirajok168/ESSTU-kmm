@@ -5,6 +5,8 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.chat_message_response.ChatMessageResponse
@@ -26,7 +28,11 @@ class DialogChatApiImpl(
                 encodedParameters.append("id", userId)
             }
         }
-        return response.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(response.body())
     }
 
     override suspend fun readMessages(authToken: String, body: ReadRequest): Boolean {
@@ -56,7 +62,11 @@ class DialogChatApiImpl(
 
             }
         }
-        return request.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(request.body())
     }
 
     override suspend fun pickMessages(authToken: String, messageIds: String): List<Message> {
@@ -67,7 +77,11 @@ class DialogChatApiImpl(
                 encodedParameters.append("id", messageIds)
             }
         }
-        return request.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(request.body())
     }
 
     override suspend fun pickUsers(authToken: String, usersIds: String): List<User> {
@@ -78,7 +92,11 @@ class DialogChatApiImpl(
                 encodedParameters.append("ids", usersIds)
             }
         }
-        return request.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(request.body())
     }
 
     override suspend fun sendMessage(
@@ -94,7 +112,11 @@ class DialogChatApiImpl(
             }
 
         }
-        return request.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(request.body())
     }
 
     override suspend fun sendMessageWithAttachments(
@@ -109,7 +131,11 @@ class DialogChatApiImpl(
                 setBody(files)
             }
         }
-        return request.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(request.body())
     }
 
     override suspend fun sendAttachments(
@@ -124,7 +150,11 @@ class DialogChatApiImpl(
                 setBody(files)
             }
         }
-        return request.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(request.body())
 
     }
 }

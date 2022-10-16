@@ -12,9 +12,7 @@ import ru.esstu.student.messaging.messenger.datasources.api.response.Message
 import ru.esstu.student.messaging.messenger.datasources.api.response.User
 
 interface DialogChatApi {
-    companion object {
-        const val BASE_URL = "https://esstu.ru"
-    }
+
 
 
     suspend fun getOpponent(

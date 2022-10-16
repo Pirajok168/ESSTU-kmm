@@ -5,6 +5,8 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.chat_message_response.ChatMessageResponse
@@ -26,7 +28,11 @@ class GroupChatApiImpl(
                 encodedParameters.append("id", id)
             }
         }
-        return response.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(response.body())
     }
 
     override suspend fun getOpponent(authToken: String, userId: String): UserResponse {
@@ -37,7 +43,11 @@ class GroupChatApiImpl(
                 encodedParameters.append("id", userId)
             }
         }
-        return response.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(response.body())
     }
 
     override suspend fun readMessages(authToken: String, body: ReadRequest): Boolean {
@@ -67,7 +77,11 @@ class GroupChatApiImpl(
 
             }
         }
-        return request.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(request.body())
     }
 
     override suspend fun pickMessages(authToken: String, messageIds: String): List<Message> {
@@ -78,7 +92,11 @@ class GroupChatApiImpl(
                 encodedParameters.append("id", messageIds)
             }
         }
-        return request.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(request.body())
     }
 
     override suspend fun pickUsers(authToken: String, usersIds: String): List<User> {
@@ -89,7 +107,11 @@ class GroupChatApiImpl(
                 encodedParameters.append("ids", usersIds)
             }
         }
-        return request.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(request.body())
     }
 
     override suspend fun sendMessage(
@@ -105,7 +127,11 @@ class GroupChatApiImpl(
             }
 
         }
-        return request.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(request.body())
     }
 
     override suspend fun sendMessageWithAttachments(
@@ -120,7 +146,11 @@ class GroupChatApiImpl(
                 setBody(files)
             }
         }
-        return request.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(request.body())
     }
 
     override suspend fun sendAttachments(
@@ -135,7 +165,11 @@ class GroupChatApiImpl(
                 setBody(files)
             }
         }
-        return request.body()
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(request.body())
     }
 
 }

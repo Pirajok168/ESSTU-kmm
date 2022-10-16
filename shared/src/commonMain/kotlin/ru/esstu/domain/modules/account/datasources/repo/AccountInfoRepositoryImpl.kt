@@ -43,9 +43,9 @@ class AccountInfoRepositoryImpl  constructor(
             TokenOwners.Entrant,
             TokenOwners.Guest -> Response.Error(ResponseError(message = "unsupported user"))
             is TokenOwners.Student ->
-                auth.provideToken { token -> api.getUser("${token.type} ${token.access}", userId = owner.id).toUser()?.toUserInfoEntity(token) }
+                auth.provideToken { token -> api.getUser("${token.access}", userId = owner.id).toUser()?.toUserInfoEntity(token) }
             is TokenOwners.Teacher ->
-                auth.provideToken { token -> api.getUser("${token.type} ${token.access}", userId = owner.id).toUser()?.toUserInfoEntity(token) }
+                auth.provideToken { token -> api.getUser("${token.access}", userId = owner.id).toUser()?.toUserInfoEntity(token) }
         }
 
         return when (response) {
