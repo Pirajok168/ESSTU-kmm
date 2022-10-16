@@ -11,6 +11,8 @@ import ru.esstu.android.R
 import ru.esstu.android.domain.navigation.bottom_navigation.BottomNavScreen
 import ru.esstu.android.domain.navigation.bottom_navigation.util.IconResource
 import ru.esstu.android.domain.navigation.bottom_navigation.util.NavItem
+import ru.esstu.android.student.messaging.messenger.navigation.MessengerScreens
+import ru.esstu.android.student.messaging.messenger.navigation.messengerNavGraph
 import ru.esstu.android.student.news.navigation.NewsScreens
 import ru.esstu.android.student.news.navigation.newsNavGraph
 
@@ -66,7 +68,7 @@ fun StudentBottomNavScreen(parentNavController: NavHostController) {
             ),*/
         ), contentNavGraph = { padding, inlineNavController ->
             newsNavGraph(padding = padding, navController = inlineNavController, parentNavController = parentNavController)
-
+            messengerNavGraph(padding = padding, NavController = inlineNavController, parentNavController = parentNavController)
             /*composable(route = MapScreen.passRoute()) {
                 MapScreen(parentPadding = padding)
             }

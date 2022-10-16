@@ -35,5 +35,5 @@ object ConversationModule {
         get() = ESSTUSdk.di.instance()
 }
 
-val ESSTUSdk.appealsModule: ConversationModule
+val ESSTUSdk.conversationModule: ConversationModule
     get() = ConversationModule

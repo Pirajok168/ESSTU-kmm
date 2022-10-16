@@ -37,5 +37,5 @@ object SupportModule {
         get() = ESSTUSdk.di.instance()
 }
 
-val ESSTUSdk.appealsModule: SupportModule
+val ESSTUSdk.supportModule: SupportModule
     get() = SupportModule
