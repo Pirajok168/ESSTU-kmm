@@ -28,6 +28,9 @@ kotlin {
                 //Coroutines
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
+                //serialization
+                implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+                implementation ("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.4.0")
 
                 //Ktor
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
@@ -53,6 +56,12 @@ kotlin {
 
                 //File
                 implementation("com.squareup.okio:okio:3.2.0")
+
+
+                // Lower-level APIs with support for custom serialization
+                implementation("androidx.datastore:datastore-core-okio:1.1.0-dev01")
+                // Higher-level APIs for storing values of basic types
+                implementation("androidx.datastore:datastore-preferences-core:1.1.0-dev01")
             }
         }
         val commonTest by getting {
@@ -87,6 +96,8 @@ kotlin {
 
                 //SqlDelight
                 implementation("com.squareup.sqldelight:native-driver:$sqlDelightVersion")
+
+
             }
         }
         val iosX64Test by getting

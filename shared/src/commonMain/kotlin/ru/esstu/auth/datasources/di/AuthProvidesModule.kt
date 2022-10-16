@@ -22,7 +22,7 @@ internal val authProvidesModule = DI.Module(
     init = {
 
 
-        bind<AuthApi>(tag = "AuthApi") with singleton {
+        bind<AuthApi>() with singleton {
             AuthApImpl(
                 portalApi = instance()
             )
@@ -30,7 +30,7 @@ internal val authProvidesModule = DI.Module(
 
         bind<IAuthRepository>() with singleton {
             AuthRepositoryImpl(
-                portalApi = instance(tag = "AuthApi"),
+                portalApi = instance(),
                 cache = instance<TokenDSManagerImpl>()
             )
         }
