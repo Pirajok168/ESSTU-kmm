@@ -27,6 +27,12 @@ fun StudentBottomNavScreen(parentNavController: NavHostController) {
                 route = NewsScreens.Root,
                 badges = 0
             ),
+            NavItem(
+                icon = IconResource.DrawableResource(R.drawable.ic_bottom_chat),
+                label = "Сообщения",
+                route = MessengerScreens.Root,
+                badges = 0
+            ),
             /*NavItem(
                 icon = IconResource.DrawableResource(R.drawable.ic_bottom_home),
                 label = "Главная",

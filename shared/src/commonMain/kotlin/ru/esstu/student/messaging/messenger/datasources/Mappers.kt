@@ -29,3 +29,27 @@ fun ru.esstu.student.messaging.messenger.datasources.api.response.Attachment.toA
         localFileUri = null
     )
 }
+
+
+fun ru.esstu.student.messaging.messenger.datasources.api.response.Message.toMessage(
+    loadedUsers: List<ru.esstu.student.messaging.messenger.datasources.api.response.User>,
+    loadedMessages: List<ru.esstu.student.messaging.messenger.datasources.api.response.Message>
+): Message? {
+    return Message(
+        id = id,
+        date = date,
+        message = message.orEmpty(),
+        attachments = attachments.map { attachment -> attachment.toAttachment() },
+        from = loadedUsers.firstOrNull { user -> user.id == this.from }?.toUser() ?: return null,
+        replyMessage = if (replyToMsgId != null) loadedMessages.firstOrNull { it.id == replyToMsgId }?.let { replyMessage ->
+            ReplyMessage(
+                id = replyMessage.id,
+                date = date,
+                message = replyMessage.message.orEmpty(),
+                attachmentsCount = replyMessage.attachments.size,
+                from = loadedUsers.firstOrNull { user -> user.id == replyMessage.from }?.toUser() ?: return@let null
+            )
+        } else null,
+        status = if (views > 1) DeliveryStatus.READ else DeliveryStatus.DELIVERED
+    )
+}
