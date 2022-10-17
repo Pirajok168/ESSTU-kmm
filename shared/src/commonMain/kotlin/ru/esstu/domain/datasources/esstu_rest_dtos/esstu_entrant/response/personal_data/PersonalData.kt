@@ -1,6 +1,6 @@
 package ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.personal_data
 
-import java.util.*
+
 
 
 data class PersonalData(

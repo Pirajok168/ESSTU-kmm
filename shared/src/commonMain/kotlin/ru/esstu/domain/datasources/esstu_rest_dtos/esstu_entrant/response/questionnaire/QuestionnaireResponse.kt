@@ -1,6 +1,6 @@
 package ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.questionnaire
 
-import java.util.*
+
 
 data class QuestionnaireResponse (
     val id: Int = 0,

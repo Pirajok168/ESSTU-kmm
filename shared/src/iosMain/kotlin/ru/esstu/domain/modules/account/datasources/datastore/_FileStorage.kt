@@ -1,6 +1,10 @@
 package ru.esstu.domain.modules.account.datasources.datastore
 
 import okio.FileSystem
+import platform.Foundation.NSDocumentDirectory
+import platform.Foundation.NSFileManager
+import platform.Foundation.NSURL
+import platform.Foundation.NSUserDomainMask
 
 class _FileStorage: _FileSystem {
     override val fileSystem: FileSystem

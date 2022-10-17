@@ -29,8 +29,8 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
                 //serialization
-                implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
-                implementation ("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.4.0")
+
+                implementation ("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.2.2")
 
                 //Ktor
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
