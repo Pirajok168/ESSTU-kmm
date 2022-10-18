@@ -77,7 +77,7 @@ fun StudentBottomNavScreen(parentNavController: NavHostController) {
                 Schedule(padding = padding)
             }
 
-            messengerNavGraph(padding = padding, NavController = inlineNavController, parentNavController = parentNavController)
+
 
             profileNavGraph(padding = padding, navController = inlineNavController, parentNavController = parentNavController)*/
         })

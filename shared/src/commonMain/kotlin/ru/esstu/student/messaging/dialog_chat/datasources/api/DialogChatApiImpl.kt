@@ -34,6 +34,7 @@ class DialogChatApiImpl(
             url {
                 path("lk/api/v2/messenger/readHistory")
                 bearerAuth(authToken)
+                contentType(ContentType.Application.Json)
                 setBody(body)
             }
         }
@@ -89,6 +90,7 @@ class DialogChatApiImpl(
             url {
                 path("lk/api/v2/messenger/sendMessage")
                 bearerAuth(authToken)
+                contentType(ContentType.Application.Json)
                 setBody(body)
 
             }
@@ -106,6 +108,7 @@ class DialogChatApiImpl(
             url {
                 path("mlk/api/v2/messenger/sendMessageMedia")
                 bearerAuth(authToken)
+                contentType(ContentType.Application.Json)
                 setBody(files)
             }
         }
@@ -121,6 +124,7 @@ class DialogChatApiImpl(
             url {
                 path("mlk/api/v2/messenger/sendMessageMedia")
                 bearerAuth(authToken)
+                contentType(ContentType.Application.Json)
                 setBody(files)
             }
         }

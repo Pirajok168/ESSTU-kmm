@@ -8,6 +8,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import ru.esstu.android.domain.modules.image_viewer.navigation.ImageScreen
+import ru.esstu.android.student.messaging.dialog_chat.navigation.DialogChatArguments
+import ru.esstu.android.student.messaging.dialog_chat.navigation.DialogChatScreen
+import ru.esstu.android.student.messaging.dialog_chat.ui.DialogChatScreen
+import ru.esstu.android.student.messaging.group_chat.navigation.GroupChatArguments
+import ru.esstu.android.student.messaging.group_chat.navigation.GroupChatScreen
+import ru.esstu.android.student.messaging.group_chat.ui.GroupChatScreen
 
 
 @ExperimentalFoundationApi
@@ -28,13 +35,6 @@ fun NavGraphBuilder.studentNavGraph(
         ) {
             StudentBottomNavScreen(parentNavController = navController)
         }
-    /*composable(
-            route = StudentRoutes.BottomNavScreen.passRoute(),
-            deepLinks = StudentRoutes.BottomNavScreen.passDeepLinkRoute()
-        ) {
-            StudentBottomNavScreen(parentNavController = navController)
-        }
-
         composable(
             route = DialogChatScreen.passRoute(),
             arguments = DialogChatScreen.passArguments(),
@@ -68,6 +68,9 @@ fun NavGraphBuilder.studentNavGraph(
                     }
                 )
         }
+    /*
+
+
 
         newMsgSelectorNavGraph(navController = navController)
 

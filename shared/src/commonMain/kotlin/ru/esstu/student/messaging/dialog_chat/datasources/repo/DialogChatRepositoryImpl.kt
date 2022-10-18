@@ -183,13 +183,14 @@ class DialogChatRepositoryImpl constructor(
     //private val erredMsgDao = dialogChatDatabase.errorMessagesDao()
 
     override suspend fun getErredMessages(dialogId: String): List<SentUserMessage> {
-         TODO()
+
     /*val messages = auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
             return@provideToken erredMsgDao.getErredMessageWithRelated(appUserId, dialogId).map { it.toSentUserMessage(context) }
         }.data ?: emptyList()
 
         return messages*/
+        TODO()
     }
 
     override suspend fun setErredMessage(dialogId: String, message: SentUserMessage) {
@@ -209,13 +210,13 @@ class DialogChatRepositoryImpl constructor(
     //private val userMsgDao = dialogChatDatabase.userMessagesDao()
 
     override suspend fun getUserMessage(dialogId: String): NewUserMessage {
-        /*val message = auth.provideToken { token ->
+       /* val message = auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
             return@provideToken userMsgDao.getUserMessageWithRelated(appUserId, dialogId)?.toSentUserMessage(context)
-        }.data ?: NewUserMessage()
+        }.data ?: NewUserMessage()*/
 
-        return message*/
         TODO()
+
     }
 
     override suspend fun updateUserMessage(dialogId: String, message: NewUserMessage) {

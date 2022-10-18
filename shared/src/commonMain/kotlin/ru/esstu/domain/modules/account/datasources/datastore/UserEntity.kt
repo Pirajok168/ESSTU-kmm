@@ -23,9 +23,7 @@ data class UserEntity(
 )
 
 
-class UserSerializer @OptIn(ExperimentalSerializationApi::class) constructor(
-
-): OkioSerializer<UserEntity?>{
+class UserSerializer: OkioSerializer<UserEntity?>{
     override val defaultValue: UserEntity?
         get() = null
 
