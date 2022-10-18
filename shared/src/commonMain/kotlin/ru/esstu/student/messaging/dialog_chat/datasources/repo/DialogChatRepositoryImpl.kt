@@ -11,13 +11,13 @@ import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.peer.DialoguePeer
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatReadRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatRequestBody
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.dialog_chat.datasources.*
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatApi
-import ru.esstu.student.messaging.dialog_chat.datasources.api.request.ReadRequest
 import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
 import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
@@ -174,7 +174,7 @@ class DialogChatRepositoryImpl constructor(
         auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
 
-            dialogChatApi.readMessages("${token.access}", ReadRequest(message.id.toInt(), peer = DialoguePeer(userId = dialogId)))
+            dialogChatApi.readMessages("${token.access}", ChatReadRequestBody(message.id.toInt(), peer = DialoguePeer(userId = dialogId)))
 
             //dialogsDao.updateDialogLastMessage(appUserId = appUserId, dialogId = dialogId, message = message.toMessageWithAttachments())
         }

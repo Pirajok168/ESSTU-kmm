@@ -6,13 +6,13 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatReadRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.chat_message_response.ChatMessageResponse
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessagePreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessageResponse
 import ru.esstu.domain.modules.account.datasources.api.response.UserResponse
-import ru.esstu.student.messaging.dialog_chat.datasources.api.request.ReadRequest
 
 
 class DialogChatApiImpl(
@@ -29,7 +29,7 @@ class DialogChatApiImpl(
         return response.body()
     }
 
-    override suspend fun readMessages(authToken: String, body: ReadRequest): Boolean {
+    override suspend fun readMessages(authToken: String, body: ChatReadRequestBody): Boolean {
         val request = portalApi.post {
             url {
                 path("lk/api/v2/messenger/readHistory")

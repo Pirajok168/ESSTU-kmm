@@ -13,10 +13,11 @@ import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.messenger.conversations.entities.Conversation
 import ru.esstu.student.messaging.messenger.supports.datasources.repo.ISupportsApiRepository
 import ru.esstu.student.messaging.messenger.supports.di.supportModule
+import ru.esstu.student.messaging.messenger.supports.entities.Supports
 
 
 data class SupportState(
-    val items: List<Conversation> = emptyList(),
+    val items: List<Supports> = emptyList(),
     val pageSize: Int = 10,
     val isLoading: Boolean = false,
     val isEndReached: Boolean = false,

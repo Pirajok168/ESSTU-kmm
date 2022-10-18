@@ -14,12 +14,13 @@ import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.messenger.appeals.datasources.repo.IAppealsApiRepository
 import ru.esstu.student.messaging.messenger.appeals.di.appealsModule
+import ru.esstu.student.messaging.messenger.appeals.entities.Appeals
 
 import ru.esstu.student.messaging.messenger.conversations.entities.Conversation
 
 
 data class AppealState(
-    val items: List<Conversation> = emptyList(),
+    val items: List<Appeals> = emptyList(),
     val pageSize: Int = 10,
     val isLoading: Boolean = false,
     val isEndReached: Boolean = false,
