@@ -6,10 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
-import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.messenger.conversations.entities.Conversation

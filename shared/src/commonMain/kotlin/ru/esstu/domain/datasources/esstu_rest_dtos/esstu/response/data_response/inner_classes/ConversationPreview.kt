@@ -1,15 +1,16 @@
 package ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.inner_classes
 
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ConversationPreview(
-    val context: Any,
-    val date: Long,
-    val description: Any,
-    val flags: Int,
     val id: Int,
-    val listViewrs: Any,
+    val type: String,
     val name: String,
+    val description: String?,
+    val context: String?,
     val participantsCount: Int,
-    val status: String,
-    val type: String
+    val date: Long,
+    val creatorId:String,
+    val flags: Int
 )

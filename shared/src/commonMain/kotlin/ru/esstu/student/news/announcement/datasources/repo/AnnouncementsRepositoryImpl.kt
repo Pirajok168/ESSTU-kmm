@@ -36,7 +36,6 @@ class AnnouncementsRepositoryImpl(
             when (response) {
                 is Response.Error -> response
                 is Response.Success -> {
-                    Napier.e(response.data.get(0).toString())
                     newsDao.setNewsWithAttachments(response.data.map { it.toNewsWithAttachments() })
                     response
                 }

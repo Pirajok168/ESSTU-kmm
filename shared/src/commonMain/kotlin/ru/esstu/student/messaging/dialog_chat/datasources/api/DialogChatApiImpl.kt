@@ -28,11 +28,7 @@ class DialogChatApiImpl(
                 encodedParameters.append("id", userId)
             }
         }
-        return Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-        }.decodeFromJsonElement(response.body())
+        return response.body()
     }
 
     override suspend fun readMessages(authToken: String, body: ReadRequest): Boolean {
@@ -62,11 +58,7 @@ class DialogChatApiImpl(
 
             }
         }
-        return Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-        }.decodeFromJsonElement(request.body())
+        return request.body()
     }
 
     override suspend fun pickMessages(authToken: String, messageIds: String): List<Message> {
@@ -77,11 +69,7 @@ class DialogChatApiImpl(
                 encodedParameters.append("id", messageIds)
             }
         }
-        return Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-        }.decodeFromJsonElement(request.body())
+        return request.body()
     }
 
     override suspend fun pickUsers(authToken: String, usersIds: String): List<User> {
@@ -92,11 +80,7 @@ class DialogChatApiImpl(
                 encodedParameters.append("ids", usersIds)
             }
         }
-        return Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-        }.decodeFromJsonElement(request.body())
+        return request.body()
     }
 
     override suspend fun sendMessage(
@@ -112,11 +96,7 @@ class DialogChatApiImpl(
             }
 
         }
-        return Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-        }.decodeFromJsonElement(request.body())
+        return request.body()
     }
 
     override suspend fun sendMessageWithAttachments(
@@ -131,11 +111,7 @@ class DialogChatApiImpl(
                 setBody(files)
             }
         }
-        return Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-        }.decodeFromJsonElement(request.body())
+        return request.body()
     }
 
     override suspend fun sendAttachments(
@@ -150,11 +126,7 @@ class DialogChatApiImpl(
                 setBody(files)
             }
         }
-        return Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-        }.decodeFromJsonElement(request.body())
+        return request.body()
 
     }
 }

@@ -1,10 +1,13 @@
 package ru.esstu.student.messaging.messenger.datasources
 
 
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.ChatMessage
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.inner_classes.FileAttachment
 import ru.esstu.student.messaging.entities.*
 
 
-fun ru.esstu.student.messaging.messenger.datasources.api.response.User.toUser(): User? {
+fun UserPreview.toUser(): User? {
     return User(
         firstName = firstName ?: return null,
         lastName = lastName.orEmpty(),
@@ -15,7 +18,7 @@ fun ru.esstu.student.messaging.messenger.datasources.api.response.User.toUser():
     )
 }
 
-fun ru.esstu.student.messaging.messenger.datasources.api.response.Attachment.toAttachment(): Attachment {
+fun FileAttachment.toAttachment(): Attachment {
     val filename = fileName.split('.').let { if (it.size > 1) it.dropLast(1) else it }.joinToString(".")
     val fileExt = fileName.split('.').let { if (it.size > 1)  it.last() else "" }
 
@@ -31,9 +34,9 @@ fun ru.esstu.student.messaging.messenger.datasources.api.response.Attachment.toA
 }
 
 
-fun ru.esstu.student.messaging.messenger.datasources.api.response.Message.toMessage(
-    loadedUsers: List<ru.esstu.student.messaging.messenger.datasources.api.response.User>,
-    loadedMessages: List<ru.esstu.student.messaging.messenger.datasources.api.response.Message>
+fun ChatMessage.toMessage(
+    loadedUsers: List<UserPreview>,
+    loadedMessages: List<ChatMessage>
 ): Message? {
     return Message(
         id = id,

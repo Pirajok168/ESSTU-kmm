@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class Message(
+data class MessageResponse(
     val attachments: List<AttachmentResponse>,
     val context: String?,
     val date: Long,

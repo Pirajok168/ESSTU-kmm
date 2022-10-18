@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Suppress("SpellCheckingInspection")
 @Serializable
-data class Conversation(
+data class ConversationResponse(
     val id: Int,
     val type: String,
     val name: String,

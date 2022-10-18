@@ -7,10 +7,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DataResponse(
     @SerialName("chats")
-    val conversations: List<Conversation>,
+    val conversations: List<ConversationResponse>,
     @SerialName("dialogs")
-    val dialogs: List<Dialog>,
-    val messages: List<Message>,
+    val dialogs: List<DialogResponse>,
+    val messages: List<MessageResponse>,
     @SerialName("users")
     val loadedUsers: List<UserResponse>
 )

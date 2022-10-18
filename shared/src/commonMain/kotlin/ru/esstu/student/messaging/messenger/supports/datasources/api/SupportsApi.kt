@@ -1,11 +1,9 @@
 package ru.esstu.student.messaging.messenger.supports.datasources.api
 
 
-import ru.esstu.student.messaging.messenger.datasources.api.response.DataResponse
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
 
 interface SupportsApi {
-    companion object { const val BASE_URL = "https://esstu.ru" }
-
 
     suspend fun getSupports(
          authToken: String,

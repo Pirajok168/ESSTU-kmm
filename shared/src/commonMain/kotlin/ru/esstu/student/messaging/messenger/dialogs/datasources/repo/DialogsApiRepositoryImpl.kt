@@ -18,9 +18,9 @@ class DialogsApiRepositoryImpl constructor(
         val response = authRepository.provideToken { type, token ->
             dialogsApi.getDialogs("$token", offset, limit)
         }
-        response
+
         return when(response){
-            is Response.Error -> Response.Error(ResponseError(message = ""))
+            is Response.Error -> Response.Error(ResponseError(message = response.error.message))
             is Response.Success -> {
                 Response.Success(response.data.toDialogs())
             }
