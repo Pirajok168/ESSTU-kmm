@@ -1,7 +1,6 @@
-package ru.esstu.student.news.datasources
+package ru.esstu.student.news.announcement.db.announcement
 
-import ru.esstu.student.news.datasources.relations.NewsWithAttachments
-import ru.esstu.student.news.entities.NewsNode
+import ru.esstu.student.news.announcement.db.announcement.entities.relations.NewsWithAttachments
 
 interface NewsDao {
     suspend fun getAllNewsWithAttachments(): List<NewsWithAttachments>

@@ -11,7 +11,7 @@ class DatabaseDriverFactory(
     private val context: Context = ContextApplication.getContextApplication().context
 ):IDatabaseDriverNewsFactory {
     override val sqlDriver: SqlDriver
-        get() = AndroidSqliteDriver(NewsDatabase.Schema, context, "test.db")
+        get() = AndroidSqliteDriver(NewsDatabase.Schema, context, "announcement.db")
 
 }
 

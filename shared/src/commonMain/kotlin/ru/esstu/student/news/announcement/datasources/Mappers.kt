@@ -1,19 +1,46 @@
 package ru.esstu.student.news.announcement.datasources
 
-import com.soywiz.klock.DateFormat
 import com.soywiz.klock.DateTime
-import com.soywiz.klock.KlockLocale
-import com.soywiz.klock.locale.russian
-import ru.esstu.domain.response.entities.DataResponse
-import ru.esstu.domain.response.toAttachment
-import ru.esstu.domain.response.toUser
-import ru.esstu.student.news.datasources.NewsAttachmentEntity
-import ru.esstu.student.news.datasources.NewsEntity
-import ru.esstu.student.news.datasources.UserEntity
-import ru.esstu.student.news.datasources.relations.NewsWithAttachments
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.inner_classes.FileAttachment
+
+import ru.esstu.student.news.announcement.db.announcement.entities.NewsAttachmentEntity
+import ru.esstu.student.news.announcement.db.announcement.entities.NewsEntity
+import ru.esstu.student.news.announcement.db.announcement.entities.UserEntity
+import ru.esstu.student.news.announcement.db.announcement.entities.relations.NewsWithAttachments
 import ru.esstu.student.news.entities.Attachment
 import ru.esstu.student.news.entities.NewsNode
 import ru.esstu.student.news.entities.User
+
+
+fun UserPreview.toUser(): User? {
+    return User(
+        id = id ?: return null,
+        firstName = firstName ?: return null,
+        lastName = lastName.orEmpty(),
+        patronymic = patronymic.orEmpty(),
+        summary = information.orEmpty(),
+        photo = if (!photo.isNullOrBlank()) "https://esstu.ru/aicstorages/publicDownload/$photo" else null
+    )
+}
+
+
+fun FileAttachment.toAttachment(): Attachment {
+    val filename = fileName.split('.').let { if (it.size > 1) it.dropLast(1) else it }.joinToString(".")
+    val fileExt = fileName.split('.').let { if (it.size > 1)  it.last() else "" }
+
+    return Attachment(
+        id = id,
+        type = type,
+        name = filename,
+        ext = fileExt,
+        fileUri = if (fileCode.isNotBlank()) "https://esstu.ru/aicstorages/publicDownload/$fileCode" else "",
+        size = fileSize,
+        localFileUri = null
+    )
+}
+
 
 fun DataResponse.toAnnouncements(): List<NewsNode> {
 

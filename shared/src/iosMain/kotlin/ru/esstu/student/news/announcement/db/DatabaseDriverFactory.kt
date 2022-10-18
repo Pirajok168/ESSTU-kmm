@@ -8,7 +8,7 @@ import ru.esstu.student.news.NewsDatabase
 class DatabaseDriverFactory: IDatabaseDriverNewsFactory {
 
     override val sqlDriver: SqlDriver
-        get() = NativeSqliteDriver(NewsDatabase.Schema, "test.db")
+        get() = NativeSqliteDriver(NewsDatabase.Schema, "announcement.db")
 }
 
 actual fun driverNewsFactory(): IDatabaseDriverNewsFactory = DatabaseDriverFactory()

@@ -1,4 +1,4 @@
-package ru.esstu.student.news.announcement.db
+package ru.esstu.student.news.announcement.db.announcement
 
 import com.squareup.sqldelight.ColumnAdapter
 import com.squareup.sqldelight.db.SqlDriver
@@ -6,13 +6,15 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.esstu.student.news.NewsDatabase
+import ru.esstu.student.news.announcement.db.announcement.entities.NewsAttachmentEntity
+import ru.esstu.student.news.announcement.db.announcement.entities.NewsEntity
+import ru.esstu.student.news.announcement.db.announcement.entities.UserEntity
 
 import ru.esstu.student.news.datasources.*
-import ru.esstu.student.news.datasources.relations.NewsWithAttachments
-import ru.esstu.student.news.entities.NewsNode
+import ru.esstu.student.news.announcement.db.announcement.entities.relations.NewsWithAttachments
 import kotlin.collections.List;
 
-internal class Database(databaseNewsFactory: SqlDriver):NewsDao {
+internal class Database(databaseNewsFactory: SqlDriver): NewsDao {
 
     private val adapter = object : ColumnAdapter<UserEntity, String>{
 
@@ -71,6 +73,7 @@ internal class Database(databaseNewsFactory: SqlDriver):NewsDao {
         dbQuery.removeAllNews()
     }
 }
+
 private fun map(
     id: Long,
     fromUser: UserEntity,

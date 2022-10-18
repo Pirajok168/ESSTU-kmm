@@ -1,4 +1,4 @@
-package ru.esstu.student.news.datasources
+package ru.esstu.student.news.announcement.db.announcement.entities
 
 import kotlinx.serialization.Serializable
 

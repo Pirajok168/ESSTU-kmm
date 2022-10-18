@@ -14,9 +14,9 @@ import ru.esstu.student.news.announcement.datasources.repo.AnnouncementsReposito
 import ru.esstu.student.news.announcement.datasources.repo.AnnouncementsUpdateRepositoryImpl
 import ru.esstu.student.news.announcement.datasources.repo.IAnnouncementsRepository
 import ru.esstu.student.news.announcement.datasources.repo.IAnnouncementsUpdateRepository
-import ru.esstu.student.news.announcement.db.Database
+import ru.esstu.student.news.announcement.db.announcement.Database
 import ru.esstu.student.news.announcement.db.driverNewsFactory
-import ru.esstu.student.news.datasources.NewsDao
+import ru.esstu.student.news.announcement.db.announcement.NewsDao
 
 import kotlin.native.concurrent.ThreadLocal
 

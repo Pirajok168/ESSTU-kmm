@@ -1,6 +1,6 @@
 package ru.esstu.student.news.announcement.datasources.repo
 
-import io.github.aakira.napier.Napier
+
 import io.ktor.client.plugins.*
 import io.ktor.utils.io.errors.*
 import ru.esstu.auth.datasources.repo.IAuthRepository
@@ -10,8 +10,8 @@ import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.news.announcement.datasources.api.NewsApi
 import ru.esstu.student.news.announcement.datasources.toAnnouncements
 import ru.esstu.student.news.announcement.datasources.toNewsWithAttachments
-import ru.esstu.student.news.datasources.NewsDao
-import ru.esstu.student.news.datasources.toNews
+import ru.esstu.student.news.announcement.db.announcement.NewsDao
+import ru.esstu.student.news.announcement.db.announcement.toNews
 import ru.esstu.student.news.entities.NewsNode
 
 class AnnouncementsRepositoryImpl(
