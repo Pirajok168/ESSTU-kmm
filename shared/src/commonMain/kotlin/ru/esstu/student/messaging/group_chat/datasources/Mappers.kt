@@ -2,9 +2,11 @@ package ru.esstu.student.messaging.group_chat.datasources
 
 
 import com.soywiz.klock.DateTime
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.conversation_preview_response.ConversationPreviewResponse
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessagePreview
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessageResponse
 import ru.esstu.student.messaging.entities.*
-import ru.esstu.student.messaging.group_chat.datasources.api.response.ConversationResponse
-import ru.esstu.student.messaging.group_chat.datasources.api.response.MessageResponse
 
 import ru.esstu.student.messaging.group_chat.entities.Conversation
 import ru.esstu.student.messaging.group_chat.util.toReplyMessage
@@ -14,7 +16,7 @@ import ru.esstu.student.messaging.messenger.datasources.toUser
 
 
 
-fun ru.esstu.student.messaging.messenger.datasources.api.response.Message.toReplyMessage(authors: List<Sender>): ReplyMessage? {
+fun MessagePreview.toReplyMessage(authors: List<Sender>): ReplyMessage? {
     return ReplyMessage(
         id = id,
         from = authors.firstOrNull { it.id == from } ?: return null,
@@ -24,7 +26,7 @@ fun ru.esstu.student.messaging.messenger.datasources.api.response.Message.toRepl
     )
 }
 
-fun ru.esstu.student.messaging.messenger.datasources.api.response.Message.toMessage(
+fun MessagePreview.toMessage(
     authors: List<Sender>,
     replyMessages: List<ReplyMessage>
 ): Message? {
@@ -57,8 +59,8 @@ fun MessageResponse.toMessages(replyMessages: List<Message> = emptyList()): List
 }
 
 suspend fun MessageResponse.toMessages(
-    provideReplies: suspend (indices: List<Long>) -> List<ru.esstu.student.messaging.messenger.datasources.api.response.Message>,
-    provideUsers: suspend (indices: List<String>) -> List<ru.esstu.student.messaging.messenger.datasources.api.response.User>,
+    provideReplies: suspend (indices: List<Long>) -> List<MessagePreview>,
+    provideUsers: suspend (indices: List<String>) -> List<UserPreview>,
 ): List<Message> {
 
     val existingAuthors = users.mapNotNull { it.toUser() }
@@ -76,7 +78,7 @@ suspend fun MessageResponse.toMessages(
     return this.messages.mapNotNull { it.toMessage(authors = existingAuthors, replyMessages = replyMessages) }
 }
 
-fun ConversationResponse.toConversation(): Conversation? {
+fun ConversationPreviewResponse.toConversation(): Conversation? {
     val participants = users.mapNotNull { it.toUser() }
     val author = participants.firstOrNull { it.id == conversation.creatorId } ?: return null
     return Conversation(

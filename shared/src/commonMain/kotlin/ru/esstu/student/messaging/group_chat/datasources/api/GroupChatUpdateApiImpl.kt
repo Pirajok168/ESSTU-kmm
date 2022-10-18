@@ -4,7 +4,7 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import ru.esstu.student.messaging.group_chat.datasources.api.response.MessageResponse
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessageResponse
 
 class GroupChatUpdateApiImpl(
     private val portalApi: HttpClient,

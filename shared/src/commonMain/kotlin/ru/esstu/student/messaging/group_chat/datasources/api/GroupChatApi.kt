@@ -3,25 +3,25 @@ package ru.esstu.student.messaging.group_chat.datasources.api
 
 import io.ktor.client.request.forms.*
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatReadRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatRequestBody
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.chat_message_response.ChatMessageResponse
-import ru.esstu.student.messaging.group_chat.datasources.api.request.ReadRequest
-import ru.esstu.student.messaging.group_chat.datasources.api.response.ConversationResponse
-import ru.esstu.student.messaging.group_chat.datasources.api.response.MessageResponse
-import ru.esstu.student.messaging.group_chat.datasources.api.response.UserResponse
-import ru.esstu.student.messaging.messenger.datasources.api.response.Message
-import ru.esstu.student.messaging.messenger.datasources.api.response.User
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.conversation_preview_response.ConversationPreviewResponse
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessagePreview
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessageResponse
+
+import ru.esstu.domain.modules.account.datasources.api.response.UserResponse
+
 
 interface GroupChatApi {
-    companion object {
-        const val BASE_URL = "https://esstu.ru"
-    }
+
 
 
     suspend fun getConversation(
        authToken: String,
         id: String,
-    ): ConversationResponse
+    ): ConversationPreviewResponse
 
 
     suspend fun getOpponent(
@@ -32,7 +32,7 @@ interface GroupChatApi {
 
     suspend fun readMessages(
        authToken: String,
-        body: ReadRequest
+        body: ChatReadRequestBody
     ): Boolean
 
 
@@ -47,13 +47,13 @@ interface GroupChatApi {
     suspend fun pickMessages(
         authToken: String,
          messageIds: String,
-    ): List<Message>
+    ): List<MessagePreview>
 
 
     suspend fun pickUsers(
          authToken: String,
        usersIds: String,
-    ): List<User>
+    ): List<UserPreview>
 
 
     //region отправка сообщений

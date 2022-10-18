@@ -1,6 +1,7 @@
-import ru.esstu.student.news.datasources.NewsAttachmentEntity;
-import ru.esstu.student.news.datasources.UserEntity;
+import ru.esstu.student.news.announcement.db.announcement.entities.NewsAttachmentEntity;
+import ru.esstu.student.news.announcement.db.announcement.entities.UserEntity;
 import kotlin.collections.List;
+
 
 
 

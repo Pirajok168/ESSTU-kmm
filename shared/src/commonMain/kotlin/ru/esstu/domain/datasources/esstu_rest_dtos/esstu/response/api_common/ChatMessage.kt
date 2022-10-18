@@ -1,11 +1,11 @@
 package ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common
 
 import kotlinx.serialization.Serializable
-import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.inner_classes.FileAttachment
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.inner_classes.FileAttachmentResponse
 
 @Serializable
 data class ChatMessage(
-    val attachments: List<FileAttachment>,
+    val attachments: List<FileAttachmentResponse>,
     val context: String?,
     val date: Long,
     val flags: Int,

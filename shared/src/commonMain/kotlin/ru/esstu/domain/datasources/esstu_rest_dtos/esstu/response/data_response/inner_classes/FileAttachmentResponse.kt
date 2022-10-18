@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 //вложения
 @Serializable
-data class FileAttachment(
+data class FileAttachmentResponse(
     val fileCode: String,
     val fileName: String,
     val fileSize: Int,

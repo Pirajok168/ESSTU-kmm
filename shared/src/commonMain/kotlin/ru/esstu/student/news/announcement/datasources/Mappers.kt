@@ -3,7 +3,7 @@ package ru.esstu.student.news.announcement.datasources
 import com.soywiz.klock.DateTime
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
-import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.inner_classes.FileAttachment
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.inner_classes.FileAttachmentResponse
 
 import ru.esstu.student.news.announcement.db.announcement.entities.NewsAttachmentEntity
 import ru.esstu.student.news.announcement.db.announcement.entities.NewsEntity
@@ -26,7 +26,7 @@ fun UserPreview.toUser(): Creator? {
 }
 
 
-fun FileAttachment.toAttachment(): AttachmentNews {
+fun FileAttachmentResponse.toAttachment(): AttachmentNews {
     val filename = fileName.split('.').let { if (it.size > 1) it.dropLast(1) else it }.joinToString(".")
     val fileExt = fileName.split('.').let { if (it.size > 1)  it.last() else "" }
 

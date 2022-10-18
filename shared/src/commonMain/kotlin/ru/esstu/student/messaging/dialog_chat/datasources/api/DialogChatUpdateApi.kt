@@ -1,6 +1,7 @@
 package ru.esstu.student.messaging.dialog_chat.datasources.api
 
-import ru.esstu.student.messaging.dialog_chat.datasources.api.response.MessageResponse
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessageResponse
+
 
 interface DialogChatUpdateApi {
     suspend fun getUpdates(

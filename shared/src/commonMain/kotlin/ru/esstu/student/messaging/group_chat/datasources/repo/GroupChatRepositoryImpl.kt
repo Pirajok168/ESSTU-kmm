@@ -27,8 +27,6 @@ import ru.esstu.student.messaging.group_chat.entities.SentUserMessage
 
 
 class GroupChatRepositoryImpl  constructor(
-
-
     private val auth: IAuthRepository,
     private val groupChatApi: GroupChatApi,
 ) : IGroupChatRepository {

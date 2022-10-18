@@ -10,8 +10,9 @@ import ru.esstu.student.news.announcement.db.announcement.entities.NewsAttachmen
 import ru.esstu.student.news.announcement.db.announcement.entities.NewsEntity
 import ru.esstu.student.news.announcement.db.announcement.entities.UserEntity
 
-import ru.esstu.student.news.datasources.*
+
 import ru.esstu.student.news.announcement.db.announcement.entities.relations.NewsWithAttachments
+import ru.esstu.student.news.announcementdbannouncement.NewsEntityDatabase
 import kotlin.collections.List;
 
 internal class Database(databaseNewsFactory: SqlDriver): NewsDao {
