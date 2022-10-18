@@ -1,12 +1,10 @@
 package ru.esstu.domain.api
 
-import ru.esstu.domain.response.entities.DataResponse
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
 
 
 interface UpdatesApi {
-    companion object {
-        const val BASE_URL = "https://esstu.ru"
-    }
+
 
 
     suspend fun getUpdates(
