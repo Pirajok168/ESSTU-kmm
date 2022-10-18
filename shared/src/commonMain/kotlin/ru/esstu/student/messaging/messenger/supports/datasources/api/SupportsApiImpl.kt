@@ -21,11 +21,7 @@ class SupportsApiImpl(
                 encodedParameters.append("limit", limit.toString())
             }
         }
-         return Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-        }.decodeFromJsonElement(response.body())
+         return response.body()
     }
 
 }

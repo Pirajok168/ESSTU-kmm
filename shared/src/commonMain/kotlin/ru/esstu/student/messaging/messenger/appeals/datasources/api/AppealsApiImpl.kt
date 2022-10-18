@@ -6,7 +6,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
-import ru.esstu.student.messaging.messenger.datasources.api.response.DataResponse
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
 
 class AppealsApiImpl(
     private val portalApi: HttpClient
@@ -21,10 +21,6 @@ class AppealsApiImpl(
                 encodedParameters.append("limit", limit.toString())
             }
         }
-         return Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-        }.decodeFromJsonElement(response.body())
+         return response.body()
     }
 }

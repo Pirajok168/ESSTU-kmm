@@ -4,10 +4,7 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromJsonElement
-import ru.esstu.student.messaging.messenger.datasources.api.response.DataResponse
-import kotlin.collections.get
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
 
 class DialogsApiImpl(
     private val portalApi: HttpClient

@@ -1,8 +1,7 @@
 package ru.esstu.student.messaging.messenger.dialogs.datasources
 
 
-import ru.esstu.student.messaging.messenger.datasources.api.response.DataResponse
-
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
 import ru.esstu.student.messaging.messenger.datasources.toMessage
 import ru.esstu.student.messaging.messenger.datasources.toUser
 
