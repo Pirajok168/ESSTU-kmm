@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.skydoves.landscapist.glide.GlideImage
 import ru.esstu.android.domain.ui.theme.CompPreviewTheme
-import ru.esstu.student.messaging.entities.User
+import ru.esstu.student.messaging.entities.Sender
 
 @Composable
 fun ChatPreview(
@@ -83,7 +83,7 @@ fun ChatPreview(
 @Composable
 fun UPP() {
     CompPreviewTheme {
-        val opponent = User(
+        val opponent = Sender(
             id = "",
             patronymic = "Попович",
             firstName = "Анатолий",

@@ -9,7 +9,7 @@ import ru.esstu.domain.modules.account.datasources.toUser
 import ru.esstu.domain.modules.account.datasources.toUserInfoEntity
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.student.messaging.entities.User
+import ru.esstu.student.messaging.entities.Sender
 
 
 
@@ -20,7 +20,7 @@ class AccountInfoRepositoryImpl  constructor(
 ) : IAccountInfoApiRepository {
     override suspend fun clearUser() = userCache.clearUser()
 
-    override suspend fun getUser(): Response<User> {
+    override suspend fun getUser(): Response<Sender> {
 
         val cache = auth.provideToken { token ->
 

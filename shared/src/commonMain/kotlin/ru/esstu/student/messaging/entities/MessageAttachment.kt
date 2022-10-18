@@ -1,7 +1,7 @@
 package ru.esstu.student.messaging.entities
 
 
-data class Attachment(
+data class MessageAttachment(
     val id: Int,
     val fileUri: String,
 

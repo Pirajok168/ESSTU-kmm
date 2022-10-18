@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.soywiz.klock.DateFormat
 import com.soywiz.klock.DateTime
 import ru.esstu.android.domain.ui.theme.CompPreviewTheme
-import ru.esstu.student.messaging.entities.User
+import ru.esstu.student.messaging.entities.Sender
 
 private val yearFormatter: DateFormat = DateFormat("dd MMMM yyyy")
 private val dateFormatter: DateFormat = DateFormat("dd MMMM")
@@ -94,7 +94,7 @@ fun ReplyPreview(
 @Composable
 fun UP1P() {
     CompPreviewTheme {
-        val opponent = User(
+        val opponent = Sender(
             id = "",
             patronymic = "Попович",
             firstName = "Анатолий",

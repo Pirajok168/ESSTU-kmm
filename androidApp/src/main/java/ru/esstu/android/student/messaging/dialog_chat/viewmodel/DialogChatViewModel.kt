@@ -23,16 +23,16 @@ import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
 import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
 import ru.esstu.student.messaging.dialog_chat.util.toSentUserMessage
-import ru.esstu.student.messaging.entities.Attachment
+import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.DeliveryStatus
 import ru.esstu.student.messaging.entities.Message
-import ru.esstu.student.messaging.entities.User
+import ru.esstu.student.messaging.entities.Sender
 
 
 data class DialogChatState(
     val isOpponentLoading: Boolean = false,
     //val appUser: User? = null,
-    val opponent: User? = null,
+    val opponent: Sender? = null,
 
     val pageSize: Int = 20,
     val pages: List<Message> = emptyList(),
@@ -64,8 +64,8 @@ sealed class DialogChatEvents {
     object SendMessage : DialogChatEvents()
     data class ResendMessage(val message: SentUserMessage) : DialogChatEvents()
 
-    data class DownloadAttachment(val messageId: Long, val attachment: Attachment) : DialogChatEvents()
-    data class UpdateAttachment(val messageId: Long, val attachment: Attachment) : DialogChatEvents()
+    data class DownloadAttachment(val messageId: Long, val attachment: MessageAttachment) : DialogChatEvents()
+    data class UpdateAttachment(val messageId: Long, val attachment: MessageAttachment) : DialogChatEvents()
 }
 
 
@@ -318,7 +318,7 @@ class DialogChatViewModel  constructor(
     }
 
 
-    private suspend fun onUpdateAttachment(messageId: Long, attachment: Attachment) {
+    private suspend fun onUpdateAttachment(messageId: Long, attachment: MessageAttachment) {
        /* mutex.withLock {
 
             val messageIndex = dialogChatState.pages.indexOfFirst { it.id == messageId }

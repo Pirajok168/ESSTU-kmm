@@ -21,9 +21,9 @@ import ru.esstu.student.messaging.dialog_chat.datasources.api.request.ReadReques
 import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
 import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
-import ru.esstu.student.messaging.entities.Attachment
+import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.Message
-import ru.esstu.student.messaging.entities.User
+import ru.esstu.student.messaging.entities.Sender
 import ru.esstu.student.messaging.messenger.datasources.toUser
 
 
@@ -40,7 +40,7 @@ class DialogChatRepositoryImpl constructor(
 
     //private val opponentDao = dialogChatDatabase.opponentDao()
 
-    override suspend fun getOpponent(id: String): Flow<FlowResponse<User>> = flow {
+    override suspend fun getOpponent(id: String): Flow<FlowResponse<Sender>> = flow {
         emit(FlowResponse.Loading())
 
         //val cachedOpponent = opponentDao.getOpponent(id)?.toUser()
@@ -230,7 +230,7 @@ class DialogChatRepositoryImpl constructor(
     }
 
     //private val historyCache = dialogChatDatabase.historyCacheDao()
-    override suspend fun updateFile(messageId: Long, attachment: Attachment) {
+    override suspend fun updateFile(messageId: Long, attachment: MessageAttachment) {
        // historyCache.insertAttachments(listOf(attachment.toDialogChatAttachmentEntity(messageId)))
     }
 }

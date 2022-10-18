@@ -9,7 +9,7 @@ import ru.esstu.student.messaging.messenger.datasources.toAttachment
 
 import ru.esstu.student.messaging.messenger.datasources.toUser
 
-fun ru.esstu.student.messaging.messenger.datasources.api.response.Message.toReplyMessage(authors: List<User>): ReplyMessage? {
+fun ru.esstu.student.messaging.messenger.datasources.api.response.Message.toReplyMessage(authors: List<Sender>): ReplyMessage? {
     return ReplyMessage(
         id = id,
         from = authors.firstOrNull { it.id == from } ?: return null,
@@ -20,7 +20,7 @@ fun ru.esstu.student.messaging.messenger.datasources.api.response.Message.toRepl
 }
 
 fun ru.esstu.student.messaging.messenger.datasources.api.response.Message.toMessage(
-    authors: List<User>,
+    authors: List<Sender>,
     replyMessages: List<ReplyMessage>
 ): Message? {
     return Message(

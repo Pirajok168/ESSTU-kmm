@@ -15,8 +15,7 @@ import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatUpdateRepository
-import ru.esstu.student.messaging.entities.Attachment
+import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.DeliveryStatus
 import ru.esstu.student.messaging.entities.Message
 import ru.esstu.student.messaging.group_chat.datasources.di.groupChatModule
@@ -62,8 +61,8 @@ sealed class GroupChatEvents {
     object SendMessage : GroupChatEvents()
     data class ResendMessage(val message: SentUserMessage) : GroupChatEvents()
 
-    data class DownloadAttachment(val messageId: Long, val attachment: Attachment) : GroupChatEvents()
-    data class UpdateAttachment(val messageId: Long, val attachment: Attachment) : GroupChatEvents()
+    data class DownloadAttachment(val messageId: Long, val attachment: MessageAttachment) : GroupChatEvents()
+    data class UpdateAttachment(val messageId: Long, val attachment: MessageAttachment) : GroupChatEvents()
 }
 
 
@@ -316,7 +315,7 @@ class GroupChatViewModel  constructor(
     }
 
 
-    private suspend fun onUpdateAttachment(messageId: Long, attachment: Attachment) {
+    private suspend fun onUpdateAttachment(messageId: Long, attachment: MessageAttachment) {
       /*  mutex.withLock {
 
             val messageIndex = dialogChatState.pages.indexOfFirst { it.id == messageId }

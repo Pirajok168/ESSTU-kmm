@@ -22,7 +22,7 @@ import com.soywiz.klock.DateTime
 import com.soywiz.klock.format
 import ru.esstu.android.R
 import ru.esstu.android.domain.ui.theme.CompPreviewTheme
-import ru.esstu.student.messaging.entities.Attachment
+import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.DeliveryStatus
 import ru.esstu.student.messaging.entities.ReplyMessage
 
@@ -36,16 +36,16 @@ fun MessageCard(
     backgroundColor: Color = MaterialTheme.colors.primary.copy(alpha = 0.1f),
 
     messageText: String,
-    attachments: List<Attachment>,
+    attachments: List<MessageAttachment>,
     reply: ReplyMessage? = null,
     sentStatus: DeliveryStatus,
     date: Long,
 
     isShowStatus: Boolean = true,
-    onImageClick: (selectedId: Int, images: List<Attachment>) -> Unit = { _, _ -> },
+    onImageClick: (selectedId: Int, images: List<MessageAttachment>) -> Unit = { _, _ -> },
     // onFileClick: (attachment: Attachment) -> Unit = { },
 
-    onFileContent: @Composable (attachment: Attachment, content: @Composable () -> Unit) -> Unit = { _, cont -> cont() },
+    onFileContent: @Composable (attachment: MessageAttachment, content: @Composable () -> Unit) -> Unit = { _, cont -> cont() },
 ) {
 
     val images = attachments.filter { it.isImage }

@@ -7,8 +7,8 @@ import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.
 import ru.esstu.student.messaging.entities.*
 
 
-fun UserPreview.toUser(): User? {
-    return User(
+fun UserPreview.toUser(): Sender? {
+    return Sender(
         firstName = firstName ?: return null,
         lastName = lastName.orEmpty(),
         patronymic = patronymic.orEmpty(),
@@ -18,11 +18,11 @@ fun UserPreview.toUser(): User? {
     )
 }
 
-fun FileAttachment.toAttachment(): Attachment {
+fun FileAttachment.toAttachment(): MessageAttachment {
     val filename = fileName.split('.').let { if (it.size > 1) it.dropLast(1) else it }.joinToString(".")
     val fileExt = fileName.split('.').let { if (it.size > 1)  it.last() else "" }
 
-    return Attachment(
+    return MessageAttachment(
         id = id,
         type = type,
         name = filename,

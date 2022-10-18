@@ -12,11 +12,11 @@ import ru.esstu.domain.modules.account.datasources.repo.IAccountInfoApiRepositor
 import ru.esstu.domain.modules.account.di.accountModule
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.student.messaging.entities.User
+import ru.esstu.student.messaging.entities.Sender
 
 data class AccountInfoState(
     val isLoading: Boolean = false,
-    val user: User? = null,
+    val user: Sender? = null,
     val error: ResponseError? = null,
 )
 

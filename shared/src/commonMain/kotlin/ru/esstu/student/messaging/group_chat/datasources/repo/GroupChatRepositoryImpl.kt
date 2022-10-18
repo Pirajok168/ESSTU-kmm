@@ -14,7 +14,7 @@ import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_re
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.student.messaging.entities.Attachment
+import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.Message
 import ru.esstu.student.messaging.group_chat.datasources.*
 import ru.esstu.student.messaging.group_chat.datasources.api.GroupChatApi
@@ -240,7 +240,7 @@ class GroupChatRepositoryImpl  constructor(
     }
 
    // private val historyCache = groupChatDatabase.historyCacheDao()
-    override suspend fun updateFile(messageId: Long, attachment: Attachment) {
+    override suspend fun updateFile(messageId: Long, attachment: MessageAttachment) {
        // historyCache.insertAttachments(listOf(attachment.toDialogChatAttachmentEntity(messageId)))
     }
 }
