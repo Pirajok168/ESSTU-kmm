@@ -14,7 +14,7 @@ class SupportsApiImpl(
     override suspend fun getSupports(authToken: String, offset: Int, limit: Int): DataResponse {
         val response = portalApi.get {
             url{
-                path("lk/api/v2/messenger/getDialogs?type=SUPPORT")
+                path("lk/api/v2/messenger/getDialogs")
                 bearerAuth(authToken)
                 encodedParameters.append("type", "SUPPORT")
                 encodedParameters.append("offset", offset.toString())

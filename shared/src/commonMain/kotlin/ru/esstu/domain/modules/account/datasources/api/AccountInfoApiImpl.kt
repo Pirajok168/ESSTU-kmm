@@ -14,7 +14,7 @@ class AccountInfoApiImpl(
             url {
                 path("mlk/api/v2/messenger/getUserFull")
                 bearerAuth(authToken)
-                encodedParameters.append("userId", userId)
+                encodedParameters.append("id", userId)
             }
         }
         return response.body()

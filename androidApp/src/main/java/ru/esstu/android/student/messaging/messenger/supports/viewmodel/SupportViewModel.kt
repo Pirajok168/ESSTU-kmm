@@ -8,12 +8,13 @@ import androidx.lifecycle.viewModelScope
 
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import ru.esstu.ESSTUSdk
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.messenger.conversations.entities.Conversation
 import ru.esstu.student.messaging.messenger.supports.datasources.repo.ISupportsApiRepository
-
+import ru.esstu.student.messaging.messenger.supports.di.supportModule
 
 
 data class SupportState(
@@ -32,7 +33,7 @@ sealed class SupportEvents {
 
 
 class SupportViewModel  constructor(
-    supportApi: ISupportsApiRepository,
+    supportApi: ISupportsApiRepository = ESSTUSdk.supportModule.repo,
     //supportDb: ISupportsDbRepository,
     //updates: ISupportsUpdateRepository
 ) : ViewModel() {
@@ -69,7 +70,7 @@ class SupportViewModel  constructor(
 
     init {
         viewModelScope.launch {
-            when(val data = supportApi.getSupports(0,10)){
+            when(val data = supportApi.getSupports(10,0)){
                 is Response.Error -> {
 
                 }

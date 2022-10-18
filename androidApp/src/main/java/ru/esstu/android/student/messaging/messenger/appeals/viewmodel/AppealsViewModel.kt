@@ -72,7 +72,7 @@ class AppealsViewModel  constructor(
 
     init {
         viewModelScope.launch {
-            when(val data = appealApi.getSupports(0,10)){
+            when(val data = appealApi.getSupports(10,0)){
                 is Response.Error -> {
 
                 }

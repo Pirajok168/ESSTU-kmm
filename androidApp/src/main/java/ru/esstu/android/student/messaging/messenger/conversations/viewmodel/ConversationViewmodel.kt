@@ -70,7 +70,7 @@ class ConversationViewModel  constructor(
 
     init {
         viewModelScope.launch {
-            when(val data = conversationApi.getConversations(0,10)){
+            when(val data = conversationApi.getConversations(10,0)){
                 is Response.Error -> {
 
                 }

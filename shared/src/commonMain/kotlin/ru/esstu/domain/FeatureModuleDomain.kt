@@ -12,6 +12,7 @@ internal val featureModuleDomain = DI.Module("FeatureModuleDomain"){
     importAll(
         ktorModule,
         domainApi,
+
         featureModuleAuth,
         moduleApiUpdates,
         accountModule,

@@ -27,7 +27,6 @@ class CustomResponseException(response: HttpResponse, message: String) :
 }
 
 
-
 internal val domainApi = DI.Module(
     name =  "DomainApi",
     init = {
@@ -50,7 +49,7 @@ internal val domainApi = DI.Module(
                 }
 
                 install(HttpTimeout) {
-                    requestTimeoutMillis = 3000
+                    requestTimeoutMillis = 9000
                 }
 
                 HttpResponseValidator {

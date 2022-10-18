@@ -12,12 +12,17 @@ class UpdatesApiImpl(
     private val portalApi: HttpClient,
 ): UpdatesApi {
     override suspend fun getUpdates(authToken: String, timestamp: Long): DataResponse {
-        return portalApi.get {
+        return Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromJsonElement(portalApi.get {
             url {
-                path("/lk/api/async/messenger/getGlobalUpdates")
+                path("lk/api/async/messenger/getGlobalUpdates")
                 bearerAuth(authToken)
                 parameters.append("time", timestamp.toString())
             }
-        }.body()
+        }.body())
+
     }
 }

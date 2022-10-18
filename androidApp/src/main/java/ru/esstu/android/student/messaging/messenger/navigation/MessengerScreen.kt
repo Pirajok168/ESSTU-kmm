@@ -89,13 +89,13 @@ fun MessengerScreen(
                     count = values().size,
                     state = pagerState,
                 ) { index ->
-                     DialogScreen(onNavToDialogChat = onNavToDialogChat)
-                    /*when (values()[index]) {
+
+                    when (values()[index]) {
                         DIALOGS -> DialogScreen(onNavToDialogChat = onNavToDialogChat)
                         CONVERSATION -> ConversationScreen(onNavToConversationChat = onNavToConversationChat)
                         TECH_SUPPORT -> SupportScreen(onNavToSupportChat = onNavToSupportChat)
-                       APPEALS -> AppealScreen(onNavToAppealChat = onNavToAppealChat)
-                    }*/
+                        APPEALS -> AppealScreen(onNavToAppealChat = onNavToAppealChat)
+                    }
                 }
             }
         }
