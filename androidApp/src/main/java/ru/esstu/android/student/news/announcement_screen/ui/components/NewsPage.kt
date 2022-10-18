@@ -3,8 +3,6 @@ package ru.esstu.android.student.news.announcement_screen.ui.components
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,7 +18,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
@@ -29,17 +26,14 @@ import androidx.core.net.toUri
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.glide.GlideImage
 import com.soywiz.klock.DateFormat
-import com.soywiz.klock.DateTime
 import com.soywiz.klock.KlockLocale
 import com.soywiz.klock.locale.russian
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
-import kotlinx.coroutines.flow.collectLatest
 import ru.esstu.android.domain.ui.component_ui.Attachment
 import ru.esstu.android.domain.ui.component_ui.UserPreview
-import ru.esstu.android.domain.ui.theme.CompPreviewTheme
-import ru.esstu.student.news.entities.Attachment
+import ru.esstu.student.news.entities.AttachmentNews
 
 
 import ru.esstu.student.news.entities.NewsNode
@@ -56,8 +50,8 @@ fun NewsPage(
     verticalPadding: Dp = 24.dp,
     isExpandedDefault:Boolean = false,
     onImageClick: (selected: String, uris: List<String>) -> Unit = { _, _ -> },
-    onDownloadAttachment: (newsId: Long, attachment: Attachment) -> Unit = { _, _ -> },
-    onUpdateAttachment: (newsId: Long, attachment: Attachment) -> Unit = { _, _ -> },
+    onDownloadAttachment: (newsId: Long, attachment: AttachmentNews) -> Unit = { _, _ -> },
+    onUpdateAttachment: (newsId: Long, attachment: AttachmentNews) -> Unit = { _, _ -> },
     onError: (message: String) -> Unit = {}
 ) {
     val attachments = node.attachments.filter { !it.isImage }

@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.ESSTUSdk
-import ru.esstu.student.news.entities.Attachment
+import ru.esstu.student.news.entities.AttachmentNews
 import ru.esstu.student.news.announcement.datasources.repo.IAnnouncementsRepository
 import ru.esstu.student.news.announcement.datasources.repo.IAnnouncementsUpdateRepository
 import ru.esstu.student.news.announcement.di.announcementsModule
@@ -30,8 +30,8 @@ sealed class AnnouncementsEvents {
     object LoadAndRefresh:AnnouncementsEvents()
     object LoadNext : AnnouncementsEvents()
     object Refresh : AnnouncementsEvents()
-    data class DownloadAttachment(val attachment: Attachment):AnnouncementsEvents()
-    data class UpdateAttachment(val announcementId: Long, val attachment: Attachment):AnnouncementsEvents()
+    data class DownloadAttachment(val attachment: AttachmentNews):AnnouncementsEvents()
+    data class UpdateAttachment(val announcementId: Long, val attachment: AttachmentNews):AnnouncementsEvents()
 }
 
 
@@ -75,7 +75,7 @@ class AnnouncementsViewModel  constructor(
         }
     }
 
-    private fun onUpdateAttachment(attachment: Attachment, announcementId: Long) {
+    private fun onUpdateAttachment(attachment: AttachmentNews, announcementId: Long) {
         val pages  = state.pages.map { node->
             if(node.id != announcementId) return@map node
             node.copy(

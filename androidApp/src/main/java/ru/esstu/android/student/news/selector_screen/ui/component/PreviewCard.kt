@@ -10,14 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.esstu.android.domain.ui.component_ui.UserPreview
-import ru.esstu.student.news.entities.User
+import ru.esstu.student.news.entities.Creator
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PreviewCard(
     modifier: Modifier = Modifier,
-    user: User,
+    user: Creator,
     title: String,
     body: String,
     onClick: () -> Unit

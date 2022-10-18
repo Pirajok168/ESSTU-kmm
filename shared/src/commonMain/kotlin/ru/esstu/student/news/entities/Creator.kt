@@ -3,7 +3,7 @@ package ru.esstu.student.news.entities
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class User(
+data class Creator(
     val id:String,
     val firstName: String,
     val lastName: String,

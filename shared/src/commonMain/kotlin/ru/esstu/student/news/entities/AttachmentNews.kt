@@ -1,6 +1,6 @@
 package ru.esstu.student.news.entities
 
-data class Attachment(
+data class AttachmentNews(
     val id: Int,
     val fileUri: String,
 

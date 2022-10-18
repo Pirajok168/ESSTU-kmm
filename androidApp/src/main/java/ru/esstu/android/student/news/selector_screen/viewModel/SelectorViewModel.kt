@@ -10,7 +10,7 @@ import com.soywiz.klock.DateTime
 import kotlinx.coroutines.launch
 import ru.esstu.domain.utill.helpers.ScheduleSource
 import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.student.news.entities.Attachment
+import ru.esstu.student.news.entities.AttachmentNews
 import ru.esstu.student.news.entities.NewsNode
 
 
@@ -41,8 +41,8 @@ sealed class SelectorScreenEvents {
     //data class PassTodayTime(val time: LocalDateTime) : SelectorScreenEvents()
     object LoadAnchor : SelectorScreenEvents()
     object LoadSchedule : SelectorScreenEvents()
-    data class DownloadAttachment(val attachment: Attachment) : SelectorScreenEvents()
-    data class UpdateAttachment(val attachment: Attachment) : SelectorScreenEvents()
+    data class DownloadAttachment(val attachment: AttachmentNews) : SelectorScreenEvents()
+    data class UpdateAttachment(val attachment: AttachmentNews) : SelectorScreenEvents()
 }
 
 
@@ -76,7 +76,7 @@ class SelectorViewModel  constructor(
         state = state.copy(closestLesson = closestLesson)*/
     }
 
-    private fun onUpdateAttachment(attachment: Attachment) {
+    private fun onUpdateAttachment(attachment: AttachmentNews) {
         val node = state.node ?: return
 
         state = state.copy(

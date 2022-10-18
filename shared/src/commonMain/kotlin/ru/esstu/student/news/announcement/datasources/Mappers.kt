@@ -9,13 +9,13 @@ import ru.esstu.student.news.announcement.db.announcement.entities.NewsAttachmen
 import ru.esstu.student.news.announcement.db.announcement.entities.NewsEntity
 import ru.esstu.student.news.announcement.db.announcement.entities.UserEntity
 import ru.esstu.student.news.announcement.db.announcement.entities.relations.NewsWithAttachments
-import ru.esstu.student.news.entities.Attachment
+import ru.esstu.student.news.entities.AttachmentNews
 import ru.esstu.student.news.entities.NewsNode
-import ru.esstu.student.news.entities.User
+import ru.esstu.student.news.entities.Creator
 
 
-fun UserPreview.toUser(): User? {
-    return User(
+fun UserPreview.toUser(): Creator? {
+    return Creator(
         id = id ?: return null,
         firstName = firstName ?: return null,
         lastName = lastName.orEmpty(),
@@ -26,11 +26,11 @@ fun UserPreview.toUser(): User? {
 }
 
 
-fun FileAttachment.toAttachment(): Attachment {
+fun FileAttachment.toAttachment(): AttachmentNews {
     val filename = fileName.split('.').let { if (it.size > 1) it.dropLast(1) else it }.joinToString(".")
     val fileExt = fileName.split('.').let { if (it.size > 1)  it.last() else "" }
 
-    return Attachment(
+    return AttachmentNews(
         id = id,
         type = type,
         name = filename,
@@ -61,11 +61,11 @@ fun DataResponse.toAnnouncements(): List<NewsNode> {
     }
 }
 
-fun User.toUserEntity() = UserEntity(
+fun Creator.toUserEntity() = UserEntity(
     id = id, summary = summary, photo = photo, lastName = lastName, firstName = firstName, patronymic = patronymic
 )
 
-fun Attachment.toNewsAttachmentEntity(newsId: Long) = NewsAttachmentEntity(
+fun AttachmentNews.toNewsAttachmentEntity(newsId: Long) = NewsAttachmentEntity(
     idAttachment = id, fileUri = fileUri, ext = ext, size = size, name = name, type = type, newsId = newsId, loadProgress = loadProgress, localFileUri = localFileUri
 )
 

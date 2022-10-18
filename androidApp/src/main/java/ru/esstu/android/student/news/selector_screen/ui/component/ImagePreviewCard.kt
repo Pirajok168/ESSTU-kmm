@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.glide.GlideImage
 import com.valentinilk.shimmer.shimmer
-import ru.esstu.student.news.entities.User
+import ru.esstu.student.news.entities.Creator
 
 
 @Composable
@@ -91,7 +91,7 @@ private fun WhiteUserPreview(
 fun ImagePreviewCard(
     modifier: Modifier = Modifier,
     photoUri: String,
-    user: User,
+    user: Creator,
     title: String,
     onClick: () -> Unit
 ) {

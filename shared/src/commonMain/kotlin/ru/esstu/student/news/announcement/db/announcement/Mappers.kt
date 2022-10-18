@@ -5,15 +5,15 @@ import ru.esstu.student.news.announcement.datasources.db.timestamp.entities.Time
 import ru.esstu.student.news.announcement.db.announcement.entities.NewsAttachmentEntity
 import ru.esstu.student.news.announcement.db.announcement.entities.UserEntity
 import ru.esstu.student.news.announcement.db.announcement.entities.relations.NewsWithAttachments
-import ru.esstu.student.news.entities.Attachment
+import ru.esstu.student.news.entities.AttachmentNews
 import ru.esstu.student.news.entities.NewsNode
-import ru.esstu.student.news.entities.User
+import ru.esstu.student.news.entities.Creator
 
-fun NewsAttachmentEntity.toAttachment() = Attachment(
+fun NewsAttachmentEntity.toAttachment() = AttachmentNews(
     type = type, id = idAttachment, name = name, loadProgress = loadProgress, localFileUri = localFileUri, size = size, ext = ext, fileUri = fileUri
 )
 
-fun UserEntity.toUser() = User(
+fun UserEntity.toUser() = Creator(
     id = id,
     firstName = firstName,
     lastName = lastName,
