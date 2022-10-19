@@ -11,11 +11,7 @@ struct Test: View {
     @State var text = ""
     
     var body: some View {
-        NavigationView {
-                    
-            Text( "123")
-        }
-        .searchable(text: $text, placement:.navigationBarDrawer)
+       Test(text: "привет")
        
       
     }

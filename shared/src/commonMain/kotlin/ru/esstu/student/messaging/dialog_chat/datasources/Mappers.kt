@@ -2,9 +2,14 @@ package ru.esstu.student.messaging.dialog_chat.datasources
 
 
 import com.soywiz.klock.DateTime
+import io.ktor.http.ContentDisposition.Companion.Attachment
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessagePreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessageResponse
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAttachmentEntity
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatReplyMessageEntity
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
 
 
 import ru.esstu.student.messaging.entities.*
@@ -35,6 +40,43 @@ fun MessagePreview.toMessage(
         status = if (views > 1) DeliveryStatus.READ else DeliveryStatus.DELIVERED
     )
 }
+
+fun MessageWithRelated.toMessage() = Message(
+    message = message.message,
+    id = message.id,
+    status = enumValueOf(message.status),
+    attachments = attachments.map { it.toAttachment() },
+    replyMessage = reply?.toReplyMessage() ,
+    date = message.date,
+    from = message.from.toUser()
+)
+
+fun DialogChatAuthorEntity.toUser() = Sender(
+    id = id,
+    patronymic = patronymic,
+    firstName = firstName,
+    lastName = lastName,
+    photo = photo,
+    summary = summary
+)
+
+fun DialogChatAttachmentEntity.toAttachment() = MessageAttachment(
+    type = type,
+    fileUri = fileUri,
+    name = name,
+    ext = ext,
+    size = size,
+    id = id,
+    localFileUri = LocalFileUri
+)
+
+fun DialogChatReplyMessageEntity.toReplyMessage() = ReplyMessage(
+    id = id,
+    attachmentsCount = attachmentsCount,
+    message = message.orEmpty(),
+    date = date,
+    from = from.toUser()
+)
 
 
 
