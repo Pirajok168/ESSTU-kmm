@@ -5,14 +5,14 @@ import com.squareup.sqldelight.db.SqlDriver
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import ru.esstu.student.news.NewsDatabase
+
 import ru.esstu.student.news.announcement.db.announcement.entities.NewsAttachmentEntity
 import ru.esstu.student.news.announcement.db.announcement.entities.NewsEntity
 import ru.esstu.student.news.announcement.db.announcement.entities.UserEntity
 
 
 import ru.esstu.student.news.announcement.db.announcement.entities.relations.NewsWithAttachments
-import ru.esstu.student.news.datasources.NewsEntityDatabase
+import ru.esstu.student.news.announcementdbannouncement.NewsEntityDatabase
 import kotlin.collections.List
 
 internal class Database(databaseNewsFactory: SqlDriver): NewsDao {

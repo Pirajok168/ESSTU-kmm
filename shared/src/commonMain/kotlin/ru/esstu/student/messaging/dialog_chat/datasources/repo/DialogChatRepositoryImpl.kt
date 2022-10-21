@@ -18,6 +18,7 @@ import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.dialog_chat.datasources.*
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatApi
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.HistoryCacheDao
 import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
 import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
@@ -34,7 +35,7 @@ class DialogChatRepositoryImpl constructor(
    // private val context: Context,
     private val auth: IAuthRepository,
     private val dialogChatApi: DialogChatApi,
-    //dialogChatDatabase: DialogChatDatabase,
+    private val cacheDao: HistoryCacheDao
     //dialogsDb: DialogsDatabase
 ) : IDialogChatRepository {
 
@@ -63,10 +64,10 @@ class DialogChatRepositoryImpl constructor(
         emit(FlowResponse.Loading(false))
     }
 
-    //private val cacheDao = dialogChatDatabase.historyCacheDao()
+
 
     override suspend fun getPage(dialogId: String, limit: Int, offset: Int): Response<List<Message>> {
-        /*val cached = auth.provideToken { token ->
+        val cached = auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Error("unsupported user type")
 
             cacheDao.getMessageHistory(
@@ -75,10 +76,10 @@ class DialogChatRepositoryImpl constructor(
                 opponentId = dialogId,
                 appUserId = appUserId
             ).map { it.toMessage() }
-        }*/
+        }
 
-       // if (cached.data != null)
-           // return Response.Success(cached.data!!)
+        if (cached.data != null)
+            return Response.Success(cached.data!!)
 
         val remotePage = auth.provideToken { type, token ->
             val rawPage = dialogChatApi.getHistory("$token", dialogId, offset, limit)
@@ -106,7 +107,7 @@ class DialogChatRepositoryImpl constructor(
         auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
 
-            //cacheDao.insertMessagesWithRelated(messages.map { it.toMessageWithRelated(dialogId = dialogId, appUserId = appUserId) })
+            cacheDao.insertMessagesWithRelated(messages.map { it.toMessageWithRelated(dialogId = dialogId, appUserId = appUserId) })
         }
     }
 
@@ -190,7 +191,7 @@ class DialogChatRepositoryImpl constructor(
         }.data ?: emptyList()
 
         return messages*/
-        TODO()
+        return emptyList()
     }
 
     override suspend fun setErredMessage(dialogId: String, message: SentUserMessage) {
@@ -210,12 +211,12 @@ class DialogChatRepositoryImpl constructor(
     //private val userMsgDao = dialogChatDatabase.userMessagesDao()
 
     override suspend fun getUserMessage(dialogId: String): NewUserMessage {
-       /* val message = auth.provideToken { token ->
+        val message = auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
             return@provideToken userMsgDao.getUserMessageWithRelated(appUserId, dialogId)?.toSentUserMessage(context)
-        }.data ?: NewUserMessage()*/
+        }.data ?: NewUserMessage()
 
-        TODO()
+
 
     }
 

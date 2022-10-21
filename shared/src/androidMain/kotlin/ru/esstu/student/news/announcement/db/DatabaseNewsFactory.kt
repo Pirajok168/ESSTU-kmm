@@ -4,7 +4,8 @@ import android.content.Context
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import ru.esstu.ContextApplication
-import ru.esstu.student.news.NewsDatabase
+
+import ru.esstu.student.news.announcement.db.announcement.NewsDatabase
 
 
 class DatabaseDriverFactory(

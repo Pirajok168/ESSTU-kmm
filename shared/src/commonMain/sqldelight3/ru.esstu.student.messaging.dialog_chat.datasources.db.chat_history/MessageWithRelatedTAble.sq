@@ -1,0 +1,59 @@
+
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity;
+
+
+
+CREATE TABLE DialogChatMessageTable(
+    messageId INTEGER PRIMARY KEY,
+    appUserId TEXT ,
+    opponentId TEXT,
+    fromSend TEXT AS DialogChatAuthorEntity NOT NULL,
+    replyMessageId INTEGER,
+    date INTEGER NOT NULL,
+    message TEXT,
+    status TEXT
+);
+
+CREATE TABLE DialogChatAttachmentTable(
+    idAttachment INTEGER PRIMARY KEY,
+    messageId INTEGER,
+    fileUri TEXT,
+    LocalFileUri TEXT,
+    loadProgress REAL,
+    name TEXT,
+    ext TEXT,
+    size INTEGER,
+    type TEXT
+);
+
+CREATE TABLE DialogChatReplyMessageTable(
+    id INTEGER PRIMARY KEY,
+    fromSend TEXT AS DialogChatAuthorEntity,
+    date INTEGER,
+    message TEXT,
+    attachmentsCount INTEGER
+);
+
+
+insertMessage:
+    INSERT OR REPLACE INTO DialogChatMessageTable(messageId, opponentId, fromSend,replyMessageId,date,message,status, appUserId)
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?);
+
+insertAttachments:
+    INSERT OR REPLACE INTO DialogChatAttachmentTable(idAttachment, messageId, fileUri,LocalFileUri,name,ext,size, type)
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?);
+
+clearAttachments:
+    DELETE FROM DialogChatAttachmentTable WHERE messageId == (:messageId);
+
+
+insertReply:
+    INSERT OR REPLACE INTO DialogChatReplyMessageTable(id, fromSend, date,message,attachmentsCount)
+        VALUES(?, ?, ?, ?, ?);
+
+getMessageHistory:
+    SELECT t.*, o.*
+        FROM DialogChatMessageTable t
+        LEFT JOIN DialogChatAttachmentTable o ON t.messageId == o.messageId
+        WHERE t.appUserId == (:appUserId) AND t.opponentId == (:opponentId)
+        ORDER BY date DESC LIMIT (:limit) OFFSET (:offset);

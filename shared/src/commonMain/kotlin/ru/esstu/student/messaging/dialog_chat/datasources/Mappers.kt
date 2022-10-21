@@ -8,6 +8,7 @@ import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.messag
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessageResponse
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAttachmentEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatReplyMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
 
@@ -15,6 +16,17 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entiti
 import ru.esstu.student.messaging.entities.*
 import ru.esstu.student.messaging.messenger.datasources.toAttachment
 import ru.esstu.student.messaging.messenger.datasources.toUser
+
+fun Sender.toUserEntity(): DialogChatAuthorEntity {
+    return DialogChatAuthorEntity(
+        summary = summary,
+        photo = photo,
+        lastName = lastName,
+        firstName = firstName,
+        patronymic = patronymic,
+        id = id
+    )
+}
 
 fun MessagePreview.toReplyMessage(authors: List<Sender>): ReplyMessage? {
     return ReplyMessage(
@@ -25,6 +37,44 @@ fun MessagePreview.toReplyMessage(authors: List<Sender>): ReplyMessage? {
         date = DateTime(date).unixMillisLong
     )
 }
+
+fun ReplyMessage.toDialogChatReplyMessageEntity() = DialogChatReplyMessageEntity(
+    from = from.toUserEntity(),
+    date = date,
+    message = message,
+    attachmentsCount = attachmentsCount,
+    id = id
+)
+
+fun Message.toDialogChatMessageEntity(appUserId: String, dialogId: String) = DialogChatMessageEntity(
+    message = message,
+    opponentId = dialogId,
+    appUserId = appUserId,
+    from = from.toUserEntity(),
+    id = id,
+    date = date,
+    status = status.name,
+    replyMessageId = replyMessage?.id
+)
+
+fun MessageAttachment.toDialogChatAttachmentEntity(messageId: Long) = DialogChatAttachmentEntity(
+    id = id,
+    size = size,
+    ext = ext,
+    name = name,
+    fileUri = fileUri,
+    type = type,
+    messageId = messageId,
+    LocalFileUri = localFileUri,
+    loadProgress = loadProgress
+)
+
+
+fun Message.toMessageWithRelated(appUserId: String, dialogId: String) = MessageWithRelated(
+    message = toDialogChatMessageEntity(appUserId, dialogId),
+    reply = replyMessage?.toDialogChatReplyMessageEntity(),
+    attachments = attachments.map { it.toDialogChatAttachmentEntity(id) }
+)
 
 fun MessagePreview.toMessage(
     authors: List<Sender>,

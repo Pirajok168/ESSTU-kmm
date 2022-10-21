@@ -9,6 +9,9 @@ import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatApi
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatApiImpl
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatUpdateApi
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatUpdateApiImpl
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.HistoryCacheDao
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.HistoryCacheDatabase
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.databaseHistoryCacheFactory
 import ru.esstu.student.messaging.dialog_chat.datasources.repo.DialogChatRepositoryImpl
 import ru.esstu.student.messaging.dialog_chat.datasources.repo.DialogChatUpdateRepositoryImpl
 import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatRepository
@@ -28,10 +31,17 @@ internal val dialogChatModule = DI.Module("DialogChatModule"){
         )
     }
 
+    bind<HistoryCacheDao>() with singleton {
+        HistoryCacheDatabase(
+            databaseHistoryCacheFactory = databaseHistoryCacheFactory().sqlDriver
+        )
+    }
+
     bind<IDialogChatRepository>() with singleton {
         DialogChatRepositoryImpl(
             auth = instance(),
-            dialogChatApi = instance()
+            dialogChatApi = instance(),
+            cacheDao = instance()
         )
     }
 
