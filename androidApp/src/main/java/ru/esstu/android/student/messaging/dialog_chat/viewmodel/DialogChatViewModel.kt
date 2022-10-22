@@ -11,6 +11,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.esstu.ESSTUSdk
+import ru.esstu.domain.modules.account.datasources.repo.IAccountInfoApiRepository
+import ru.esstu.domain.modules.account.di.accountModule
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
@@ -72,7 +74,7 @@ sealed class DialogChatEvents {
 class DialogChatViewModel  constructor(
     private val dialogChatRepository: IDialogChatRepository = ESSTUSdk.dialogChatModule.repo,
     private val dialogChatUpdateRepository: IDialogChatUpdateRepository = ESSTUSdk.dialogChatModule.update,
-    //private val accountInfoRepository: IAccountInfoApiRepository
+    private val accountInfoRepository: IAccountInfoApiRepository = ESSTUSdk.accountModule.repo
 ) : ViewModel() {
 
     var dialogChatState by mutableStateOf(DialogChatState())

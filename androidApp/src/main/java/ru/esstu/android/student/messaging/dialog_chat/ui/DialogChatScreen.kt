@@ -36,7 +36,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.statusBarsPadding
+import com.soywiz.klock.DateFormat
 import com.soywiz.klock.DateTime
+import com.soywiz.klock.DateTimeTz
+import com.soywiz.klock.parse
 import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -56,7 +59,7 @@ import ru.esstu.student.messaging.entities.DeliveryStatus
 
 
 private val todayYear = DateTime.now().year
-
+private val dateFormat: DateFormat = DateFormat("d MMM yyyy" )
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DialogChatScreen(
@@ -258,7 +261,8 @@ fun DialogChatScreen(
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
                 uiState.sentMessages
-                    .groupBy { it.formatDate.local }
+                    .groupBy {  dateFormat.parse("${it.formatDate.local.dayOfMonth} " +
+                            "${it.formatDate.local.month.localShortName} ${it.formatDate.local.yearInt}") }
                     .forEach { (date, messages) ->
                         val isCurrentYear = date.year == todayYear
 
@@ -348,7 +352,8 @@ fun DialogChatScreen(
 
                 uiState.pages
                     .mapIndexed { index, message -> index to message }
-                    .groupBy { it.second.formatDate.local }
+                    .groupBy {  dateFormat.parse("${it.second.formatDate.local.dayOfMonth} " +
+                            "${it.second.formatDate.local.month.localShortName} ${it.second.formatDate.local.yearInt}") }
                     .forEach { (date, messages) ->
                         val isCurrentYear = date.year == todayYear
 
@@ -530,8 +535,29 @@ fun DialogChatScreen(
                             CircularProgressIndicator()
                         }
                     }
+
+                
             }
+
+
+            /*LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                reverseLayout = true,
+                contentPadding = PaddingValues(vertical = 8.dp)
+            ){
+                uiState.pages
+                    .mapIndexed { index, message -> index to message  }
+                    .groupBy { dateFormat.parse("${it.second.formatDate.local.dayOfMonth}") }
+                    .forEach { (date, messages) ->
+                        stickyHeader {
+                            TimeDivider(date = messages, isCurrentYear = )
+                        }
+                    }
+            }*/
+
         }
+
+
     }
 }
 
