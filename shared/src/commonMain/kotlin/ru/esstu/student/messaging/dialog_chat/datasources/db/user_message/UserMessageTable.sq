@@ -1,0 +1,34 @@
+CREATE TABLE UserMessageEntityTable (
+    appUserId TEXT,
+    dialogId TEXT PRIMARY KEY,
+    text Text,
+    replyMessageId INTEGER
+);
+
+CREATE TABLE UserCachedFileTable(
+    id INTEGER PRIMARY KEY,
+    appUserId TEXT,
+    dialogId TEXT,
+    name TEXT,
+    ext TEXT,
+    size INTEGER NOT NULL,
+    type TEXT
+);
+
+
+getCachedFiles:
+    SELECT * FROM UserCachedFileTable WHERE appUserId == :appUserId AND dialogId == :dialogId;
+
+getUserMessage:
+    SELECT * FROM UserMessageEntityTable WHERE appUserId == :appUserId AND dialogId == :dialogId;
+
+removeMessage:
+    DELETE FROM UserMessageEntityTable WHERE appUserId == :appUserId AND dialogId == :dialogId;
+
+addMessage:
+    INSERT OR REPLACE INTO UserMessageEntityTable(appUserId, dialogId, text, replyMessageId)
+        VALUES (?, ? ,?, ?);
+
+addCachedFiles:
+    INSERT OR REPLACE INTO UserCachedFileTable(id, appUserId,dialogId,name,ext,size,type)
+        VALUES (?, ? ,?, ?,? ,? ,?);

@@ -34,6 +34,14 @@ CREATE TABLE DialogChatReplyMessageTable(
     attachmentsCount INTEGER
 );
 
+getReplyMessage:
+     SELECT t.*, o.*
+            FROM DialogChatMessageTable t
+            LEFT JOIN DialogChatAttachmentTable o ON t.messageId == o.messageId
+            WHERE t.appUserId == (:appUserId) AND t.opponentId == (:opponentId);
+
+test:
+    SELECT  * FROM  DialogChatMessageTable;
 
 insertMessage:
     INSERT OR REPLACE INTO DialogChatMessageTable(messageId, opponentId, fromSend,replyMessageId,date,message,status, appUserId)

@@ -4,4 +4,5 @@ import kotlinx.serialization.Serializable
 
 //просто пустой интерфейс чтобы унифицировать тело запроса и инкапсулировать запихиваемые в него классы
 
-interface IPeer { }
+@Serializable
+abstract class IPeer { }

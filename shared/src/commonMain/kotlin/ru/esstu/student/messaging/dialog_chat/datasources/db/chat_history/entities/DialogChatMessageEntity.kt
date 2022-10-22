@@ -1,8 +1,9 @@
 package ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities
 
+import kotlinx.serialization.Serializable
 
 
-
+@Serializable
 data class DialogChatMessageEntity(
     val appUserId:String, //обычно внешний ключ, но здесь просто поле, относительно которого выбирается кэш только для текущего аккаунта
 

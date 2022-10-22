@@ -1,6 +1,8 @@
 package ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities
 
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class DialogChatReplyMessageEntity(
 
     val id: Long,

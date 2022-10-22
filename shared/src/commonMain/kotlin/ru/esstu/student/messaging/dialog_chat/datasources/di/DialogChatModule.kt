@@ -12,6 +12,9 @@ import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatUpdateAp
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.HistoryCacheDao
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.HistoryCacheDatabase
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.databaseHistoryCacheFactory
+import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.UserMessageDao
+import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.UserMessageDatabase
+import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.databaseUserMessageDatabase
 import ru.esstu.student.messaging.dialog_chat.datasources.repo.DialogChatRepositoryImpl
 import ru.esstu.student.messaging.dialog_chat.datasources.repo.DialogChatUpdateRepositoryImpl
 import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatRepository
@@ -37,11 +40,18 @@ internal val dialogChatModule = DI.Module("DialogChatModule"){
         )
     }
 
+    bind<UserMessageDao>() with singleton {
+        UserMessageDatabase(
+            userMessageDaoDatabase = databaseUserMessageDatabase().sqlDriver
+        )
+    }
+
     bind<IDialogChatRepository>() with singleton {
         DialogChatRepositoryImpl(
             auth = instance(),
             dialogChatApi = instance(),
-            cacheDao = instance()
+            cacheDao = instance(),
+            userMsgDao = instance(),
         )
     }
 

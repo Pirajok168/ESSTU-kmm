@@ -86,6 +86,8 @@ class HistoryCacheDatabase(
         limit: Int,
         offset: Int
     ): List<MessageWithRelated> {
+
+
         val query = dbQuery.getMessageHistory(
             appUserId = appUserId,
             opponentId = opponentId,
@@ -93,7 +95,7 @@ class HistoryCacheDatabase(
             offset = offset.toLong(),
         ).executeAsList()
         Napier.e(query.toString())
-        TODO()
+        return emptyList()
     }
 
 

@@ -5,4 +5,4 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DialoguePeer(
     val userId: String
-): IPeer
+): IPeer()

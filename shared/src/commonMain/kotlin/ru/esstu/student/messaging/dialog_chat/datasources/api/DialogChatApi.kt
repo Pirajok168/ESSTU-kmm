@@ -25,7 +25,7 @@ interface DialogChatApi {
 
     suspend fun readMessages(
          authToken: String,
-       body: ChatReadRequestBody
+         body: ChatReadRequestBody
     ): Boolean
 
 

@@ -3,8 +3,15 @@ package ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_r
 import kotlinx.serialization.Serializable
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.peer.IPeer
 
+
+@Serializable
+sealed class IPeer_{
+    @Serializable
+    data class DialoguePeer(val userId: String): IPeer_()
+}
+
 @Serializable
 data class ChatReadRequestBody (
     val maxId:Int,
-    val peer: IPeer
+    val peer: IPeer_
 )

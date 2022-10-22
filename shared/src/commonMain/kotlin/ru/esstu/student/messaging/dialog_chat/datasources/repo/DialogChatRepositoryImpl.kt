@@ -13,12 +13,15 @@ import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_re
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatReadRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatRequestBody
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.IPeer_
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.dialog_chat.datasources.*
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatApi
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.HistoryCacheDao
+import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.UserMessageDao
+import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.toSentUserMessage
 import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
 import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
@@ -35,7 +38,8 @@ class DialogChatRepositoryImpl constructor(
    // private val context: Context,
     private val auth: IAuthRepository,
     private val dialogChatApi: DialogChatApi,
-    private val cacheDao: HistoryCacheDao
+    private val cacheDao: HistoryCacheDao,
+    private val userMsgDao: UserMessageDao,
     //dialogsDb: DialogsDatabase
 ) : IDialogChatRepository {
 
@@ -175,7 +179,7 @@ class DialogChatRepositoryImpl constructor(
         auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
 
-            dialogChatApi.readMessages("${token.access}", ChatReadRequestBody(message.id.toInt(), peer = DialoguePeer(userId = dialogId)))
+            dialogChatApi.readMessages("${token.access}", ChatReadRequestBody(message.id.toInt(), peer = IPeer_.DialoguePeer(userId = dialogId)))
 
             //dialogsDao.updateDialogLastMessage(appUserId = appUserId, dialogId = dialogId, message = message.toMessageWithAttachments())
         }
@@ -213,10 +217,10 @@ class DialogChatRepositoryImpl constructor(
     override suspend fun getUserMessage(dialogId: String): NewUserMessage {
         val message = auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
-            return@provideToken userMsgDao.getUserMessageWithRelated(appUserId, dialogId)?.toSentUserMessage(context)
+            return@provideToken userMsgDao.getUserMessageWithRelated(appUserId, dialogId)?.toSentUserMessage()
         }.data ?: NewUserMessage()
 
-
+        return message
 
     }
 

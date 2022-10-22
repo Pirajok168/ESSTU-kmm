@@ -10,7 +10,7 @@ import ru.esstu.student.news.announcement.db.announcement.NewsDatabase
 
 class DatabaseHistoryCacheFactory(
     private val context: Context = ContextApplication.getContextApplication().context,
-    override val sqlDriver: SqlDriver = AndroidSqliteDriver(NewsDatabase.Schema, context, "databaseHistoryCache.db")
+    override val sqlDriver: SqlDriver = AndroidSqliteDriver(MessageWithRelatedTAble.Schema, context, "databaseHistoryCache.db")
 ): IDatabaseHistoryCacheFactory {
 
 }

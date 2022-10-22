@@ -128,6 +128,11 @@ sqldelight {
         packageName = "ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history"
         sourceFolders = listOf("sqldelight3")
     }
+
+    database("UserMessageTable"){
+        packageName = "ru.esstu.student.messaging.dialog_chat.datasources.db.user_message"
+        sourceFolders = listOf("kotlin")
+    }
 }
 
 android {
