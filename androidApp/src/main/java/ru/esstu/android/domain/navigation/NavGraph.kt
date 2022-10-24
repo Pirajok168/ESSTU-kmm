@@ -71,7 +71,7 @@ fun SetupNavGraph(
         //TODO не настроен
         entrantNavGraph(navController)
 
-        studentNavGraph(navController)
+
 
         teacherNavGraph(navController)
 

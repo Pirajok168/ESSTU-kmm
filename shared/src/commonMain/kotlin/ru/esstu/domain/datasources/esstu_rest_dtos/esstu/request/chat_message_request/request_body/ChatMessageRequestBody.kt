@@ -6,6 +6,6 @@ import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_re
 @Serializable
 data class ChatMessageRequestBody(
     val message: String,
-    val peer: IPeer,
+    val peer: IPeer_,
     val replyToId: Int? = null
 )

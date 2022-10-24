@@ -8,6 +8,8 @@ import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_re
 sealed class IPeer_{
     @Serializable
     data class DialoguePeer(val userId: String): IPeer_()
+
+
 }
 
 @Serializable

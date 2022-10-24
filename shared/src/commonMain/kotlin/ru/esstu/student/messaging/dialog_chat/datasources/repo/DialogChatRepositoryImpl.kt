@@ -133,7 +133,7 @@ class DialogChatRepositoryImpl constructor(
                 dialogChatApi.sendAttachments(
                     authToken = "$token",
                     files = multipartBodyList,
-                    requestSendMessage = ChatRequestBody(peer = DialoguePeer(userId = dialogId))
+                    requestSendMessage = ChatRequestBody(peer = IPeer_.DialoguePeer(userId = dialogId))
                 )
             }
 
@@ -148,7 +148,7 @@ class DialogChatRepositoryImpl constructor(
                 dialogChatApi.sendMessageWithAttachments(
                     authToken = "$token",
                     files = multipartBodyList,
-                    requestSendMessage = ChatMessageRequestBody(message.orEmpty(), DialoguePeer(dialogId), replyMessage?.id?.toInt())
+                    requestSendMessage = ChatMessageRequestBody(message.orEmpty(), IPeer_.DialoguePeer(dialogId), replyMessage?.id?.toInt())
                 )
             }
             return when (result) {
@@ -161,7 +161,7 @@ class DialogChatRepositoryImpl constructor(
             val result = auth.provideToken { type, token ->
                 dialogChatApi.sendMessage(
                     authToken = "$token",
-                    body = ChatMessageRequestBody(message.orEmpty(), DialoguePeer(dialogId), replyMessage?.id?.toInt())
+                    body = ChatMessageRequestBody(message.orEmpty(), IPeer_.DialoguePeer(dialogId), replyMessage?.id?.toInt())
                 )
             }
             return when (result) {
