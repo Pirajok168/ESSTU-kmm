@@ -11,6 +11,7 @@ import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.peer.ConversionPeer
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatRequestBody
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.IPeer_
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
@@ -120,7 +121,7 @@ class GroupChatRepositoryImpl  constructor(
                 groupChatApi.sendAttachments(
                     authToken = "$token",
                     files = multipartBodyList,
-                    requestSendMessage = ChatRequestBody(peer = ConversionPeer(convId))
+                    requestSendMessage = ChatRequestBody(peer = IPeer_.ConversionPeer(convId))
                 )
             }
 
@@ -135,7 +136,7 @@ class GroupChatRepositoryImpl  constructor(
                 groupChatApi.sendMessageWithAttachments(
                     authToken = "$token",
                     files = multipartBodyList,
-                    requestSendMessage = ChatMessageRequestBody(message.orEmpty(), ConversionPeer(convId), replyMessage?.id?.toInt())
+                    requestSendMessage = ChatMessageRequestBody(message.orEmpty(), IPeer_.ConversionPeer(convId), replyMessage?.id?.toInt())
                 )
             }
             return when (result) {
@@ -148,7 +149,7 @@ class GroupChatRepositoryImpl  constructor(
             val result = auth.provideToken { type, token ->
                 groupChatApi.sendMessage(
                     authToken = "$token",
-                    body = ChatMessageRequestBody(message.orEmpty(), ConversionPeer(convId), replyMessage?.id?.toInt())
+                    body = ChatMessageRequestBody(message.orEmpty(), IPeer_.ConversionPeer(convId), replyMessage?.id?.toInt())
                 )
             }
             return when (result) {
