@@ -9,6 +9,10 @@ sealed class IPeer_{
     @Serializable
     data class DialoguePeer(val userId: String): IPeer_()
 
+    @Serializable
+    data class ConversionPeer(
+        val chatId: Int
+    ): IPeer_()
 
 }
 

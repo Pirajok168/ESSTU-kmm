@@ -37,5 +37,5 @@ interface HistoryCacheDao {
     }
 
 
-    abstract suspend fun getMessageHistory(appUserId: String, opponentId: String, limit: Int, offset: Int): List<MessageWithRelated>
+     suspend fun getMessageHistory(appUserId: String, opponentId: String, limit: Int, offset: Int): List<MessageWithRelated>
 }
