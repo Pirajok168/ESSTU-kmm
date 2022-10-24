@@ -540,20 +540,6 @@ fun DialogChatScreen(
             }
 
 
-            /*LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                reverseLayout = true,
-                contentPadding = PaddingValues(vertical = 8.dp)
-            ){
-                uiState.pages
-                    .mapIndexed { index, message -> index to message  }
-                    .groupBy { dateFormat.parse("${it.second.formatDate.local.dayOfMonth}") }
-                    .forEach { (date, messages) ->
-                        stickyHeader {
-                            TimeDivider(date = messages, isCurrentYear = )
-                        }
-                    }
-            }*/
 
         }
 

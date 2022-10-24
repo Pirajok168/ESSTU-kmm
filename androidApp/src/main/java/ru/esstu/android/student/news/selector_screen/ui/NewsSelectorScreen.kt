@@ -7,10 +7,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -49,7 +46,9 @@ fun NewsSelectorScreen(
     parentPadding: PaddingValues,
 ) {
     Scaffold(
-        modifier = Modifier.padding(parentPadding).statusBarsPadding(),
+        modifier = Modifier
+            .padding(parentPadding)
+            .statusBarsPadding(),
         topBar = {
         TopAppBar(
             elevation = 0.dp,
@@ -62,7 +61,9 @@ fun NewsSelectorScreen(
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
         ) {
-
+            Button(onClick = { announcementsViewModel.download() }) {
+                Text("Download file")
+            }
             val uiState = viewModel.state
             val scope = rememberCoroutineScope()
 

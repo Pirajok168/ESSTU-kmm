@@ -58,6 +58,9 @@ internal val domainApi = DI.Module(
                         if (error == 400 || error == 401) {
                             throw CustomResponseException(response, "Неверный логин или пароль")
                         }
+                        if(error == 500){
+                            throw CustomResponseException(response, "Сервер не работает")
+                        }
                     }
                 }
 

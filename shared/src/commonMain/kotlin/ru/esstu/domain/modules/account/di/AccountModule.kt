@@ -8,12 +8,11 @@ import ru.esstu.ESSTUSdk
 import ru.esstu.auth.datasources.di.AuthModule
 import ru.esstu.domain.modules.account.datasources.api.AccountInfoApi
 import ru.esstu.domain.modules.account.datasources.api.AccountInfoApiImpl
-import ru.esstu.domain.modules.account.datasources.datastore.AccountInfoDSManager
-import ru.esstu.domain.modules.account.datasources.datastore.IAccountInfoDSManager
-import ru.esstu.domain.modules.account.datasources.datastore.create
-import ru.esstu.domain.modules.account.datasources.datastore.producePath
+import ru.esstu.domain.modules.account.datasources.datastore.*
 import ru.esstu.domain.modules.account.datasources.repo.AccountInfoRepositoryImpl
 import ru.esstu.domain.modules.account.datasources.repo.IAccountInfoApiRepository
+import ru.esstu.domain.modules.downloader.Downloader
+import ru.esstu.domain.modules.downloader.IDownloader
 import kotlin.native.concurrent.ThreadLocal
 
 internal val accountModule = DI.Module("AccountModule"){
@@ -36,11 +35,21 @@ internal val accountModule = DI.Module("AccountModule"){
             auth = instance()
         )
     }
+
+    bind<IDownloader>() with singleton {
+        Downloader(
+            fileSystem = storage().fileSystem,
+            instance()
+        )
+    }
 }
 
 @ThreadLocal
 object AccountModule {
     val repo: IAccountInfoApiRepository
+        get() = ESSTUSdk.di.instance()
+
+    val download: IDownloader
         get() = ESSTUSdk.di.instance()
 }
 
