@@ -9,7 +9,7 @@ import SwiftUI
 import shared
 
 struct ImageNewsCard: View {
-    let user: User___
+    let user: Creator
     let title: String
     let preview: String
     
@@ -38,7 +38,7 @@ struct ImageNewsCard: View {
 
 struct ImageNewsCard_Previews: PreviewProvider {
     static var previews: some View {
-        let user: User___ = User___(
+        let user: Creator = Creator(
             id: "",
             firstName: "Данила",
             lastName: "Александрович",

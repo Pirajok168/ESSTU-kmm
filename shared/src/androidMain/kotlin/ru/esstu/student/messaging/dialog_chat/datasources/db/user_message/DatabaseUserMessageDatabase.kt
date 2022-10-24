@@ -6,7 +6,8 @@ import com.squareup.sqldelight.db.SqlDriver
 import ru.esstu.ContextApplication
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.DatabaseHistoryCacheFactory
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.IDatabaseHistoryCacheFactory
-import ru.esstu.student.news.announcement.db.announcement.NewsDatabase
+
+
 
 class DatabaseUserMessageDatabase(
     private val context: Context = ContextApplication.getContextApplication().context,
