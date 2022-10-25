@@ -5,7 +5,7 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entiti
 
 CREATE TABLE DialogChatMessageTable(
     messageId INTEGER PRIMARY KEY,
-    appUserId TEXT NOT NULL ,
+    appUserId TEXT NOT NULL,
     opponentId TEXT,
     fromSend TEXT AS DialogChatAuthorEntity NOT NULL,
     replyMessageId INTEGER,

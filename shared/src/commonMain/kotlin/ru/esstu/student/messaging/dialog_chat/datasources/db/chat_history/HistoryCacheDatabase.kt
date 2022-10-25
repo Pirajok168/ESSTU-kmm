@@ -124,29 +124,32 @@ class HistoryCacheDatabase(
         messageReplayMessage: String?,
         attachmentsCount: Long?
     ): MessageWithRelatedEntity {
-        return MessageWithRelatedEntity(
-            message = DialogChatMessageEntity(
-                appUserId = appUserId,
-                id = messageId,
-                opponentId = opponentId.orEmpty(),
-                from = fromSend,
-                replyMessageId = replyMessageId,
-                date = date,
-                message =message.orEmpty(),
-                status = status.orEmpty(),
+        val message = DialogChatMessageEntity(
+            appUserId = appUserId,
+            id = messageId,
+            opponentId = opponentId.orEmpty(),
+            from = fromSend,
+            replyMessageId = replyMessageId,
+            date = date,
+            message =message.orEmpty(),
+            status = status.orEmpty(),
+        )
 
-            ),
-            DialogChatAttachmentEntity(
-                id = idAttachment?.toInt()!!,
-                messageId = messageId_!!,
-                fileUri = fileUri.orEmpty(),
-                LocalFileUri = LocalFileUri,
-                loadProgress = loadProgress?.toFloat(),
-                name = name,
-                ext = ext,
-                size = size!!.toInt(),
-                type = type
-            ),
+        val attachment = if (idAttachment == null) null else DialogChatAttachmentEntity(
+            id = idAttachment.toInt(),
+            messageId = messageId_!!,
+            fileUri = fileUri.orEmpty(),
+            LocalFileUri = LocalFileUri,
+            loadProgress = loadProgress?.toFloat(),
+            name = name,
+            ext = ext,
+            size = size!!.toInt(),
+            type = type
+        )
+
+        return MessageWithRelatedEntity(
+            message = message,
+            attachments = attachment,
             reply = if (idReplyMessage == null) null else{
                 DialogChatReplyMessageEntity(
                     id = idReplyMessage,

@@ -30,8 +30,8 @@ fun NavGraphBuilder.studentNavGraph(
         startDestination = StudentRoutes.BottomNavScreen.startDest(),
     ) {
         composable(
-        route = StudentRoutes.BottomNavScreen.passRoute(),
-        deepLinks = StudentRoutes.BottomNavScreen.passDeepLinkRoute()
+            route = StudentRoutes.BottomNavScreen.passRoute(),
+            deepLinks = StudentRoutes.BottomNavScreen.passDeepLinkRoute()
         ) {
             StudentBottomNavScreen(parentNavController = navController)
         }

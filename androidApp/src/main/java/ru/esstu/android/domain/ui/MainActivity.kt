@@ -6,14 +6,16 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
 
 import androidx.core.view.WindowCompat
 
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.insets.navigationBarsWithImePadding
+import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 import ru.esstu.android.domain.navigation.SetupNavGraph
@@ -43,7 +45,10 @@ class MainActivity : AppCompatActivity() {
 
                 //observe current destination
                 //SetupUiObserver(navController = navController, listener = uiStateObserver)
-                Surface() {
+                Surface(
+                    color = MaterialTheme.colors.background,
+                ) {
+
                     SetupNavGraph(navController)
                 }
 

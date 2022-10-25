@@ -1,8 +1,11 @@
 package ru.esstu.android.student.messaging.dialog_chat.ui
 
+import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import androidx.core.net.toUri
@@ -92,7 +96,7 @@ fun DialogChatScreen(
 
             //val files = resultUris.mapNotNull { it.cacheToFile(context) }
 
-          //  viewModel.onEvent(DialogChatEvents.PassAttachments(files))
+            //viewModel.onEvent(DialogChatEvents.PassAttachments(files))
         }
     }
     //endregion
@@ -412,7 +416,7 @@ fun DialogChatScreen(
                                             },
                                             onFileContent = { file, content ->
 
-                                               /* val workManager = remember { WorkManager.getInstance(context.applicationContext) }
+
 
                                                 val permissionsLauncher =
                                                     rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { response ->
@@ -424,49 +428,21 @@ fun DialogChatScreen(
 
                                                     }
 
-                                                LaunchedEffect(Unit) {
-                                                    workManager.getWorkInfosForUniqueWorkLiveData(file.id.toString()).asFlow().collectLatest { workInfos ->
-                                                        workInfos.forEach { worker ->
-                                                            when (worker?.state) {
-                                                                WorkInfo.State.RUNNING -> {
-                                                                    val progress = worker.progress.getFloat(FileDownloadWorker.responseParams.KEY_PROGRESS_VAL, -1f)
-                                                                    if (progress >= 0) {
-                                                                        val fileCopy = file.copy(loadProgress = progress)
-                                                                        viewModel.onEvent(DialogChatEvents.UpdateAttachment(messageId = message.id, fileCopy))
-                                                                    }
-                                                                }
-                                                                WorkInfo.State.SUCCEEDED -> {
-                                                                    val loadedUri = worker.outputData.getString(FileDownloadWorker.responseParams.KEY_FILE_URI)
-
-                                                                    if (file.localFileUri == null && loadedUri != null) {
-                                                                        val fileCopy = file.copy(localFileUri = loadedUri, loadProgress = null)
-                                                                        viewModel.onEvent(DialogChatEvents.UpdateAttachment(messageId = message.id, fileCopy))
-                                                                    }
-                                                                }
-                                                                WorkInfo.State.FAILED,
-                                                                WorkInfo.State.CANCELLED -> {
-                                                                    if (file.loadProgress != null) {
-                                                                        val fileCopy = file.copy(loadProgress = null)
-                                                                        viewModel.onEvent(DialogChatEvents.UpdateAttachment(messageId = message.id, fileCopy))
-                                                                    }
-                                                                }
-                                                                else -> {
-                                                                    // ignored
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-
 
                                                 Box(modifier = Modifier.clickable {
 
                                                     if (file.loadProgress == null && file.localFileUri.isNullOrBlank()) {
                                                         withPermissions(
                                                             context = context.applicationContext,
-                                                            permissions = FileDownloadWorker.requiredPermissions,
+                                                            permissions =  arrayOf(
+                                                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                                            ),
                                                             onRequest = {
-                                                                permissionsLauncher.launch(FileDownloadWorker.requiredPermissions)
+                                                                permissionsLauncher.launch( arrayOf(
+                                                                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                                                                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                                                ))
                                                             },
                                                             onGranted = {
                                                                 viewModel.onEvent(DialogChatEvents.DownloadAttachment(message.id, file))
@@ -508,7 +484,7 @@ fun DialogChatScreen(
                                                         }
                                                     }
 
-                                                }) { content() }*/
+                                                }) { content() }
 
                                             }
                                         )
@@ -545,6 +521,14 @@ fun DialogChatScreen(
 
 
     }
+}
+
+fun withPermissions(context: Context, vararg permissions: String, onRequest: () -> Unit, onGranted: () -> Unit) {
+    val hasPermissions = permissions.all { permission ->
+        ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+    }
+
+    if (hasPermissions) onGranted() else onRequest()
 }
 
 @Preview

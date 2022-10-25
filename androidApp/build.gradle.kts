@@ -62,7 +62,7 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.23.1")
 
     //Material
-    implementation ("com.google.android.material:material:1.6.1")
+    implementation ("com.google.android.material:material:1.7.0")
 
     //Time https://docs.korge.org/klock/
     implementation ("com.soywiz.korlibs.klock:klock-android:3.0.1")
