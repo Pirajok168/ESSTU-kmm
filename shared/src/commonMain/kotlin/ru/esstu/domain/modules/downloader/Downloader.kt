@@ -1,35 +1,19 @@
 package ru.esstu.domain.modules.downloader
 
-import io.github.aakira.napier.Napier
 import io.ktor.client.*
-import io.ktor.client.call.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.util.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
 import okio.FileSystem
-import okio.ForwardingSource
-import okio.Path
 import okio.Path.Companion.toPath
-import okio.Source
 import ru.esstu.domain.modules.account.datasources.datastore.producePath
 import ru.esstu.domain.utill.wrappers.FlowResponse
-import kotlin.math.roundToInt
+import ru.esstu.domain.utill.wrappers.ResponseError
 
 
-
-sealed class DownloadResult {
-    object Success : DownloadResult()
-
-    data class Error(val message: String, val cause: Exception? = null) : DownloadResult()
-
-    data class Progress(val progress: Int): DownloadResult()
-}
 
 
 
@@ -38,7 +22,7 @@ class Downloader(
     private val httpClient: HttpClient
 ): IDownloader {
     @OptIn(InternalAPI::class)
-    override suspend fun downloadFile(url: String): Flow<DownloadResult> = flow{
+    override suspend fun downloadFile(url: String): Flow<FlowResponse<Int>> = flow{
         try {
             val response = httpClient.get {
                 url(url)
@@ -50,13 +34,13 @@ class Downloader(
                 val currentRead = response.content.readAvailable(data, offset, data.size)
                 offset += currentRead
 
-                val progress = (offset * 100f / data.size).roundToInt()
-                emit(DownloadResult.Progress(progress))
+                val progress = (offset * 100f / data.size)
+                emit(FlowResponse.Loading(progress = progress))
 
             }while (currentRead > 0)
 
             if (response.status.isSuccess()) {
-                //download(data,producePath().path.toPath() )
+
 
 
                 fileSystem.write("${producePath().path}/file".toPath(), true){
@@ -64,14 +48,14 @@ class Downloader(
                 }
 
 
-                emit(DownloadResult.Success)
+                emit(FlowResponse.Success(100))
             } else {
-                emit(DownloadResult.Error("File not downloaded"))
+                emit(FlowResponse.Error(ResponseError(message = "Ошибка скачивания")))
             }
         }catch (e: TimeoutCancellationException){
-
+            emit(FlowResponse.Error(ResponseError(message = "Сервер не отвечает")))
         }catch (t: Throwable){
-
+            emit(FlowResponse.Error(ResponseError(message = "Ошибка скачивания")))
         }
 
 

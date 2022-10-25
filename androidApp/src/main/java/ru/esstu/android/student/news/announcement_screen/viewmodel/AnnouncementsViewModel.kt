@@ -7,26 +7,18 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.ESSTUSdk
-import ru.esstu.domain.modules.account.datasources.datastore.producePath
 import ru.esstu.domain.modules.account.di.accountModule
-import ru.esstu.domain.modules.downloader.DownloadResult
 import ru.esstu.domain.modules.downloader.IDownloader
 import ru.esstu.student.news.entities.AttachmentNews
 import ru.esstu.student.news.announcement.datasources.repo.IAnnouncementsRepository
 import ru.esstu.student.news.announcement.datasources.repo.IAnnouncementsUpdateRepository
 import ru.esstu.student.news.announcement.di.announcementsModule
 import ru.esstu.student.news.entities.NewsNode
-import java.io.OutputStream
-import kotlin.math.roundToInt
-import kotlin.text.get
 
 
 data class AnnouncementsState(
