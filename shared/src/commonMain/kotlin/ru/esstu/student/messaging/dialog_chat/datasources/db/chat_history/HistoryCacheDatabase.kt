@@ -11,6 +11,7 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entiti
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatReplyMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelatedEntity
 import ruesstustudentmessagingdialogchatdatasourcesdbchathistory.DialogChatMessageTable
 import ruesstustudentmessagingdialogchatdatasourcesdbchathistory.DialogChatReplyMessageTable
 import ruesstustudentmessagingdialogchatdatasourcesdbchathistory.GetMessageHistory
@@ -77,7 +78,7 @@ class HistoryCacheDatabase(
     }
 
     override suspend fun insertReply(reply: DialogChatReplyMessageEntity) {
-        dbQuery.insertReply(id = reply.id, fromSend = reply.from, date = reply.date, reply.message, reply.attachmentsCount.toLong())
+        dbQuery.insertReply(idReplyMessage = reply.id, fromSendReplyMessage = reply.from, dateReplyMessage = reply.date, reply.message, reply.attachmentsCount.toLong())
     }
 
     override suspend fun getMessageHistory(
@@ -93,9 +94,69 @@ class HistoryCacheDatabase(
             opponentId = opponentId,
             limit = limit.toLong(),
             offset = offset.toLong(),
+            mapper = ::map
         ).executeAsList()
         Napier.e(query.toString())
         return emptyList()
+    }
+
+    private fun map(
+        messageId: Long,
+        appUserId: String,
+        opponentId: String?,
+        fromSend: DialogChatAuthorEntity,
+        replyMessageId: Long?,
+        date: Long,
+        message: String?,
+        status: String?,
+        idAttachment: Long?,
+        messageId_: Long?,
+        fileUri: String?,
+        LocalFileUri: String?,
+        loadProgress: Double?,
+        name: String?,
+        ext: String?,
+        size: Long?,
+        type: String?,
+        idReplyMessage: Long?,
+        fromSendReplyMessage: DialogChatAuthorEntity?,
+        dateReplyMessage: Long?,
+        messageReplayMessage: String?,
+        attachmentsCount: Long?
+    ): MessageWithRelatedEntity {
+        return MessageWithRelatedEntity(
+            message = DialogChatMessageEntity(
+                appUserId = appUserId,
+                id = messageId,
+                opponentId = opponentId.orEmpty(),
+                from = fromSend,
+                replyMessageId = replyMessageId,
+                date = date,
+                message =message.orEmpty(),
+                status = status.orEmpty(),
+
+            ),
+            DialogChatAttachmentEntity(
+                id = idAttachment?.toInt()!!,
+                messageId = messageId_!!,
+                fileUri = fileUri.orEmpty(),
+                LocalFileUri = LocalFileUri,
+                loadProgress = loadProgress?.toFloat(),
+                name = name,
+                ext = ext,
+                size = size!!.toInt(),
+                type = type
+            ),
+            reply = if (idReplyMessage == null) null else{
+                DialogChatReplyMessageEntity(
+                    id = idReplyMessage,
+                    from = fromSendReplyMessage!!,
+                    date = dateReplyMessage!!,
+                    message = messageReplayMessage.toString(),
+                    attachmentsCount = attachmentsCount!!.toInt()
+                )
+            }
+        )
     }
 
 

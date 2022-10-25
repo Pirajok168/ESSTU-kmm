@@ -5,7 +5,7 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entiti
 
 CREATE TABLE DialogChatMessageTable(
     messageId INTEGER PRIMARY KEY,
-    appUserId TEXT ,
+    appUserId TEXT NOT NULL ,
     opponentId TEXT,
     fromSend TEXT AS DialogChatAuthorEntity NOT NULL,
     replyMessageId INTEGER,
@@ -15,22 +15,22 @@ CREATE TABLE DialogChatMessageTable(
 );
 
 CREATE TABLE DialogChatAttachmentTable(
-    idAttachment INTEGER PRIMARY KEY,
-    messageId INTEGER,
+    idAttachment INTEGER PRIMARY KEY NOT NULL,
+    messageId INTEGER NOT NULL ,
     fileUri TEXT,
     LocalFileUri TEXT,
     loadProgress REAL,
     name TEXT,
     ext TEXT,
-    size INTEGER,
+    size INTEGER NOT NULL,
     type TEXT
 );
 
 CREATE TABLE DialogChatReplyMessageTable(
-    id INTEGER PRIMARY KEY,
-    fromSend TEXT AS DialogChatAuthorEntity,
-    date INTEGER,
-    message TEXT,
+    idReplyMessage INTEGER PRIMARY KEY,
+    fromSendReplyMessage TEXT AS DialogChatAuthorEntity,
+    dateReplyMessage INTEGER,
+    messageReplayMessage TEXT,
     attachmentsCount INTEGER
 );
 
@@ -56,12 +56,13 @@ clearAttachments:
 
 
 insertReply:
-    INSERT OR REPLACE INTO DialogChatReplyMessageTable(id, fromSend, date,message,attachmentsCount)
+    INSERT OR REPLACE INTO DialogChatReplyMessageTable(idReplyMessage, fromSendReplyMessage, dateReplyMessage,messageReplayMessage,attachmentsCount)
         VALUES(?, ?, ?, ?, ?);
 
 getMessageHistory:
-    SELECT t.*, o.*
+    SELECT t.*, o.*, q.*
         FROM DialogChatMessageTable t
         LEFT JOIN DialogChatAttachmentTable o ON t.messageId == o.messageId
+        LEFT JOIN DialogChatReplyMessageTable q ON t.replyMessageId == q.idReplyMessage
         WHERE t.appUserId == (:appUserId) AND t.opponentId == (:opponentId)
         ORDER BY date DESC LIMIT (:limit) OFFSET (:offset);
