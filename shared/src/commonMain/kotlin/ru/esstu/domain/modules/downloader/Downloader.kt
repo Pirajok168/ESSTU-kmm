@@ -13,8 +13,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import okio.FileSystem
+import okio.ForwardingSource
 import okio.Path
 import okio.Path.Companion.toPath
+import okio.Source
 import ru.esstu.domain.modules.account.datasources.datastore.producePath
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import kotlin.math.roundToInt
@@ -28,11 +30,8 @@ sealed class DownloadResult {
 
     data class Progress(val progress: Int): DownloadResult()
 }
-interface IDownloader{
-    suspend fun  downloadFile(url: String): Flow<DownloadResult>
-}
 
-expect  suspend fun download(data: ByteArray, path: Path)
+
 
 class Downloader(
     private val fileSystem: FileSystem,
@@ -50,16 +49,19 @@ class Downloader(
             do {
                 val currentRead = response.content.readAvailable(data, offset, data.size)
                 offset += currentRead
+
                 val progress = (offset * 100f / data.size).roundToInt()
                 emit(DownloadResult.Progress(progress))
 
             }while (currentRead > 0)
 
             if (response.status.isSuccess()) {
-                download(data,producePath().path.toPath() )
-                /*fileSystem.write(producePath().path.toPath(), true){
+                //download(data,producePath().path.toPath() )
+
+
+                fileSystem.write("${producePath().path}/file".toPath(), true){
                     write(data)
-                }*/
+                }
 
 
                 emit(DownloadResult.Success)
