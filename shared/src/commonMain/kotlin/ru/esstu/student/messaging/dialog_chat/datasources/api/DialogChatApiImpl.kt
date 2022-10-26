@@ -101,7 +101,7 @@ class DialogChatApiImpl(
 
     override suspend fun sendMessageWithAttachments(
         authToken: String,
-        files: List<MultiPartFormDataContent>,
+        files: MultiPartFormDataContent,
         requestSendMessage: ChatMessageRequestBody
     ): ChatMessageResponse {
         val request = portalApi.post {
@@ -117,17 +117,24 @@ class DialogChatApiImpl(
 
     override suspend fun sendAttachments(
         authToken: String,
-        files: List<MultiPartFormDataContent>,
+        files: MultiPartFormDataContent,
         requestSendMessage: ChatRequestBody
     ): ChatMessageResponse {
+
+
         val request = portalApi.post {
+            headers {
+                append("Authorization", "Bearer $authToken")
+            }
+
             url {
                 path("mlk/api/v2/messenger/sendMessageMedia")
-                bearerAuth(authToken)
-                contentType(ContentType.Application.Json)
                 setBody(files)
+
             }
         }
+        request
+
         return request.body()
 
     }

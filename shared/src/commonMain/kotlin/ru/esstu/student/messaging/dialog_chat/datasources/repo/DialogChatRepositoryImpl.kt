@@ -3,13 +3,13 @@ package ru.esstu.student.messaging.dialog_chat.datasources.repo
 
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
+import io.ktor.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okio.Path.Companion.toPath
 
 import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.entities.TokenOwners
-import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.peer.DialoguePeer
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatReadRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatRequestBody
@@ -21,7 +21,9 @@ import ru.esstu.student.messaging.dialog_chat.datasources.*
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatApi
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.HistoryCacheDao
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.UserMessageDao
+import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.toEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.toSentUserMessage
+import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.toUserMessageEntity
 import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
 import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
@@ -115,14 +117,21 @@ class DialogChatRepositoryImpl constructor(
         }
     }
 
+    @OptIn(InternalAPI::class)
     override suspend fun sendMessage(dialogId: String, message: String?, replyMessage: Message?, attachments: List<CachedFile>): Response<Long> {
-        val multipartBodyList = attachments.map {
-            MultiPartFormDataContent(
-                formData{
-                    append("files", it.sourceFile.toPath().nameBytes.toByteArray())
+        val multipartBodyList = MultiPartFormDataContent(
+            parts = formData {
+                attachments.forEach {
+                    append("files", it.sourceFile.toPath().nameBytes.toByteArray(), Headers.build {
+                        append(HttpHeaders.ContentType, ContentType.MultiPart.Mixed)
+                        append(HttpHeaders.ContentDisposition, "filename=${it.name}")
+                    })
                 }
-            )
-        }
+
+            //append("requestSendMessage", ChatRequestBody(peer = IPeer_.DialoguePeer(userId = dialogId)))
+            }
+        )
+
 
 
 
@@ -212,7 +221,7 @@ class DialogChatRepositoryImpl constructor(
     }
     //= erredMsgDao.removeMessage(id)
 
-    //private val userMsgDao = dialogChatDatabase.userMessagesDao()
+
 
     override suspend fun getUserMessage(dialogId: String): NewUserMessage {
         val message = auth.provideToken { token ->
@@ -225,14 +234,14 @@ class DialogChatRepositoryImpl constructor(
     }
 
     override suspend fun updateUserMessage(dialogId: String, message: NewUserMessage) {
-       /* auth.provideToken { token ->
+        auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
 
             userMsgDao.updateUserMessageWithRelated(
                 message = message.toUserMessageEntity(appUserId, dialogId),
                 files = message.attachments.map { it.toEntity(appUserId, dialogId) }
             )
-        }*/
+        }
     }
 
     //private val historyCache = dialogChatDatabase.historyCacheDao()

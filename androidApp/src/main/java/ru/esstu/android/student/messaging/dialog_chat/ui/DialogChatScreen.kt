@@ -52,6 +52,7 @@ import ru.esstu.android.R
 import ru.esstu.android.domain.ui.theme.CompPreviewTheme
 
 import ru.esstu.android.student.messaging.dialog_chat.ui.components.*
+import ru.esstu.android.student.messaging.dialog_chat.util.cacheToFile
 import ru.esstu.android.student.messaging.dialog_chat.viewmodel.DialogChatEvents
 import ru.esstu.android.student.messaging.dialog_chat.viewmodel.DialogChatViewModel
 //import ru.esstu.student.messaging.dialog_chat.util.cacheToFile
@@ -94,9 +95,9 @@ fun DialogChatScreen(
                 }
             } ?: return@rememberLauncherForActivityResult
 
-            //val files = resultUris.mapNotNull { it.cacheToFile(context) }
+            val files = resultUris.mapNotNull { it.cacheToFile(context) }
 
-            //viewModel.onEvent(DialogChatEvents.PassAttachments(files))
+            viewModel.onEvent(DialogChatEvents.PassAttachments(files))
         }
     }
     //endregion

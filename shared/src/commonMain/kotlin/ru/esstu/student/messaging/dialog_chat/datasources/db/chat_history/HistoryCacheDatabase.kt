@@ -96,6 +96,8 @@ class HistoryCacheDatabase(
             offset = offset.toLong(),
             mapper = ::map
         ).executeAsList()
+
+
         Napier.e(query.toString())
         return emptyList()
     }

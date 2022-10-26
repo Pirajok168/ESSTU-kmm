@@ -55,9 +55,9 @@ internal val domainApi = DI.Module(
                 HttpResponseValidator {
                     validateResponse { response ->
                         val error: Int = response.status.value
-                        if (error == 400 || error == 401) {
+                        /*if (error == 400 || error == 401) {
                             throw CustomResponseException(response, "Неверный логин или пароль")
-                        }
+                        }*/
                         if(error == 500){
                             throw CustomResponseException(response, "Сервер не работает")
                         }
