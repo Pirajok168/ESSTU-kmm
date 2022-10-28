@@ -5,6 +5,7 @@ import org.kodein.di.bind
 import org.kodein.di.instance
 import org.kodein.di.singleton
 import ru.esstu.ESSTUSdk
+import ru.esstu.domain.modules.account.datasources.datastore.storage
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatApi
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatApiImpl
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatUpdateApi
@@ -24,7 +25,8 @@ import kotlin.native.concurrent.ThreadLocal
 internal val dialogChatModule = DI.Module("DialogChatModule"){
     bind<DialogChatApi>() with singleton {
         DialogChatApiImpl(
-            portalApi = instance()
+            portalApi = instance(),
+            storage().fileSystem
         )
     }
 

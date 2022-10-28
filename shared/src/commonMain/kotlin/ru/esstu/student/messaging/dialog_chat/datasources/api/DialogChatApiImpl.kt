@@ -1,5 +1,6 @@
 package ru.esstu.student.messaging.dialog_chat.datasources.api
 
+import io.github.aakira.napier.Napier
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -9,6 +10,7 @@ import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
+import okio.FileSystem
 import okio.Path.Companion.toPath
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatReadRequestBody
@@ -22,6 +24,7 @@ import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 
 class DialogChatApiImpl(
     private val portalApi: HttpClient,
+    private val fileSystem: FileSystem,
 ): DialogChatApi {
     override suspend fun getOpponent(authToken: String, userId: String): UserResponse {
         val response = portalApi.get{
@@ -142,8 +145,12 @@ class DialogChatApiImpl(
                         })
 
                         files.forEach {
-                            append("files", it.sourceFile.toPath().nameBytes.toByteArray(), Headers.build {
-                                append(HttpHeaders.ContentType, "image/png")
+                            Napier.e("${it.type} - route = ${it.sourceFile}")
+                            val array = fileSystem.read(it.sourceFile.toPath()){
+                                readByteArray()
+                            }
+                            append("files", array, Headers.build {
+                                append(HttpHeaders.ContentType, it.type)
                                 append(HttpHeaders.ContentDisposition, "filename=${it.name}")
                             })
                         }
