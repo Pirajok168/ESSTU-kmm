@@ -59,7 +59,7 @@ interface DialogChatApi {
 
     suspend fun sendMessageWithAttachments(
         authToken: String,
-        files: MultiPartFormDataContent,
+        files: List<CachedFile>,
         requestSendMessage: ChatMessageRequestBody
     ): ChatMessageResponse
 

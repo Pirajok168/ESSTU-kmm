@@ -117,25 +117,7 @@ class DialogChatRepositoryImpl constructor(
 
     @OptIn(InternalAPI::class)
     override suspend fun sendMessage(dialogId: String, message: String?, replyMessage: Message?, attachments: List<CachedFile>): Response<Long> {
-        val at = attachments.map {
-            it.sourceFile.toPath().nameBytes.toByteArray()
-        }
 
-        val multipartBodyList = MultiPartFormDataContent(
-            parts = formData {
-                //append("requestSendMessage", Json {  }.encodeToJsonElement(ChatRequestBody(peer = IPeer_.DialoguePeer(userId = dialogId))).toString())
-
-               // append("files", at)
-                /*attachments.forEach {
-                    append("files", it.sourceFile.toPath().nameBytes.toByteArray(), Headers.build {
-                        append(HttpHeaders.ContentType, ContentType.MultiPart.Mixed)
-                        append(HttpHeaders.ContentDisposition, "filename=${it.name}")
-                    })
-                }*/
-
-
-            }
-        )
 
 
 
@@ -162,7 +144,7 @@ class DialogChatRepositoryImpl constructor(
             val result = auth.provideToken { type, token ->
                 dialogChatApi.sendMessageWithAttachments(
                     authToken = "$token",
-                    files = multipartBodyList,
+                    files = attachments,
                     requestSendMessage = ChatMessageRequestBody(message.orEmpty(), IPeer_.DialoguePeer(dialogId), replyMessage?.id?.toInt())
                 )
             }

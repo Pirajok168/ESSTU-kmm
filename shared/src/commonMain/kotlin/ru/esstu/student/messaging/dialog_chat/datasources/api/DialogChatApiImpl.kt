@@ -109,17 +109,38 @@ class DialogChatApiImpl(
 
     override suspend fun sendMessageWithAttachments(
         authToken: String,
-        files: MultiPartFormDataContent,
+        files: List<CachedFile>,
         requestSendMessage: ChatMessageRequestBody
     ): ChatMessageResponse {
         val request = portalApi.post {
+            headers {
+                append("Authorization", "Bearer $authToken")
+            }
+
             url {
                 path("mlk/api/v2/messenger/sendMessageMedia")
-                bearerAuth(authToken)
+                setBody(MultiPartFormDataContent(
+                    formData {
+                        append("requestSendMessage", value = Json{}.encodeToJsonElement(requestSendMessage).toString() , headers = Headers.build {
+                            append(HttpHeaders.ContentType, ContentType.Application.Json)
+                        })
+
+                        files.forEach {
+                            Napier.e("${it.type} - route = ${it.sourceFile} name = ${it.name} ext =${it.ext}")
+                            val array = fileSystem.read(it.sourceFile.toPath()){
+                                readByteArray()
+                            }
+                            append("files", array, Headers.build {
+                                append(HttpHeaders.ContentType, it.type)
+                                append(HttpHeaders.ContentDisposition, "filename=${it.name}.${it.ext}")
+                            })
+                        }
+                    }
+                ))
                 contentType(ContentType.Application.Json)
-                setBody(files)
             }
         }
+
         return request.body()
     }
 
