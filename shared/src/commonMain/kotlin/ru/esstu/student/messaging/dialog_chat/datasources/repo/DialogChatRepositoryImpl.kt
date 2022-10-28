@@ -2,7 +2,6 @@ package ru.esstu.student.messaging.dialog_chat.datasources.repo
 
 
 import io.ktor.client.request.forms.*
-import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -12,7 +11,6 @@ import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatReadRequestBody
-import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.IPeer_
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
@@ -119,16 +117,23 @@ class DialogChatRepositoryImpl constructor(
 
     @OptIn(InternalAPI::class)
     override suspend fun sendMessage(dialogId: String, message: String?, replyMessage: Message?, attachments: List<CachedFile>): Response<Long> {
+        val at = attachments.map {
+            it.sourceFile.toPath().nameBytes.toByteArray()
+        }
+
         val multipartBodyList = MultiPartFormDataContent(
             parts = formData {
-                attachments.forEach {
+                //append("requestSendMessage", Json {  }.encodeToJsonElement(ChatRequestBody(peer = IPeer_.DialoguePeer(userId = dialogId))).toString())
+
+               // append("files", at)
+                /*attachments.forEach {
                     append("files", it.sourceFile.toPath().nameBytes.toByteArray(), Headers.build {
                         append(HttpHeaders.ContentType, ContentType.MultiPart.Mixed)
                         append(HttpHeaders.ContentDisposition, "filename=${it.name}")
                     })
-                }
+                }*/
 
-            //append("requestSendMessage", ChatRequestBody(peer = IPeer_.DialoguePeer(userId = dialogId)))
+
             }
         )
 
@@ -137,12 +142,13 @@ class DialogChatRepositoryImpl constructor(
 
 
 
-        if (message == null && replyMessage == null && attachments.any()) {
+
+        if (message.isNullOrEmpty() && replyMessage == null && attachments.any()) {
             val result = auth.provideToken { type, token ->
                 dialogChatApi.sendAttachments(
                     authToken = "$token",
-                    files = multipartBodyList,
-                    requestSendMessage = ChatRequestBody(peer = IPeer_.DialoguePeer(userId = dialogId))
+                    files = attachments,
+                    requestSendMessage = ChatMessageRequestBody(message.orEmpty(), IPeer_.DialoguePeer(dialogId), replyMessage?.id?.toInt())
                 )
             }
 

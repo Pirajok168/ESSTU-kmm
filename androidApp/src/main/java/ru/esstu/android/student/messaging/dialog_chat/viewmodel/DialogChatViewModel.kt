@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -190,6 +192,9 @@ class DialogChatViewModel  constructor(
 
     private suspend fun onPassOpponent(id: String) {
         onCancelObserver()
+
+
+
 
         dialogChatRepository.getOpponent(id).collect { response ->
             when (response) {

@@ -5,14 +5,19 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
+
+import io.ktor.util.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
+import okio.Path.Companion.toPath
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatReadRequestBody
-import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.chat_message_response.ChatMessageResponse
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessagePreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessageResponse
 import ru.esstu.domain.modules.account.datasources.api.response.UserResponse
+import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 
 
 class DialogChatApiImpl(
@@ -115,10 +120,11 @@ class DialogChatApiImpl(
         return request.body()
     }
 
+    @OptIn(InternalAPI::class)
     override suspend fun sendAttachments(
         authToken: String,
-        files: MultiPartFormDataContent,
-        requestSendMessage: ChatRequestBody
+        files: List<CachedFile>,
+        requestSendMessage: ChatMessageRequestBody
     ): ChatMessageResponse {
 
 
@@ -129,13 +135,45 @@ class DialogChatApiImpl(
 
             url {
                 path("mlk/api/v2/messenger/sendMessageMedia")
-                setBody(files)
+                setBody(MultiPartFormDataContent(
+                    formData {
+                        append("requestSendMessage", value = Json{}.encodeToJsonElement(requestSendMessage).toString() , headers = Headers.build {
+                            append(HttpHeaders.ContentType, ContentType.Application.Json)
+                        })
 
+                        files.forEach {
+                            append("files", it.sourceFile.toPath().nameBytes.toByteArray(), Headers.build {
+                                append(HttpHeaders.ContentType, "image/png")
+                                append(HttpHeaders.ContentDisposition, "filename=${it.name}")
+                            })
+                        }
+                    }
+                ))
+                contentType(ContentType.Application.Json)
             }
         }
+
         request
 
         return request.body()
 
+       /* val response = portalApi.submitFormWithBinaryData(
+            url = "lk/api/v2/messenger/sendMessageMedia",
+            formData = formData {
+
+                //append("requestSendMessage", requestSendMessage)
+                files.forEach {
+                    append("files", it.sourceFile.toPath().nameBytes.toByteArray(), Headers.build {
+                        append(HttpHeaders.ContentDisposition, "filename=${it.name}")
+                    })
+                }
+            }
+        ){
+            bearerAuth(authToken)
+            setBody(requestSendMessage)
+            contentType(ContentType.Application.Json)
+        }*/
+
+        //return response.body()
     }
 }

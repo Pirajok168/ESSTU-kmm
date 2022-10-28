@@ -66,8 +66,8 @@ interface DialogChatApi {
 
     suspend fun sendAttachments(
         authToken: String,
-        files: MultiPartFormDataContent,
-        requestSendMessage: ChatRequestBody
+        files: List<CachedFile>,
+        requestSendMessage: ChatMessageRequestBody
     ): ChatMessageResponse
     //endregion
 }

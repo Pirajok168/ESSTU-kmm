@@ -17,6 +17,11 @@ sealed class IPeer_{
 }
 
 @Serializable
+data class ChatRequestBody(
+    val peer: IPeer_
+)
+
+@Serializable
 data class ChatReadRequestBody (
     val maxId:Int,
     val peer: IPeer_

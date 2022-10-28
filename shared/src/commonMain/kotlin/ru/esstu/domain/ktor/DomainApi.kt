@@ -1,5 +1,7 @@
 package ru.esstu.domain.ktor
 
+import io.github.aakira.napier.DebugAntilog
+import io.github.aakira.napier.Napier
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
@@ -44,7 +46,11 @@ internal val domainApi = DI.Module(
                 }
 
                 install(Logging){
-                    logger = Logger.DEFAULT
+                    logger = object : Logger{
+                        override fun log(message: String) {
+                            Napier.v("HTTP Client", null, message)
+                        }
+                    }
                     level = LogLevel.HEADERS
                 }
 
@@ -55,9 +61,9 @@ internal val domainApi = DI.Module(
                 HttpResponseValidator {
                     validateResponse { response ->
                         val error: Int = response.status.value
-                        /*if (error == 400 || error == 401) {
+                        if (error == 400 || error == 401) {
                             throw CustomResponseException(response, "Неверный логин или пароль")
-                        }*/
+                        }
                         if(error == 500){
                             throw CustomResponseException(response, "Сервер не работает")
                         }
@@ -71,7 +77,7 @@ internal val domainApi = DI.Module(
                     }
 
                 }
-            }
+            }.also { Napier.base(DebugAntilog()) }
         }
     }
 )
