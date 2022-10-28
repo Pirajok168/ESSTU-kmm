@@ -145,13 +145,13 @@ class DialogChatApiImpl(
                         })
 
                         files.forEach {
-                            Napier.e("${it.type} - route = ${it.sourceFile}")
+                            Napier.e("${it.type} - route = ${it.sourceFile} name = ${it.name} ext =${it.ext}")
                             val array = fileSystem.read(it.sourceFile.toPath()){
                                 readByteArray()
                             }
                             append("files", array, Headers.build {
                                 append(HttpHeaders.ContentType, it.type)
-                                append(HttpHeaders.ContentDisposition, "filename=${it.name}")
+                                append(HttpHeaders.ContentDisposition, "filename=${it.name}.${it.ext}")
                             })
                         }
                     }
@@ -160,27 +160,7 @@ class DialogChatApiImpl(
             }
         }
 
-        request
-
         return request.body()
 
-       /* val response = portalApi.submitFormWithBinaryData(
-            url = "lk/api/v2/messenger/sendMessageMedia",
-            formData = formData {
-
-                //append("requestSendMessage", requestSendMessage)
-                files.forEach {
-                    append("files", it.sourceFile.toPath().nameBytes.toByteArray(), Headers.build {
-                        append(HttpHeaders.ContentDisposition, "filename=${it.name}")
-                    })
-                }
-            }
-        ){
-            bearerAuth(authToken)
-            setBody(requestSendMessage)
-            contentType(ContentType.Application.Json)
-        }*/
-
-        //return response.body()
     }
 }
