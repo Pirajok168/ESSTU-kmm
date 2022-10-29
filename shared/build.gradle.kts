@@ -133,6 +133,8 @@ sqldelight {
         packageName = "ru.esstu.student.messaging.dialog_chat.datasources.db.user_message"
         sourceFolders = listOf("kotlin")
     }
+
+
 }
 
 android {

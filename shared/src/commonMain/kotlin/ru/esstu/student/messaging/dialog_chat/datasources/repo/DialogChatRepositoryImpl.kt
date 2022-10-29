@@ -34,8 +34,6 @@ import ru.esstu.student.messaging.messenger.datasources.toUser
 
 
 class DialogChatRepositoryImpl constructor(
-
-   // private val context: Context,
     private val auth: IAuthRepository,
     private val dialogChatApi: DialogChatApi,
     private val cacheDao: HistoryCacheDao,
@@ -43,14 +41,14 @@ class DialogChatRepositoryImpl constructor(
     //dialogsDb: DialogsDatabase
 ) : IDialogChatRepository {
 
-    //private val opponentDao = dialogChatDatabase.opponentDao()
+
 
     override suspend fun getOpponent(id: String): Flow<FlowResponse<Sender>> = flow {
         emit(FlowResponse.Loading())
 
-        //val cachedOpponent = opponentDao.getOpponent(id)?.toUser()
-       // if (cachedOpponent != null)
-       //     emit(FlowResponse.Success(cachedOpponent))
+        val cachedOpponent = cacheDao.getOpponent(id)?.toUser()
+        if (cachedOpponent != null)
+            emit(FlowResponse.Success(cachedOpponent))
 
         when (val response = auth.provideToken { type, token -> dialogChatApi.getOpponent("$token", id) }) {
             is Response.Error -> emit(FlowResponse.Error(response.error))
@@ -59,8 +57,8 @@ class DialogChatRepositoryImpl constructor(
                 if (remoteOpponent == null)
                     emit(FlowResponse.Error(ResponseError(message = "Cast Exception")))
                 else {
-               //     opponentDao.insert(remoteOpponent.toUserEntity())
-                 //   if (remoteOpponent != cachedOpponent)
+                    cacheDao.insert(remoteOpponent.toUserEntity())
+                    if (remoteOpponent != cachedOpponent)
                         emit(FlowResponse.Success(remoteOpponent))
                 }
             }

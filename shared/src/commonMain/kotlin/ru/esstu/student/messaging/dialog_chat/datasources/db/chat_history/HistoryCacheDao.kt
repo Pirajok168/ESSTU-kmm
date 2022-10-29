@@ -1,6 +1,7 @@
 package ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history
 
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAttachmentEntity
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatReplyMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
@@ -8,6 +9,13 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entiti
 
 interface HistoryCacheDao {
 
+    suspend fun getOpponent(id: String): DialogChatAuthorEntity?
+
+
+    suspend fun insert(opponent: DialogChatAuthorEntity)
+
+
+    suspend fun clear(id: String)
 
      suspend fun insertMessage(messages: DialogChatMessageEntity)
 

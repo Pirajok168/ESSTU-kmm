@@ -66,3 +66,22 @@ getMessageHistory:
         LEFT JOIN DialogChatReplyMessageTable q ON t.replyMessageId == q.idReplyMessage
         WHERE t.appUserId == (:appUserId) AND t.opponentId == (:opponentId)
         ORDER BY date DESC LIMIT (:limit) OFFSET (:offset);
+
+
+CREATE TABLE DialogChatAuthorTable (
+    id TEXT PRIMARY KEY NOT NULL,
+    fitstName TEXT NOT NULL,
+    lastName TEXT NOT NULL,
+    patronymic TEXT NOT NULL,
+    summary TEXT NOT NULL,
+    photo TEXT NOT NULL
+);
+
+getOpponent:
+   SELECT * FROM DialogChatAuthorTable WHERE id == (:id) LIMIT 1;
+
+insert:
+    INSERT OR REPLACE INTO DialogChatAuthorTable(id, fitstName, lastName,patronymic,summary,photo)
+        VALUES(?,?,?,?,?,?);
+clear:
+    DELETE FROM DialogChatAuthorTable WHERE id == :id;
