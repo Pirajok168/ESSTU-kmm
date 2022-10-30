@@ -10,8 +10,7 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entiti
 import ru.esstu.student.messaging.dialog_chat.datasources.toMessage
 import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
-
-
+import kotlin.random.Random
 
 
 fun CachedFile.toEntity(appUserId: String, dialogId: String): UserCachedFileEntity {
@@ -26,6 +25,7 @@ fun CachedFile.toEntity(appUserId: String, dialogId: String): UserCachedFileEnti
         ext = ext,
         name = name,
         type = type,
+        id = Random.nextLong()
     )
 }
 

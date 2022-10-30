@@ -3,12 +3,12 @@ package ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entit
 
 
 
-class UserCachedFileEntity(
+data class UserCachedFileEntity(
 
     val appUserId:String,
     val dialogId:String,
 
-
+    var id: Long? = null,
     val source: String,
     val name: String,
     val ext: String,
@@ -16,5 +16,5 @@ class UserCachedFileEntity(
     val type: String
 ) {
 
-    var id: Int? = null
+
 }

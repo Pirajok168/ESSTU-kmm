@@ -113,7 +113,7 @@ class HistoryCacheDatabase(
         ).executeAsList()
 
 
-        Napier.e(query.toString())
+       // Napier.e(query.toString())
         return emptyList()
     }
 

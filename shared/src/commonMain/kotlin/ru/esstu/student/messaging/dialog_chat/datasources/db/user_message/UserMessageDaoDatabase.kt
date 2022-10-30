@@ -42,7 +42,8 @@ class UserMessageDatabase(
             name = name.orEmpty(),
             ext = ext.orEmpty(),
             size = size,
-            type = type.orEmpty()
+            type = type.orEmpty(),
+            id = id
         )
     }
 

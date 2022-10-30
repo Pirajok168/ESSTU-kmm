@@ -8,12 +8,15 @@ CREATE TABLE UserMessageEntityTable (
 CREATE TABLE UserCachedFileTable(
     id INTEGER PRIMARY KEY,
     appUserId TEXT,
-    dialogId TEXT,
+    dialogId TEXT ,
     name TEXT,
     ext TEXT,
     size INTEGER NOT NULL,
-    type TEXT
+    type TEXT,
+    FOREIGN KEY (dialogId) REFERENCES UserMessageEntityTable(dialogId) ON DELETE CASCADE
 );
+
+
 
 
 getCachedFiles:
