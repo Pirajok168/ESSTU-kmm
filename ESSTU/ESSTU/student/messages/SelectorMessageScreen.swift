@@ -37,42 +37,11 @@ struct SelectorMessageScreen: View {
         NavigationStack{
             ScrollView{
                 
-//                ScrollView(.horizontal, showsIndicators: false){
-//
-//                    HStack(){
-//                        ForEach(TypeMessages.allCases, id: \TypeMessages.self){
-//                            index in
-//
-//                            VStack(){
-//                                Button(action: {
-//                                    withAnimation{
-//                                        selectedTab = index.id
-//                                    }
-//                                }, label: {
-//                                    Text(index.title)
-//                                })
-//                                if selectedTab == index{
-//                                    Rectangle()
-//                                        .frame(height: 2)
-//                                        .matchedGeometryEffect(id: "title", in: namespace, isSource: true)
-//                                        .foregroundColor(.blue)
-//                                }
-//                                Spacer()
-//                            }
-//                            .frame(height: 45)
-//                            .padding(.horizontal)
-//                        }
-//                        .buttonStyle(.plain)
-//                    }
-//                }
-//
-//                .padding(.top)
-//                .padding(.horizontal)
+
                 
                 
                 
-                
-                
+                    
                 
                 
                
@@ -86,47 +55,68 @@ struct SelectorMessageScreen: View {
                 }
                 
             }
+            .safeAreaInset(edge: .top, content: {
+                Color.clear.frame(height: 80)
+            })
+            .overlay{
+                ZStack{
+                    Color.clear.background(
+                        .ultraThinMaterial)
+                    VStack{
+                        Text("Мессенджер")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .font(.title3)
+                        
+                        ScrollView(.horizontal, showsIndicators: false){
+        
+                            HStack(){
+                                ForEach(TypeMessages.allCases, id: \TypeMessages.self){
+                                    index in
+        
+                                    VStack(){
+                                        Button(action: {
+                                            withAnimation{
+                                                selectedTab = index.id
+                                            }
+                                        }){
+                                            Text(index.title)
+                                        }
+                                        .frame(maxHeight: 50, alignment: .top)
+                                        
+                                        
+                                        
+                                        
+                                        if selectedTab == index{
+                                            Rectangle()
+                                                .frame(height: 2)
+                                                .matchedGeometryEffect(id: "title", in: namespace, isSource: true)
+                                                .foregroundColor(.blue)
+                                        }
+                                      
+                                    }
+                                    .frame(maxHeight: 50, alignment: .bottom)
+                                    
+                                    .padding(.horizontal)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
+                    
+                }
+                .frame(height: 80)
+                .frame(maxHeight: .infinity, alignment: .top)
+                
+                
+            }
             
           
             
            
-            .toolbar{
-                VStack{
-                    Text("Мессенджер")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    ScrollView(.horizontal, showsIndicators: false){
-    
-                        HStack(){
-                            ForEach(TypeMessages.allCases, id: \TypeMessages.self){
-                                index in
-    
-                                VStack(){
-                                    Button(action: {
-                                        withAnimation{
-                                            selectedTab = index.id
-                                        }
-                                    }, label: {
-                                        Text(index.title)
-                                    })
-                                    
-                                    if selectedTab == index{
-                                        Rectangle()
-                                            .frame(height: 2)
-                                            .matchedGeometryEffect(id: "title", in: namespace, isSource: true)
-                                            .foregroundColor(.blue)
-                                    }
-                                    Spacer()
-                                }
-                                .frame(height: 60)
-                                .padding(.horizontal)
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                }
+            
                    
                
-            }
+            
            
         }
         

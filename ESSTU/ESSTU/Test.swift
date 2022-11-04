@@ -54,7 +54,7 @@ struct Test: View {
                                         }){
                                             Text(index.title)
                                         }
-                                        .frame(maxHeight: 40, alignment: .center)
+                                        .frame(maxHeight: 50, alignment: .top)
                                         
                                         
                                         
@@ -67,7 +67,7 @@ struct Test: View {
                                         }
                                       
                                     }
-                                    .frame(maxHeight: 40, alignment: .bottom)
+                                    .frame(maxHeight: 50, alignment: .bottom)
                                     
                                     .padding(.horizontal)
                                 }
