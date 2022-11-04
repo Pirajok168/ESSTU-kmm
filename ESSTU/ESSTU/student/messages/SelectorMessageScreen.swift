@@ -37,54 +37,37 @@ struct SelectorMessageScreen: View {
         NavigationStack{
             ScrollView{
                 
-                ScrollView(.horizontal, showsIndicators: false){
-                    
-                    HStack(){
-                        ForEach(TypeMessages.allCases, id: \TypeMessages.self){
-                            index in
-                            
-                            VStack(){
-                                Button(action: {
-                                    withAnimation{
-                                        selectedTab = index.id
-                                    }
-                                    
-                                }, label: {
-                                    Text(index.title)
-                                    
-                                    
-                                })
-                                
-                                
-                                if selectedTab == index{
-                                    Rectangle()
-                                    
-                                        .frame(height: 2)
-                                    
-                                        .matchedGeometryEffect(id: "title", in: namespace, isSource: true)
-                                        .foregroundColor(.blue)
-                                    
-                                    
-                                }
-                                Spacer()
-                            }
-                            .frame(height: 45)
-                            .padding(.horizontal)
-                            
-                            
-                        }
-                        .buttonStyle(.plain)
-                        
-                        
-                    }
-                    
-                    
-                    
-                    
-                }
-                
-                .padding(.top)
-                .padding(.horizontal)
+//                ScrollView(.horizontal, showsIndicators: false){
+//
+//                    HStack(){
+//                        ForEach(TypeMessages.allCases, id: \TypeMessages.self){
+//                            index in
+//
+//                            VStack(){
+//                                Button(action: {
+//                                    withAnimation{
+//                                        selectedTab = index.id
+//                                    }
+//                                }, label: {
+//                                    Text(index.title)
+//                                })
+//                                if selectedTab == index{
+//                                    Rectangle()
+//                                        .frame(height: 2)
+//                                        .matchedGeometryEffect(id: "title", in: namespace, isSource: true)
+//                                        .foregroundColor(.blue)
+//                                }
+//                                Spacer()
+//                            }
+//                            .frame(height: 45)
+//                            .padding(.horizontal)
+//                        }
+//                        .buttonStyle(.plain)
+//                    }
+//                }
+//
+//                .padding(.top)
+//                .padding(.horizontal)
                 
                 
                 
@@ -104,8 +87,49 @@ struct SelectorMessageScreen: View {
                 
             }
             
-            .navigationTitle("Мессенджер")
+          
+            
+           
+            .toolbar{
+                VStack{
+                    Text("Мессенджер")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    ScrollView(.horizontal, showsIndicators: false){
+    
+                        HStack(){
+                            ForEach(TypeMessages.allCases, id: \TypeMessages.self){
+                                index in
+    
+                                VStack(){
+                                    Button(action: {
+                                        withAnimation{
+                                            selectedTab = index.id
+                                        }
+                                    }, label: {
+                                        Text(index.title)
+                                    })
+                                    
+                                    if selectedTab == index{
+                                        Rectangle()
+                                            .frame(height: 2)
+                                            .matchedGeometryEffect(id: "title", in: namespace, isSource: true)
+                                            .foregroundColor(.blue)
+                                    }
+                                    Spacer()
+                                }
+                                .frame(height: 60)
+                                .padding(.horizontal)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+                   
+               
+            }
+           
         }
+        
         
         
         
