@@ -18,7 +18,7 @@ struct MessageElem: View {
                             .padding(3)
                             .foregroundColor(.white)
                     }
-                    .background(.red)
+                    .background(Color.ui.yellow)
                     
                     .clipShape(Capsule())
                     .overlay{

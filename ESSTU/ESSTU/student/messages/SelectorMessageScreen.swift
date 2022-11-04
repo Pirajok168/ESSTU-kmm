@@ -26,6 +26,14 @@ enum TypeMessages: String, CaseIterable, Identifiable{
     var id: Self { self }
 }
 
+extension Color {
+    static let ui = Color.UI()
+    
+    struct UI {
+         let yellow = Color("AccentColor")
+    }
+}
+
 struct SelectorMessageScreen: View {
     @State private var selectedTab: TypeMessages = .dialogs
     
@@ -90,7 +98,7 @@ struct SelectorMessageScreen: View {
                                             Rectangle()
                                                 .frame(height: 2)
                                                 .matchedGeometryEffect(id: "title", in: namespace, isSource: true)
-                                                .foregroundColor(.blue)
+                                                .foregroundColor(Color.ui.yellow)
                                         }
                                       
                                     }
@@ -129,5 +137,7 @@ struct SelectorMessageScreen: View {
 struct SelectorMessageScreen_Previews: PreviewProvider {
     static var previews: some View {
         SelectorMessageScreen()
+            
+            .previewDevice(PreviewDevice(rawValue: "iPhone 8"))
     }
 }
