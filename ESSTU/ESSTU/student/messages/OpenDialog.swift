@@ -47,24 +47,21 @@ struct OpenDialog: View {
                 .listStyle(.plain)
             }
             .rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
-           
-            HStack{
-                Image(systemName: "paperclip")
-                    .padding(.trailing)
-                TextField("Введите сообщение", text: $searchValue)
-                    .textFieldStyle(.plain)
-                
-            }
-           
-            .padding()
+          
             
         }
         
         .safeAreaInset(edge: .top, content: {
             Color.clear.frame(height: 73)
         })
+        .safeAreaInset(edge: .bottom, content: {
+            Color.clear.frame(height: 43)
+        })
         .overlay(content: {
             NavBarOpeningDialog()
+        })
+        .overlay(content: {
+            BottomKeyword()
         })
         
         
