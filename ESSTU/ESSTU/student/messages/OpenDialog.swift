@@ -41,7 +41,7 @@ struct OpenDialog: View {
                     }
                     
                 }.onAppear{
-                    scroll.scrollTo(49)
+                    scroll.scrollTo(0)
                 }
                
                 .listStyle(.plain)
@@ -59,6 +59,7 @@ struct OpenDialog: View {
             .padding()
             
         }
+        
         .safeAreaInset(edge: .top, content: {
             Color.clear.frame(height: 73)
         })

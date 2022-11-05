@@ -9,16 +9,22 @@ import SwiftUI
 
 struct OuterView: View {
     var body: some View {
-        ScrollView{
-            GeometryReader {
-                geometry in
-
-                Text("Top View \(geometry.frame(in: .global).midY)")
-                    .frame(width: geometry.size.width, height: 50)
-                    .background(Color.orange)
+        VStack{
+            ScrollViewReader{
+                _ in
+                
+                List(0..<500){_ in
+                    Rectangle()
+                }
+                
             }
-
         }
+        .safeAreaInset(edge: .top, content: {
+            Color.clear.frame(height: 73)
+        })
+        .overlay(content: {
+            NavBarOpeningDialog()
+        })
         
     }
 }
