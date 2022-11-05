@@ -16,18 +16,7 @@ struct OpenDialog: View {
     var body: some View {
         
         VStack {
-            HStack{
-                Button {
-                   
-                } label: {
-                    Image(systemName: "arrow.left")
-                }
-                .padding(.trailing)
-                UserPreview(url: "", abbreviation: "ED", title: "Еремин Данила Александрович", subtitle: "Студент 3 курса группы Б760",  45)
-              
-            }
-            .padding()
-            .frame(height: 50)
+           
             ScrollViewReader{
                 scroll in
                 
@@ -39,26 +28,26 @@ struct OpenDialog: View {
                     let forMe = Bool.random()
                     if forMe == true{
                         MessageCard(forMe: forMe)
-                            .scaleEffect(x: 1, y: -1, anchor: .center)
-                        
-                        
+                            .rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
                             .id(message)
                             .listRowSeparator(.hidden)
                         
                     }else{
                         MessageCard(forMe: forMe, true)
-                            .scaleEffect(x: 1, y: -1, anchor: .center)
+                            .rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
                             .id(message)
                             .listRowSeparator(.hidden)
+                        
                     }
                     
                 }.onAppear{
-                    scroll.scrollTo(0)
+                    scroll.scrollTo(49)
                 }
-                .scaleEffect(x: 1, y: -1, anchor: .center)
+               
                 .listStyle(.plain)
             }
-            
+            .rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
+           
             HStack{
                 Image(systemName: "paperclip")
                     .padding(.trailing)
@@ -66,9 +55,16 @@ struct OpenDialog: View {
                     .textFieldStyle(.plain)
                 
             }
+           
             .padding()
             
         }
+        .safeAreaInset(edge: .top, content: {
+            Color.clear.frame(height: 73)
+        })
+        .overlay(content: {
+            NavBarOpeningDialog()
+        })
         
         
         

@@ -68,8 +68,7 @@ struct SelectorMessageScreen: View {
             })
             .overlay{
                 ZStack{
-                    Color.clear.background(
-                        .ultraThinMaterial)
+                    Color.clear.background(.ultraThinMaterial)
                     VStack{
                         Text("Мессенджер")
                             .frame(maxWidth: .infinity, alignment: .center)
@@ -116,6 +115,7 @@ struct SelectorMessageScreen: View {
                 .frame(maxHeight: .infinity, alignment: .top)
                 
                 
+                
             }
             
           
@@ -138,6 +138,6 @@ struct SelectorMessageScreen_Previews: PreviewProvider {
     static var previews: some View {
         SelectorMessageScreen()
             
-            .previewDevice(PreviewDevice(rawValue: "iPhone 8"))
+            
     }
 }

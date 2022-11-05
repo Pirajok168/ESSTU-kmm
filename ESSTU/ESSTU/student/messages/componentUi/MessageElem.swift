@@ -30,7 +30,7 @@ struct MessageElem: View {
                 })
             
             VStack(alignment: .leading, spacing: 5){
-                Text("Еремин Данила Александрович")
+                Text("Фамилия Имя Отчество")
                     .font(.headline)
                     
                 Text("Последнее сообщение")

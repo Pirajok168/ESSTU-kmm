@@ -7,113 +7,33 @@
 
 import SwiftUI
 
-struct Test: View {
-    
-    @State private var selectedTab: TypeMessages = .dialogs
-    
-    @Namespace var namespace
-
+struct OuterView: View {
     var body: some View {
-       
-        NavigationStack{
+        ScrollView{
+            GeometryReader {
+                geometry in
 
-            ScrollView{
-                LazyVStack{
-                    ForEach(0..<100, id: \.self){
-                        index in
-                        Text("\(index)")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(.blue)
-                            .padding()
-                        Divider()
-                    }
-                }
-            }
-            .overlay{
-                
-                    
-                ZStack{
-                    Color.clear.background(
-                        .ultraThinMaterial)
-                    VStack{
-                        Text("Мессенджер")
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .font(.title3)
-                        
-                        ScrollView(.horizontal, showsIndicators: false){
-        
-                            HStack(){
-                                ForEach(TypeMessages.allCases, id: \TypeMessages.self){
-                                    index in
-        
-                                    VStack(){
-                                        Button(action: {
-                                            withAnimation{
-                                                selectedTab = index.id
-                                            }
-                                        }){
-                                            Text(index.title)
-                                        }
-                                        .frame(maxHeight: 50, alignment: .top)
-                                        
-                                        
-                                        
-                                        
-                                        if selectedTab == index{
-                                            Rectangle()
-                                                .frame(height: 2)
-                                                .matchedGeometryEffect(id: "title", in: namespace, isSource: true)
-                                                .foregroundColor(.blue)
-                                        }
-                                      
-                                    }
-                                    .frame(maxHeight: 50, alignment: .bottom)
-                                    
-                                    .padding(.horizontal)
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                    }
-                    
-                }
-                .frame(height: 80)
-                .frame(maxHeight: .infinity, alignment: .top)
-                
-                
+                Text("Top View \(geometry.frame(in: .global).midY)")
+                    .frame(width: geometry.size.width, height: 50)
+                    .background(Color.orange)
             }
 
-                
-                
-            
         }
+        
     }
-
 }
 
-struct NavBar: View {
-    
-   
 
-    var body: some View {
-       
-        HStack{
-            Text("HelloWorld")
-                .font(.largeTitle.bold())
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-        }
-        .frame(maxHeight: .infinity, alignment: .top)
-    }
 
-}
+
+
 
 
 
 struct Test_Previews: PreviewProvider {
     static var previews: some View {
        
-            Test()
+        OuterView()
               
     }
 }
