@@ -25,7 +25,7 @@ struct MessageCard: View {
                 VStack(alignment: .leading){
                     Text("Сообщение")
                         .padding()
-                        .background(Color.ui.yellow)
+                        .background(.ultraThinMaterial)
                         .cornerRadius(10)
                         
                     
@@ -52,7 +52,7 @@ struct MessageCard: View {
                 VStack(alignment: .trailing){
                     Text("Сообщение")
                         .padding()
-                        .background(Color.ui.yellow)
+                        .background(.ultraThinMaterial)
                         .cornerRadius(10)
                         
                         

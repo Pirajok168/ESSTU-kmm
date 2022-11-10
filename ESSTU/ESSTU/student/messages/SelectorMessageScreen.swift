@@ -69,10 +69,11 @@ struct SelectorMessageScreen: View {
             .overlay{
                 ZStack{
                     Color.clear.background(.ultraThinMaterial)
+                        
                     VStack{
                         Text("Мессенджер")
                             .frame(maxWidth: .infinity, alignment: .center)
-                            .font(.title3)
+                            .font(.title2.bold())
                         
                         ScrollView(.horizontal, showsIndicators: false){
         
@@ -111,8 +112,10 @@ struct SelectorMessageScreen: View {
                     }
                     
                 }
+                
                 .frame(height: 80)
                 .frame(maxHeight: .infinity, alignment: .top)
+                
                 
                 
                 

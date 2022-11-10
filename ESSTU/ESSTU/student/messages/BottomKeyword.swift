@@ -22,8 +22,9 @@ struct BottomKeyword: View {
                
                 TextField("Введите сообщение", text: $searchValue)
                     .textFieldStyle(.roundedBorder)
-                    
+                    .cornerRadius(40)
                     .padding(.trailing)
+                
                     
             }
         }
