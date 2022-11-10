@@ -20,6 +20,7 @@
 		292C452228D5E0D8005F176D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 292C452128D5E0D8005F176D /* Preview Assets.xcassets */; };
 		292C452C28D5F502005F176D /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292C452B28D5F502005F176D /* LoginScreen.swift */; };
 		292DBC862916822100214521 /* BottomKeyword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292DBC852916822100214521 /* BottomKeyword.swift */; };
+		292DBC88291D4ACC00214521 /* NavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292DBC87291D4ACC00214521 /* NavBar.swift */; };
 		297B9CC528DF044000A11505 /* AuthNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297B9CC428DF044000A11505 /* AuthNavigation.swift */; };
 		297B9CEB28DF110D00A11505 /* StudentNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297B9CEA28DF110D00A11505 /* StudentNavigation.swift */; };
 		297B9CEE28DF116600A11505 /* NewsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297B9CED28DF116600A11505 /* NewsScreen.swift */; };
@@ -53,6 +54,7 @@
 		292C452128D5E0D8005F176D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		292C452B28D5F502005F176D /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
 		292DBC852916822100214521 /* BottomKeyword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomKeyword.swift; sourceTree = "<group>"; };
+		292DBC87291D4ACC00214521 /* NavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBar.swift; sourceTree = "<group>"; };
 		297B9CC428DF044000A11505 /* AuthNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNavigation.swift; sourceTree = "<group>"; };
 		297B9CEA28DF110D00A11505 /* StudentNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentNavigation.swift; sourceTree = "<group>"; };
 		297B9CED28DF116600A11505 /* NewsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsScreen.swift; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 				2922EB4A28F1741600F73B21 /* MessagesScreen.swift */,
 				2922EB4C28F2789C00F73B21 /* OpenDialog.swift */,
 				292DBC852916822100214521 /* BottomKeyword.swift */,
+				292DBC87291D4ACC00214521 /* NavBar.swift */,
 			);
 			path = messages;
 			sourceTree = "<group>";
@@ -411,6 +414,7 @@
 				29946CEE2916720900C6AEAE /* NavBarOpeningDialog.swift in Sources */,
 				292C451B28D5E0D7005F176D /* ESSTUApp.swift in Sources */,
 				29DF83FE28E03D6000D758E2 /* AnnouncementsViewModel.swift in Sources */,
+				292DBC88291D4ACC00214521 /* NavBar.swift in Sources */,
 				29DF840628E1761900D758E2 /* SelectorViewModel.swift in Sources */,
 				292DBC862916822100214521 /* BottomKeyword.swift in Sources */,
 			);

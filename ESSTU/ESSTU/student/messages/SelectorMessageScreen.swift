@@ -44,15 +44,6 @@ struct SelectorMessageScreen: View {
     var body: some View {
         NavigationStack{
             ScrollView{
-                
-
-                
-                
-                
-                    
-                
-                
-               
                 switch(selectedTab) {
                 case .dialogs: MessagesScreen()
     
@@ -67,13 +58,27 @@ struct SelectorMessageScreen: View {
                 Color.clear.frame(height: 80)
             })
             .overlay{
-                ZStack{
-                    Color.clear.background(.ultraThinMaterial)
-                        
+                NavBar(conent: {
                     VStack{
-                        Text("Мессенджер")
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .font(.title2.bold())
+                        ZStack{
+                            Text("Мессенджер")
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .font(.title2.bold())
+                            
+                            Button(action: {
+                                
+                            }, label: {
+                                Image(systemName: "plus.message")
+                                    
+                            })
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .padding(.trailing)
+                            .foregroundColor(Color.ui.yellow)
+                            
+                            
+                        }
+                        
+                       
                         
                         ScrollView(.horizontal, showsIndicators: false){
         
@@ -110,11 +115,7 @@ struct SelectorMessageScreen: View {
                             }
                         }
                     }
-                    
-                }
-                
-                .frame(height: 80)
-                .frame(maxHeight: .infinity, alignment: .top)
+                })
                 
                 
                 

@@ -12,7 +12,7 @@ import SwiftUI
 struct OpenDialog: View {
   
     @State private var searchValue: String = ""
-    @State private var position: CGSize = CGSize.zero
+    
     var body: some View {
         
         VStack {
@@ -58,7 +58,20 @@ struct OpenDialog: View {
             Color.clear.frame(height: 43)
         })
         .overlay(content: {
-            NavBarOpeningDialog()
+            NavBar(conent: {
+                HStack{
+                    Button {
+
+                    } label: {
+                        Image(systemName: "arrow.left")
+                    }
+                    .padding(.horizontal)
+                    
+                    UserPreview(url: "", abbreviation: "ED", title: "Еремин Данила Александрович", subtitle: "Студент 3 курса группы Б760",  45)
+                        .padding(.trailing)
+                }
+            })
+        
         })
         .overlay(content: {
             BottomKeyword()
