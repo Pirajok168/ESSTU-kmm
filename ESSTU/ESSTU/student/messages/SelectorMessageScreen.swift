@@ -36,6 +36,10 @@ extension Color {
 
 struct SelectorMessageScreen: View {
     @State private var selectedTab: TypeMessages = .dialogs
+    @State private var isPresented: Bool = false
+    @State private var searchValue: String = ""
+    
+    @State private var isScrollDown = false
     
     @Namespace var namespace
     
@@ -66,7 +70,7 @@ struct SelectorMessageScreen: View {
                                 .font(.title2.bold())
                             
                             Button(action: {
-                                
+                                isPresented = true
                             }, label: {
                                 Image(systemName: "plus.message")
                                     
@@ -77,6 +81,14 @@ struct SelectorMessageScreen: View {
                             
                             
                         }
+                        
+                        TextField("Поиск по чатам и людям", text: $searchValue)
+                            .textFieldStyle(.roundedBorder)
+                            .cornerRadius(40)
+                            .padding(.horizontal)
+                            
+                       
+                            
                         
                        
                         
@@ -116,11 +128,27 @@ struct SelectorMessageScreen: View {
                         }
                     }
                 })
+                .sheet(isPresented: $isPresented, content: {
+                    
+                })
                 
                 
                 
                 
             }
+            .gesture(
+               DragGesture().onChanged { value in
+                  if value.translation.height > 0 {
+                    withAnimation{
+                        isScrollDown = true
+                    }
+                  } else {
+                      withAnimation{
+                          isScrollDown = false
+                      }
+                  }
+               }
+            )
             
           
             
