@@ -34,6 +34,46 @@ extension Color {
     }
 }
 
+struct Contact : Identifiable, Hashable {
+    var id = UUID()
+    var firstName: String
+    var lastName: String
+    var telephone: String
+}
+
+class ContactsModel : ObservableObject {
+    //MARK:- Variables
+    var contactData : [Contact]
+    @Published var sectionDictionary : Dictionary<String , [Contact]>
+    //MARK:- initializer
+    init() {
+        contactData = [Contact(firstName: "Jacob", lastName: "Smith", telephone: ""),
+                       Contact(firstName: "alexandra", lastName: "Johnson", telephone: ""),
+                       Contact(firstName: "daniel", lastName: "Williams", telephone: ""),
+                       Contact(firstName: "Angel", lastName: "Brown", telephone: ""),
+                       Contact(firstName: "David", lastName: "Jones", telephone: ""),
+                       Contact(firstName: "Michael", lastName: "Miller", telephone: ""),
+                       Contact(firstName: "Jose", lastName: "Garcia", telephone: ""),
+                       Contact(firstName: "Joseph", lastName: "Davis", telephone: ""),
+                       Contact(firstName: "christopher", lastName: "Martin", telephone: ""),
+                       Contact(firstName: "Gabriel", lastName: "Wilson", telephone: ""),
+                       Contact(firstName: "Anthony", lastName: "Brown", telephone: "")]
+        sectionDictionary = [:]
+        sectionDictionary = getSectionedDictionary()
+    }
+    func getSectionedDictionary() -> Dictionary <String , [Contact]> {
+            let sectionDictionary: Dictionary<String, [Contact]> = {
+                return Dictionary(grouping: contactData, by: {
+                    let name = $0.firstName
+                    let normalizedName = name.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+                    let firstChar = String(normalizedName.first!).uppercased()
+                    return firstChar
+                })
+            }()
+            return sectionDictionary
+        }
+}
+
 struct SelectorMessageScreen: View {
     @State private var selectedTab: TypeMessages = .dialogs
     @State private var isPresented: Bool = false
@@ -44,6 +84,7 @@ struct SelectorMessageScreen: View {
     @Namespace var namespace
     
 
+    @StateObject var contactsModel = ContactsModel()
     
     var body: some View {
         NavigationStack{
@@ -71,6 +112,7 @@ struct SelectorMessageScreen: View {
                             
                             Button(action: {
                                 isPresented = true
+                        
                             }, label: {
                                 Image(systemName: "plus.message")
                                     
@@ -82,10 +124,18 @@ struct SelectorMessageScreen: View {
                             
                         }
                         
-                        TextField("Поиск по чатам и людям", text: $searchValue)
-                            .textFieldStyle(.roundedBorder)
-                            .cornerRadius(40)
-                            .padding(.horizontal)
+//                        if !isScrollDown{
+//                            TextField("Поиск по чатам и людям", text: $searchValue)
+//                                .textFieldStyle(.roundedBorder)
+//                                .cornerRadius(40)
+//                                .padding(.horizontal)
+//
+//
+//
+//                        }
+                      
+                            
+                       
                             
                        
                             
@@ -129,26 +179,42 @@ struct SelectorMessageScreen: View {
                     }
                 })
                 .sheet(isPresented: $isPresented, content: {
-                    
+                    NavigationStack{
+                        
+                        List(contactsModel.sectionDictionary.keys.sorted(), id: \.self){
+                            key in
+                            if let contacts = contactsModel.sectionDictionary[key]!.filter({ (contact) -> Bool in
+                                self.searchValue.isEmpty ? true : contact.firstName.lowercased().contains( self.searchValue.lowercased())
+                            }), !contacts.isEmpty
+                            {
+                                Section(header: Text("\(key)")) {
+                                   ForEach(contacts){ value in
+                                       Text("\(value.firstName) \(value.lastName)")
+                                   }
+                               }
+                            }
+                        }
+                            .navigationTitle("Написать сообщение")
+                            .navigationBarTitleDisplayMode(.inline)
+                        
+                            .searchable(text: $searchValue)
+                            .toolbar{
+                                ToolbarItem(placement: .navigationBarLeading, content: {
+                                    Button(action: {
+                                        
+                                    }, label: {
+                                        Text("Отмена")
+                                    })
+                                })
+                            }
+                    }
                 })
                 
                 
                 
                 
             }
-            .gesture(
-               DragGesture().onChanged { value in
-                  if value.translation.height > 0 {
-                    withAnimation{
-                        isScrollDown = true
-                    }
-                  } else {
-                      withAnimation{
-                          isScrollDown = false
-                      }
-                  }
-               }
-            )
+            
             
           
             
