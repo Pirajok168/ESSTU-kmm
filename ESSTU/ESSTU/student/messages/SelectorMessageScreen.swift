@@ -92,7 +92,7 @@ struct SelectorMessageScreen: View {
 
     @StateObject var contactsModel = ContactsModel()
     
-   
+    @State private var heightNavBar: CGFloat = 100
     
     var body: some View {
         NavigationStack{
@@ -120,10 +120,25 @@ struct SelectorMessageScreen: View {
             .coordinateSpace(name: "scroll")
            
             .safeAreaInset(edge: .top, content: {
-                Color.clear.frame(height: 80)
+                Color.clear.frame(height: 105)
+            })
+            .onChange(of: contactsModel.offsetChange, perform: {
+                value in
+                if heightNavBar < 70{
+                    if value > heightNavBar{
+                        return
+                    }
+                }
+                if contactsModel.offsetChange > 0 {
+                    heightNavBar = 100 + (value * -1)
+                }else{
+                    heightNavBar = 100
+                }
             })
             .overlay{
-                NavBar(conent: {
+               
+                ZStack{
+                    Color.clear.background(.ultraThinMaterial)
                     VStack{
                         ZStack{
                             Text("Мессенджер")
@@ -143,12 +158,15 @@ struct SelectorMessageScreen: View {
                             
                             
                         }
+                        Spacer()
                         
+                        TextEditor(text: $searchValue)
+                            .frame(height: 40 + (contactsModel.offsetChange > 0  ? contactsModel.offsetChange * -1 : 0))
+                            .cornerRadius(20)
+                            .padding(.horizontal)
+                            
                         
-                        Text("\(contactsModel.offsetChange)")
-                        
-                        
-                        
+                        Spacer()
                        
 
                         ScrollView(.horizontal, showsIndicators: false){
@@ -187,7 +205,9 @@ struct SelectorMessageScreen: View {
                         }
                         
                     }
-                })
+                }
+                .frame(height: heightNavBar)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 
                 
                 
@@ -243,6 +263,20 @@ struct SelectorMessageScreen: View {
    
     
 }
+
+struct MyTextFieldStyle: TextFieldStyle {
+    let offset: CGFloat = 0
+    
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+            .frame(height: 60)
+            .background(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .stroke(Color.red, lineWidth: 3)
+            ).padding()
+    }
+}
+
 
 struct SelectorMessageScreen_Previews: PreviewProvider {
     static var previews: some View {
