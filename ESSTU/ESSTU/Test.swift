@@ -17,6 +17,7 @@ struct ContentView: View {
                 }
             
             Text("\(offset)")
+               
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .coordinateSpace(name: "vs")

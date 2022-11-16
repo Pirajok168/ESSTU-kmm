@@ -160,9 +160,25 @@ struct SelectorMessageScreen: View {
                         }
                         Spacer()
                         
+                        
                         TextEditor(text: $searchValue)
                             .frame(height: 40 + (contactsModel.offsetChange > 0  ? contactsModel.offsetChange * -1 : 0))
                             .cornerRadius(20)
+                            .overlay{
+                                
+                                HStack {
+                                  
+                                    if heightNavBar > 70 {
+                                        Text("Поиск по чатам и собеседникам")
+                                            .opacity(searchValue.isEmpty ? 1 : 0)
+                                            .foregroundColor(.gray)
+                                            
+                                    }
+                                }
+                                
+                                
+                                
+                            }
                             .padding(.horizontal)
                             
                         
