@@ -8,25 +8,25 @@
 import SwiftUI
 
 struct MessagesScreen: View {
+    @EnvironmentObject var contactsModel: ContactsModel
+    @State private var offsetChange: CGFloat = 0
     
     var body: some View {
         
-        ScrollView(.vertical){
-            LazyVStack{
-                ForEach(0..<40, id: \.self){
-                    message in
-                    MessageElem()
-                }
+    
+        LazyVStack{
+            ForEach(0..<40, id: \.self){
+                message in
+                MessageElem()
             }
-            .padding(.horizontal)
         }
+        
+       
+        
+        .padding(.horizontal)
+        
     
         
     }
 }
 
-struct MessagesScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        MessagesScreen()
-    }
-}

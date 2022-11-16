@@ -45,6 +45,12 @@ class ContactsModel : ObservableObject {
     //MARK:- Variables
     var contactData : [Contact]
     @Published var sectionDictionary : Dictionary<String , [Contact]>
+    
+    @Published  var offsetChange: CGFloat = 0
+    func test(offsetChange: CGFloat){
+        self.offsetChange = offsetChange
+    }
+    
     //MARK:- initializer
     init() {
         contactData = [Contact(firstName: "Jacob", lastName: "Smith", telephone: ""),
@@ -86,19 +92,33 @@ struct SelectorMessageScreen: View {
 
     @StateObject var contactsModel = ContactsModel()
     
+   
+    
     var body: some View {
         NavigationStack{
             ScrollView{
-                switch(selectedTab) {
-                case .dialogs: MessagesScreen()
-    
-                case .discussions: MessagesScreen()
-                case .support: MessagesScreen()
-                default:
-                    Text("2")
+                VStack{
+                    switch(selectedTab) {
+                    case .dialogs: MessagesScreen()
+                        
+                    case .discussions: MessagesScreen()
+                    case .support: MessagesScreen()
+                    default:
+                        Text("2")
+                    }
                 }
-                
+                .background(GeometryReader {
+                                return Color.clear.preference(key: ViewOffsetKey.self,
+                                                              value: -$0.frame(in: .named("scroll")).origin.y)
+                            })
+                .onPreferenceChange(ViewOffsetKey.self) { offset in
+                    
+                    contactsModel.offsetChange = offset
+                }
+               
             }
+            .coordinateSpace(name: "scroll")
+           
             .safeAreaInset(edge: .top, content: {
                 Color.clear.frame(height: 80)
             })
@@ -124,24 +144,13 @@ struct SelectorMessageScreen: View {
                             
                         }
                         
-//                        if !isScrollDown{
-//                            TextField("Поиск по чатам и людям", text: $searchValue)
-//                                .textFieldStyle(.roundedBorder)
-//                                .cornerRadius(40)
-//                                .padding(.horizontal)
-//
-//
-//
-//                        }
-                      
-                            
-                       
-                            
-                       
-                            
+                        
+                        Text("\(contactsModel.offsetChange)")
+                        
+                        
                         
                        
-                        
+
                         ScrollView(.horizontal, showsIndicators: false){
         
                             HStack(){
@@ -176,53 +185,53 @@ struct SelectorMessageScreen: View {
                                 .buttonStyle(.plain)
                             }
                         }
+                        
                     }
                 })
-                .sheet(isPresented: $isPresented, content: {
-                    NavigationStack{
-                        
-                        List(contactsModel.sectionDictionary.keys.sorted(), id: \.self){
-                            key in
-                            if let contacts = contactsModel.sectionDictionary[key]!.filter({ (contact) -> Bool in
-                                self.searchValue.isEmpty ? true : contact.firstName.lowercased().contains( self.searchValue.lowercased())
-                            }), !contacts.isEmpty
-                            {
-                                Section(header: Text("\(key)")) {
-                                   ForEach(contacts){ value in
-                                       Text("\(value.firstName) \(value.lastName)")
-                                   }
-                               }
-                            }
-                        }
-                            .navigationTitle("Написать сообщение")
-                            .navigationBarTitleDisplayMode(.inline)
-                        
-                            .searchable(text: $searchValue)
-                            .toolbar{
-                                ToolbarItem(placement: .navigationBarLeading, content: {
-                                    Button(action: {
-                                        
-                                    }, label: {
-                                        Text("Отмена")
-                                    })
-                                })
-                            }
-                    }
-                })
+                
+                
                 
                 
                 
                 
             }
+            .sheet(isPresented: $isPresented, content: {
+                NavigationStack{
+                    
+                    
+                    List(contactsModel.sectionDictionary.keys.sorted(), id: \.self){
+                        key in
+                        if let contacts = contactsModel.sectionDictionary[key]!.filter({ (contact) -> Bool in
+                            self.searchValue.isEmpty ? true : contact.firstName.lowercased().contains( self.searchValue.lowercased())
+                        }), !contacts.isEmpty
+                        {
+                            Section(header: Text("\(key)")) {
+                               ForEach(contacts){ value in
+                                   Text("\(value.firstName) \(value.lastName)")
+                               }
+                           }
+                            
+                        }
+                    }
+                        .navigationTitle("Написать сообщение")
+                       
+                        .navigationBarTitleDisplayMode(.inline)
+                    
+                        .searchable(text: $searchValue)
+                        .toolbar{
+                            ToolbarItem(placement: .navigationBarLeading, content: {
+                                Button(action: {
+                                    
+                                }, label: {
+                                    Text("Отмена")
+                                })
+                            })
+                        }
+                }
+            })
             
             
-          
-            
-           
-            
-                   
-               
-            
+    
            
         }
         
@@ -230,6 +239,9 @@ struct SelectorMessageScreen: View {
         
         
     }
+    
+   
+    
 }
 
 struct SelectorMessageScreen_Previews: PreviewProvider {

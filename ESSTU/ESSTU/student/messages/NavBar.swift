@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct NavBar<Content>: View where Content: View{
-    let conent: () -> Content
+    @ViewBuilder var conent: () -> Content
+    
+    
     
     var body: some View {
         ZStack{
