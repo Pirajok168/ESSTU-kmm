@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace = "ru.esstu.android"
-    compileSdk = 32
+    compileSdk = 33
     defaultConfig {
         applicationId = "ru.esstu.android"
         minSdk = 21
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
     }
@@ -17,7 +17,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.0"
+        kotlinCompilerExtensionVersion = "1.3.2"
     }
     packagingOptions {
         resources {
@@ -33,12 +33,12 @@ android {
 
 dependencies {
     implementation(project(":shared"))
-    implementation("androidx.compose.ui:ui:1.2.1")
-    implementation("androidx.compose.ui:ui-tooling:1.2.1")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.2.1")
-    implementation("androidx.compose.foundation:foundation:1.2.1")
-    implementation("androidx.compose.material:material:1.2.1")
-    implementation("androidx.activity:activity-compose:1.5.1")
+    implementation("androidx.compose.ui:ui:1.3.2")
+    implementation("androidx.compose.ui:ui-tooling:1.3.2")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.3.2")
+    implementation("androidx.compose.foundation:foundation:1.3.1")
+    implementation("androidx.compose.material:material:1.3.1")
+    implementation("androidx.activity:activity-compose:1.6.1")
     implementation ("androidx.appcompat:appcompat:1.5.1")
 
     //Initializer
@@ -59,7 +59,7 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-insets:0.23.1")
 
     //system ui controller
-    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.23.1")
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
 
     //Material
     implementation ("com.google.android.material:material:1.7.0")
