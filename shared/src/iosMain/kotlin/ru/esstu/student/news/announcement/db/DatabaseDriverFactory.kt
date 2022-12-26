@@ -11,4 +11,4 @@ class DatabaseDriverFactory: IDatabaseDriverNewsFactory {
         get() = NativeSqliteDriver(NewsDatabase.Schema, "announcement.db")
 }
 
-actual fun driverNewsFactory(): IDatabaseDriverNewsFactory = DatabaseDriverFactory()
+actual fun databaseStudentFactory(): IDatabaseDriverNewsFactory = DatabaseDriverFactory()

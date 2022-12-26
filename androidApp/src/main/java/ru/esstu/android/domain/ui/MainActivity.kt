@@ -23,7 +23,7 @@ import ru.esstu.android.domain.ui.theme.EsstuTheme
 
 
 
-class MainActivity : AppCompatActivity() {
+class  MainActivity : AppCompatActivity() {
 
     //@Inject
    // lateinit var uiStateObserver: IUiObserver

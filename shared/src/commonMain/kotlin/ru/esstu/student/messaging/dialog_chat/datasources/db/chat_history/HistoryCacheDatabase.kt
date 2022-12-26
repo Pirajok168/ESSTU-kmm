@@ -6,52 +6,22 @@ import io.github.aakira.napier.Napier
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import ru.esstu.student.EsstuDatabase
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAttachmentEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatReplyMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelatedEntity
-import ruesstustudentmessagingdialogchatdatasourcesdbchathistory.DialogChatMessageTable
-import ruesstustudentmessagingdialogchatdatasourcesdbchathistory.DialogChatReplyMessageTable
-import ruesstustudentmessagingdialogchatdatasourcesdbchathistory.GetMessageHistory
 
-interface IDatabaseHistoryCacheFactory {
-    val sqlDriver: SqlDriver
-}
 
-expect fun databaseHistoryCacheFactory(): IDatabaseHistoryCacheFactory
 
 class HistoryCacheDatabase(
-    databaseHistoryCacheFactory: SqlDriver
+    database: EsstuDatabase
 ) : HistoryCacheDao {
-    private val adapter = object : ColumnAdapter<DialogChatAuthorEntity, String> {
-        override fun decode(databaseValue: String): DialogChatAuthorEntity {
-            return Json { }.decodeFromString(databaseValue)
-        }
 
-        override fun encode(value: DialogChatAuthorEntity): String {
-            return Json { }.encodeToString(value)
-        }
 
-    }
 
-    private val adapter2 = object : ColumnAdapter<DialogChatAuthorEntity, String> {
-        override fun decode(databaseValue: String): DialogChatAuthorEntity {
-            return Json { }.decodeFromString(databaseValue)
-        }
-
-        override fun encode(value: DialogChatAuthorEntity): String {
-            return Json { }.encodeToString(value)
-        }
-
-    }
-
-    private val database = MessageWithRelatedTAble(
-        databaseHistoryCacheFactory,
-        DialogChatMessageTable.Adapter(adapter),
-        DialogChatReplyMessageTable.Adapter(adapter2)
-    )
     private val dbQuery = database.messageWithRelatedTAbleQueries
 
     override suspend fun insertMessage(messages: DialogChatMessageEntity) {

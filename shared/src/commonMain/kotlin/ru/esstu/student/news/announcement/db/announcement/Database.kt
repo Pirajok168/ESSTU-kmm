@@ -5,6 +5,7 @@ import com.squareup.sqldelight.db.SqlDriver
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import ru.esstu.student.EsstuDatabase
 
 import ru.esstu.student.news.announcement.db.announcement.entities.NewsAttachmentEntity
 import ru.esstu.student.news.announcement.db.announcement.entities.NewsEntity
@@ -15,7 +16,7 @@ import ru.esstu.student.news.announcement.db.announcement.entities.relations.New
 import ru.esstu.student.news.announcementdbannouncement.NewsEntityDatabase
 import kotlin.collections.List
 
-internal class Database(databaseNewsFactory: SqlDriver): NewsDao {
+internal class Database(database: EsstuDatabase): NewsDao {
 
     private val adapter = object : ColumnAdapter<UserEntity, String>{
 
@@ -40,8 +41,6 @@ internal class Database(databaseNewsFactory: SqlDriver): NewsDao {
 
     }
 
-
-    private val database = NewsDatabase(databaseNewsFactory, NewsEntityDatabase.Adapter(adapter,listAdapter))
     private val dbQuery = database.newsDatabaseQueries
 
 

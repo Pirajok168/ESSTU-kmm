@@ -5,17 +5,16 @@ import org.kodein.di.bind
 import org.kodein.di.instance
 import org.kodein.di.singleton
 import ru.esstu.ESSTUSdk
+import ru.esstu.student.domain.db.IDatabaseStudent
 import ru.esstu.student.news.announcement.datasources.api.NewsApi
 import ru.esstu.student.news.announcement.datasources.api.NewsApiImpl
 import ru.esstu.student.news.announcement.datasources.db.timestamp.DatabaseTimestamp
 import ru.esstu.student.news.announcement.datasources.db.timestamp.TimestampDao
-import ru.esstu.student.news.announcement.datasources.db.timestamp.driverTimestampFactory
 import ru.esstu.student.news.announcement.datasources.repo.AnnouncementsRepositoryImpl
 import ru.esstu.student.news.announcement.datasources.repo.AnnouncementsUpdateRepositoryImpl
 import ru.esstu.student.news.announcement.datasources.repo.IAnnouncementsRepository
 import ru.esstu.student.news.announcement.datasources.repo.IAnnouncementsUpdateRepository
 import ru.esstu.student.news.announcement.db.announcement.Database
-import ru.esstu.student.news.announcement.db.driverNewsFactory
 import ru.esstu.student.news.announcement.db.announcement.NewsDao
 
 import kotlin.native.concurrent.ThreadLocal
@@ -28,16 +27,15 @@ internal val announcementsModule = DI.Module("AnnouncementsModule") {
     }
 
     bind<NewsDao>() with singleton {
-        val driverFactory = driverNewsFactory()
         Database(
-            databaseNewsFactory = driverFactory.sqlDriver
+
+            database = instance<IDatabaseStudent>().getDataBase()
         )
     }
 
     bind<TimestampDao>() with singleton {
-        val driverTimestampFactory = driverTimestampFactory()
         DatabaseTimestamp(
-            databaseTimestampFactory = driverTimestampFactory.sqlDriver
+            database = instance<IDatabaseStudent>().getDataBase()
         )
     }
 

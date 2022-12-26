@@ -1,22 +1,19 @@
 package ru.esstu.student.messaging.dialog_chat.datasources.db.user_message
 
 import com.squareup.sqldelight.db.SqlDriver
+import ru.esstu.student.EsstuDatabase
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.HistoryCacheDao
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.UserCachedFileEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.UserMessageEntity
 
-interface IDatabaseUserMessageDatabase {
-    val sqlDriver: SqlDriver
-}
 
-expect fun databaseUserMessageDatabase(): IDatabaseUserMessageDatabase
 
 class UserMessageDatabase(
-    userMessageDaoDatabase: SqlDriver,
-    //private val cacheDao: HistoryCacheDao
+    database: EsstuDatabase
+
 ): UserMessageDao {
-    private val database = UserMessageTable(userMessageDaoDatabase)
+
     private val dbQuery = database.userMessageTableQueries
     override suspend fun getCachedFiles(
         appUserId: String,

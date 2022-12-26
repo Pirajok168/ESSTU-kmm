@@ -6,4 +6,4 @@ interface IDatabaseDriverNewsFactory {
     val sqlDriver: SqlDriver
 }
 
-expect fun driverNewsFactory(): IDatabaseDriverNewsFactory
+expect fun databaseStudentFactory(): IDatabaseDriverNewsFactory

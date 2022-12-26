@@ -1,6 +1,7 @@
 package ru.esstu.student.news
 
 import org.kodein.di.DI
+import ru.esstu.student.domain.di.domainStudentModule
 import ru.esstu.student.news.announcement.di.announcementsModule
 
 

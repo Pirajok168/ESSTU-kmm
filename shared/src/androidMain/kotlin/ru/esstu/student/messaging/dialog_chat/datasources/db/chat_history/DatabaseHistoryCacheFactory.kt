@@ -4,16 +4,6 @@ import android.content.Context
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import ru.esstu.ContextApplication
-import ru.esstu.student.news.announcement.db.DatabaseDriverFactory
-import ru.esstu.student.news.announcement.db.IDatabaseDriverNewsFactory
-import ru.esstu.student.news.announcement.db.announcement.NewsDatabase
-
-class DatabaseHistoryCacheFactory(
-    private val context: Context = ContextApplication.getContextApplication().context,
-    override val sqlDriver: SqlDriver = AndroidSqliteDriver(MessageWithRelatedTAble.Schema, context, "databaseHistoryCache.db")
-): IDatabaseHistoryCacheFactory {
-
-}
+import ru.esstu.student.EsstuDatabase
 
 
-actual fun databaseHistoryCacheFactory(): IDatabaseHistoryCacheFactory = DatabaseHistoryCacheFactory()

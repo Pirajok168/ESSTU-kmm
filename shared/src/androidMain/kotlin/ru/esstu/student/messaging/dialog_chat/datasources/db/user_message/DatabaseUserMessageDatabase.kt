@@ -1,28 +1,3 @@
 package ru.esstu.student.messaging.dialog_chat.datasources.db.user_message
 
-import android.content.Context
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.squareup.sqldelight.android.AndroidSqliteDriver
-import com.squareup.sqldelight.db.SqlDriver
-import ru.esstu.ContextApplication
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.DatabaseHistoryCacheFactory
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.IDatabaseHistoryCacheFactory
 
-
-class DatabaseUserMessageDatabase(
-    private val context: Context = ContextApplication.getContextApplication().context,
-    override val sqlDriver: SqlDriver = AndroidSqliteDriver(
-        UserMessageTable.Schema,
-        context,
-        "databaseUserMessageDatabase.db",
-        callback = object : AndroidSqliteDriver.Callback(UserMessageTable.Schema) {
-            override fun onConfigure(db: SupportSQLiteDatabase) {
-                super.onConfigure(db)
-                db.setForeignKeyConstraintsEnabled(true)
-            }
-        })
-) : IDatabaseUserMessageDatabase
-
-
-actual fun databaseUserMessageDatabase(): IDatabaseUserMessageDatabase =
-    DatabaseUserMessageDatabase()

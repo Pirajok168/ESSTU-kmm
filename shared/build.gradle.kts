@@ -115,25 +115,15 @@ kotlin {
 
 sqldelight {
 
-    database("NewsDatabase") {
-        packageName = "ru.esstu.student.news.announcement.db.announcement"
-        sourceFolders = listOf("sqldelight")
+    database("EsstuDatabase"){
+        packageName = "ru.esstu.student"
     }
 
-    database("TimestampDatabase"){
-        packageName ="ru.esstu.student.news"
-        sourceFolders = listOf("sqldelight2")
-    }
 
-    database("MessageWithRelatedTAble"){
-        packageName = "ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history"
-        sourceFolders = listOf("sqldelight3")
-    }
 
-    database("UserMessageTable"){
-        packageName = "ru.esstu.student.messaging.dialog_chat.datasources.db.user_message"
-        sourceFolders = listOf("kotlin")
-    }
+
+
+   
 
 
 }

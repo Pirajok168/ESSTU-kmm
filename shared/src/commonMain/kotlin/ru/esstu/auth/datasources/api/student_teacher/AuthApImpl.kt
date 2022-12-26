@@ -20,8 +20,8 @@ class AuthApImpl(
                     append("response_type", "token")
                     append("grant_type", "refresh_token")
                     append("scope", "trust")
-                    append("client_id", "personal_office_mobile")
-                    append("client_secret", "431ecc50c5be014224ec1abf8c2f99840ca4c43e15a7db56bcf8d0b1b6ef632e")
+                    append("client_id", "personal_office_employee")
+                    append("client_secret", "0a36339cfb8136da2151301170a730d758a88c0f130bd15fc1abe583a91ccfae")
                     append("refresh_token", refresh)
                 }))
             }
@@ -41,8 +41,8 @@ class AuthApImpl(
                     append("response_type", "token")
                     append("grant_type", "password")
                     append("scope", "trust")
-                    append("client_id", "personal_office_mobile")
-                    append("client_secret", "431ecc50c5be014224ec1abf8c2f99840ca4c43e15a7db56bcf8d0b1b6ef632e")
+                    append("client_id", "personal_office_employee")
+                    append("client_secret", "0a36339cfb8136da2151301170a730d758a88c0f130bd15fc1abe583a91ccfae")
                 }))
 
             }
