@@ -61,6 +61,7 @@ insertReply:
 
 getMessageHistory:
     SELECT t.*, o.*, q.*
+
         FROM DialogChatMessageTable t
         LEFT JOIN DialogChatAttachmentTable o ON t.messageId == o.messageId
         LEFT JOIN DialogChatReplyMessageTable q ON t.replyMessageId == q.idReplyMessage

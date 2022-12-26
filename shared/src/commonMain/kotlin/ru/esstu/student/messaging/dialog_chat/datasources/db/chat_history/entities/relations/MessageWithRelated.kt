@@ -14,8 +14,10 @@ data class MessageWithRelated(
     val reply: DialogChatReplyMessageEntity?,
 )
 
+
+
 data class MessageWithRelatedEntity(
-    val message: DialogChatMessageEntity?,
+    val message: DialogChatMessageEntity,
 
     val attachments: DialogChatAttachmentEntity?,
 

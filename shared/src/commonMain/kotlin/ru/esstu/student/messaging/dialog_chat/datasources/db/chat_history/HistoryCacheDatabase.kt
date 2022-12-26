@@ -1,11 +1,5 @@
 package ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history
 
-import com.squareup.sqldelight.ColumnAdapter
-import com.squareup.sqldelight.db.SqlDriver
-import io.github.aakira.napier.Napier
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import ru.esstu.student.EsstuDatabase
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAttachmentEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
@@ -15,11 +9,9 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entiti
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelatedEntity
 
 
-
 class HistoryCacheDatabase(
     database: EsstuDatabase
 ) : HistoryCacheDao {
-
 
 
     private val dbQuery = database.messageWithRelatedTAbleQueries
@@ -72,6 +64,67 @@ class HistoryCacheDatabase(
         limit: Int,
         offset: Int
     ): List<MessageWithRelated> {
+        fun map(
+            messageId: Long,
+            appUserId: String,
+            opponentId: String?,
+            fromSend: DialogChatAuthorEntity,
+            replyMessageId: Long?,
+            date: Long,
+            message: String?,
+            status: String?,
+            idAttachment: Long?,
+            messageId_: Long?,
+            fileUri: String?,
+            LocalFileUri: String?,
+            loadProgress: Double?,
+            name: String?,
+            ext: String?,
+            size: Long?,
+            type: String?,
+            idReplyMessage: Long?,
+            fromSendReplyMessage: DialogChatAuthorEntity?,
+            dateReplyMessage: Long?,
+            messageReplayMessage: String?,
+            attachmentsCount: Long?
+        ): MessageWithRelatedEntity {
+            val messages = DialogChatMessageEntity(
+                appUserId = appUserId,
+                id = messageId,
+                opponentId = opponentId.orEmpty(),
+                from = fromSend,
+                replyMessageId = replyMessageId,
+                date = date,
+                message = message.orEmpty(),
+                status = status.orEmpty(),
+            )
+
+            val attachment = if (idAttachment == null) null else DialogChatAttachmentEntity(
+                id = idAttachment.toInt(),
+                messageId = messageId_!!,
+                fileUri = fileUri.orEmpty(),
+                LocalFileUri = LocalFileUri,
+                loadProgress = loadProgress?.toFloat(),
+                name = name,
+                ext = ext,
+                size = size!!.toInt(),
+                type = type
+            )
+
+            return MessageWithRelatedEntity(
+                message = messages,
+                attachments = attachment,
+                reply = if (idReplyMessage == null) null else {
+                    DialogChatReplyMessageEntity(
+                        id = idReplyMessage,
+                        from = fromSendReplyMessage!!,
+                        date = dateReplyMessage!!,
+                        message = messageReplayMessage.toString(),
+                        attachmentsCount = attachmentsCount!!.toInt()
+                    )
+                }
+            )
+        }
 
 
         val query = dbQuery.getMessageHistory(
@@ -82,72 +135,38 @@ class HistoryCacheDatabase(
             mapper = ::map
         ).executeAsList()
 
+        val a = query.groupBy {
+            it.message.id
+        }
+        val result = mutableListOf<MessageWithRelated>()
 
-       // Napier.e(query.toString())
-        return emptyList()
-    }
-
-    private fun map(
-        messageId: Long,
-        appUserId: String,
-        opponentId: String?,
-        fromSend: DialogChatAuthorEntity,
-        replyMessageId: Long?,
-        date: Long,
-        message: String?,
-        status: String?,
-        idAttachment: Long?,
-        messageId_: Long?,
-        fileUri: String?,
-        LocalFileUri: String?,
-        loadProgress: Double?,
-        name: String?,
-        ext: String?,
-        size: Long?,
-        type: String?,
-        idReplyMessage: Long?,
-        fromSendReplyMessage: DialogChatAuthorEntity?,
-        dateReplyMessage: Long?,
-        messageReplayMessage: String?,
-        attachmentsCount: Long?
-    ): MessageWithRelatedEntity {
-        val message = DialogChatMessageEntity(
-            appUserId = appUserId,
-            id = messageId,
-            opponentId = opponentId.orEmpty(),
-            from = fromSend,
-            replyMessageId = replyMessageId,
-            date = date,
-            message = message.orEmpty(),
-            status = status.orEmpty(),
-        )
-
-        val attachment = if (idAttachment == null) null else DialogChatAttachmentEntity(
-            id = idAttachment.toInt(),
-            messageId = messageId_!!,
-            fileUri = fileUri.orEmpty(),
-            LocalFileUri = LocalFileUri,
-            loadProgress = loadProgress?.toFloat(),
-            name = name,
-            ext = ext,
-            size = size!!.toInt(),
-            type = type
-        )
-
-        return MessageWithRelatedEntity(
-            message = message,
-            attachments = attachment,
-            reply = if (idReplyMessage == null) null else {
-                DialogChatReplyMessageEntity(
-                    id = idReplyMessage,
-                    from = fromSendReplyMessage!!,
-                    date = dateReplyMessage!!,
-                    message = messageReplayMessage.toString(),
-                    attachmentsCount = attachmentsCount!!.toInt()
-                )
+        a.forEach { (key, value) ->
+            val attachments = mutableListOf<DialogChatAttachmentEntity>()
+            var message: DialogChatMessageEntity? = null
+            var reply: DialogChatReplyMessageEntity? = null
+            value.forEach { messageWith ->
+                if (result.find { it.message.id == messageWith.message.id } == null) {
+                    message = messageWith.message
+                    reply = messageWith.reply
+                }
+                if (messageWith.attachments != null) {
+                    attachments.add(messageWith.attachments)
+                }
             }
-        )
+
+            result.add(
+                MessageWithRelated(
+                    message = message ?: return emptyList(),
+                    attachments = attachments,
+                    reply = reply
+                )
+            )
+        }
+
+        return result
     }
+
+
 
     override suspend fun getOpponent(id: String): DialogChatAuthorEntity? {
         fun map(
