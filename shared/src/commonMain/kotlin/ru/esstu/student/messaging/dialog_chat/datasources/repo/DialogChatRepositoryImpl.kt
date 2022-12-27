@@ -33,6 +33,8 @@ import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.Message
 import ru.esstu.student.messaging.entities.Sender
 import ru.esstu.student.messaging.messenger.datasources.toUser
+import ru.esstu.student.messaging.messenger.dialogs.datasources.db.cache.CacheDao
+import ru.esstu.student.messaging.messenger.dialogs.datasources.toMessageWithAttachments
 
 
 class DialogChatRepositoryImpl constructor(
@@ -41,7 +43,7 @@ class DialogChatRepositoryImpl constructor(
     private val cacheDao: HistoryCacheDao,
     private val userMsgDao: UserMessageDao,
     private val erredMsgDao: ErredMessageDao,
-    //dialogsDb: DialogsDatabase
+    private val dialogsDao: CacheDao
 ) : IDialogChatRepository {
 
 
@@ -191,7 +193,7 @@ class DialogChatRepositoryImpl constructor(
         return Response.Error(ResponseError(message = "Неизвестное состояние"))
     }
 
-    //private val dialogsDao = dialogsDb.cacheDao()
+
 
     override suspend fun updateLastMessageOnPreview(dialogId: String, message: Message) {
         auth.provideToken { token ->
@@ -205,7 +207,7 @@ class DialogChatRepositoryImpl constructor(
                 )
             )
 
-            //dialogsDao.updateDialogLastMessage(appUserId = appUserId, dialogId = dialogId, message = message.toMessageWithAttachments())
+            dialogsDao.updateDialogLastMessage(appUserId = appUserId, dialogId = dialogId, message = message.toMessageWithAttachments())
         }
     }
 
@@ -256,8 +258,8 @@ class DialogChatRepositoryImpl constructor(
         }
     }
 
-    //private val historyCache = dialogChatDatabase.historyCacheDao()
+
     override suspend fun updateFile(messageId: Long, attachment: MessageAttachment) {
-        // historyCache.insertAttachments(listOf(attachment.toDialogChatAttachmentEntity(messageId)))
+        cacheDao.insertAttachments(listOf(attachment.toDialogChatAttachmentEntity(messageId)))
     }
 }

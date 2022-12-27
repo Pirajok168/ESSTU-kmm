@@ -10,3 +10,11 @@ data class MessageWithAttachments(
 
     val attachments:List<AttachmentEntity>
 )
+
+
+data class MessageWithAttachmentsEntity(
+
+    val message: MessageEntity,
+
+    val attachments: AttachmentEntity?
+)

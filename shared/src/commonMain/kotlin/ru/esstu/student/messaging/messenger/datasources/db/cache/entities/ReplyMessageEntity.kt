@@ -1,7 +1,7 @@
 package ru.esstu.student.messaging.messenger.datasources.db.cache.entities
 
 
-
+@kotlinx.serialization.Serializable
 data class ReplyMessageEntity(
     val id: Long,
 

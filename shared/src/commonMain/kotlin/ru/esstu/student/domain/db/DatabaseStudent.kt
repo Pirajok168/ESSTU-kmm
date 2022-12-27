@@ -9,6 +9,10 @@ import ru.esstu.student.EsstuDatabase
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatMessageTable
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatReplyMessageTable
+import ru.esstu.student.messaging.entities.ReplyMessage
+import ru.esstu.student.messaging.messanger.dialogs.datasources.db.DialogTable
+import ru.esstu.student.messaging.messanger.dialogs.datasources.db.MessageTable
+import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.ReplyMessageEntity
 import ru.esstu.student.news.announcement.datasources.db.announcement.NewsEntityDatabase
 
 import ru.esstu.student.news.announcement.db.announcement.entities.NewsAttachmentEntity
@@ -65,10 +69,34 @@ class DatabaseStudent(sqlDriver: SqlDriver): IDatabaseStudent {
 
     }
 
+    private val adapter4 = object : ColumnAdapter<ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity, String> {
+        override fun decode(databaseValue: String): ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity {
+            return Json { }.decodeFromString(databaseValue)
+        }
+
+        override fun encode(value: ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity): String {
+            return Json { }.encodeToString(value)
+        }
+
+    }
+
+    private val adapter5 = object : ColumnAdapter<ReplyMessageEntity, String> {
+        override fun decode(databaseValue: String): ReplyMessageEntity {
+            return Json { }.decodeFromString(databaseValue)
+        }
+
+        override fun encode(value: ReplyMessageEntity): String {
+            return Json { }.encodeToString(value)
+        }
+
+    }
+
     private val database = EsstuDatabase(sqlDriver,
-        DialogChatMessageTable.Adapter(adapter2),
-        DialogChatReplyMessageTable.Adapter(adapter3),
-        NewsEntityDatabase.Adapter(adapter, listAdapter),
+        DialogChatMessageTableAdapter=DialogChatMessageTable.Adapter(adapter2),
+        DialogChatReplyMessageTableAdapter=DialogChatReplyMessageTable.Adapter(adapter3),
+        NewsEntityDatabaseAdapter=NewsEntityDatabase.Adapter(adapter, listAdapter),
+        DialogTableAdapter= DialogTable.Adapter(adapter4),
+        MessageTableAdapter=MessageTable.Adapter(adapter4,adapter5)
     )
 
     override fun getDataBase(): EsstuDatabase = database

@@ -61,7 +61,8 @@ internal val dialogChatModule = DI.Module("DialogChatModule"){
             dialogChatApi = instance(),
             cacheDao = instance(),
             userMsgDao = instance(),
-            erredMsgDao = instance()
+            erredMsgDao = instance(),
+            instance()
         )
     }
 

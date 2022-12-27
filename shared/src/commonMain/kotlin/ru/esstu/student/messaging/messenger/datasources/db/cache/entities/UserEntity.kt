@@ -1,5 +1,6 @@
 package ru.esstu.student.messaging.messenger.datasources.db.cache.entities
 
+@kotlinx.serialization.Serializable
 data class UserEntity (
     val id:String,
     val firstName: String,

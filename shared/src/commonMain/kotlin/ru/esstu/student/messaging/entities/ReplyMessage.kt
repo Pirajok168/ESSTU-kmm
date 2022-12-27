@@ -1,6 +1,6 @@
 package ru.esstu.student.messaging.entities
 
-
+@kotlinx.serialization.Serializable
 data class ReplyMessage(
     val id: Long,
     val from: Sender,

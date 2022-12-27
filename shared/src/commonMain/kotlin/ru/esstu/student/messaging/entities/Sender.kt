@@ -1,5 +1,6 @@
 package ru.esstu.student.messaging.entities
 
+@kotlinx.serialization.Serializable
 data class Sender(
     val id: String,
     val firstName: String,

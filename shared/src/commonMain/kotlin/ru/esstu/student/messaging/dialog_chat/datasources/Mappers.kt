@@ -14,8 +14,10 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entiti
 
 
 import ru.esstu.student.messaging.entities.*
+
 import ru.esstu.student.messaging.messenger.datasources.toAttachment
 import ru.esstu.student.messaging.messenger.datasources.toUser
+
 
 fun Sender.toUserEntity(): DialogChatAuthorEntity {
     return DialogChatAuthorEntity(
@@ -149,5 +151,4 @@ suspend fun MessageResponse.toMessages(
 
     return this.messages.mapNotNull { it.toMessage(authors = existingAuthors, replyMessages = replyMessages) }
 }
-
 

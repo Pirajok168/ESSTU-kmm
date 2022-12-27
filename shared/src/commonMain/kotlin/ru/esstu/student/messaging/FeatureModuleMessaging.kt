@@ -12,12 +12,13 @@ import ru.esstu.student.messaging.messenger.supports.di.supportModule
 internal val featureModuleMessaging = DI.Module("featureModuleMessaging") {
     importAll(
         messengerModule,
+        dialogsModule,
         dialogChatModule,
         groupChatModule,
         appealsModule,
         conversationModule,
         supportModule,
-        dialogsModule
+
     )
 
 }

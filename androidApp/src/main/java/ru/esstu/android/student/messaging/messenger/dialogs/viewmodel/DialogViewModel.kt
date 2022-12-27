@@ -14,6 +14,8 @@ import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.dialog_chat.datasources.di.dialogChatModule
 import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsApiRepository
+import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsDbRepository
+import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsUpdatesRepository
 import ru.esstu.student.messaging.messenger.dialogs.di.dialogsModule
 import ru.esstu.student.messaging.messenger.dialogs.entities.Dialog
 
@@ -35,15 +37,15 @@ sealed class DialogEvents {
 
 
 class DialogViewModel  constructor(
-    //dialogUpdate: IDialogsUpdatesRepository,
-    //dialogDB: IDialogsDbRepository,
+    dialogUpdate: IDialogsUpdatesRepository = ESSTUSdk.dialogsModule.updateDialogs,
+    dialogDB: IDialogsDbRepository = ESSTUSdk.dialogsModule.repoDialogs,
     dialogApi: IDialogsApiRepository = ESSTUSdk.dialogsModule.repo
 ) : ViewModel() {
 
     var dialogState by mutableStateOf(DialogState())
         private set
 
-   /* private val paginator = Paginator(
+    private val paginator = Paginator(
         initialKey = 0,
         onReset = { if (dialogState.cleanCacheOnRefresh) dialogDB.clear() },
         onLoad = { dialogState = dialogState.copy(isLoading = it) },
@@ -69,7 +71,7 @@ class DialogViewModel  constructor(
         onNext = { _, items ->
             dialogState = dialogState.copy(items = dialogState.items + items, error = null, isEndReached = items.isEmpty())
         }
-    )*/
+    )
 
     init {
         viewModelScope.launch {
@@ -82,7 +84,7 @@ class DialogViewModel  constructor(
                 }
             }
         }
-        /*viewModelScope.launch {
+        viewModelScope.launch {
 
             dialogUpdate.updatesFlow.collectLatest {
                 if (it is Response.Success && it.data.isNotEmpty()) {
@@ -90,16 +92,16 @@ class DialogViewModel  constructor(
                     paginator.refresh()
                 }
             }
-        }*/
+        }
     }
 
     fun onEvent(event: DialogEvents) {
-       /* when (event) {
+        when (event) {
             is DialogEvents.GetNext -> viewModelScope.launch { paginator.loadNext() }
             is DialogEvents.Reload -> viewModelScope.launch {
                 dialogState = dialogState.copy(cleanCacheOnRefresh = false)
                 paginator.refresh()
             }
-        }*/
+        }
     }
 }

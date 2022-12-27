@@ -1,4 +1,3 @@
-
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity;
 
 
@@ -53,6 +52,7 @@ CREATE TABLE ErredCachedFileTable(
     type TEXT NOT NULL,
     FOREIGN KEY (messageId) REFERENCES ErredMessageTable(idErredMessage) ON DELETE CASCADE
 );
+
 
 getCachedFiles:
     SELECT * FROM ErredCachedFileTable WHERE messageId == (:messageId);
