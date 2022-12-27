@@ -20,7 +20,11 @@ class DialogChatUpdateRepositoryImpl constructor(
         while (true) {
 
             when (val result = auth.provideToken { type, token ->
-                val updates = updateApi.getUpdates("$token", lastMessageId = latestMessageId, peerId = dialogId)
+                val updates = updateApi.getUpdates(
+                    "$token",
+                    lastMessageId = latestMessageId,
+                    peerId = dialogId
+                )
 
                 updates.toMessages(
                     provideUsers = { indices ->
@@ -37,9 +41,12 @@ class DialogChatUpdateRepositoryImpl constructor(
                     delay(500)
                 }
                 is Response.Success -> {
-                    val messages = result.data.map { it.copy(attachments = it.attachments.asReversed()) }.asReversed()
+                    val messages =
+                        result.data.map { it.copy(attachments = it.attachments.asReversed()) }
+                            .asReversed()
                     latestMessageId =
-                        messages.lastOrNull { it.status == DeliveryStatus.DELIVERED }?.id ?: messages.firstOrNull()?.id ?: latestMessageId
+                        messages.lastOrNull { it.status == DeliveryStatus.DELIVERED }?.id
+                            ?: messages.firstOrNull()?.id ?: latestMessageId
 
                     emit(Response.Success(messages))
                 }

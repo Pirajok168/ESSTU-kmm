@@ -1,7 +1,7 @@
 package ru.esstu.student.messaging.entities
 
 data class Sender(
-    val id:String,
+    val id: String,
     val firstName: String,
     val lastName: String,
     val patronymic: String,

@@ -5,5 +5,5 @@ import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.entities.Message
 
 interface IDialogChatUpdateRepository {
-    fun collectUpdates(dialogId:String, lastMessageId: Long = 0): Flow<Response<List<Message>>>
+    fun collectUpdates(dialogId: String, lastMessageId: Long = 0): Flow<Response<List<Message>>>
 }

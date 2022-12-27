@@ -11,10 +11,10 @@ import ru.esstu.student.messaging.entities.DeliveryStatus
 
 fun CachedFile.toEntity(messageId: Long): ErredCachedFileEntity {
 
-   /* val sourceBytes = FileInputStream(source).use { fs ->
-        fs.readBytes()
-    }
-*/
+    /* val sourceBytes = FileInputStream(source).use { fs ->
+         fs.readBytes()
+     }
+ */
     return ErredCachedFileEntity(
         messageId = messageId,
         source = null,
@@ -43,8 +43,8 @@ fun ErredCachedFileEntity.toCachedFile(): CachedFile {
     )
 }
 
-fun SentUserMessage.toErredMessageEntity(appUserId:String, dialogId:String): ErredMessageEntity? {
-    if(status!=DeliveryStatus.ERRED) return null
+fun SentUserMessage.toErredMessageEntity(appUserId: String, dialogId: String): ErredMessageEntity? {
+    if (status != DeliveryStatus.ERRED) return null
     return ErredMessageEntity(
         appUserId = appUserId,
         dialogId = dialogId,

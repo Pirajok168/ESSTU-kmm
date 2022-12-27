@@ -12,16 +12,18 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.enti
 
 class ErredMessageDatabase(
     database: EsstuDatabase
-): ErredMessageDao {
+) : ErredMessageDao {
     private val dbQuery = database.messageWithRelatedTAbleQueries
 
     override suspend fun getCachedFiles(messageId: Long): List<ErredCachedFileEntity> {
-        fun map(idCashedFile: Int?,
-                messageId: Long,
-                name: String,
-                ext: String,
-                size: Long,
-                type: String): ErredCachedFileEntity{
+        fun map(
+            idCashedFile: Int?,
+            messageId: Long,
+            name: String,
+            ext: String,
+            size: Long,
+            type: String
+        ): ErredCachedFileEntity {
             return ErredCachedFileEntity(
                 messageId = messageId,
                 source = null,
@@ -135,14 +137,21 @@ class ErredMessageDatabase(
         dialogId: String
     ): List<ErredMessageEntity> {
         fun map(
-             idErredMessage: Long,
-             appUserId: String,
-             dialogId: String,
-             date: Long,
-             text: String,
-             replyMessageId: Long?
-        ): ErredMessageEntity{
-            return ErredMessageEntity(idErredMessage, appUserId, dialogId, date, text, replyMessageId)
+            idErredMessage: Long,
+            appUserId: String,
+            dialogId: String,
+            date: Long,
+            text: String,
+            replyMessageId: Long?
+        ): ErredMessageEntity {
+            return ErredMessageEntity(
+                idErredMessage,
+                appUserId,
+                dialogId,
+                date,
+                text,
+                replyMessageId
+            )
         }
         return dbQuery.getErredMessages(appUserId, dialogId, ::map).executeAsList()
     }

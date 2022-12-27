@@ -14,7 +14,7 @@ data class SentUserMessage(
     val replyMessage: Message? = null,
     val date: Long = DateTime.nowUnixLong(),
     val status: DeliveryStatus = DeliveryStatus.SENT
-){
-    val formatDate:DateTime = DateTime(date)
+) {
+    val formatDate: DateTime = DateTime(date)
 }
 

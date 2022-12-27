@@ -15,7 +15,13 @@ interface IDialogChatRepository {
 
     suspend fun getPage(dialogId: String, limit: Int, offset: Int): Response<List<Message>>
     suspend fun setMessages(dialogId: String, messages: List<Message>)
-    suspend fun sendMessage(dialogId: String, message: String? = null, replyMessage: Message? = null, attachments: List<CachedFile> = emptyList()): Response<Long>
+    suspend fun sendMessage(
+        dialogId: String,
+        message: String? = null,
+        replyMessage: Message? = null,
+        attachments: List<CachedFile> = emptyList()
+    ): Response<Long>
+
     suspend fun updateLastMessageOnPreview(dialogId: String, message: Message)
     suspend fun getErredMessages(dialogId: String): List<SentUserMessage>
     suspend fun setErredMessage(dialogId: String, message: SentUserMessage)

@@ -12,7 +12,7 @@ data class Message(
     val replyMessage: ReplyMessage? = null,
     val status: DeliveryStatus,
     val attachments: List<MessageAttachment> = emptyList()
-){
+) {
     val formatDate: DateTime = DateTime(date)
 }
 

@@ -12,14 +12,16 @@ interface ErredMessageDao {
     suspend fun getCachedFiles(messageId: Long): List<ErredCachedFileEntity>
 
 
-
     suspend fun getReplyMessage(messageId: Long): MessageWithRelated?
 
 
     suspend fun getErredMessages(appUserId: String, dialogId: String): List<ErredMessageEntity>
 
 
-    suspend fun getErredMessageWithRelated(appUserId: String, dialogId: String): List<ErredMessageWithRelated> {
+    suspend fun getErredMessageWithRelated(
+        appUserId: String,
+        dialogId: String
+    ): List<ErredMessageWithRelated> {
         val rawMessages = getErredMessages(appUserId, dialogId)
         return rawMessages.map { msg ->
             ErredMessageWithRelated(

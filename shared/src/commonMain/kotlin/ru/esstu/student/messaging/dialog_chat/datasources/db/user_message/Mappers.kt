@@ -1,7 +1,6 @@
 package ru.esstu.student.messaging.dialog_chat.datasources.db.user_message
 
 
-
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.UserCachedFileEntity
@@ -14,7 +13,6 @@ import kotlin.random.Random
 
 
 fun CachedFile.toEntity(appUserId: String, dialogId: String): UserCachedFileEntity {
-
 
 
     return UserCachedFileEntity(
@@ -47,7 +45,7 @@ fun UserCachedFileEntity.toCachedFile(): CachedFile {
     )
 }
 
-fun NewUserMessage.toUserMessageEntity(appUserId:String, dialogId:String): UserMessageEntity {
+fun NewUserMessage.toUserMessageEntity(appUserId: String, dialogId: String): UserMessageEntity {
     return UserMessageEntity(
         appUserId = appUserId,
         dialogId = dialogId,

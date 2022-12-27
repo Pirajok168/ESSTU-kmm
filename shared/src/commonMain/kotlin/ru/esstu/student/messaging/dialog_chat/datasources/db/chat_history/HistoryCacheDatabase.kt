@@ -167,7 +167,6 @@ class HistoryCacheDatabase(
     }
 
 
-
     override suspend fun getOpponent(id: String): DialogChatAuthorEntity? {
         fun map(
             id: String,

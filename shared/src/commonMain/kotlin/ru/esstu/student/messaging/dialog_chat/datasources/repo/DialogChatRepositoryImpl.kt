@@ -209,13 +209,13 @@ class DialogChatRepositoryImpl constructor(
         }
     }
 
-    //private val erredMsgDao = dialogChatDatabase.errorMessagesDao()
 
     override suspend fun getErredMessages(dialogId: String): List<SentUserMessage> {
 
         val messages = auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
-            return@provideToken erredMsgDao.getErredMessageWithRelated(appUserId, dialogId).map { it.toSentUserMessage() }
+            return@provideToken erredMsgDao.getErredMessageWithRelated(appUserId, dialogId)
+                .map { it.toSentUserMessage() }
         }.data ?: emptyList()
 
         return messages
@@ -224,7 +224,8 @@ class DialogChatRepositoryImpl constructor(
     override suspend fun setErredMessage(dialogId: String, message: SentUserMessage) {
         auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
-            val erredMessage = message.toErredMessageEntity(appUserId, dialogId) ?: return@provideToken
+            val erredMessage =
+                message.toErredMessageEntity(appUserId, dialogId) ?: return@provideToken
             erredMsgDao.addMessage(erredMessage)
             erredMsgDao.addCachedFiles(message.attachments.map { it.toEntity(message.id) })
         }
