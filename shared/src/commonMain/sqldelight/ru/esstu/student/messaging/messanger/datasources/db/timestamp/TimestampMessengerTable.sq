@@ -1,0 +1,11 @@
+CREATE TABLE TimestampMessengerTable (
+    appUserId TEXT NOT NULL,
+    timestamp INTEGER
+);
+
+getTimestamp:
+    SELECT * FROM TimestampMessengerTable WHERE appUserId == (:appUserId);
+
+setTimestamp:
+        INSERT OR REPLACE INTO TimestampMessengerTable(appUserId, timestamp)
+        VALUES (?,?);

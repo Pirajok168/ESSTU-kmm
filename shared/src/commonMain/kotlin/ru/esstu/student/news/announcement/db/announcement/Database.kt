@@ -13,7 +13,7 @@ import ru.esstu.student.news.announcement.db.announcement.entities.UserEntity
 
 
 import ru.esstu.student.news.announcement.db.announcement.entities.relations.NewsWithAttachments
-import ru.esstu.student.news.announcementdbannouncement.NewsEntityDatabase
+
 import kotlin.collections.List
 
 internal class Database(database: EsstuDatabase): NewsDao {

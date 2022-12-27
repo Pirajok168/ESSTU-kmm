@@ -7,11 +7,13 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.esstu.student.EsstuDatabase
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
-import ru.esstu.student.messagingdialogchatdatasourcesdb.chathistory.DialogChatMessageTable
-import ru.esstu.student.messagingdialogchatdatasourcesdb.chathistory.DialogChatReplyMessageTable
+import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatMessageTable
+import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatReplyMessageTable
+import ru.esstu.student.news.announcement.datasources.db.announcement.NewsEntityDatabase
+
 import ru.esstu.student.news.announcement.db.announcement.entities.NewsAttachmentEntity
 import ru.esstu.student.news.announcement.db.announcement.entities.UserEntity
-import ru.esstu.student.news.announcementdbannouncement.NewsEntityDatabase
+
 
 interface IDatabaseStudent {
     fun getDataBase(): EsstuDatabase
