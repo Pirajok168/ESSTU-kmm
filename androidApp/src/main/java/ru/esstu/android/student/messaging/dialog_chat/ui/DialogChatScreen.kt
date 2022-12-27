@@ -64,7 +64,8 @@ import ru.esstu.student.messaging.entities.DeliveryStatus
 
 
 private val todayYear = DateTime.now().year
-private val dateFormat: DateFormat = DateFormat("d MMM yyyy" )
+private val dateFormat: DateFormat = DateFormat("d MMM yyyy")
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DialogChatScreen(
@@ -83,23 +84,24 @@ fun DialogChatScreen(
 
     //region activityResultApi
     val context = LocalContext.current
-    val fileLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val resultUris = result.data?.run {
-                when (val uris = clipData) {
-                    null ->
-                        listOfNotNull(data)
+    val fileLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val resultUris = result.data?.run {
+                    when (val uris = clipData) {
+                        null ->
+                            listOfNotNull(data)
 
-                    else ->
-                        (0 until uris.itemCount).mapNotNull { index -> uris.getItemAt(index).uri }
-                }
-            } ?: return@rememberLauncherForActivityResult
+                        else ->
+                            (0 until uris.itemCount).mapNotNull { index -> uris.getItemAt(index).uri }
+                    }
+                } ?: return@rememberLauncherForActivityResult
 
-            val files = resultUris.mapNotNull { it.cacheToFile(context) }
+                val files = resultUris.mapNotNull { it.cacheToFile(context) }
 
-            viewModel.onEvent(DialogChatEvents.PassAttachments(files))
+                viewModel.onEvent(DialogChatEvents.PassAttachments(files))
+            }
         }
-    }
     //endregion
 
     val uiState = viewModel.dialogChatState
@@ -168,7 +170,13 @@ fun DialogChatScreen(
                                         .padding(vertical = 16.dp),
                                     title = "${attachment.name}.${attachment.ext}",
                                     uri = if (attachment.isImage) attachment.uri else null,
-                                    onClose = { viewModel.onEvent(DialogChatEvents.RemoveAttachment(attachment)) }
+                                    onClose = {
+                                        viewModel.onEvent(
+                                            DialogChatEvents.RemoveAttachment(
+                                                attachment
+                                            )
+                                        )
+                                    }
                                 )
                             }
                         }
@@ -228,10 +236,14 @@ fun DialogChatScreen(
                                 )
                             }
                             IconButton(onClick = {
-                                fileLauncher.launch(Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
-                                    type = "image/*"
-                                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                                })
+                                fileLauncher.launch(
+                                    Intent(
+                                        Intent.ACTION_PICK,
+                                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                                    ).apply {
+                                        type = "image/*"
+                                        putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                                    })
                             }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_chat_add_photo),
@@ -243,13 +255,19 @@ fun DialogChatScreen(
                     placeholder = { Text(text = "Новое сообщение") },
                     trailingIcon = {
 
-                        val isValidMessage = uiState.message.text.any() || uiState.message.attachments.any()
+                        val isValidMessage =
+                            uiState.message.text.any() || uiState.message.attachments.any()
 
-                        IconButton(onClick = { viewModel.onEvent(DialogChatEvents.SendMessage) }, enabled = isValidMessage) {
+                        IconButton(
+                            onClick = { viewModel.onEvent(DialogChatEvents.SendMessage) },
+                            enabled = isValidMessage
+                        ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_chat_send_message),
                                 contentDescription = null,
-                                tint = if (isValidMessage) MaterialTheme.colors.primary else LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
+                                tint = if (isValidMessage) MaterialTheme.colors.primary else LocalContentColor.current.copy(
+                                    alpha = LocalContentAlpha.current
+                                )
                             )
                         }
                     },
@@ -266,8 +284,12 @@ fun DialogChatScreen(
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
                 uiState.sentMessages
-                    .groupBy {  dateFormat.parse("${it.formatDate.local.dayOfMonth} " +
-                            "${it.formatDate.local.month.localShortName} ${it.formatDate.local.yearInt}") }
+                    .groupBy {
+                        dateFormat.parse(
+                            "${it.formatDate.local.dayOfMonth} " +
+                                    "${it.formatDate.local.month.localShortName} ${it.formatDate.local.yearInt}"
+                        )
+                    }
                     .forEach { (date, messages) ->
                         val isCurrentYear = date.year == todayYear
 
@@ -305,12 +327,15 @@ fun DialogChatScreen(
                                             Box(modifier = Modifier.clickable {
 
                                                 if (file.localFileUri?.isNotBlank() == true) {
-                                                    val localUri = file.localFileUri.orEmpty().toUri()
+                                                    val localUri =
+                                                        file.localFileUri.orEmpty().toUri()
 
                                                     try {
                                                         val intent = Intent(Intent.ACTION_VIEW)
 
-                                                        val photoUri: Uri = if (localUri.toString().contains("content"))
+                                                        val photoUri: Uri = if (localUri.toString()
+                                                                .contains("content")
+                                                        )
                                                             localUri
                                                         else
                                                             FileProvider.getUriForFile(
@@ -357,8 +382,12 @@ fun DialogChatScreen(
 
                 uiState.pages
                     .mapIndexed { index, message -> index to message }
-                    .groupBy {  dateFormat.parse("${it.second.formatDate.local.dayOfMonth} " +
-                            "${it.second.formatDate.local.month.localShortName} ${it.second.formatDate.local.yearInt}") }
+                    .groupBy {
+                        dateFormat.parse(
+                            "${it.second.formatDate.local.dayOfMonth} " +
+                                    "${it.second.formatDate.local.month.localShortName} ${it.second.formatDate.local.yearInt}"
+                        )
+                    }
                     .forEach { (date, messages) ->
                         val isCurrentYear = date.year == todayYear
 
@@ -391,7 +420,13 @@ fun DialogChatScreen(
 
                                     SwipeableCard(
                                         distance = 40.dp,
-                                        onDragged = { viewModel.onEvent(DialogChatEvents.PassReplyMessage(message)) },
+                                        onDragged = {
+                                            viewModel.onEvent(
+                                                DialogChatEvents.PassReplyMessage(
+                                                    message
+                                                )
+                                            )
+                                        },
                                         backLayerContent = {
                                             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                                                 Icon(
@@ -408,7 +443,8 @@ fun DialogChatScreen(
                                             date = message.date,
                                             reply = message.replyMessage,
                                             sentStatus = message.status,
-                                            backgroundColor = backgroundColor, isShowStatus = message.from.id != opponentId,
+                                            backgroundColor = backgroundColor,
+                                            isShowStatus = message.from.id != opponentId,
                                             onImageClick = { id, attachments ->
                                                 onNavToImage(
                                                     attachments.firstOrNull { it.id == id }?.closestUri.orEmpty(),
@@ -418,14 +454,19 @@ fun DialogChatScreen(
                                             onFileContent = { file, content ->
 
 
-
                                                 val permissionsLauncher =
                                                     rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { response ->
 
-                                                        val allPermissionsGranted = response.all { (_, isGranted) -> isGranted }
+                                                        val allPermissionsGranted =
+                                                            response.all { (_, isGranted) -> isGranted }
 
                                                         if (allPermissionsGranted)
-                                                            viewModel.onEvent(DialogChatEvents.DownloadAttachment(message.id, file))
+                                                            viewModel.onEvent(
+                                                                DialogChatEvents.DownloadAttachment(
+                                                                    message.id,
+                                                                    file
+                                                                )
+                                                            )
 
                                                     }
 
@@ -435,38 +476,52 @@ fun DialogChatScreen(
                                                     if (file.loadProgress == null && file.localFileUri.isNullOrBlank()) {
                                                         withPermissions(
                                                             context = context.applicationContext,
-                                                            permissions =  arrayOf(
+                                                            permissions = arrayOf(
                                                                 Manifest.permission.READ_EXTERNAL_STORAGE,
                                                                 Manifest.permission.WRITE_EXTERNAL_STORAGE
                                                             ),
                                                             onRequest = {
-                                                                permissionsLauncher.launch( arrayOf(
-                                                                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                                                                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                                                                ))
+                                                                permissionsLauncher.launch(
+                                                                    arrayOf(
+                                                                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                                                                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                                                    )
+                                                                )
                                                             },
                                                             onGranted = {
-                                                                viewModel.onEvent(DialogChatEvents.DownloadAttachment(message.id, file))
+                                                                viewModel.onEvent(
+                                                                    DialogChatEvents.DownloadAttachment(
+                                                                        message.id,
+                                                                        file
+                                                                    )
+                                                                )
                                                             }
                                                         )
                                                     }
 
                                                     if (file.localFileUri?.isNotBlank() == true) {
-                                                        val localUri = file.localFileUri.orEmpty().toUri()
+                                                        val localUri =
+                                                            file.localFileUri.orEmpty().toUri()
 
                                                         try {
                                                             val intent = Intent(Intent.ACTION_VIEW)
 
-                                                            val photoUri: Uri = if (localUri.toString().contains("content"))
-                                                                localUri
-                                                            else
-                                                                FileProvider.getUriForFile(
-                                                                    context,
-                                                                    context.applicationContext.packageName.toString() + ".provider",
-                                                                    localUri.toFile()
+                                                            val photoUri: Uri =
+                                                                if (localUri.toString()
+                                                                        .contains("content")
                                                                 )
+                                                                    localUri
+                                                                else
+                                                                    FileProvider.getUriForFile(
+                                                                        context,
+                                                                        context.applicationContext.packageName.toString() + ".provider",
+                                                                        localUri.toFile()
+                                                                    )
 
-                                                            intent.setDataAndType(photoUri, file.type)
+                                                            intent.setDataAndType(
+                                                                photoUri,
+                                                                file.type
+                                                            )
                                                             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
                                                             context.startActivity(intent)
@@ -513,9 +568,8 @@ fun DialogChatScreen(
                         }
                     }
 
-                
-            }
 
+            }
 
 
         }
@@ -524,18 +578,15 @@ fun DialogChatScreen(
     }
 }
 
-fun withPermissions(context: Context, vararg permissions: String, onRequest: () -> Unit, onGranted: () -> Unit) {
+fun withPermissions(
+    context: Context,
+    vararg permissions: String,
+    onRequest: () -> Unit,
+    onGranted: () -> Unit
+) {
     val hasPermissions = permissions.all { permission ->
         ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
     }
 
     if (hasPermissions) onGranted() else onRequest()
-}
-
-@Preview
-@Composable
-fun DCS() {
-    CompPreviewTheme {
-        DialogChatScreen(opponentId = "")
-    }
 }

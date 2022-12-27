@@ -1,4 +1,4 @@
-package ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history
+package ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages
 
 import ru.esstu.student.EsstuDatabase
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAttachmentEntity
@@ -7,63 +7,34 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entiti
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatReplyMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelatedEntity
+import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.entities.ErredCachedFileEntity
+import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.entities.ErredMessageEntity
 
-
-class HistoryCacheDatabase(
+class ErredMessageDatabase(
     database: EsstuDatabase
-) : HistoryCacheDao {
-
-
+): ErredMessageDao {
     private val dbQuery = database.messageWithRelatedTAbleQueries
 
-    override suspend fun insertMessage(messages: DialogChatMessageEntity) {
-        dbQuery.insertMessage(
-            messageId = messages.id,
-            opponentId = messages.opponentId,
-            fromSend = messages.from,
-            replyMessageId = messages.replyMessageId,
-            date = messages.date,
-            message = messages.message,
-            status = messages.status,
-            messages.appUserId
-        )
-    }
-
-    override suspend fun insertAttachments(attachments: List<DialogChatAttachmentEntity>) {
-        attachments.forEach {
-            dbQuery.insertAttachments(
-                it.id.toLong(),
-                messageId = it.messageId,
-                fileUri = it.fileUri,
-                LocalFileUri = it.LocalFileUri,
-                name = it.name,
-                ext = it.ext,
-                size = it.size.toLong(),
-                type = it.type
+    override suspend fun getCachedFiles(messageId: Long): List<ErredCachedFileEntity> {
+        fun map(idCashedFile: Int?,
+                messageId: Long,
+                name: String,
+                ext: String,
+                size: Long,
+                type: String): ErredCachedFileEntity{
+            return ErredCachedFileEntity(
+                messageId = messageId,
+                source = null,
+                name,
+                ext,
+                size,
+                type
             )
         }
+        return dbQuery.getCachedFiles(messageId, ::map).executeAsList()
     }
 
-    override suspend fun clearAttachments(messageId: Long) {
-        dbQuery.clearAttachments(messageId)
-    }
-
-    override suspend fun insertReply(reply: DialogChatReplyMessageEntity) {
-        dbQuery.insertReply(
-            idReplyMessage = reply.id,
-            fromSendReplyMessage = reply.from,
-            dateReplyMessage = reply.date,
-            reply.message,
-            reply.attachmentsCount.toLong()
-        )
-    }
-
-    override suspend fun getMessageHistory(
-        appUserId: String,
-        opponentId: String,
-        limit: Int,
-        offset: Int
-    ): List<MessageWithRelated> {
+    override suspend fun getReplyMessage(messageId: Long): MessageWithRelated? {
         fun map(
             messageId: Long,
             appUserId: String,
@@ -126,15 +97,7 @@ class HistoryCacheDatabase(
             )
         }
 
-
-        val query = dbQuery.getMessageHistory(
-            appUserId = appUserId,
-            opponentId = opponentId,
-            limit = limit.toLong(),
-            offset = offset.toLong(),
-            mapper = ::map
-        ).executeAsList()
-
+        val query = dbQuery.getReplyMessage(messageId, ::map).executeAsList()
         val a = query.groupBy {
             it.message.id
         }
@@ -156,45 +119,50 @@ class HistoryCacheDatabase(
 
             result.add(
                 MessageWithRelated(
-                    message = message ?: return emptyList(),
+                    message = message ?: return null,
                     attachments = attachments,
                     reply = reply
                 )
             )
         }
-        result
-        return result
+        val b = result.firstOrNull()
+        b
+        return result.firstOrNull()
     }
 
-
-
-    override suspend fun getOpponent(id: String): DialogChatAuthorEntity? {
+    override suspend fun getErredMessages(
+        appUserId: String,
+        dialogId: String
+    ): List<ErredMessageEntity> {
         fun map(
-            id: String,
-            fitstName: String,
-            lastName: String,
-            patronymic: String,
-            summary: String,
-            photo: String
-        ): DialogChatAuthorEntity = DialogChatAuthorEntity(
-            id, fitstName, lastName, patronymic, summary, photo
-        )
-        return dbQuery.getOpponent(id, ::map).executeAsOneOrNull()
+             idErredMessage: Long,
+             appUserId: String,
+             dialogId: String,
+             date: Long,
+             text: String,
+             replyMessageId: Long?
+        ): ErredMessageEntity{
+            return ErredMessageEntity(idErredMessage, appUserId, dialogId, date, text, replyMessageId)
+        }
+        return dbQuery.getErredMessages(appUserId, dialogId, ::map).executeAsList()
     }
 
-    override suspend fun insert(opponent: DialogChatAuthorEntity) {
-        dbQuery.insert(
-            id = opponent.id,
-            fitstName = opponent.firstName,
-            lastName = opponent.lastName,
-            patronymic = opponent.patronymic,
-            summary = opponent.summary,
-            photo = opponent.photo.orEmpty()
-        )
+    override suspend fun removeMessage(id: Long) {
+        dbQuery.removeMessage(id)
     }
 
-    override suspend fun clear(id: String) {
-        dbQuery.clear(id)
+    override suspend fun addMessage(message: ErredMessageEntity) {
+        message.apply {
+            dbQuery.addMessage(id, appUserId, dialogId, date, text, replyMessageId)
+        }
+    }
+
+    override suspend fun addCachedFiles(files: List<ErredCachedFileEntity>) {
+        files.forEach {
+            it.apply {
+                dbQuery.addCachedFiles(id, messageId, name, ext, size, type)
+            }
+        }
     }
 
 

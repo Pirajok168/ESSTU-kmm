@@ -18,6 +18,10 @@ import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.dialog_chat.datasources.*
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatApi
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.HistoryCacheDao
+import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.ErredMessageDao
+import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.toEntity
+import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.toErredMessageEntity
+import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.toSentUserMessage
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.UserMessageDao
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.toEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.toSentUserMessage
@@ -31,16 +35,14 @@ import ru.esstu.student.messaging.entities.Sender
 import ru.esstu.student.messaging.messenger.datasources.toUser
 
 
-
-
 class DialogChatRepositoryImpl constructor(
     private val auth: IAuthRepository,
     private val dialogChatApi: DialogChatApi,
     private val cacheDao: HistoryCacheDao,
     private val userMsgDao: UserMessageDao,
+    private val erredMsgDao: ErredMessageDao,
     //dialogsDb: DialogsDatabase
 ) : IDialogChatRepository {
-
 
 
     override suspend fun getOpponent(id: String): Flow<FlowResponse<Sender>> = flow {
@@ -50,7 +52,8 @@ class DialogChatRepositoryImpl constructor(
         if (cachedOpponent != null)
             emit(FlowResponse.Success(cachedOpponent))
 
-        when (val response = auth.provideToken { type, token -> dialogChatApi.getOpponent("$token", id) }) {
+        when (val response =
+            auth.provideToken { type, token -> dialogChatApi.getOpponent("$token", id) }) {
             is Response.Error -> emit(FlowResponse.Error(response.error))
             is Response.Success -> {
                 val remoteOpponent = response.data.user.toUser()
@@ -67,10 +70,14 @@ class DialogChatRepositoryImpl constructor(
     }
 
 
-
-    override suspend fun getPage(dialogId: String, limit: Int, offset: Int): Response<List<Message>> {
+    override suspend fun getPage(
+        dialogId: String,
+        limit: Int,
+        offset: Int
+    ): Response<List<Message>> {
         val cached = auth.provideToken { token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Error("unsupported user type")
+            val appUserId =
+                (token.owner as? TokenOwners.Student)?.id ?: throw Error("unsupported user type")
 
             cacheDao.getMessageHistory(
                 limit = limit,
@@ -109,18 +116,22 @@ class DialogChatRepositoryImpl constructor(
         auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
 
-            cacheDao.insertMessagesWithRelated(messages.map { it.toMessageWithRelated(dialogId = dialogId, appUserId = appUserId) })
+            cacheDao.insertMessagesWithRelated(messages.map {
+                it.toMessageWithRelated(
+                    dialogId = dialogId,
+                    appUserId = appUserId
+                )
+            })
         }
     }
 
     @OptIn(InternalAPI::class)
-    override suspend fun sendMessage(dialogId: String, message: String?, replyMessage: Message?, attachments: List<CachedFile>): Response<Long> {
-
-
-
-
-
-
+    override suspend fun sendMessage(
+        dialogId: String,
+        message: String?,
+        replyMessage: Message?,
+        attachments: List<CachedFile>
+    ): Response<Long> {
 
 
         if (message.isNullOrEmpty() && replyMessage == null && attachments.any()) {
@@ -128,7 +139,11 @@ class DialogChatRepositoryImpl constructor(
                 dialogChatApi.sendAttachments(
                     authToken = "$token",
                     files = attachments,
-                    requestSendMessage = ChatMessageRequestBody(message.orEmpty(), IPeer_.DialoguePeer(dialogId), replyMessage?.id?.toInt())
+                    requestSendMessage = ChatMessageRequestBody(
+                        message.orEmpty(),
+                        IPeer_.DialoguePeer(dialogId),
+                        replyMessage?.id?.toInt()
+                    )
                 )
             }
 
@@ -143,7 +158,11 @@ class DialogChatRepositoryImpl constructor(
                 dialogChatApi.sendMessageWithAttachments(
                     authToken = "$token",
                     files = attachments,
-                    requestSendMessage = ChatMessageRequestBody(message.orEmpty(), IPeer_.DialoguePeer(dialogId), replyMessage?.id?.toInt())
+                    requestSendMessage = ChatMessageRequestBody(
+                        message.orEmpty(),
+                        IPeer_.DialoguePeer(dialogId),
+                        replyMessage?.id?.toInt()
+                    )
                 )
             }
             return when (result) {
@@ -156,7 +175,11 @@ class DialogChatRepositoryImpl constructor(
             val result = auth.provideToken { type, token ->
                 dialogChatApi.sendMessage(
                     authToken = "$token",
-                    body = ChatMessageRequestBody(message.orEmpty(), IPeer_.DialoguePeer(dialogId), replyMessage?.id?.toInt())
+                    body = ChatMessageRequestBody(
+                        message.orEmpty(),
+                        IPeer_.DialoguePeer(dialogId),
+                        replyMessage?.id?.toInt()
+                    )
                 )
             }
             return when (result) {
@@ -174,7 +197,13 @@ class DialogChatRepositoryImpl constructor(
         auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
 
-            dialogChatApi.readMessages("${token.access}", ChatReadRequestBody(message.id.toInt(), peer = IPeer_.DialoguePeer(userId = dialogId)))
+            dialogChatApi.readMessages(
+                "${token.access}",
+                ChatReadRequestBody(
+                    message.id.toInt(),
+                    peer = IPeer_.DialoguePeer(userId = dialogId)
+                )
+            )
 
             //dialogsDao.updateDialogLastMessage(appUserId = appUserId, dialogId = dialogId, message = message.toMessageWithAttachments())
         }
@@ -184,35 +213,31 @@ class DialogChatRepositoryImpl constructor(
 
     override suspend fun getErredMessages(dialogId: String): List<SentUserMessage> {
 
-    /*val messages = auth.provideToken { token ->
+        val messages = auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
-            return@provideToken erredMsgDao.getErredMessageWithRelated(appUserId, dialogId).map { it.toSentUserMessage(context) }
+            return@provideToken erredMsgDao.getErredMessageWithRelated(appUserId, dialogId).map { it.toSentUserMessage() }
         }.data ?: emptyList()
 
-        return messages*/
-        return emptyList()
+        return messages
     }
 
     override suspend fun setErredMessage(dialogId: String, message: SentUserMessage) {
-        /*auth.provideToken { token ->
+        auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
             val erredMessage = message.toErredMessageEntity(appUserId, dialogId) ?: return@provideToken
             erredMsgDao.addMessage(erredMessage)
             erredMsgDao.addCachedFiles(message.attachments.map { it.toEntity(message.id) })
-        }*/
+        }
     }
 
-    override suspend fun delErredMessage(id: Long){
-
-    }
-    //= erredMsgDao.removeMessage(id)
-
+    override suspend fun delErredMessage(id: Long) = erredMsgDao.removeMessage(id)
 
 
     override suspend fun getUserMessage(dialogId: String): NewUserMessage {
         val message = auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
-            return@provideToken userMsgDao.getUserMessageWithRelated(appUserId, dialogId)?.toSentUserMessage()
+            return@provideToken userMsgDao.getUserMessageWithRelated(appUserId, dialogId)
+                ?.toSentUserMessage()
         }.data ?: NewUserMessage()
 
         return message
@@ -232,6 +257,6 @@ class DialogChatRepositoryImpl constructor(
 
     //private val historyCache = dialogChatDatabase.historyCacheDao()
     override suspend fun updateFile(messageId: Long, attachment: MessageAttachment) {
-       // historyCache.insertAttachments(listOf(attachment.toDialogChatAttachmentEntity(messageId)))
+        // historyCache.insertAttachments(listOf(attachment.toDialogChatAttachmentEntity(messageId)))
     }
 }

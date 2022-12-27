@@ -17,20 +17,19 @@ interface HistoryCacheDao {
 
     suspend fun clear(id: String)
 
-     suspend fun insertMessage(messages: DialogChatMessageEntity)
+    suspend fun insertMessage(messages: DialogChatMessageEntity)
 
 
-     suspend fun insertAttachments(attachments: List<DialogChatAttachmentEntity>)
+    suspend fun insertAttachments(attachments: List<DialogChatAttachmentEntity>)
 
 
-     suspend fun clearAttachments(messageId: Long)
+    suspend fun clearAttachments(messageId: Long)
 
 
-     suspend fun insertReply(reply: DialogChatReplyMessageEntity)
+    suspend fun insertReply(reply: DialogChatReplyMessageEntity)
 
 
-
-     suspend fun insertMessagesWithRelated(messages: List<MessageWithRelated>) {
+    suspend fun insertMessagesWithRelated(messages: List<MessageWithRelated>) {
 
         messages.forEach { message ->
             clearAttachments(message.message.id)
@@ -45,5 +44,10 @@ interface HistoryCacheDao {
     }
 
 
-     suspend fun getMessageHistory(appUserId: String, opponentId: String, limit: Int, offset: Int): List<MessageWithRelated>
+    suspend fun getMessageHistory(
+        appUserId: String,
+        opponentId: String,
+        limit: Int,
+        offset: Int
+    ): List<MessageWithRelated>
 }

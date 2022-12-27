@@ -6,7 +6,7 @@ class ErredCachedFileEntity(
     val messageId: Long,
 
 
-    val source: ByteArray,
+    val source: ByteArray?,
     val name: String,
     val ext: String,
     val size: Long,

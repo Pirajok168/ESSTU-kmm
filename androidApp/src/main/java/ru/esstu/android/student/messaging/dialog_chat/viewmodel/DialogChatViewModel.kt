@@ -68,12 +68,15 @@ sealed class DialogChatEvents {
     object SendMessage : DialogChatEvents()
     data class ResendMessage(val message: SentUserMessage) : DialogChatEvents()
 
-    data class DownloadAttachment(val messageId: Long, val attachment: MessageAttachment) : DialogChatEvents()
-    data class UpdateAttachment(val messageId: Long, val attachment: MessageAttachment) : DialogChatEvents()
+    data class DownloadAttachment(val messageId: Long, val attachment: MessageAttachment) :
+        DialogChatEvents()
+
+    data class UpdateAttachment(val messageId: Long, val attachment: MessageAttachment) :
+        DialogChatEvents()
 }
 
 
-class DialogChatViewModel  constructor(
+class DialogChatViewModel constructor(
     private val dialogChatRepository: IDialogChatRepository = ESSTUSdk.dialogChatModule.repo,
     private val dialogChatUpdateRepository: IDialogChatUpdateRepository = ESSTUSdk.dialogChatModule.update,
     private val accountInfoRepository: IAccountInfoApiRepository = ESSTUSdk.accountModule.repo
@@ -88,11 +91,20 @@ class DialogChatViewModel  constructor(
             is DialogChatEvents.CancelObserver -> onCancelObserver()
             is DialogChatEvents.NextPage -> viewModelScope.launch { paginator.loadNext() }
 
-            is DialogChatEvents.PassMessage -> withCachedMsg { dialogChatState = dialogChatState.copy(message = dialogChatState.message.copy(text = event.message)) }
-            is DialogChatEvents.PassReplyMessage -> withCachedMsg { dialogChatState = dialogChatState.copy(message = dialogChatState.message.copy(replyMessage = event.message)) }
+            is DialogChatEvents.PassMessage -> withCachedMsg {
+                dialogChatState =
+                    dialogChatState.copy(message = dialogChatState.message.copy(text = event.message))
+            }
+            is DialogChatEvents.PassReplyMessage -> withCachedMsg {
+                dialogChatState =
+                    dialogChatState.copy(message = dialogChatState.message.copy(replyMessage = event.message))
+            }
             is DialogChatEvents.PassAttachments -> withCachedMsg { onPassAttachments(event.attachments) }
             is DialogChatEvents.RemoveAttachment -> withCachedMsg { onRemoveAttachment(event.attachment) }
-            is DialogChatEvents.RemoveReplyMessage -> withCachedMsg { dialogChatState = dialogChatState.copy(message = dialogChatState.message.copy(replyMessage = null)) }
+            is DialogChatEvents.RemoveReplyMessage -> withCachedMsg {
+                dialogChatState =
+                    dialogChatState.copy(message = dialogChatState.message.copy(replyMessage = null))
+            }
 
             is DialogChatEvents.SendMessage -> withCachedMsg { onSendMessage() }
             is DialogChatEvents.ResendMessage -> viewModelScope.launch { onResendMessage(event.message) }
@@ -100,7 +112,12 @@ class DialogChatViewModel  constructor(
             is DialogChatEvents.DownloadAttachment -> {
                 //fileDownloadRepository.downloadFile(event.attachment)
             }
-            is DialogChatEvents.UpdateAttachment -> viewModelScope.launch { onUpdateAttachment(event.messageId, event.attachment) }
+            is DialogChatEvents.UpdateAttachment -> viewModelScope.launch {
+                onUpdateAttachment(
+                    event.messageId,
+                    event.attachment
+                )
+            }
         }
     }
 
@@ -108,26 +125,37 @@ class DialogChatViewModel  constructor(
         initialKey = 0,
 
         onRequest = { key ->
-            val opponent = dialogChatState.opponent ?: return@Paginator Response.Error(ResponseError())
+            val opponent =
+                dialogChatState.opponent ?: return@Paginator Response.Error(ResponseError())
 
             dialogChatRepository.getPage(opponent.id, dialogChatState.pageSize, key)
         },
 
         onRefresh = { page ->
-            dialogChatState = dialogChatState.copy(pages = page, error = null, isEndReached = page.isEmpty())
+            dialogChatState =
+                dialogChatState.copy(pages = page, error = null, isEndReached = page.isEmpty())
 
             val opponent = dialogChatState.opponent ?: return@Paginator
 
-            installObserver(opponent.id, page.lastOrNull { it.status == DeliveryStatus.DELIVERED }?.id ?: page.firstOrNull()?.id ?: 0)
+            installObserver(
+                opponent.id,
+                page.lastOrNull { it.status == DeliveryStatus.DELIVERED }?.id
+                    ?: page.firstOrNull()?.id ?: 0
+            )
 
             attachErredMessages(opponent.id)
 
-            dialogChatState = dialogChatState.copy(message = dialogChatRepository.getUserMessage(opponent.id))
+            dialogChatState =
+                dialogChatState.copy(message = dialogChatRepository.getUserMessage(opponent.id))
 
             updatePreview(page.firstOrNull())
         },
         onNext = { _, page ->
-            dialogChatState = dialogChatState.copy(pages = dialogChatState.pages + page, error = null, isEndReached = page.isEmpty())
+            dialogChatState = dialogChatState.copy(
+                pages = dialogChatState.pages + page,
+                error = null,
+                isEndReached = page.isEmpty()
+            )
         },
 
         onLoad = { dialogChatState = dialogChatState.copy(isPageLoading = it) },
@@ -141,7 +169,12 @@ class DialogChatViewModel  constructor(
         if (updatesObserver?.isCancelled != true)
             updatesObserver?.cancel()
 
-        dialogChatState = dialogChatState.copy(opponent = null, message = NewUserMessage(), sentMessages = emptyList(), pages = emptyList())
+        dialogChatState = dialogChatState.copy(
+            opponent = null,
+            message = NewUserMessage(),
+            sentMessages = emptyList(),
+            pages = emptyList()
+        )
     }
 
     private fun installObserver(dialogId: String, lastMessageId: Long) {
@@ -155,7 +188,8 @@ class DialogChatViewModel  constructor(
         updatesObserver = viewModelScope.launch {
             updatesFlow.collect { response ->
                 when (response) {
-                    is Response.Error -> dialogChatState = dialogChatState.copy(error = response.error)
+                    is Response.Error -> dialogChatState =
+                        dialogChatState.copy(error = response.error)
                     is Response.Success -> {
                         dialogChatState = dialogChatState.copy(error = null)
                         if (response.data.isEmpty()) return@collect
@@ -175,14 +209,15 @@ class DialogChatViewModel  constructor(
         }
     }
 
-    private suspend fun updatePreview(message: Message?){
+    private suspend fun updatePreview(message: Message?) {
         val opponent = dialogChatState.opponent ?: return
-        val msg = message?:return
+        val msg = message ?: return
         dialogChatRepository.updateLastMessageOnPreview(dialogId = opponent.id, message = msg)
     }
 
     private suspend fun attachErredMessages(dialogId: String) {
-        dialogChatState = dialogChatState.copy(sentMessages = dialogChatRepository.getErredMessages(dialogId))
+        dialogChatState =
+            dialogChatState.copy(sentMessages = dialogChatRepository.getErredMessages(dialogId))
 
         dialogChatState.sentMessages.forEach { msg ->
             if (msg.status == DeliveryStatus.ERRED)
@@ -198,8 +233,10 @@ class DialogChatViewModel  constructor(
 
         dialogChatRepository.getOpponent(id).collect { response ->
             when (response) {
-                is FlowResponse.Error -> dialogChatState = dialogChatState.copy(error = response.error)
-                is FlowResponse.Loading -> dialogChatState = dialogChatState.copy(isOpponentLoading = response.isLoading)
+                is FlowResponse.Error -> dialogChatState =
+                    dialogChatState.copy(error = response.error)
+                is FlowResponse.Loading -> dialogChatState =
+                    dialogChatState.copy(isOpponentLoading = response.isLoading)
                 is FlowResponse.Success -> {
                     val isOpponentUpdating = dialogChatState.opponent?.id == response.data.id
 
@@ -212,7 +249,8 @@ class DialogChatViewModel  constructor(
     }
 
     private fun onPassAttachments(attachments: List<CachedFile>) {
-        val newAttachments = (dialogChatState.message.attachments + attachments).distinctBy { cachedFile -> cachedFile.uri }
+        val newAttachments =
+            (dialogChatState.message.attachments + attachments).distinctBy { cachedFile -> cachedFile.uri }
 
         dialogChatState = dialogChatState
             .copy(message = dialogChatState.message.copy(attachments = newAttachments))
@@ -244,7 +282,10 @@ class DialogChatViewModel  constructor(
 
         val sentUserMessage = dialogChatState.message.toSentUserMessage()
 
-        dialogChatState = dialogChatState.copy(message = NewUserMessage(), sentMessages = listOf(sentUserMessage) + dialogChatState.sentMessages)
+        dialogChatState = dialogChatState.copy(
+            message = NewUserMessage(),
+            sentMessages = listOf(sentUserMessage) + dialogChatState.sentMessages
+        )
 
         val result = dialogChatRepository.sendMessage(
             dialogId = opponent.id,
@@ -268,7 +309,8 @@ class DialogChatViewModel  constructor(
                 is Response.Success ->
                     dialogChatState.copy(sentMessages = dialogChatState.sentMessages.map { sent ->
                         if (sent == sentUserMessage) {
-                            val success = sent.copy(id = result.data, status = DeliveryStatus.DELIVERED)
+                            val success =
+                                sent.copy(id = result.data, status = DeliveryStatus.DELIVERED)
                             dialogChatRepository.delErredMessage(sent.id)
                             success
                         } else
@@ -285,12 +327,13 @@ class DialogChatViewModel  constructor(
 
         val updatedMessage = message.copy(status = DeliveryStatus.SENT)
 
-        dialogChatState = dialogChatState.copy(sentMessages = dialogChatState.sentMessages.map { sent ->
-            if (sent == message)
-                updatedMessage
-            else
-                sent
-        })
+        dialogChatState =
+            dialogChatState.copy(sentMessages = dialogChatState.sentMessages.map { sent ->
+                if (sent == message)
+                    updatedMessage
+                else
+                    sent
+            })
 
         val result = dialogChatRepository.sendMessage(
             dialogId = opponent.id,
@@ -314,7 +357,8 @@ class DialogChatViewModel  constructor(
                 is Response.Success ->
                     dialogChatState.copy(sentMessages = dialogChatState.sentMessages.map { sent ->
                         if (sent == updatedMessage) {
-                            val success = sent.copy(id = result.data, status = DeliveryStatus.DELIVERED)
+                            val success =
+                                sent.copy(id = result.data, status = DeliveryStatus.DELIVERED)
                             dialogChatRepository.delErredMessage(sent.id)
                             success
                         } else
@@ -326,27 +370,27 @@ class DialogChatViewModel  constructor(
 
 
     private suspend fun onUpdateAttachment(messageId: Long, attachment: MessageAttachment) {
-       /* mutex.withLock {
+        /* mutex.withLock {
 
-            val messageIndex = dialogChatState.pages.indexOfFirst { it.id == messageId }
-            if (messageIndex == -1) return
+             val messageIndex = dialogChatState.pages.indexOfFirst { it.id == messageId }
+             if (messageIndex == -1) return
 
-            val attachments = dialogChatState.pages[messageIndex].attachments.toMutableList()
+             val attachments = dialogChatState.pages[messageIndex].attachments.toMutableList()
 
-            val oldAttachmentIndex = attachments.indexOfFirst { it.id == attachment.id }
-            if (oldAttachmentIndex == -1) return
+             val oldAttachmentIndex = attachments.indexOfFirst { it.id == attachment.id }
+             if (oldAttachmentIndex == -1) return
 
-            attachments[oldAttachmentIndex] = attachment
-            val updatedAttachments = attachments.toImmutableList()
+             attachments[oldAttachmentIndex] = attachment
+             val updatedAttachments = attachments.toImmutableList()
 
-            val updatedMessage = dialogChatState.pages[messageIndex].copy(attachments = updatedAttachments)
-            val pages = dialogChatState.pages.toMutableList()
-            pages[messageIndex] = updatedMessage
-            val updatedPages = pages.toImmutableList()
+             val updatedMessage = dialogChatState.pages[messageIndex].copy(attachments = updatedAttachments)
+             val pages = dialogChatState.pages.toMutableList()
+             pages[messageIndex] = updatedMessage
+             val updatedPages = pages.toImmutableList()
 
-            dialogChatState = dialogChatState.copy(pages = updatedPages)
-        }
+             dialogChatState = dialogChatState.copy(pages = updatedPages)
+         }
 
-        dialogChatRepository.updateFile(messageId, attachment)*/
+         dialogChatRepository.updateFile(messageId, attachment)*/
     }
 }
