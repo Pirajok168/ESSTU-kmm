@@ -1,31 +1,26 @@
 package ru.esstu.student.messaging.messenger.dialogs.di
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
 import org.kodein.di.singleton
 import ru.esstu.ESSTUSdk
-import ru.esstu.domain.api.UpdatesApi
-import ru.esstu.student.domain.db.DatabaseStudent
 import ru.esstu.student.domain.db.IDatabaseStudent
 import ru.esstu.student.messaging.messenger.dialogs.datasources.api.DialogsApi
 import ru.esstu.student.messaging.messenger.dialogs.datasources.api.DialogsApiImpl
-import ru.esstu.student.messaging.messenger.dialogs.datasources.db.cache.CacheDao
-import ru.esstu.student.messaging.messenger.dialogs.datasources.db.cache.CacheDatabase
+import ru.esstu.student.messaging.messenger.dialogs.datasources.db.CacheDao
+import ru.esstu.student.messaging.messenger.dialogs.datasources.db.CacheDatabase
 import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.*
-import ru.esstu.student.messaging.messenger.supports.datasources.api.SupportsApi
-import ru.esstu.student.messaging.messenger.supports.datasources.api.SupportsApiImpl
-import ru.esstu.student.messaging.messenger.supports.datasources.repo.ISupportsApiRepository
-import ru.esstu.student.messaging.messenger.supports.datasources.repo.SupportsApiRepositoryImpl
 import kotlin.native.concurrent.ThreadLocal
 
-internal val dialogsModule = DI.Module("dialogsModule"){
+internal val dialogsModuleNew = DI.Module("dialogsModuleNew"){
     bind<DialogsApi>() with singleton {
         DialogsApiImpl(
             portalApi = instance()
         )
     }
-
     bind<IDialogsApiRepository>() with singleton {
         DialogsApiRepositoryImpl(
             authRepository = instance(),
@@ -33,9 +28,13 @@ internal val dialogsModule = DI.Module("dialogsModule"){
         )
     }
 
+
+
+
     bind<CacheDao>() with singleton {
         CacheDatabase(
-            database = instance<IDatabaseStudent>().getDataBase()
+            database = instance<IDatabaseStudent>().getDataBase(),
+            coroutineScope = CoroutineScope(Dispatchers.Default)
         )
     }
 
@@ -45,29 +44,17 @@ internal val dialogsModule = DI.Module("dialogsModule"){
             cacheDao = instance()
         )
     }
-
-
-    bind<IDialogsUpdatesRepository>() with singleton {
-        DialogsUpdatesRepositoryImpl(
-            auth = instance(),
-            api = instance(),
-            timestampDao = instance()
-        )
-    }
-
 }
 
 @ThreadLocal
-object DialogsModule {
+object DialogsModuleNew {
     val repo: IDialogsApiRepository
         get() = ESSTUSdk.di.instance()
 
     val repoDialogs: IDialogsDbRepository
         get() = ESSTUSdk.di.instance()
 
-    val updateDialogs:IDialogsUpdatesRepository
-        get() = ESSTUSdk.di.instance()
 }
 
-val ESSTUSdk.dialogsModule: DialogsModule
-    get() = DialogsModule
+val ESSTUSdk.dialogsModuleNew: DialogsModuleNew
+    get() = DialogsModuleNew

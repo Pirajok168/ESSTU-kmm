@@ -14,11 +14,8 @@ import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.Messag
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.ReplyMessageEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.relations.MessageWithAttachments
-import ru.esstu.student.messaging.messenger.datasources.toMessage
-import ru.esstu.student.messaging.messenger.datasources.toUser
-import ru.esstu.student.messaging.messenger.dialogs.datasources.db.cache.entities.DialogEntity
-import ru.esstu.student.messaging.messenger.dialogs.datasources.db.cache.entities.relations.DialogWithMessage
-
+import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.DialogEntity
+import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.relations.DialogWithMessage
 
 
 fun DataResponse.toDialogs(): List<Dialog> {
@@ -68,7 +65,7 @@ fun MessageAttachment.toAttachmentEntity(messageId: Long) = AttachmentEntity(
 
 fun Message.toMessageWithAttachments() = MessageWithAttachments(
     message = toMessageEntity(),
-    attachments = attachments.map { it.toAttachmentEntity(id) }
+    attachments = attachments
 )
 
 fun Dialog.toDialogEntity(appUserId: String, sortOrder:Int): DialogEntity {
@@ -112,7 +109,7 @@ fun MessageWithAttachments.toMessage() = Message(
     message = message.message.orEmpty(),
     replyMessage = message.replyMessage?.toReplyMessage(),
     status = enumValueOf(message.status),
-    attachments = attachments.map { it.toAttachment() }
+    attachments = attachments
 )
 
 

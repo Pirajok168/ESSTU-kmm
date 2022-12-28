@@ -1,0 +1,41 @@
+import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.ReplyMessageEntity;
+import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity;
+
+CREATE TABLE MessageTableNew(
+    messageId INTEGER PRIMARY KEY NOT NULL,
+    fromUser TEXT AS UserEntity,
+    date INTEGER NOT NULL,
+    message TEXT NOT NULL,
+    status TEXT NOT NULL,
+    replyMessage TEXT AS ReplyMessageEntity,
+    countAttachments INTEGER AS Int
+);
+
+CREATE TABLE DialogTableNew(
+    idDialog TEXT NOT NULL,
+    appUserId TEXT NOT NULL,
+    lastMessageId INTEGER,
+    opponent TEXT AS UserEntity NOT NULL,
+    unread INTEGER AS Int DEFAULT 0 NOT NULL,
+    notifyAboutIt INTEGER AS Boolean NOT NULL,
+    FOREIGN KEY (lastMessageId) REFERENCES MessageTableNew(messageId) ON DELETE CASCADE
+);
+
+getAllDialogs:
+    SELECT a.*, b.* FROM DialogTableNew a
+    	LEFT JOIN MessageTableNew b ON a.lastMessageId = b.messageId;
+
+setLastMessage:
+    INSERT OR REPLACE INTO MessageTableNew(messageId, fromUser,date, message, status, replyMessage, countAttachments)
+       VALUES (?,?,?,?,?,?,?);
+
+setDialog:
+    INSERT OR REPLACE INTO DialogTableNew(idDialog, appUserId,lastMessageId, opponent, unread, notifyAboutIt)
+        VALUES (?,?,?,?,?,?);
+
+getDialogsWithLastMessage:
+    SELECT d.*, m.* FROM DialogTableNew d
+    LEFT JOIN MessageTableNew m ON d.lastMessageId == m.messageId
+    ORDER BY m.date DESC LIMIT :pageSize OFFSET :pageOffset;
+
+

@@ -5,7 +5,6 @@ import io.ktor.client.request.forms.*
 import io.ktor.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import okio.Path.Companion.toPath
 
 import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.entities.TokenOwners
@@ -33,7 +32,7 @@ import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.Message
 import ru.esstu.student.messaging.entities.Sender
 import ru.esstu.student.messaging.messenger.datasources.toUser
-import ru.esstu.student.messaging.messenger.dialogs.datasources.db.cache.CacheDao
+import ru.esstu.student.messaging.messenger.dialogs.datasources.db.CacheDao
 import ru.esstu.student.messaging.messenger.dialogs.datasources.toMessageWithAttachments
 
 
@@ -207,7 +206,7 @@ class DialogChatRepositoryImpl constructor(
                 )
             )
 
-            dialogsDao.updateDialogLastMessage(appUserId = appUserId, dialogId = dialogId, message = message.toMessageWithAttachments())
+            //dialogsDao.updateDialogLastMessage(appUserId = appUserId, dialogId = dialogId, message = message.toMessageWithAttachments())
         }
     }
 

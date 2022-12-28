@@ -29,5 +29,5 @@ fun Message.toReplyMessage() = ReplyMessage(
     message = message,
     from = from,
     id = id,
-    attachmentsCount = attachments.size
+    attachmentsCount = attachments
 )

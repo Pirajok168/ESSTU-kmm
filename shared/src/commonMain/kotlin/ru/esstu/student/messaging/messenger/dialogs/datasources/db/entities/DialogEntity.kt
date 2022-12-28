@@ -1,4 +1,4 @@
-package ru.esstu.student.messaging.messenger.dialogs.datasources.db.cache.entities
+package ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities
 
 
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity

@@ -71,11 +71,11 @@ fun MessageAttachment.toDialogChatAttachmentEntity(messageId: Long) = DialogChat
     loadProgress = loadProgress
 )
 
-
+// TODO: переделать ещё историю базы данных
 fun Message.toMessageWithRelated(appUserId: String, dialogId: String) = MessageWithRelated(
     message = toDialogChatMessageEntity(appUserId, dialogId),
     reply = replyMessage?.toDialogChatReplyMessageEntity(),
-    attachments = attachments.map { it.toDialogChatAttachmentEntity(id) }
+    attachments = emptyList()
 )
 
 fun MessagePreview.toMessage(
@@ -86,7 +86,7 @@ fun MessagePreview.toMessage(
         id = id,
         date = DateTime(date).unixMillisLong,
         message = message.orEmpty(),
-        attachments = attachments.map { attachment -> attachment.toAttachment() },
+        attachments = 0,
         from = authors.firstOrNull { user -> user.id == this.from } ?: return null,
         replyMessage = if (replyToMsgId != null) replyMessages.firstOrNull { it.id == replyToMsgId } else null,
         status = if (views > 1) DeliveryStatus.READ else DeliveryStatus.DELIVERED
@@ -97,7 +97,7 @@ fun MessageWithRelated.toMessage() = Message(
     message = message.message,
     id = message.id,
     status = enumValueOf(message.status),
-    attachments = attachments.map { it.toAttachment() },
+    attachments = 0,
     replyMessage = reply?.toReplyMessage() ,
     date = message.date,
     from = message.from.toUser()

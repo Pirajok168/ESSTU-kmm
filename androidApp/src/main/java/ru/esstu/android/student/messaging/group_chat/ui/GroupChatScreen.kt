@@ -404,11 +404,11 @@ fun GroupChatScreen(
                                                 )
                                             }
                                         }) {
-
+                                        // TODO:  править тут
                                         MessageCard(
                                             from = if (!isNextSameAuthorAndDate && !isMessageFromYou)
                                                 message.from else null,
-                                            attachments = message.attachments,
+                                            attachments = emptyList(),
                                             messageText = message.message,
                                             date = message.formatDate.local,
                                             reply = message.replyMessage,

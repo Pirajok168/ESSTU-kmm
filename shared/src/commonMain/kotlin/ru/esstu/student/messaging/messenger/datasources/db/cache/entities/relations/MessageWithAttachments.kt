@@ -8,13 +8,8 @@ data class MessageWithAttachments(
 
     val message: MessageEntity,
 
-    val attachments:List<AttachmentEntity>
+    val attachments: Int
 )
 
 
-data class MessageWithAttachmentsEntity(
 
-    val message: MessageEntity,
-
-    val attachments: AttachmentEntity?
-)

@@ -37,7 +37,7 @@ class GroupChatUpdateRepositoryImpl constructor(
                     delay(500)
                 }
                 is Response.Success -> {
-                    val messages = result.data.map { it.copy(attachments = it.attachments.asReversed()) }.asReversed()
+                    val messages = result.data.map { it.copy(attachments = it.attachments) }.asReversed()
                     latestMessageId =
                         messages.lastOrNull { it.status == DeliveryStatus.DELIVERED }?.id ?: messages.firstOrNull()?.id ?: latestMessageId
 

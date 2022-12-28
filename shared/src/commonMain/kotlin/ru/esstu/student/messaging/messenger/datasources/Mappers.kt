@@ -42,7 +42,7 @@ fun ChatMessage.toMessage(
         id = id,
         date = date,
         message = message.orEmpty(),
-        attachments = attachments.map { attachment -> attachment.toAttachment() },
+        attachments = attachments.size,
         from = loadedUsers.firstOrNull { user -> user.id == this.from }?.toUser() ?: return null,
         replyMessage = if (replyToMsgId != null) loadedMessages.firstOrNull { it.id == replyToMsgId }?.let { replyMessage ->
             ReplyMessage(

@@ -51,10 +51,10 @@ fun AppealScreen(
 
             if (index == uiState.items.lastIndex && !uiState.isEndReached && !uiState.isLoading)
                 appealViewModel.onEvent(AppealEvents.GetNext)
-
+            // TODO: Правка тут
             var subtitle: String = if (accInfoState.user?.id == item.lastMessage?.from?.id) "вы: " else ""
             subtitle += when {
-                item.lastMessage?.attachments?.any() == true -> "[Вложение]"
+                item.lastMessage?.attachments!!  > 0 == true  -> "[Вложение]"
                 item.lastMessage?.message?.isNotBlank() == true -> item.lastMessage?.message
                 else -> ""
             }

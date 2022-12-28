@@ -2,8 +2,7 @@ package ru.esstu.android.student.messaging.messenger.navigation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -17,7 +16,7 @@ import kotlinx.coroutines.launch
 import ru.esstu.android.R
 import ru.esstu.android.student.messaging.messenger.appeals.ui.AppealScreen
 import ru.esstu.android.student.messaging.messenger.conversations.ui.ConversationScreen
-import ru.esstu.android.student.messaging.messenger.dialogs.ui.DialogScreen
+import ru.esstu.android.student.messaging.messenger.dialogs.ui.DialogsScreen
 import ru.esstu.android.student.messaging.messenger.navigation.Pages.*
 import ru.esstu.android.student.messaging.messenger.supports.ui.SupportScreen
 
@@ -39,12 +38,14 @@ fun MessengerScreen(
     onNavToNewMessage: () -> Unit = { },
     parentPadding: PaddingValues
 ) {
-
+    var title by remember{
+        mutableStateOf("Мессенджер")
+    }
     Scaffold(
         modifier = Modifier.padding(parentPadding).statusBarsPadding(),
         topBar = {
             TopAppBar(
-                title = { Text(text = "Мессенджер") },
+                title = { Text(text = title) },
                 backgroundColor = MaterialTheme.colors.background,
                 elevation = 0.dp
             )
@@ -91,7 +92,9 @@ fun MessengerScreen(
                 ) { index ->
 
                     when (values()[index]) {
-                        DIALOGS -> DialogScreen(onNavToDialogChat = onNavToDialogChat)
+                        DIALOGS -> DialogsScreen(onNavToDialogChat = onNavToDialogChat, updateTitle = {
+                            title = it
+                        })
                         CONVERSATION -> ConversationScreen(onNavToConversationChat = onNavToConversationChat)
                         TECH_SUPPORT -> SupportScreen(onNavToSupportChat = onNavToSupportChat)
                         APPEALS -> AppealScreen(onNavToAppealChat = onNavToAppealChat)

@@ -34,7 +34,7 @@ fun MessagePreview.toMessage(
         id = id,
         date = DateTime(date).unixMillisLong,
         message = message.orEmpty(),
-        attachments = attachments.map { attachment -> attachment.toAttachment() },
+        attachments = 0,
         from = authors.firstOrNull { user -> user.id == this.from } ?: return null,
         replyMessage = if (replyToMsgId != null) replyMessages.firstOrNull { it.id == replyToMsgId } else null,
         status = if (views > 1) DeliveryStatus.READ else DeliveryStatus.DELIVERED
@@ -49,7 +49,7 @@ fun MessageResponse.toMessages(replyMessages: List<Message> = emptyList()): List
                 id = id,
                 date = DateTime(date).unixMillisLong,
                 message = message.message.orEmpty(),
-                attachments = attachments.map { attachment -> attachment.toAttachment() },
+                attachments = 0,
                 from = users.firstOrNull { user -> user.id == this.from } ?: return@mapNotNull null,
                 replyMessage = if (replyToMsgId != null) replyMessages.firstOrNull { it.id == replyToMsgId }?.toReplyMessage() else null,
                 status = if (message.views > 1) DeliveryStatus.READ else DeliveryStatus.DELIVERED
