@@ -54,17 +54,12 @@ class MessengerScreenViewModel(
             dialogState = dialogState.copy(isEditing = true)
         }
 
-
-
-        val list = dialogState.selectedDialog.toMutableList()
-        if (list.contains(dialog)){
-            list.remove(dialog)
-        }else{
-            list.add(dialog)
+        val l = mutableSetOf(*dialogState.selectedDialog.toTypedArray())
+        if (!l.add(dialog)){
+            l.remove(dialog)
         }
 
-
-        dialogState = dialogState.copy(selectedDialog = list.toList())
+        dialogState = dialogState.copy(selectedDialog = l.toList())
     }
 
     fun closeEditingMode(){
