@@ -88,6 +88,7 @@ class DialogsViewModel constructor(
         viewModelScope.launch {
             dialogDB._cachedDialogs.collectLatest{
                 Log.e("TEST", it.toString())
+                dialogState = dialogState.copy(items = it)
             }
         }
 

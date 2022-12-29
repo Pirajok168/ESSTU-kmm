@@ -11,4 +11,6 @@ interface IDialogsDbRepository {
     suspend fun clear()
 
     suspend fun setDialogs(dialogs: List<Dialog>)
+
+    suspend fun deleteDialog(id: String)
 }

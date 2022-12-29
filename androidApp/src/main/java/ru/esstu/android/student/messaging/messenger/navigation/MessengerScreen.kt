@@ -2,9 +2,13 @@ package ru.esstu.android.student.messaging.messenger.navigation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.statusBarsPadding
@@ -18,8 +22,10 @@ import ru.esstu.android.student.messaging.messenger.appeals.ui.AppealScreen
 import ru.esstu.android.student.messaging.messenger.conversations.ui.ConversationScreen
 import ru.esstu.android.student.messaging.messenger.dialogs.ui.DialogsScreen
 import ru.esstu.android.student.messaging.messenger.navigation.Pages.*
+import ru.esstu.android.student.messaging.messenger.navigation.viewmodel.MessengerScreenViewModel
 import ru.esstu.android.student.messaging.messenger.supports.ui.SupportScreen
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import ru.esstu.android.student.messaging.messenger.navigation.viewmodel.toNormalView
 
 enum class Pages(val description: String) {
     DIALOGS("Диалоги"),
@@ -36,19 +42,48 @@ fun MessengerScreen(
     onNavToSupportChat: (id: Int) -> Unit = { },
     onNavToAppealChat: (id: Int) -> Unit = { },
     onNavToNewMessage: () -> Unit = { },
+    viewModel: MessengerScreenViewModel = viewModel(),
     parentPadding: PaddingValues
 ) {
-    var title by remember{
-        mutableStateOf("Мессенджер")
-    }
+    var title by remember { mutableStateOf("Мессенджер") }
+    val uiState = viewModel.dialogState
+
     Scaffold(
-        modifier = Modifier.padding(parentPadding).statusBarsPadding(),
+        modifier = Modifier
+            .padding(parentPadding)
+            .statusBarsPadding(),
         topBar = {
-            TopAppBar(
-                title = { Text(text = title) },
-                backgroundColor = MaterialTheme.colors.background,
-                elevation = 0.dp
-            )
+            if (!uiState.isEditing) {
+                TopAppBar(
+                    title = { Text(text = title) },
+                    backgroundColor = MaterialTheme.colors.background,
+                    elevation = 0.dp
+                )
+            } else {
+                TopAppBar(
+                    title = {
+                        Text(text = "${viewModel.dialogState.selectedDialog.size}")
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            viewModel.closeEditingMode()
+                        }) {
+                            Icon(imageVector = Icons.Default.Clear, contentDescription = "")
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            viewModel.showAlertDialog()
+                        }) {
+                            Icon(imageVector = Icons.Default.Delete, contentDescription = "")
+                        }
+                    },
+                    backgroundColor = MaterialTheme.colors.background,
+                    elevation = 0.dp,
+
+                )
+            }
+
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -60,7 +95,39 @@ fun MessengerScreen(
                 )
             }
         }) {
-
+        if (uiState.showAlertDialog){
+            AlertDialog(
+                onDismissRequest = { viewModel.dismissDialog() },
+                title = {
+                    Text(text = if (uiState.selectedDialog.size >= 2) "Удалить " toNormalView uiState.selectedDialog.size else "Удалить 1 чат")
+                },
+                text = {
+                    Text(text = "Вы дейстивтельно хотите удалить все сообщения? Отменить это действие будет невозможно.")
+                },
+                buttons = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(10.dp),
+                        horizontalArrangement = Arrangement.End
+                    ){
+                        OutlinedButton(
+                            onClick = {
+                                viewModel.dismissDialog()
+                            }
+                        ) {
+                            Text(text = "Отмена")
+                        }
+                        Spacer(modifier = Modifier.size(10.dp))
+                        OutlinedButton(
+                            onClick = {
+                                viewModel.deleteDialogs()
+                            }
+                        ) {
+                            Text(text = "Удалить", color = Color.Red)
+                        }
+                    }
+                }
+            )
+        }
         val pagerState = rememberPagerState()
         val scope = rememberCoroutineScope()
         Box(contentAlignment = Alignment.BottomEnd) {
@@ -92,9 +159,17 @@ fun MessengerScreen(
                 ) { index ->
 
                     when (values()[index]) {
-                        DIALOGS -> DialogsScreen(onNavToDialogChat = onNavToDialogChat, updateTitle = {
-                            title = it
-                        })
+                        DIALOGS -> DialogsScreen(
+                            onNavToDialogChat = onNavToDialogChat,
+                            updateTitle = {
+                                title = it
+                            },
+                            onEditingDialogs = {
+                                viewModel.addDialog(it)
+                            },
+                            isEditing = uiState.isEditing,
+                            selectedList = uiState.selectedDialog
+                        )
                         CONVERSATION -> ConversationScreen(onNavToConversationChat = onNavToConversationChat)
                         TECH_SUPPORT -> SupportScreen(onNavToSupportChat = onNavToSupportChat)
                         APPEALS -> AppealScreen(onNavToAppealChat = onNavToAppealChat)
@@ -104,4 +179,6 @@ fun MessengerScreen(
         }
     }
 }
+
+
 

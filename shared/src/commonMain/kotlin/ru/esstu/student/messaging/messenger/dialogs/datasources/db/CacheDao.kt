@@ -12,4 +12,5 @@ interface CacheDao {
     suspend fun setDialog(appUserId: String, dialog: ru.esstu.student.messaging.messenger.dialogs.entities.Dialog)
     suspend fun getDialogWithLastMessage(appUserId: String, pageSize: Int, pageOffset: Int): List<DialogWithMessage>
 
+    suspend fun deleteDialog(idDialog: String)
 }

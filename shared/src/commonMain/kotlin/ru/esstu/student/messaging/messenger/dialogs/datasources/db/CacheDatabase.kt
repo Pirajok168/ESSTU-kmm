@@ -96,5 +96,9 @@ class CacheDatabase(
        return dbQueries.getDialogsWithLastMessage(pageSize.toLong(), pageOffset.toLong(), ::map).executeAsList()
     }
 
+    override suspend fun deleteDialog(idDialog: String) {
+        dbQueries.deleteDialog(idDialog)
+    }
+
 
 }

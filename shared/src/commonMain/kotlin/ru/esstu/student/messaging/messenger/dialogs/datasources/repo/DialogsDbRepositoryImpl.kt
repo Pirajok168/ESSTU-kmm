@@ -42,5 +42,9 @@ class DialogsDbRepositoryImpl  constructor(
         }
     }
 
+    override suspend fun deleteDialog(id: String) {
+        cacheDao.deleteDialog(id)
+    }
+
 
 }

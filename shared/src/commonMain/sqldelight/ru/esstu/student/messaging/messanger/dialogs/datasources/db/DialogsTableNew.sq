@@ -38,4 +38,8 @@ getDialogsWithLastMessage:
     LEFT JOIN MessageTableNew m ON d.lastMessageId == m.messageId
     ORDER BY m.date DESC LIMIT :pageSize OFFSET :pageOffset;
 
+deleteDialog:
+    DELETE FROM DialogTableNew WHERE idDialog = (:idDialog);
+
+
 

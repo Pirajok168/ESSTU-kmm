@@ -1,8 +1,10 @@
 package ru.esstu.android.student.messaging.messenger.dialogs.ui
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -22,12 +24,17 @@ import ru.esstu.android.student.messaging.messenger.dialogs.ui.components.Messen
 import ru.esstu.android.student.messaging.messenger.dialogs.viewmodel.DialogEvents
 import ru.esstu.android.student.messaging.messenger.dialogs.viewmodel.DialogsViewModel
 import ru.esstu.domain.utill.workingDate.toFormatString
+import ru.esstu.student.messaging.messenger.dialogs.entities.Dialog
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DialogsScreen(
     onNavToDialogChat: (dialogId: String) -> Unit = { },
     dialogsViewModel: DialogsViewModel = viewModel(),
-    updateTitle: (String) -> Unit
+    updateTitle: (String) -> Unit,
+    onEditingDialogs: (Dialog) -> Unit,
+    isEditing: Boolean,
+    selectedList: List<Dialog>
 ) {
     val uiState = dialogsViewModel.dialogState
 
@@ -54,12 +61,13 @@ fun DialogsScreen(
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
 
-        itemsIndexed(uiState.items) { index, item ->
+        itemsIndexed(uiState.items, key = { index, item -> item.id }) { index, item ->
 
             if (index == uiState.items.lastIndex && !uiState.isEndReached && !uiState.isLoading)
                 dialogsViewModel.onEvent(DialogEvents.GetNext)
 
             var subtitle: String = if (item.opponent != item.lastMessage?.from) "вы: " else ""
+            // TODO: тоже костыль пока
             subtitle += when {
                 item.lastMessage?.attachments!! > 0 == true -> "[Вложение]"
                 item.lastMessage?.message?.isNotBlank() == true -> item.lastMessage?.message
@@ -68,14 +76,32 @@ fun DialogsScreen(
 
             MessengerCard(
                 modifier = Modifier
-                    .clickable { onNavToDialogChat(item.id) }
+                    .animateItemPlacement()
+                    .combinedClickable(
+                        onClick = {
+                            if (!isEditing) onNavToDialogChat(item.id)
+                            else onEditingDialogs(item)
+                        },
+                        onLongClick = {
+                            onEditingDialogs(item)
+                        }
+                    )
                     .background(
-                        MaterialTheme.colors.secondary.copy(
-                            alpha = if (item.unreadMessageCount > 0)
-                                0.1f
-                            else
-                                0f
-                        )
+                        if (isEditing) {
+                            MaterialTheme.colors.primary.copy(
+                                alpha = if (selectedList.contains(item))
+                                    0.1f
+                                else
+                                    0f
+                            )
+                        } else {
+                            MaterialTheme.colors.secondary.copy(
+                                alpha = if (item.unreadMessageCount > 0)
+                                    0.1f
+                                else
+                                    0f
+                            )
+                        }
                     )
                     .padding(vertical = 8.dp, horizontal = 24.dp),
                 unread = item.unreadMessageCount,
