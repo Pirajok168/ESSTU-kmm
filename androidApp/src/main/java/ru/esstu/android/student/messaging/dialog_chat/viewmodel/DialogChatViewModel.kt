@@ -7,12 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.cancellable
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import ru.esstu.ESSTUSdk
+import ru.esstu.ESSTUSdk2
 import ru.esstu.domain.modules.account.datasources.repo.IAccountInfoApiRepository
 import ru.esstu.domain.modules.account.di.accountModule
 import ru.esstu.domain.utill.wrappers.FlowResponse
@@ -77,9 +75,9 @@ sealed class DialogChatEvents {
 
 
 class DialogChatViewModel constructor(
-    private val dialogChatRepository: IDialogChatRepository = ESSTUSdk.dialogChatModule.repo,
-    private val dialogChatUpdateRepository: IDialogChatUpdateRepository = ESSTUSdk.dialogChatModule.update,
-    private val accountInfoRepository: IAccountInfoApiRepository = ESSTUSdk.accountModule.repo
+    private val dialogChatRepository: IDialogChatRepository = ESSTUSdk2.dialogChatModule.repo,
+    private val dialogChatUpdateRepository: IDialogChatUpdateRepository = ESSTUSdk2.dialogChatModule.update,
+    private val accountInfoRepository: IAccountInfoApiRepository = ESSTUSdk2.accountModule.repo
 ) : ViewModel() {
 
     var dialogChatState by mutableStateOf(DialogChatState())

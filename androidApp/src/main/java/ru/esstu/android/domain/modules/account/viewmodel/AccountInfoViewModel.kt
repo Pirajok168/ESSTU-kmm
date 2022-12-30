@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
+import ru.esstu.ESSTUSdk2
 
 import ru.esstu.domain.modules.account.datasources.repo.IAccountInfoApiRepository
 import ru.esstu.domain.modules.account.di.accountModule
@@ -27,7 +27,7 @@ sealed class AccountInfoEvents {
 
 
 class AccountInfoViewModel  constructor(
-    private val repo: IAccountInfoApiRepository = ESSTUSdk.accountModule.repo
+    private val repo: IAccountInfoApiRepository = ESSTUSdk2.accountModule.repo
 ) : ViewModel() {
 
     var accountInfoState by mutableStateOf(AccountInfoState())

@@ -18,3 +18,10 @@ dependencyResolutionManagement {
 rootProject.name = "ESSTU"
 include(":androidApp")
 include(":shared")
+
+
+include(":common:core")
+include(":common:auth:api")
+include(":common:auth:db")
+include(":common:auth:repo")
+include(":common:umbrella-core")

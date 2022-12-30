@@ -7,10 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
+import ru.esstu.ESSTUSdk2
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.student.messaging.messenger.conversations.entities.Conversation
 import ru.esstu.student.messaging.messenger.supports.datasources.repo.ISupportsApiRepository
 import ru.esstu.student.messaging.messenger.supports.di.supportModule
 import ru.esstu.student.messaging.messenger.supports.entities.Supports
@@ -32,7 +31,7 @@ sealed class SupportEvents {
 
 
 class SupportViewModel  constructor(
-    supportApi: ISupportsApiRepository = ESSTUSdk.supportModule.repo,
+    supportApi: ISupportsApiRepository = ESSTUSdk2.supportModule.repo,
     //supportDb: ISupportsDbRepository,
     //updates: ISupportsUpdateRepository
 ) : ViewModel() {

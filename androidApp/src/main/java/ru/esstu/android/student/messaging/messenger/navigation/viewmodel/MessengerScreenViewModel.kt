@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
+import ru.esstu.ESSTUSdk2
 import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsDbRepository
 import ru.esstu.student.messaging.messenger.dialogs.di.dialogsModuleNew
 import ru.esstu.student.messaging.messenger.dialogs.entities.Dialog
@@ -26,7 +26,7 @@ infix fun String.toNormalView(countChat: Int): String{
 }
 
 class MessengerScreenViewModel(
-   private val dialogDB: IDialogsDbRepository = ESSTUSdk.dialogsModuleNew.repoDialogs,
+    private val dialogDB: IDialogsDbRepository = ESSTUSdk2.dialogsModuleNew.repoDialogs,
 ): ViewModel() {
     var dialogState by mutableStateOf(MessengerScreenState())
         private set

@@ -6,13 +6,18 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import ru.esstu.ESSTUSdk2
 
-import ru.esstu.ESSTUSdk
+
+import ru.esstu.IAuthRepository
 import ru.esstu.auth.datasources.di.repoAuth
-import ru.esstu.auth.datasources.repo.IAuthRepository
-import ru.esstu.auth.entities.Token
-import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.domain.utill.wrappers.ResponseError
+
+import ru.esstu.entities.Token
+
+
+import ru.esstu.repoAuth
+import ru.esstu.utill.wrappers.Response
+import ru.esstu.utill.wrappers.ResponseError
 
 data class AuthState(
     val token: Token? = null,
@@ -32,7 +37,7 @@ sealed class AuthEvents {
 
 
 class AuthViewModel(
-    private val repo: IAuthRepository = ESSTUSdk.repoAuth.authModule,
+    private val repo: IAuthRepository = ESSTUSdk2.repoAuth.authModule,
     //private val firebaseRepo: IFirebaseRepository
 ) : ViewModel() {
     var authState by mutableStateOf(AuthState())

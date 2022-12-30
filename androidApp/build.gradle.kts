@@ -34,6 +34,7 @@ android {
 
 dependencies {
     implementation(project(":shared"))
+    implementation(project(":common:umbrella-core"))
     implementation("androidx.compose.ui:ui:1.3.2")
     implementation("androidx.compose.ui:ui-tooling:1.3.2")
     implementation("androidx.compose.ui:ui-tooling-preview:1.3.2")
@@ -75,7 +76,8 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-pager:0.23.1")
     implementation ("com.google.accompanist:accompanist-pager-indicators:0.23.1")
     implementation ("com.google.accompanist:accompanist-flowlayout:0.23.1")
-
+    implementation(project(mapOf("path" to ":common:auth:repo")))
+    implementation(project(mapOf("path" to ":common:core")))
 
 
 }

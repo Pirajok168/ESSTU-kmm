@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import ru.esstu.ESSTUSdk
+import ru.esstu.ESSTUSdk2
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsApiRepository
@@ -41,10 +41,10 @@ sealed class DialogEvents {
 class DialogsViewModel constructor(
     /* dialogUpdate: IDialogsUpdatesRepository = ESSTUSdk.dialogsModule.updateDialogs,
      dialogDB: IDialogsDbRepository = ESSTUSdk.dialogsModule.repoDialogs,*/
-    dialogApi: IDialogsApiRepository = ESSTUSdk.dialogsModuleNew.repo,
-    dialogDB: IDialogsDbRepository = ESSTUSdk.dialogsModuleNew.repoDialogs,
+    dialogApi: IDialogsApiRepository = ESSTUSdk2.dialogsModuleNew.repo,
+    dialogDB: IDialogsDbRepository = ESSTUSdk2.dialogsModuleNew.repoDialogs,
 
-) : ViewModel() {
+    ) : ViewModel() {
 
     var dialogState by mutableStateOf(DialogState())
         private set

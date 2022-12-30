@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import ru.esstu.ESSTUSdk
+import ru.esstu.ESSTUSdk2
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
@@ -67,8 +67,8 @@ sealed class GroupChatEvents {
 
 
 class GroupChatViewModel  constructor(
-    private val groupChatRepository: IGroupChatRepository = ESSTUSdk.groupChatModule.repo,
-    private val dialogChatUpdateRepository: IGroupChatUpdateRepository = ESSTUSdk.groupChatModule.updates,
+    private val groupChatRepository: IGroupChatRepository = ESSTUSdk2.groupChatModule.repo,
+    private val dialogChatUpdateRepository: IGroupChatUpdateRepository = ESSTUSdk2.groupChatModule.updates,
    // private val fileDownloadRepository: IFileDownloadRepository
 ) : ViewModel() {
 

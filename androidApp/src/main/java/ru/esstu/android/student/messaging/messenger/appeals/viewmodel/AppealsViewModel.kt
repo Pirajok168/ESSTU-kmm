@@ -6,17 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
-import ru.esstu.domain.utill.paginator.Paginator
+import ru.esstu.ESSTUSdk2
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.messenger.appeals.datasources.repo.IAppealsApiRepository
 import ru.esstu.student.messaging.messenger.appeals.di.appealsModule
 import ru.esstu.student.messaging.messenger.appeals.entities.Appeals
-
-import ru.esstu.student.messaging.messenger.conversations.entities.Conversation
 
 
 data class AppealState(
@@ -36,7 +32,7 @@ sealed class AppealEvents {
 
 
 class AppealsViewModel  constructor(
-    appealApi: IAppealsApiRepository = ESSTUSdk.appealsModule.repo,
+    appealApi: IAppealsApiRepository = ESSTUSdk2.appealsModule.repo,
     //appealDb: IAppealsDbRepository,
   //  updates: IAppealsUpdateRepository
 ) : ViewModel() {

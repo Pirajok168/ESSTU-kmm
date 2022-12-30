@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.ESSTUSdk
+import ru.esstu.ESSTUSdk2
 import ru.esstu.domain.modules.account.di.accountModule
 import ru.esstu.domain.modules.downloader.IDownloader
 import ru.esstu.student.news.entities.AttachmentNews
@@ -40,10 +40,10 @@ sealed class AnnouncementsEvents {
 
 
 class AnnouncementsViewModel  constructor(
-    private val repo: IAnnouncementsRepository = ESSTUSdk.announcementsModule.repo,
-    private val downolad: IDownloader = ESSTUSdk.accountModule.download,
+    private val repo: IAnnouncementsRepository = ESSTUSdk2.announcementsModule.repo,
+    private val downolad: IDownloader = ESSTUSdk2.accountModule.download,
    // private val downloadRepo:IFileDownloadRepository = EngineSDK.announcementsModule.updates,
-    updates: IAnnouncementsUpdateRepository = ESSTUSdk.announcementsModule.updates
+    updates: IAnnouncementsUpdateRepository = ESSTUSdk2.announcementsModule.updates
 ) : ViewModel() {
 
     var state by mutableStateOf(AnnouncementsState())
