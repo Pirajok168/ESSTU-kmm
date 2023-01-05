@@ -3,6 +3,7 @@ package ru.esstu.student.messaging.dialog_chat.datasources
 
 import com.soywiz.klock.DateTime
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.inner_classes.FileAttachmentResponse
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessagePreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessageResponse
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAttachmentEntity
@@ -15,7 +16,6 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entiti
 import ru.esstu.student.messaging.entities.*
 
 import ru.esstu.student.messaging.messenger.datasources.toUser
-import ru.esstu.student.news.announcement.datasources.toAttachment
 
 
 fun Sender.toUserEntity(): DialogChatAuthorEntity {
@@ -77,6 +77,21 @@ fun Message.toMessageWithRelated(appUserId: String, dialogId: String) = MessageW
     attachments = attachments.map { it.toDialogChatAttachmentEntity(id) }
 )
 
+fun FileAttachmentResponse.toAttachment(): MessageAttachment {
+    val filename = fileName.split('.').let { if (it.size > 1) it.dropLast(1) else it }.joinToString(".")
+    val fileExt = fileName.split('.').let { if (it.size > 1)  it.last() else "" }
+
+    return MessageAttachment(
+        id = id,
+        type = type,
+        name = filename,
+        ext = fileExt,
+        fileUri = if (fileCode.isNotBlank()) "https://esstu.ru/aicstorages/publicDownload/$fileCode" else "",
+        size = fileSize,
+        localFileUri = null
+    )
+}
+
 fun MessagePreview.toMessage(
     authors: List<Sender>,
     replyMessages: List<ReplyMessage>
@@ -85,7 +100,7 @@ fun MessagePreview.toMessage(
         id = id,
         date = DateTime(date).unixMillisLong,
         message = message.orEmpty(),
-        attachments = emptyList() ,
+        attachments = attachments.map { it.toAttachment() } ,
         from = authors.firstOrNull { user -> user.id == this.from } ?: return null,
         replyMessage = if (replyToMsgId != null) replyMessages.firstOrNull { it.id == replyToMsgId } else null,
         status = if (views > 1) DeliveryStatus.READ else DeliveryStatus.DELIVERED
@@ -147,7 +162,6 @@ suspend fun MessageResponse.toMessages(
     else emptyList()
 
     val replyMessages = rawReplyMessages.mapNotNull { it.toReplyMessage(existingAuthors + missingAuthors) }
-
     return this.messages.mapNotNull { it.toMessage(authors = existingAuthors, replyMessages = replyMessages) }
 }
 

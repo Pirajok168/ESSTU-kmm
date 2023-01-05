@@ -25,6 +25,8 @@ import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
 import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
 import ru.esstu.student.messaging.dialog_chat.util.toSentUserMessage
+import ru.esstu.student.messaging.dialog_chat_new.datasources.di.dialogChatModuleNew
+import ru.esstu.student.messaging.dialog_chat_new.datasources.repo.IDialogChatRepositoryNew
 import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.DeliveryStatus
 import ru.esstu.student.messaging.entities.Message
@@ -75,8 +77,8 @@ sealed class DialogChatEvents {
 
 
 class DialogChatViewModel constructor(
-    private val dialogChatRepository: IDialogChatRepository = ESSTUSdk.dialogChatModule.repo,
-    private val dialogChatUpdateRepository: IDialogChatUpdateRepository = ESSTUSdk.dialogChatModule.update,
+    private val dialogChatRepository: IDialogChatRepositoryNew = ESSTUSdk.dialogChatModuleNew.repo,
+    //private val dialogChatUpdateRepository: IDialogChatUpdateRepository = ESSTUSdk.dialogChatModule.update,
 ) : ViewModel() {
 
     var dialogChatState by mutableStateOf(DialogChatState())
@@ -143,8 +145,8 @@ class DialogChatViewModel constructor(
 
             attachErredMessages(opponent.id)
 
-            dialogChatState =
-                dialogChatState.copy(message = dialogChatRepository.getUserMessage(opponent.id))
+            //dialogChatState =
+            //    dialogChatState.copy(message = dialogChatRepository.getUserMessage(opponent.id))
 
             updatePreview(page.firstOrNull())
         },
@@ -176,7 +178,7 @@ class DialogChatViewModel constructor(
     }
 
     private fun installObserver(dialogId: String, lastMessageId: Long) {
-        if (updatesObserver?.isCancelled != true)
+        /*if (updatesObserver?.isCancelled != true)
             updatesObserver?.cancel()
 
         val updatesFlow = dialogChatUpdateRepository
@@ -204,18 +206,18 @@ class DialogChatViewModel constructor(
                     }
                 }
             }
-        }
+        }*/
     }
 
     private suspend fun updatePreview(message: Message?) {
         val opponent = dialogChatState.opponent ?: return
         val msg = message ?: return
-        dialogChatRepository.updateLastMessageOnPreview(dialogId = opponent.id, message = msg)
+        // dialogChatRepository.updateLastMessageOnPreview(dialogId = opponent.id, message = msg)
     }
 
     private suspend fun attachErredMessages(dialogId: String) {
-        dialogChatState =
-            dialogChatState.copy(sentMessages = dialogChatRepository.getErredMessages(dialogId))
+       // dialogChatState =
+          //  dialogChatState.copy(sentMessages = dialogChatRepository.getErredMessages(dialogId))
 
         dialogChatState.sentMessages.forEach { msg ->
             if (msg.status == DeliveryStatus.ERRED)
@@ -268,7 +270,7 @@ class DialogChatViewModel constructor(
 
             val opponent = dialogChatState.opponent ?: return@launch
             val message = dialogChatState.message
-            dialogChatRepository.updateUserMessage(dialogId = opponent.id, message = message)
+         //   dialogChatRepository.updateUserMessage(dialogId = opponent.id, message = message)
         }
     }
 

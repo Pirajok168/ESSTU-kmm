@@ -1,0 +1,70 @@
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity;
+import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity;
+
+CREATE TABLE DialogChatMessageTableNew(
+    appUserId TEXT NOT NULL,
+
+    messageId INTEGER PRIMARY KEY,
+    opponentId TEXT,
+
+    fromSend TEXT AS DialogChatAuthorEntity NOT NULL,
+
+    replyMessageId INTEGER,
+    date INTEGER NOT NULL,
+    message TEXT NOT NULL,
+    status TEXT NOT NULL
+);
+
+
+CREATE TABLE DialogChatAttachmentTableNew(
+    idAttachment INTEGER PRIMARY KEY NOT NULL,
+
+    messageId INTEGER NOT NULL ,
+    fileUri TEXT NOT NULL ,
+    LocalFileUri TEXT,
+    loadProgress REAL,
+    name TEXT,
+    ext TEXT,
+    size INTEGER NOT NULL,
+    type TEXT,
+    FOREIGN KEY (messageId) REFERENCES DialogChatMessageTableNew (messageId) ON DELETE CASCADE
+);
+
+CREATE TABLE DialogChatReplyMessageTableNew(
+    idReplyMessage INTEGER PRIMARY KEY,
+    messageId INTEGER NOT NULL ,
+    fromSendReplyMessage TEXT AS DialogChatAuthorEntity,
+    dateReplyMessage INTEGER NOT NULL,
+    messageReplayMessage TEXT,
+    attachmentsCount INTEGER AS Int NOT NULL,
+    FOREIGN KEY (messageId) REFERENCES DialogChatMessageTableNew (messageId) ON DELETE CASCADE
+);
+
+
+
+getMessageHistory:
+    SELECT t.*, o.*, q.*
+        FROM DialogChatMessageTableNew t
+        LEFT JOIN DialogChatAttachmentTableNew o ON t.messageId == o.messageId
+        LEFT JOIN DialogChatReplyMessageTableNew q ON t.replyMessageId == q.idReplyMessage
+        WHERE t.appUserId == (:appUserId) AND t.opponentId == (:opponentId)
+        ORDER BY date DESC LIMIT (:limit) OFFSET (:offset);
+
+insertMessage:
+    INSERT OR REPLACE INTO DialogChatMessageTableNew(messageId, opponentId, fromSend, replyMessageId, date, message, status, appUserId)
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?);
+
+insertAttachments:
+    INSERT OR REPLACE INTO DialogChatAttachmentTableNew(idAttachment, messageId, fileUri,LocalFileUri,name,ext,size, type)
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?);
+
+insertReply:
+    INSERT OR REPLACE INTO DialogChatReplyMessageTableNew(idReplyMessage, fromSendReplyMessage, dateReplyMessage,messageReplayMessage,attachmentsCount, messageId)
+        VALUES(?, ?, ?, ?, ?, ?);
+
+
+
+
+
+
+

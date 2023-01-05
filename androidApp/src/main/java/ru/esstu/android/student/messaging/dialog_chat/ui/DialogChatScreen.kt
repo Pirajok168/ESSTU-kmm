@@ -392,7 +392,7 @@ fun DialogChatScreen(
                         val isCurrentYear = date.year == todayYear
 
                         items(messages) { (index, message) ->
-                            if (index == uiState.pages.lastIndex && !uiState.isEndReached && !uiState.isPageLoading)
+                            if (index == uiState.pages.lastIndex && !uiState.isEndReached && !uiState.isPageLoading && uiState.pages.size > 9)
                                 viewModel.onEvent(DialogChatEvents.NextPage)
 
                             Row(Modifier.padding(horizontal = 24.dp)) {
