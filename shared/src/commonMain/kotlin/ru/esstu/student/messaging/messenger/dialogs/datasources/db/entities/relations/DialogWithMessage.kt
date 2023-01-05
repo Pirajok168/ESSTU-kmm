@@ -3,9 +3,10 @@ package ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.rel
 
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.relations.MessageWithAttachments
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.DialogEntity
+import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.LastMessageWithCountAttachments
 
 
 data class DialogWithMessage(
     val dialog: DialogEntity,
-    val lastMessage: MessageWithAttachments?
+    val lastMessage: LastMessageWithCountAttachments?
 )

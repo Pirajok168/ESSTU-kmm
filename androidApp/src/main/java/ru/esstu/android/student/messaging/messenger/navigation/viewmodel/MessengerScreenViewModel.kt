@@ -9,11 +9,11 @@ import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
 import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsDbRepository
 import ru.esstu.student.messaging.messenger.dialogs.di.dialogsModuleNew
-import ru.esstu.student.messaging.messenger.dialogs.entities.Dialog
+import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 
 
 data class MessengerScreenState(
-    val selectedDialog: List<Dialog> = emptyList(),
+    val selectedPreviewDialog: List<PreviewDialog> = emptyList(),
     val isEditing: Boolean = false,
     val showAlertDialog: Boolean = false,
 )
@@ -42,29 +42,29 @@ class MessengerScreenViewModel(
     fun deleteDialogs(){
         dismissDialog()
         viewModelScope.launch {
-            dialogState.selectedDialog.forEach {
+            dialogState.selectedPreviewDialog.forEach {
                 dialogDB.deleteDialog(it.id)
             }
         }
         closeEditingMode()
     }
 
-    fun addDialog(dialog: Dialog){
+    fun addDialog(previewDialog: PreviewDialog){
         if(!dialogState.isEditing){
             dialogState = dialogState.copy(isEditing = true)
         }
 
-        val l = mutableSetOf(*dialogState.selectedDialog.toTypedArray())
-        if (!l.add(dialog)){
-            l.remove(dialog)
+        val l = mutableSetOf(*dialogState.selectedPreviewDialog.toTypedArray())
+        if (!l.add(previewDialog)){
+            l.remove(previewDialog)
         }
 
-        dialogState = dialogState.copy(selectedDialog = l.toList())
+        dialogState = dialogState.copy(selectedPreviewDialog = l.toList())
     }
 
     fun closeEditingMode(){
         dialogState = dialogState.copy(
-            selectedDialog = emptyList(),
+            selectedPreviewDialog = emptyList(),
             isEditing = false,
         )
     }

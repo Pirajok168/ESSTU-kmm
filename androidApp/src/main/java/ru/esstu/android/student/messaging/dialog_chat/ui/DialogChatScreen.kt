@@ -436,9 +436,9 @@ fun DialogChatScreen(
                                                 )
                                             }
                                         }) {
-                                        // TODO:  править тут
+
                                         MessageCard(
-                                            attachments = emptyList(),
+                                            attachments = message.attachments,
                                             messageText = message.message,
                                             date = message.date,
                                             reply = message.replyMessage,

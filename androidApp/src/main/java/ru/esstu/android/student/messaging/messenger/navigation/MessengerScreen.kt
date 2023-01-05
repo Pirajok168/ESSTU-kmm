@@ -18,12 +18,9 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import ru.esstu.android.R
-import ru.esstu.android.student.messaging.messenger.appeals.ui.AppealScreen
-import ru.esstu.android.student.messaging.messenger.conversations.ui.ConversationScreen
 import ru.esstu.android.student.messaging.messenger.dialogs.ui.DialogsScreen
 import ru.esstu.android.student.messaging.messenger.navigation.Pages.*
 import ru.esstu.android.student.messaging.messenger.navigation.viewmodel.MessengerScreenViewModel
-import ru.esstu.android.student.messaging.messenger.supports.ui.SupportScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.esstu.android.student.messaging.messenger.navigation.viewmodel.toNormalView
 
@@ -62,7 +59,7 @@ fun MessengerScreen(
             } else {
                 TopAppBar(
                     title = {
-                        Text(text = "${viewModel.dialogState.selectedDialog.size}")
+                        Text(text = "${viewModel.dialogState.selectedPreviewDialog.size}")
                     },
                     navigationIcon = {
                         IconButton(onClick = {
@@ -99,7 +96,7 @@ fun MessengerScreen(
             AlertDialog(
                 onDismissRequest = { viewModel.dismissDialog() },
                 title = {
-                    Text(text = if (uiState.selectedDialog.size >= 2) "Удалить " toNormalView uiState.selectedDialog.size else "Удалить 1 чат")
+                    Text(text = if (uiState.selectedPreviewDialog.size >= 2) "Удалить " toNormalView uiState.selectedPreviewDialog.size else "Удалить 1 чат")
                 },
                 text = {
                     Text(text = "Вы дейстивтельно хотите удалить все сообщения? Отменить это действие будет невозможно.")
@@ -168,11 +165,41 @@ fun MessengerScreen(
                                 viewModel.addDialog(it)
                             },
                             isEditing = uiState.isEditing,
-                            selectedList = uiState.selectedDialog
+                            selectedList = uiState.selectedPreviewDialog
                         )
-                        CONVERSATION -> ConversationScreen(onNavToConversationChat = onNavToConversationChat)
-                        TECH_SUPPORT -> SupportScreen(onNavToSupportChat = onNavToSupportChat)
-                        APPEALS -> AppealScreen(onNavToAppealChat = onNavToAppealChat)
+                        CONVERSATION -> DialogsScreen(
+                            onNavToDialogChat = onNavToDialogChat,
+                            updateTitle = {
+                                title = it
+                            },
+                            onEditingDialogs = {
+                                viewModel.addDialog(it)
+                            },
+                            isEditing = uiState.isEditing,
+                            selectedList = uiState.selectedPreviewDialog
+                        )
+                        TECH_SUPPORT -> DialogsScreen(
+                            onNavToDialogChat = onNavToDialogChat,
+                            updateTitle = {
+                                title = it
+                            },
+                            onEditingDialogs = {
+                                viewModel.addDialog(it)
+                            },
+                            isEditing = uiState.isEditing,
+                            selectedList = uiState.selectedPreviewDialog
+                        )
+                        APPEALS -> DialogsScreen(
+                            onNavToDialogChat = onNavToDialogChat,
+                            updateTitle = {
+                                title = it
+                            },
+                            onEditingDialogs = {
+                                viewModel.addDialog(it)
+                            },
+                            isEditing = uiState.isEditing,
+                            selectedList = uiState.selectedPreviewDialog
+                        )
                     }
                 }
             }

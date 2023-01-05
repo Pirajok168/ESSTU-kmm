@@ -7,8 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.cancellable
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -79,13 +77,13 @@ sealed class DialogChatEvents {
 class DialogChatViewModel constructor(
     private val dialogChatRepository: IDialogChatRepository = ESSTUSdk.dialogChatModule.repo,
     private val dialogChatUpdateRepository: IDialogChatUpdateRepository = ESSTUSdk.dialogChatModule.update,
-    private val accountInfoRepository: IAccountInfoApiRepository = ESSTUSdk.accountModule.repo
 ) : ViewModel() {
 
     var dialogChatState by mutableStateOf(DialogChatState())
         private set
 
     fun onEvent(event: DialogChatEvents) {
+
         when (event) {
             is DialogChatEvents.PassOpponent -> viewModelScope.launch { onPassOpponent(event.id) }
             is DialogChatEvents.CancelObserver -> onCancelObserver()

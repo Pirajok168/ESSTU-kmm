@@ -6,7 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import ru.esstu.android.student.messaging.dialog_chat.navigation.DialogChatScreen
-import ru.esstu.android.student.messaging.group_chat.navigation.GroupChatScreen
 import ru.esstu.android.student.messaging.new_message.selector.navigation.SelectorScreens
 
 fun NavGraphBuilder.messengerNavGraph(
@@ -28,13 +27,13 @@ fun NavGraphBuilder.messengerNavGraph(
                     parentNavController.navigate(DialogChatScreen.navigate(it))
                 },
                 onNavToConversationChat = {
-                    parentNavController.navigate(GroupChatScreen.navigate(it))
+                   // parentNavController.navigate(GroupChatScreen.navigate(it))
                 },
                 onNavToAppealChat = {
-                    parentNavController.navigate(GroupChatScreen.navigate(it))
+                   // parentNavController.navigate(GroupChatScreen.navigate(it))
                 },
                 onNavToSupportChat = {
-                    parentNavController.navigate(GroupChatScreen.navigate(it))
+                  //  parentNavController.navigate(GroupChatScreen.navigate(it))
                 }
             )
         }

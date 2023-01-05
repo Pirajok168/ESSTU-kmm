@@ -1,9 +1,7 @@
 package ru.esstu.android.student.messaging.messenger.dialogs.ui
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,7 +22,7 @@ import ru.esstu.android.student.messaging.messenger.dialogs.ui.components.Messen
 import ru.esstu.android.student.messaging.messenger.dialogs.viewmodel.DialogEvents
 import ru.esstu.android.student.messaging.messenger.dialogs.viewmodel.DialogsViewModel
 import ru.esstu.domain.utill.workingDate.toFormatString
-import ru.esstu.student.messaging.messenger.dialogs.entities.Dialog
+import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -32,9 +30,9 @@ fun DialogsScreen(
     onNavToDialogChat: (dialogId: String) -> Unit = { },
     dialogsViewModel: DialogsViewModel = viewModel(),
     updateTitle: (String) -> Unit,
-    onEditingDialogs: (Dialog) -> Unit,
+    onEditingDialogs: (PreviewDialog) -> Unit,
     isEditing: Boolean,
-    selectedList: List<Dialog>
+    selectedList: List<PreviewDialog>
 ) {
     val uiState = dialogsViewModel.dialogState
 

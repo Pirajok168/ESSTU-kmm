@@ -12,9 +12,7 @@ import ru.esstu.android.domain.modules.image_viewer.navigation.ImageScreen
 import ru.esstu.android.student.messaging.dialog_chat.navigation.DialogChatArguments
 import ru.esstu.android.student.messaging.dialog_chat.navigation.DialogChatScreen
 import ru.esstu.android.student.messaging.dialog_chat.ui.DialogChatScreen
-import ru.esstu.android.student.messaging.group_chat.navigation.GroupChatArguments
-import ru.esstu.android.student.messaging.group_chat.navigation.GroupChatScreen
-import ru.esstu.android.student.messaging.group_chat.ui.GroupChatScreen
+
 
 
 @ExperimentalFoundationApi
@@ -51,7 +49,7 @@ fun NavGraphBuilder.studentNavGraph(
                 )
         }
 
-        composable(
+        /*composable(
             route = GroupChatScreen.passRoute(),
             arguments = GroupChatScreen.passArguments(),
             deepLinks = GroupChatScreen.passDeepLinkRoute()
@@ -67,7 +65,7 @@ fun NavGraphBuilder.studentNavGraph(
                         navController.navigate(ImageScreen.navigate(uri, uris))
                     }
                 )
-        }
+        }*/
     /*
 
 

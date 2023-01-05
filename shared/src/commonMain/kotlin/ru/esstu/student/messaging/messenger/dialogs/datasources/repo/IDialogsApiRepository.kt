@@ -1,9 +1,8 @@
 package ru.esstu.student.messaging.messenger.dialogs.datasources.repo
 
-import kotlinx.coroutines.flow.Flow
-import ru.esstu.domain.utill.wrappers.FlowResponse
-import ru.esstu.student.messaging.messenger.dialogs.entities.Dialog
+import ru.esstu.domain.utill.wrappers.Response
+import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 
 interface IDialogsApiRepository {
-    suspend fun getDialogs(limit: Int, offset: Int): Flow<FlowResponse<List<Dialog>>>
+    suspend fun getDialogs(limit: Int, offset: Int): Response<List<PreviewDialog>>
 }

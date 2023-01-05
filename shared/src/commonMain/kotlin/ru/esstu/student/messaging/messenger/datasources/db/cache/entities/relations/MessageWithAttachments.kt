@@ -8,7 +8,7 @@ data class MessageWithAttachments(
 
     val message: MessageEntity,
 
-    val attachments: Int
+    val attachments: List<AttachmentEntity>
 )
 
 

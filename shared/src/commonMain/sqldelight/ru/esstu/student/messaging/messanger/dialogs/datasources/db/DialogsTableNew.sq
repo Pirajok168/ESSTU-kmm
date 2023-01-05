@@ -21,16 +21,14 @@ CREATE TABLE DialogTableNew(
     FOREIGN KEY (lastMessageId) REFERENCES MessageTableNew(messageId) ON DELETE CASCADE
 );
 
-getAllDialogs:
-    SELECT a.*, b.* FROM DialogTableNew a
-    	LEFT JOIN MessageTableNew b ON a.lastMessageId = b.messageId;
+
 
 setLastMessage:
     INSERT OR REPLACE INTO MessageTableNew(messageId, fromUser,date, message, status, replyMessage, countAttachments)
        VALUES (?,?,?,?,?,?,?);
 
 setDialog:
-    INSERT OR REPLACE INTO DialogTableNew(idDialog, appUserId,lastMessageId, opponent, unread, notifyAboutIt)
+    INSERT OR REPLACE INTO DialogTableNew(idDialog, appUserId, lastMessageId, opponent, unread, notifyAboutIt)
         VALUES (?,?,?,?,?,?);
 
 getDialogsWithLastMessage:

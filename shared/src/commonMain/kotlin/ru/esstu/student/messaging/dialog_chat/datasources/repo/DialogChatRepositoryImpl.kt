@@ -33,7 +33,6 @@ import ru.esstu.student.messaging.entities.Message
 import ru.esstu.student.messaging.entities.Sender
 import ru.esstu.student.messaging.messenger.datasources.toUser
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.CacheDao
-import ru.esstu.student.messaging.messenger.dialogs.datasources.toMessageWithAttachments
 
 
 class DialogChatRepositoryImpl constructor(
@@ -197,7 +196,6 @@ class DialogChatRepositoryImpl constructor(
     override suspend fun updateLastMessageOnPreview(dialogId: String, message: Message) {
         auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
-
             dialogChatApi.readMessages(
                 "${token.access}",
                 ChatReadRequestBody(

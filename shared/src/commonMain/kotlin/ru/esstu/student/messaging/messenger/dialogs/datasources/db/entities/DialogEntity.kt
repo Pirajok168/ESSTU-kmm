@@ -8,7 +8,6 @@ data class DialogEntity(
     val appUserId: String,
     val id: String,
 
-    val sortOrder:Int,
 
     val lastMessageId:Long?,
 

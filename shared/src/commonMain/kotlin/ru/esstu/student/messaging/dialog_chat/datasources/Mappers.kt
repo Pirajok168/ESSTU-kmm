@@ -2,7 +2,6 @@ package ru.esstu.student.messaging.dialog_chat.datasources
 
 
 import com.soywiz.klock.DateTime
-import io.ktor.http.ContentDisposition.Companion.Attachment
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessagePreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessageResponse
@@ -15,8 +14,8 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entiti
 
 import ru.esstu.student.messaging.entities.*
 
-import ru.esstu.student.messaging.messenger.datasources.toAttachment
 import ru.esstu.student.messaging.messenger.datasources.toUser
+import ru.esstu.student.news.announcement.datasources.toAttachment
 
 
 fun Sender.toUserEntity(): DialogChatAuthorEntity {
@@ -75,7 +74,7 @@ fun MessageAttachment.toDialogChatAttachmentEntity(messageId: Long) = DialogChat
 fun Message.toMessageWithRelated(appUserId: String, dialogId: String) = MessageWithRelated(
     message = toDialogChatMessageEntity(appUserId, dialogId),
     reply = replyMessage?.toDialogChatReplyMessageEntity(),
-    attachments = emptyList()
+    attachments = attachments.map { it.toDialogChatAttachmentEntity(id) }
 )
 
 fun MessagePreview.toMessage(
@@ -86,7 +85,7 @@ fun MessagePreview.toMessage(
         id = id,
         date = DateTime(date).unixMillisLong,
         message = message.orEmpty(),
-        attachments = 0,
+        attachments = emptyList() ,
         from = authors.firstOrNull { user -> user.id == this.from } ?: return null,
         replyMessage = if (replyToMsgId != null) replyMessages.firstOrNull { it.id == replyToMsgId } else null,
         status = if (views > 1) DeliveryStatus.READ else DeliveryStatus.DELIVERED
@@ -97,7 +96,7 @@ fun MessageWithRelated.toMessage() = Message(
     message = message.message,
     id = message.id,
     status = enumValueOf(message.status),
-    attachments = 0,
+    attachments = attachments.map { it.toAttachment() },
     replyMessage = reply?.toReplyMessage() ,
     date = message.date,
     from = message.from.toUser()

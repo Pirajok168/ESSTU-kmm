@@ -1,7 +1,6 @@
 package ru.esstu.student.messaging.dialog_chat.entities
 
 import com.soywiz.klock.DateTime
-import com.soywiz.klock.DateTimeTz
 import ru.esstu.student.messaging.entities.DeliveryStatus
 import ru.esstu.student.messaging.entities.Message
 import kotlin.random.Random

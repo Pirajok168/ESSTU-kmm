@@ -2,6 +2,7 @@ package ru.esstu.student.messaging.messenger.dialogs.di
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainCoroutineDispatcher
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
@@ -34,7 +35,6 @@ internal val dialogsModuleNew = DI.Module("dialogsModuleNew"){
     bind<CacheDao>() with singleton {
         CacheDatabase(
             database = instance<IDatabaseStudent>().getDataBase(),
-            coroutineScope = CoroutineScope(Dispatchers.Default)
         )
     }
 
