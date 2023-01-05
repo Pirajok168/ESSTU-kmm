@@ -25,6 +25,8 @@ import ru.esstu.student.messaging.dialog_chat_new.datasources.api.DialogChatApiN
 import ru.esstu.student.messaging.dialog_chat_new.datasources.api.DialogChatApiNewImpl
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.HistoryCacheDaoNew
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.HistoryCacheDatabaseNew
+import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.OpponentDao
+import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.OpponentDatabase
 import ru.esstu.student.messaging.dialog_chat_new.datasources.repo.DialogChatRepositoryNewImpl
 import ru.esstu.student.messaging.dialog_chat_new.datasources.repo.IDialogChatRepositoryNew
 import kotlin.native.concurrent.ThreadLocal
@@ -40,9 +42,15 @@ internal val dialogChatModuleNew = DI.Module("DialogChatModuleNew"){
             database = instance<IDatabaseStudent>().getDataBase()
         )
     }
+    bind<OpponentDao>() with singleton {
+        OpponentDatabase(
+            database = instance<IDatabaseStudent>().getDataBase()
+        )
+    }
 
     bind<IDialogChatRepositoryNew>() with singleton {
         DialogChatRepositoryNewImpl(
+            instance(),
             instance(),
             instance(),
             instance()

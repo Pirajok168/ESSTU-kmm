@@ -7,6 +7,7 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entiti
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.entities.MessageWithRelatedNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatAttachmentTableNew
+import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatAuthorTableNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatMessageTableNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatReplyMessageTableNew
 import ru.esstu.student.messaging.entities.Message
@@ -103,3 +104,27 @@ fun DialogChatAuthorEntity.toUser() = Sender(
     photo = photo,
     summary = summary
 )
+
+
+//<editor-fold desc="Opponent">
+fun DialogChatAuthorTableNew.toUser() = Sender(
+    id = id,
+    patronymic = patronymic,
+    firstName = fitstName,
+    lastName = lastName,
+    photo = photo,
+    summary = summary
+)
+
+fun Sender.toUserEntityOpponent(): DialogChatAuthorTableNew {
+    return DialogChatAuthorTableNew(
+        summary = summary,
+        photo = photo.orEmpty(),
+        lastName = lastName,
+        fitstName = firstName,
+        patronymic = patronymic,
+        id = id
+    )
+}
+//</editor-fold>
+

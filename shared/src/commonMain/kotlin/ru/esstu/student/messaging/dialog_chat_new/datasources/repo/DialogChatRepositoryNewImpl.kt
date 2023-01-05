@@ -31,8 +31,11 @@ import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
 import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
 import ru.esstu.student.messaging.dialog_chat_new.datasources.api.DialogChatApiNew
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.HistoryCacheDaoNew
+import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.OpponentDao
 import ru.esstu.student.messaging.dialog_chat_new.datasources.toMessage
 import ru.esstu.student.messaging.dialog_chat_new.datasources.toMessageWithRelatedEntity
+import ru.esstu.student.messaging.dialog_chat_new.datasources.toUser
+import ru.esstu.student.messaging.dialog_chat_new.datasources.toUserEntityOpponent
 import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.Message
 import ru.esstu.student.messaging.entities.Sender
@@ -44,6 +47,7 @@ class DialogChatRepositoryNewImpl constructor(
     private val auth: IAuthRepository,
     private val dialogChatApi: DialogChatApiNew,
     private val cacheDao: HistoryCacheDaoNew,
+    private val opponentDao: OpponentDao,
    /*
     private val userMsgDao: UserMessageDao,
     private val erredMsgDao: ErredMessageDao,
@@ -54,9 +58,9 @@ class DialogChatRepositoryNewImpl constructor(
     override suspend fun getOpponent(id: String): Flow<FlowResponse<Sender>> = flow {
         emit(FlowResponse.Loading())
 
-        //val cachedOpponent = cacheDao.getOpponent(id)?.toUser()
-       // if (cachedOpponent != null)
-          //  emit(FlowResponse.Success(cachedOpponent))
+        val cachedOpponent = opponentDao.getOpponent(id)?.toUser()
+        if (cachedOpponent != null)
+           emit(FlowResponse.Success(cachedOpponent))
 
         when (val response =
             auth.provideToken { type, token -> dialogChatApi.getOpponent("$token", id) }) {
@@ -66,8 +70,8 @@ class DialogChatRepositoryNewImpl constructor(
                 if (remoteOpponent == null)
                     emit(FlowResponse.Error(ResponseError(message = "Cast Exception")))
                 else {
-                   // cacheDao.insert(remoteOpponent.toUserEntity())
-                   // if (remoteOpponent != cachedOpponent)
+                    opponentDao.insert(remoteOpponent.toUserEntityOpponent())
+                    if (remoteOpponent != cachedOpponent)
                        emit(FlowResponse.Success(remoteOpponent))
                 }
             }
@@ -81,7 +85,7 @@ class DialogChatRepositoryNewImpl constructor(
         limit: Int,
         offset: Int
     ): Response<List<Message>> {
-        Napier.e("ЗАШЛИ СЮДА")
+
         val cached = auth.provideToken { token ->
             val appUserId =
                 (token.owner as? TokenOwners.Student)?.id ?: throw Error("unsupported user type")
@@ -93,10 +97,10 @@ class DialogChatRepositoryNewImpl constructor(
                 appUserId = appUserId
             ).map { it.toMessage() }
         }
-        Napier.e(cached.data.toString())
+
         if (!cached.data.isNullOrEmpty())
             return Response.Success(cached.data!!)
-        Napier.e("сюда не зашли")
+
         val remotePage = auth.provideToken { type, token ->
             val rawPage = dialogChatApi.getHistory("$token", dialogId, offset, limit)
 

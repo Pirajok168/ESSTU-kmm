@@ -21,48 +21,6 @@ class HistoryCacheDatabaseNew(
 
     private val dbQuery = database.chatHistoryQueries
 
-    /*override suspend fun insertMessage(messages: DialogChatMessageEntity) {
-        dbQuery.insertMessage(
-            messageId = messages.id,
-            opponentId = messages.opponentId,
-            fromSend = messages.from,
-            replyMessageId = messages.replyMessageId,
-            date = messages.date,
-            message = messages.message,
-            status = messages.status,
-            messages.appUserId
-        )
-    }
-
-    override suspend fun insertAttachments(attachments: List<DialogChatAttachmentEntity>) {
-        attachments.forEach {
-            dbQuery.insertAttachments(
-                it.id.toLong(),
-                messageId = it.messageId,
-                fileUri = it.fileUri,
-                LocalFileUri = it.LocalFileUri,
-                name = it.name,
-                ext = it.ext,
-                size = it.size.toLong(),
-                type = it.type
-            )
-        }
-    }
-
-    override suspend fun clearAttachments(messageId: Long) {
-        dbQuery.clearAttachments(messageId)
-    }
-
-    override suspend fun insertReply(reply: DialogChatReplyMessageEntity) {
-        dbQuery.insertReply(
-            idReplyMessage = reply.id,
-            fromSendReplyMessage = reply.from,
-            dateReplyMessage = reply.date,
-            reply.message,
-            reply.attachmentsCount.toLong()
-        )
-    }*/
-
     override suspend fun getMessageHistory(
         appUserId: String,
         opponentId: String,
@@ -169,24 +127,11 @@ class HistoryCacheDatabaseNew(
                 )
             )
         }
-        result
         return result
     }
 
 
-    override suspend fun getOpponent(id: String): DialogChatAuthorEntity? {
-        fun map(
-            id: String,
-            fitstName: String,
-            lastName: String,
-            patronymic: String,
-            summary: String,
-            photo: String
-        ): DialogChatAuthorEntity = DialogChatAuthorEntity(
-            id, fitstName, lastName, patronymic, summary, photo
-        )
-        return TODO()
-    }
+
 
     override suspend fun insertMessage(messages: DialogChatMessageTableNew) {
         messages.apply {
@@ -233,20 +178,7 @@ class HistoryCacheDatabaseNew(
         }
     }
 
-    /* override suspend fun insert(opponent: DialogChatAuthorEntity) {
-         dbQuery.insert(
-             id = opponent.id,
-             fitstName = opponent.firstName,
-             lastName = opponent.lastName,
-             patronymic = opponent.patronymic,
-             summary = opponent.summary,
-             photo = opponent.photo.orEmpty()
-         )
-     }
 
-     override suspend fun clear(id: String) {
-         dbQuery.clear(id)
-     }*/
 
 
 }

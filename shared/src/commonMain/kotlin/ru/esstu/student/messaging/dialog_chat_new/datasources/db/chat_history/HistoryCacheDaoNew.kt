@@ -9,22 +9,7 @@ import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogCh
 
 interface HistoryCacheDaoNew {
 
-    suspend fun getOpponent(id: String): DialogChatAuthorEntity?
-    //suspend fun insert(opponent: DialogChatAuthorEntity)
 
-
-    //suspend fun clear(id: String)
-
-
-
-
-  //
-
-
-   // suspend fun clearAttachments(messageId: Long)
-
-
-   //
 
     suspend fun insertMessage(messages: DialogChatMessageTableNew)
 

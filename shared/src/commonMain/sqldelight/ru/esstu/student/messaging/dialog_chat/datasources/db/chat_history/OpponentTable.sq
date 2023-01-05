@@ -1,0 +1,16 @@
+CREATE TABLE DialogChatAuthorTableNew (
+    id TEXT PRIMARY KEY NOT NULL,
+    fitstName TEXT NOT NULL,
+    lastName TEXT NOT NULL,
+    patronymic TEXT NOT NULL,
+    summary TEXT NOT NULL,
+    photo TEXT NOT NULL
+);
+
+getOpponent:
+   SELECT * FROM DialogChatAuthorTableNew WHERE id == (:id) LIMIT 1;
+
+
+insert:
+   INSERT OR REPLACE INTO DialogChatAuthorTableNew(id, fitstName, lastName,patronymic,summary,photo)
+       VALUES(?,?,?,?,?,?);
