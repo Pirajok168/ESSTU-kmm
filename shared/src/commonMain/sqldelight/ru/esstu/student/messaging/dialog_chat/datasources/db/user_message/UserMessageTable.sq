@@ -1,18 +1,19 @@
 CREATE TABLE UserMessageEntityTable (
-    appUserId TEXT,
-    dialogId TEXT PRIMARY KEY,
-    text Text,
+    appUserId TEXT NOT NULL,
+    dialogId TEXT PRIMARY KEY NOT NULL,
+    text Text NOT NULL,
     replyMessageId INTEGER
 );
 
 CREATE TABLE UserCachedFileTable(
-    id INTEGER PRIMARY KEY,
-    appUserId TEXT,
-    dialogId TEXT ,
-    name TEXT,
-    ext TEXT,
+    appUserId TEXT NOT NULL ,
+    dialogId TEXT NOT NULL ,
+    source BLOB NOT NULL ,
+    idCached INTEGER AS Int PRIMARY KEY,
+    name TEXT NOT NULL ,
+    ext TEXT NOT NULL ,
     size INTEGER NOT NULL,
-    type TEXT,
+    type TEXT NOT NULL ,
     FOREIGN KEY (dialogId) REFERENCES UserMessageEntityTable(dialogId) ON DELETE CASCADE
 );
 
@@ -21,6 +22,13 @@ CREATE TABLE UserCachedFileTable(
 
 getCachedFiles:
     SELECT * FROM UserCachedFileTable WHERE appUserId == :appUserId AND dialogId == :dialogId;
+
+getReplyMessage:
+    SELECT t.*, o.*, q.*
+               FROM DialogChatMessageTableNew t
+               LEFT JOIN DialogChatAttachmentTableNew o ON t.messageId == o.messageId
+               LEFT JOIN DialogChatReplyMessageTableNew q ON t.replyMessageId == q.idReplyMessage
+               WHERE t.messageId == (:messageId) ;
 
 getUserMessage:
     SELECT * FROM UserMessageEntityTable WHERE appUserId == :appUserId AND dialogId == :dialogId;
@@ -33,5 +41,5 @@ addMessage:
         VALUES (?, ? ,?, ?);
 
 addCachedFiles:
-    INSERT OR REPLACE INTO UserCachedFileTable(id, appUserId,dialogId,name,ext,size,type)
-        VALUES (?, ? ,?, ?,? ,? ,?);
+    INSERT OR REPLACE INTO UserCachedFileTable(idCached, appUserId,dialogId,name,ext,size,type, source)
+        VALUES (?, ? ,?, ?,? ,? ,?, ?);

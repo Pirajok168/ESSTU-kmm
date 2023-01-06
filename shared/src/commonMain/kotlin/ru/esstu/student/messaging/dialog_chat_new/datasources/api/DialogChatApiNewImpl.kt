@@ -24,7 +24,7 @@ import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 
 class DialogChatApiNewImpl(
     private val portalApi: HttpClient,
-    //private val fileSystem: FileSystem,
+    private val fileSystem: FileSystem,
 ): DialogChatApiNew {
     override suspend fun getOpponent(authToken: String, userId: String): UserResponse {
         val response = portalApi.get{
@@ -90,7 +90,7 @@ class DialogChatApiNewImpl(
         return request.body()
     }
 
-   /* override suspend fun sendMessage(
+    override suspend fun sendMessage(
         authToken: String,
         body: ChatMessageRequestBody
     ): ChatMessageResponse {
@@ -183,5 +183,5 @@ class DialogChatApiNewImpl(
 
         return request.body()
 
-    }*/
+    }
 }

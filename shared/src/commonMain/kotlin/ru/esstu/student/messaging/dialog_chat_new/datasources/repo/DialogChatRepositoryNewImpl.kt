@@ -23,19 +23,17 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.toEn
 import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.toErredMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.toSentUserMessage
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.UserMessageDao
-import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.toEntity
+
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.toSentUserMessage
-import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.toUserMessageEntity
+
 import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
 import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
+import ru.esstu.student.messaging.dialog_chat_new.datasources.*
 import ru.esstu.student.messaging.dialog_chat_new.datasources.api.DialogChatApiNew
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.HistoryCacheDaoNew
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.OpponentDao
-import ru.esstu.student.messaging.dialog_chat_new.datasources.toMessage
-import ru.esstu.student.messaging.dialog_chat_new.datasources.toMessageWithRelatedEntity
-import ru.esstu.student.messaging.dialog_chat_new.datasources.toUser
-import ru.esstu.student.messaging.dialog_chat_new.datasources.toUserEntityOpponent
+import ru.esstu.student.messaging.dialog_chat_new.datasources.db.user_messages.UserMessageDaoNew
 import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.Message
 import ru.esstu.student.messaging.entities.Sender
@@ -48,6 +46,7 @@ class DialogChatRepositoryNewImpl constructor(
     private val dialogChatApi: DialogChatApiNew,
     private val cacheDao: HistoryCacheDaoNew,
     private val opponentDao: OpponentDao,
+    private val userMsgDao: UserMessageDaoNew,
    /*
     private val userMsgDao: UserMessageDao,
     private val erredMsgDao: ErredMessageDao,
@@ -113,7 +112,7 @@ class DialogChatRepositoryNewImpl constructor(
                 }
             )
         }
-
+        Napier.e(remotePage.data.toString())
         return when (remotePage) {
             is Response.Error -> Response.Error(remotePage.error)
             is Response.Success -> {
@@ -144,8 +143,8 @@ class DialogChatRepositoryNewImpl constructor(
         attachments: List<CachedFile>
     ): Response<Long> {
 
-        TODO()
-       /* if (message.isNullOrEmpty() && replyMessage == null && attachments.any()) {
+
+        if (message.isNullOrEmpty() && replyMessage == null && attachments.any()) {
             val result = auth.provideToken { type, token ->
                 dialogChatApi.sendAttachments(
                     authToken = "$token",
@@ -199,7 +198,7 @@ class DialogChatRepositoryNewImpl constructor(
             }
         }
 
-        return Response.Error(ResponseError(message = "Неизвестное состояние"))*/
+        return Response.Error(ResponseError(message = "Неизвестное состояние"))
     }
 
 
@@ -247,27 +246,26 @@ class DialogChatRepositoryNewImpl constructor(
 
 
     override suspend fun getUserMessage(dialogId: String): NewUserMessage {
-        TODO()
-        /*val message = auth.provideToken { token ->
+
+        val message = auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
             return@provideToken userMsgDao.getUserMessageWithRelated(appUserId, dialogId)
                 ?.toSentUserMessage()
         }.data ?: NewUserMessage()
 
-        return message*/
+        return message
 
     }
 
     override suspend fun updateUserMessage(dialogId: String, message: NewUserMessage) {
-    TODO()
-    /*auth.provideToken { token ->
+        auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
 
             userMsgDao.updateUserMessageWithRelated(
                 message = message.toUserMessageEntity(appUserId, dialogId),
                 files = message.attachments.map { it.toEntity(appUserId, dialogId) }
             )
-        }*/
+        }
     }
 
 

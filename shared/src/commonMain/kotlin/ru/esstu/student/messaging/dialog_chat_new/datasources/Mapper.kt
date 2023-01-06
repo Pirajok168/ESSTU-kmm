@@ -1,19 +1,34 @@
 package ru.esstu.student.messaging.dialog_chat_new.datasources
 
+import okio.FileSystem
+import okio.Path.Companion.toPath
+import ru.esstu.domain.modules.account.datasources.datastore.producePath
+import ru.esstu.domain.modules.account.datasources.datastore.storage
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAttachmentEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatReplyMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
+import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.UserCachedFileEntity
+import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.UserMessageEntity
+import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.relations.UserMessageWithRelated
+import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.toCachedFile
+import ru.esstu.student.messaging.dialog_chat.datasources.toMessage
+import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
+import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.entities.MessageWithRelatedNew
+import ru.esstu.student.messaging.dialog_chat_new.datasources.db.user_messages.entities.UserMessageWithRelatedNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatAttachmentTableNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatAuthorTableNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatMessageTableNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatReplyMessageTableNew
+import ru.esstu.student.messaging.dialogchat.datasources.db.usermessage.UserCachedFileTable
+import ru.esstu.student.messaging.dialogchat.datasources.db.usermessage.UserMessageEntityTable
 import ru.esstu.student.messaging.entities.Message
 import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.ReplyMessage
 import ru.esstu.student.messaging.entities.Sender
+import kotlin.random.Random
 
 //<editor-fold desc="ToEntityMapper">
 fun Message.toMessageWithRelatedEntity(appUserId: String, dialogId: String) = MessageWithRelatedNew(
@@ -127,4 +142,63 @@ fun Sender.toUserEntityOpponent(): DialogChatAuthorTableNew {
     )
 }
 //</editor-fold>
+
+
+fun UserMessageWithRelatedNew.toSentUserMessage() = NewUserMessage(
+    attachments = attachments.map { it.toCachedFile() },
+    replyMessage = reply?.toMessage(),
+    text = message.text,
+)
+
+fun UserCachedFileTable.toCachedFile(
+    fileSystem: FileSystem = storage().fileSystem
+): CachedFile {
+
+    fileSystem.write("${producePath().path}/$name.$ext".toPath(), true){
+        write(source)
+    }
+
+
+
+    return CachedFile(
+        type = type,
+        name = name,
+        ext = ext,
+        size = size,
+        sourceFile = "${producePath().path}/$name.$ext",
+        uri = "${producePath().path}/$name.$ext"
+    )
+}
+
+fun NewUserMessage.toUserMessageEntity(appUserId: String, dialogId: String): UserMessageEntityTable {
+    return UserMessageEntityTable(
+        appUserId = appUserId,
+        dialogId = dialogId,
+        text = text,
+        replyMessageId = replyMessage?.id,
+    )
+}
+
+fun CachedFile.toEntity(
+    appUserId: String,
+    dialogId: String,
+    fileSystem: FileSystem = storage().fileSystem,
+): UserCachedFileTable {
+
+
+
+    return UserCachedFileTable(
+        dialogId = dialogId,
+        appUserId = appUserId,
+        source = fileSystem.read(sourceFile.toPath()){
+            readByteArray()
+        },
+        size = size,
+        ext = ext,
+        name = name,
+        type = type,
+        idCached = Random.nextLong().toInt()
+    )
+}
+
 

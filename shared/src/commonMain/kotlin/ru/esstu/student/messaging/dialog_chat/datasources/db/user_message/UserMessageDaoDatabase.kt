@@ -17,8 +17,8 @@ class UserMessageDatabase(
         appUserId: String,
         dialogId: String
     ): List<UserCachedFileEntity> {
-
-        return dbQuery.getCachedFiles(appUserId, dialogId, ::toUserCachedFileEntity).executeAsList()
+        TODO()
+        //return dbQuery.getCachedFiles(appUserId, dialogId, ::toUserCachedFileEntity).executeAsList()
     }
 
     private fun toUserCachedFileEntity(
@@ -74,7 +74,8 @@ class UserMessageDatabase(
 
     override suspend fun addCachedFiles(files: List<UserCachedFileEntity>) {
         files.forEach {
-            dbQuery.addCachedFiles(it.id?.toLong(), it.appUserId, it.dialogId, it.name, it.ext, it.size, it.type)
+
+            //dbQuery.addCachedFiles(it.id?.toLong(), it.appUserId, it.dialogId, it.name, it.ext, it.size, it.type)
         }
     }
 }

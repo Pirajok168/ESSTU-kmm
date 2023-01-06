@@ -23,18 +23,24 @@ import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatReposi
 import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatUpdateRepository
 import ru.esstu.student.messaging.dialog_chat_new.datasources.api.DialogChatApiNew
 import ru.esstu.student.messaging.dialog_chat_new.datasources.api.DialogChatApiNewImpl
+import ru.esstu.student.messaging.dialog_chat_new.datasources.api.DialogChatUpdateApiNew
+import ru.esstu.student.messaging.dialog_chat_new.datasources.api.DialogChatUpdateApiNewImpl
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.HistoryCacheDaoNew
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.HistoryCacheDatabaseNew
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.OpponentDao
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.OpponentDatabase
+import ru.esstu.student.messaging.dialog_chat_new.datasources.db.user_messages.UserMessageDaoNew
 import ru.esstu.student.messaging.dialog_chat_new.datasources.repo.DialogChatRepositoryNewImpl
+import ru.esstu.student.messaging.dialog_chat_new.datasources.repo.DialogChatUpdateRepositoryNewImpl
 import ru.esstu.student.messaging.dialog_chat_new.datasources.repo.IDialogChatRepositoryNew
+import ru.esstu.student.messaging.dialog_chat_new.datasources.repo.IDialogChatUpdateRepositoryNew
 import kotlin.native.concurrent.ThreadLocal
 
 internal val dialogChatModuleNew = DI.Module("DialogChatModuleNew"){
     bind<DialogChatApiNew>() with singleton {
         DialogChatApiNewImpl(
             portalApi = instance(),
+            storage().fileSystem
         )
     }
     bind<HistoryCacheDaoNew>() with singleton {
@@ -47,16 +53,35 @@ internal val dialogChatModuleNew = DI.Module("DialogChatModuleNew"){
             database = instance<IDatabaseStudent>().getDataBase()
         )
     }
+    bind<UserMessageDaoNew>() with singleton {
+        ru.esstu.student.messaging.dialog_chat_new.datasources.db.user_messages.UserMessageDatabase(
+            instance<IDatabaseStudent>().getDataBase()
+        )
+    }
 
     bind<IDialogChatRepositoryNew>() with singleton {
         DialogChatRepositoryNewImpl(
             instance(),
             instance(),
             instance(),
+            instance(),
+            instance(),
+        )
+    }
+
+    bind<DialogChatUpdateApiNew>() with singleton {
+        DialogChatUpdateApiNewImpl(
             instance()
         )
     }
 
+    bind<IDialogChatUpdateRepositoryNew>() with singleton {
+        DialogChatUpdateRepositoryNewImpl(
+            auth = instance(),
+            updateApi = instance(),
+            chatApi = instance()
+        )
+    }
 
 
 }
@@ -66,7 +91,7 @@ object DialogChatModule {
     val repo: IDialogChatRepositoryNew
         get() = ESSTUSdk.di.instance()
 
-    val update: IDialogChatUpdateRepository
+    val update: IDialogChatUpdateRepositoryNew
         get() = ESSTUSdk.di.instance()
 }
 

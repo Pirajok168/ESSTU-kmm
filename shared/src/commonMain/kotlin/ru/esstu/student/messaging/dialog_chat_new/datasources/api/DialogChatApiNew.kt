@@ -53,7 +53,7 @@ interface DialogChatApiNew {
 
     //region отправка сообщений
 
-    /*suspend fun sendMessage(
+    suspend fun sendMessage(
         authToken: String,
         body: ChatMessageRequestBody
     ): ChatMessageResponse
@@ -70,6 +70,6 @@ interface DialogChatApiNew {
         authToken: String,
         files: List<CachedFile>,
         requestSendMessage: ChatMessageRequestBody
-    ): ChatMessageResponse*/
+    ): ChatMessageResponse
     //endregion
 }
