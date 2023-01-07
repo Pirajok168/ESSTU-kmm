@@ -9,6 +9,7 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entiti
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatReplyMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
+import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.entities.ErredCachedFileEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.UserCachedFileEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.UserMessageEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.relations.UserMessageWithRelated
@@ -200,5 +201,7 @@ fun CachedFile.toEntity(
         idCached = Random.nextLong().toInt()
     )
 }
+
+
 
 

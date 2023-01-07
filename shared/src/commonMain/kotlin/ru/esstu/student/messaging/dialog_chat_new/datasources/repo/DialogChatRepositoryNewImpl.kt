@@ -19,8 +19,8 @@ import ru.esstu.student.messaging.dialog_chat.datasources.*
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatApi
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.HistoryCacheDao
 import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.ErredMessageDao
-import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.toEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.toErredMessageEntity
+
+
 import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.toSentUserMessage
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.UserMessageDao
 
@@ -33,6 +33,10 @@ import ru.esstu.student.messaging.dialog_chat_new.datasources.*
 import ru.esstu.student.messaging.dialog_chat_new.datasources.api.DialogChatApiNew
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.HistoryCacheDaoNew
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.OpponentDao
+import ru.esstu.student.messaging.dialog_chat_new.datasources.db.erred_messages.ErredMessageDaoNew
+import ru.esstu.student.messaging.dialog_chat_new.datasources.db.erred_messages.toErredMessageEntity
+import ru.esstu.student.messaging.dialog_chat_new.datasources.db.erred_messages.toEntity
+import ru.esstu.student.messaging.dialog_chat_new.datasources.db.erred_messages.toSentUserMessage
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.user_messages.UserMessageDaoNew
 import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.Message
@@ -47,10 +51,7 @@ class DialogChatRepositoryNewImpl constructor(
     private val cacheDao: HistoryCacheDaoNew,
     private val opponentDao: OpponentDao,
     private val userMsgDao: UserMessageDaoNew,
-   /*
-    private val userMsgDao: UserMessageDao,
-    private val erredMsgDao: ErredMessageDao,
-    private val dialogsDao: CacheDao*/
+    private val erredMsgDao: ErredMessageDaoNew,
 ) : IDialogChatRepositoryNew {
 
 
@@ -221,28 +222,27 @@ class DialogChatRepositoryNewImpl constructor(
 
 
     override suspend fun getErredMessages(dialogId: String): List<SentUserMessage> {
-        TODO()
-        /*val messages = auth.provideToken { token ->
+
+        val messages = auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
             return@provideToken erredMsgDao.getErredMessageWithRelated(appUserId, dialogId)
                 .map { it.toSentUserMessage() }
         }.data ?: emptyList()
 
-        return messages*/
+        return messages
     }
 
     override suspend fun setErredMessage(dialogId: String, message: SentUserMessage) {
-    TODO()
-    /*auth.provideToken { token ->
+        auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
             val erredMessage =
                 message.toErredMessageEntity(appUserId, dialogId) ?: return@provideToken
             erredMsgDao.addMessage(erredMessage)
             erredMsgDao.addCachedFiles(message.attachments.map { it.toEntity(message.id) })
-        }*/
+        }
     }
 
-    override suspend fun delErredMessage(id: Long) = TODO()
+    override suspend fun delErredMessage(id: Long) = erredMsgDao.removeMessage(id)
 
 
     override suspend fun getUserMessage(dialogId: String): NewUserMessage {

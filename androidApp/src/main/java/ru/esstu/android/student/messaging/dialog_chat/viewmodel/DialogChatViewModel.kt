@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -188,7 +189,9 @@ class DialogChatViewModel constructor(
             .cancellable()
 
         updatesObserver = viewModelScope.launch {
-            updatesFlow.collect { response ->
+            updatesFlow
+                .conflate()
+                .collect { response ->
                 when (response) {
                     is Response.Error -> dialogChatState =
                         dialogChatState.copy(error = response.error)
@@ -197,7 +200,6 @@ class DialogChatViewModel constructor(
                         if (response.data.isEmpty()) return@collect
 
                         val updates = response.data
-                        Log.e("updates", updates.toString())
                         dialogChatRepository.setMessages(dialogId, updates)
                         dialogChatState = dialogChatState.copy(
                             pages = (updates + dialogChatState.pages).distinctBy { it.id },
@@ -218,8 +220,8 @@ class DialogChatViewModel constructor(
     }
 
     private suspend fun attachErredMessages(dialogId: String) {
-       // dialogChatState =
-          //  dialogChatState.copy(sentMessages = dialogChatRepository.getErredMessages(dialogId))
+        dialogChatState =
+            dialogChatState.copy(sentMessages = dialogChatRepository.getErredMessages(dialogId))
 
         dialogChatState.sentMessages.forEach { msg ->
             if (msg.status == DeliveryStatus.ERRED)
@@ -302,7 +304,7 @@ class DialogChatViewModel constructor(
                     dialogChatState.copy(sentMessages = dialogChatState.sentMessages.map { sent ->
                         if (sent == sentUserMessage) {
                             val erred = sent.copy(status = DeliveryStatus.ERRED)
-                            //dialogChatRepository.setErredMessage(opponent.id, erred)
+                            dialogChatRepository.setErredMessage(opponent.id, erred)
                             erred
                         } else
                             sent
@@ -313,7 +315,7 @@ class DialogChatViewModel constructor(
                         if (sent == sentUserMessage) {
                             val success =
                                 sent.copy(id = result.data, status = DeliveryStatus.DELIVERED)
-                            //dialogChatRepository.delErredMessage(sent.id)
+                            dialogChatRepository.delErredMessage(sent.id)
                             success
                         } else
                             sent

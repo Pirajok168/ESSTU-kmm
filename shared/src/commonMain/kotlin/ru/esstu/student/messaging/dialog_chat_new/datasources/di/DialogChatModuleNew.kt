@@ -29,6 +29,7 @@ import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.Hi
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.HistoryCacheDatabaseNew
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.OpponentDao
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.OpponentDatabase
+import ru.esstu.student.messaging.dialog_chat_new.datasources.db.erred_messages.ErredMessageDaoNew
 import ru.esstu.student.messaging.dialog_chat_new.datasources.db.user_messages.UserMessageDaoNew
 import ru.esstu.student.messaging.dialog_chat_new.datasources.repo.DialogChatRepositoryNewImpl
 import ru.esstu.student.messaging.dialog_chat_new.datasources.repo.DialogChatUpdateRepositoryNewImpl
@@ -58,6 +59,11 @@ internal val dialogChatModuleNew = DI.Module("DialogChatModuleNew"){
             instance<IDatabaseStudent>().getDataBase()
         )
     }
+    bind<ErredMessageDaoNew>() with singleton {
+        ru.esstu.student.messaging.dialog_chat_new.datasources.db.erred_messages.ErredMessageDatabase(
+            instance<IDatabaseStudent>().getDataBase()
+        )
+    }
 
     bind<IDialogChatRepositoryNew>() with singleton {
         DialogChatRepositoryNewImpl(
@@ -66,6 +72,7 @@ internal val dialogChatModuleNew = DI.Module("DialogChatModuleNew"){
             instance(),
             instance(),
             instance(),
+            instance()
         )
     }
 
