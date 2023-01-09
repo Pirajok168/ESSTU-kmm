@@ -32,6 +32,7 @@ internal val dialogsModuleNew = DI.Module("dialogsModuleNew"){
 
 
 
+
     bind<CacheDao>() with singleton {
         CacheDatabase(
             database = instance<IDatabaseStudent>().getDataBase(),
@@ -53,6 +54,7 @@ object DialogsModuleNew {
 
     val repoDialogs: IDialogsDbRepository
         get() = ESSTUSdk.di.instance()
+
 
 }
 

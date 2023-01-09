@@ -13,4 +13,6 @@ interface CacheDao {
     suspend fun updateDialogLastMessage(appUserId: String, dialogId: String, lastMessage: PreviewLastMessage)
 
     suspend fun deleteDialog(idDialog: Long)
+
+    suspend fun deleteAll()
 }

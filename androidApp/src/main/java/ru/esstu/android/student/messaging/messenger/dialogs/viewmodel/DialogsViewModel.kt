@@ -5,15 +5,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.collectLatest
 
 import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
+import ru.esstu.student.messaging.messenger.di.messengerModule
+
 import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsApiRepository
 import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsDbRepository
+import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsUpdatesRepository
 import ru.esstu.student.messaging.messenger.dialogs.di.dialogsModuleNew
 
 
@@ -35,12 +39,12 @@ sealed class DialogEvents {
 
 
 class DialogsViewModel constructor(
-    /* dialogUpdate: IDialogsUpdatesRepository = ESSTUSdk.dialogsModule.updateDialogs,
-     dialogDB: IDialogsDbRepository = ESSTUSdk.dialogsModule.repoDialogs,*/
+    dialogUpdate: IDialogsUpdatesRepository = ESSTUSdk.messengerModule.update,
+
     dialogApi: IDialogsApiRepository = ESSTUSdk.dialogsModuleNew.repo,
     dialogDB: IDialogsDbRepository = ESSTUSdk.dialogsModuleNew.repoDialogs,
 
-) : ViewModel() {
+    ) : ViewModel() {
 
     var dialogState by mutableStateOf(DialogState())
         private set
@@ -52,7 +56,10 @@ class DialogsViewModel constructor(
 
     private val paginator = Paginator(
         initialKey = 0,
-        onReset = { if (dialogState.cleanCacheOnRefresh) dialogDB.clear() },
+        onReset = {
+            if (dialogState.cleanCacheOnRefresh)
+                dialogDB.clear()
+                  },
         onLoad = { dialogState = dialogState.copy(isLoading = it, title = if (it) "Обновление" else "Мессенджер") },
         onRequest = { key ->
             val cachedDialogs = dialogDB.getDialogs(dialogState.pageSize, key)
@@ -86,12 +93,12 @@ class DialogsViewModel constructor(
 
         viewModelScope.launch {
 
-            /*dialogUpdate.updatesFlow.collectLatest {
+            dialogUpdate.updatesFlow.collectLatest {
                 if (it is Response.Success && it.data.isNotEmpty()) {
                     dialogState = dialogState.copy(cleanCacheOnRefresh = true)
                     paginator.refresh()
                 }
-            }*/
+            }
         }
     }
 

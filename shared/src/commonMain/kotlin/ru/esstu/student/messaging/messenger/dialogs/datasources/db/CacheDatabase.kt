@@ -104,5 +104,9 @@ class CacheDatabase(
         dbQueries.deleteDialog(idDialog)
     }
 
+    override suspend fun deleteAll() {
+        dbQueries.clear()
+    }
+
 
 }

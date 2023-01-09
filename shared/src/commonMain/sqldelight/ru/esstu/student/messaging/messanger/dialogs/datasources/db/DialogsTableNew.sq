@@ -45,4 +45,6 @@ getDialog:
         WHERE idDialog = :idDialog AND  appUserId = :appUserId;
 
 
+clear:
+    DELETE FROM MessageTableNew;
 

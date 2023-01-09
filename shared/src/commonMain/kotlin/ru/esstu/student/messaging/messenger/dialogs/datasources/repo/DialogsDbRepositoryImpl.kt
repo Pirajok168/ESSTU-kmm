@@ -25,7 +25,7 @@ class DialogsDbRepositoryImpl  constructor(
         return dialogs
     }
 
-    override suspend fun clear() = TODO()
+    override suspend fun clear() = cacheDao.deleteAll()
 
     override suspend fun setDialogs(previewDialogs: List<PreviewDialog>) {
 

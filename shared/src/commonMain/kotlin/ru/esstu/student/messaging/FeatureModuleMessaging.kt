@@ -10,9 +10,7 @@ internal val featureModuleMessaging = DI.Module("featureModuleMessaging") {
     importAll(
         messengerModule,
         dialogsModuleNew,
-        //dialogChatModule,
         dialogChatModuleNew
-
         )
 
 }
