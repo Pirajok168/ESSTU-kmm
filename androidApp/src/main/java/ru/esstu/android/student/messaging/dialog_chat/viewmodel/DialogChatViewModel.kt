@@ -216,7 +216,7 @@ class DialogChatViewModel constructor(
     private suspend fun updatePreview(message: Message?) {
         val opponent = dialogChatState.opponent ?: return
         val msg = message ?: return
-         //dialogChatRepository.updateLastMessageOnPreview(dialogId = opponent.id, message = msg)
+         dialogChatRepository.updateLastMessageOnPreview(dialogId = opponent.id, message = msg)
     }
 
     private suspend fun attachErredMessages(dialogId: String) {
@@ -316,6 +316,7 @@ class DialogChatViewModel constructor(
                             val success =
                                 sent.copy(id = result.data, status = DeliveryStatus.DELIVERED)
                             dialogChatRepository.delErredMessage(sent.id)
+
                             success
                         } else
                             sent

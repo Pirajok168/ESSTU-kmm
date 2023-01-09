@@ -16,15 +16,7 @@ import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.dialog_chat.datasources.*
-import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatApi
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.HistoryCacheDao
-import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.ErredMessageDao
 
-
-import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.toSentUserMessage
-import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.UserMessageDao
-
-import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.toSentUserMessage
 
 import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
@@ -43,6 +35,8 @@ import ru.esstu.student.messaging.entities.Message
 import ru.esstu.student.messaging.entities.Sender
 import ru.esstu.student.messaging.messenger.datasources.toUser
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.CacheDao
+import ru.esstu.student.messaging.messenger.dialogs.datasources.toMessageWithAttachments
+import ru.esstu.student.messaging.messenger.dialogs.datasources.toPreviewLastMessage
 
 
 class DialogChatRepositoryNewImpl constructor(
@@ -52,6 +46,7 @@ class DialogChatRepositoryNewImpl constructor(
     private val opponentDao: OpponentDao,
     private val userMsgDao: UserMessageDaoNew,
     private val erredMsgDao: ErredMessageDaoNew,
+    private val historyCacheDaoNew: CacheDao
 ) : IDialogChatRepositoryNew {
 
 
@@ -60,7 +55,7 @@ class DialogChatRepositoryNewImpl constructor(
 
         val cachedOpponent = opponentDao.getOpponent(id)?.toUser()
         if (cachedOpponent != null)
-           emit(FlowResponse.Success(cachedOpponent))
+            emit(FlowResponse.Success(cachedOpponent))
 
         when (val response =
             auth.provideToken { type, token -> dialogChatApi.getOpponent("$token", id) }) {
@@ -72,7 +67,7 @@ class DialogChatRepositoryNewImpl constructor(
                 else {
                     opponentDao.insert(remoteOpponent.toUserEntityOpponent())
                     if (remoteOpponent != cachedOpponent)
-                       emit(FlowResponse.Success(remoteOpponent))
+                        emit(FlowResponse.Success(remoteOpponent))
                 }
             }
         }
@@ -203,10 +198,8 @@ class DialogChatRepositoryNewImpl constructor(
     }
 
 
-
     override suspend fun updateLastMessageOnPreview(dialogId: String, message: Message) {
-    TODO()
-    /* auth.provideToken { token ->
+        auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
             dialogChatApi.readMessages(
                 "${token.access}",
@@ -215,9 +208,8 @@ class DialogChatRepositoryNewImpl constructor(
                     peer = IPeer_.DialoguePeer(userId = dialogId)
                 )
             )
-
-            //dialogsDao.updateDialogLastMessage(appUserId = appUserId, dialogId = dialogId, message = message.toMessageWithAttachments())
-        }*/
+            historyCacheDaoNew.updateDialogLastMessage(appUserId = appUserId, dialogId = dialogId, message.toPreviewLastMessage())
+        }
     }
 
 
@@ -270,7 +262,7 @@ class DialogChatRepositoryNewImpl constructor(
 
 
     override suspend fun updateFile(messageId: Long, attachment: MessageAttachment) {
-    TODO()
-    //cacheDao.insertAttachments(listOf(attachment.toDialogChatAttachmentEntity(messageId)))
+        TODO()
+        //cacheDao.insertAttachments(listOf(attachment.toDialogChatAttachmentEntity(messageId)))
     }
 }

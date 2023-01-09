@@ -37,7 +37,12 @@ getDialogsWithLastMessage:
     ORDER BY m.date DESC LIMIT :pageSize OFFSET :pageOffset;
 
 deleteDialog:
-    DELETE FROM DialogTableNew WHERE idDialog = (:idDialog);
+    DELETE FROM MessageTableNew WHERE messageId = (:lastMessageId);
+
+
+getDialog:
+    SELECT * FROM DialogTableNew
+        WHERE idDialog = :idDialog AND  appUserId = :appUserId;
 
 
 

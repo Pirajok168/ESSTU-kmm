@@ -72,7 +72,8 @@ internal val dialogChatModuleNew = DI.Module("DialogChatModuleNew"){
             instance(),
             instance(),
             instance(),
-            instance()
+            instance(),
+            historyCacheDaoNew = instance()
         )
     }
 

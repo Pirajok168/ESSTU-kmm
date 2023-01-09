@@ -5,6 +5,7 @@ import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.Cha
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
 import ru.esstu.student.messaging.entities.*
+import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.MessageEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.ReplyMessageEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.relations.MessageWithAttachments
@@ -108,6 +109,30 @@ fun ReplyMessageEntity.toReplyMessage() = ReplyMessage(
     attachmentsCount = attachmentsCount
 )
 //</editor-fold>
+
+fun Message.toPreviewLastMessage() = PreviewLastMessage(
+    id = id,
+    from = from,
+    date = date,
+    message = message,
+    replyMessage = replyMessage,
+    status = status,
+    attachments.size
+)
+
+
+fun Message.toMessageWithAttachments() = LastMessageWithCountAttachments(
+    message = toMessageEntity(),
+    attachments = attachments.size
+)
+fun Message.toMessageEntity() = MessageEntity(
+    message = message,
+    date = date,
+    id = id,
+    from = from.toUserEntity(),
+    replyMessage = replyMessage?.toReplyMessageEntity(),
+    status = status.name
+)
 
 /*fun Message.toMessageEntity() = MessageEntity(
     message = message,

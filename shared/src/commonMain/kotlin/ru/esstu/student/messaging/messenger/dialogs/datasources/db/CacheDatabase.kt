@@ -4,7 +4,6 @@ import ru.esstu.student.EsstuDatabase
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.MessageEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.ReplyMessageEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity
-import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.relations.MessageWithAttachments
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.DialogEntity
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.LastMessageWithCountAttachments
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.relations.DialogWithMessage
@@ -83,12 +82,25 @@ class CacheDatabase(
     override suspend fun updateDialogLastMessage(
         appUserId: String,
         dialogId: String,
-        message: MessageWithAttachments
+        lastMessage: PreviewLastMessage
     ) {
-        TODO("Not yet implemented")
+        val dialog = dbQueries.getDialog(dialogId, appUserId).executeAsOneOrNull()
+        if (dialog != null){
+            deleteDialog(dialog.lastMessageId!!)
+
+            lastMessage.apply {
+                dbQueries.setLastMessage(id, from.toUserEntity(), date, message, status.name,replyMessage?.toReplyMessageEntity(), attachments)
+            }
+
+            dialog.apply {
+                dbQueries.setDialog(idDialog, appUserId, lastMessage.id, opponent, 0, notifyAboutIt)
+            }
+        }
+
+
     }
 
-    override suspend fun deleteDialog(idDialog: String) {
+    override suspend fun deleteDialog(idDialog: Long) {
         dbQueries.deleteDialog(idDialog)
     }
 
