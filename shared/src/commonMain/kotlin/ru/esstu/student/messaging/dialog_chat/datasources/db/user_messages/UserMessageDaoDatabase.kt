@@ -1,29 +1,26 @@
-package ru.esstu.student.messaging.dialog_chat_new.datasources.db.erred_messages
+package ru.esstu.student.messaging.dialog_chat.datasources.db.user_messages
 
 import ru.esstu.student.EsstuDatabase
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAttachmentEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatMessageEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatReplyMessageEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelatedEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.entities.ErredCachedFileEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.entities.ErredMessageEntity
-import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.entities.MessageWithRelatedEntityNew
-import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.entities.MessageWithRelatedNew
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.MessageWithRelatedEntityNew
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.MessageWithRelatedNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatAttachmentTableNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatMessageTableNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatReplyMessageTableNew
-import ru.esstu.student.messaging.dialogchat.datasources.db.erredmessages.ErredCachedFileTableNew
-import ru.esstu.student.messaging.dialogchat.datasources.db.erredmessages.ErredMessageTableNew
+import ru.esstu.student.messaging.dialogchat.datasources.db.usermessage.UserCachedFileTable
+import ru.esstu.student.messaging.dialogchat.datasources.db.usermessage.UserMessageEntityTable
 
-class ErredMessageDatabase(
+
+class UserMessageDatabase(
     database: EsstuDatabase
-) : ErredMessageDaoNew {
-    private val dbQuery = database.erredMessagesQueries
+): UserMessageDao {
 
-    override suspend fun getCachedFiles(messageId: Long): List<ErredCachedFileTableNew> {
-        return dbQuery.getCachedFiles(messageId).executeAsList()
+    private val dbQuery = database.userMessageTableQueries
+    override suspend fun getCachedFiles(
+        appUserId: String,
+        dialogId: String
+    ): List<UserCachedFileTable> {
+        return dbQuery.getCachedFiles(appUserId, dialogId).executeAsList()
     }
 
     override suspend fun getReplyMessage(messageId: Long): MessageWithRelatedNew? {
@@ -127,31 +124,29 @@ class ErredMessageDatabase(
         return result.firstOrNull()
     }
 
-    override suspend fun getErredMessages(
+    override suspend fun getUserMessage(
         appUserId: String,
         dialogId: String
-    ): List<ErredMessageTableNew> {
-
-        return dbQuery.getErredMessages(appUserId, dialogId).executeAsList()
+    ): UserMessageEntityTable? {
+        return dbQuery.getUserMessage(appUserId, dialogId).executeAsOneOrNull()
     }
 
-    override suspend fun removeMessage(id: Long) {
-        dbQuery.removeMessage(id)
+    override suspend fun removeMessage(appUserId: String, dialogId: String) {
+        dbQuery.removeMessage(appUserId, dialogId)
     }
 
-    override suspend fun addMessage(message: ErredMessageTableNew) {
+    override suspend fun addMessage(message: UserMessageEntityTable) {
         message.apply {
-            dbQuery.addMessage(idErredMessage, appUserId, dialogId, date, text, replyMessageId)
+            dbQuery.addMessage(appUserId, dialogId, text, replyMessageId)
         }
     }
 
-    override suspend fun addCachedFiles(files: List<ErredCachedFileTableNew>) {
+    override suspend fun addCachedFiles(files: List<UserCachedFileTable>) {
         files.forEach {
             it.apply {
-                dbQuery.addCachedFiles(idCahedFile, messageId, name, ext, size, type, source)
+                dbQuery.addCachedFiles(idCached, appUserId, dialogId, name, ext, size, type, source)
             }
         }
     }
-
 
 }

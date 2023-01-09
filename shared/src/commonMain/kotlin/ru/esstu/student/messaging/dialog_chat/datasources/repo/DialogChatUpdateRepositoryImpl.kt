@@ -42,7 +42,7 @@ class DialogChatUpdateRepositoryImpl constructor(
                 }
                 is Response.Success -> {
                     val messages =
-                        result.data.map { it.copy(attachments = emptyList()) }
+                        result.data
                             .asReversed()
                     latestMessageId =
                         messages.lastOrNull { it.status == DeliveryStatus.DELIVERED }?.id

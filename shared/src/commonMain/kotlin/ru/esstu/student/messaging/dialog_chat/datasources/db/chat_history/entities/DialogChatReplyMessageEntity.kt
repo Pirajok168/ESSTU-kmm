@@ -2,6 +2,7 @@ package ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entit
 
 import kotlinx.serialization.Serializable
 
+
 @Serializable
 data class DialogChatReplyMessageEntity(
 

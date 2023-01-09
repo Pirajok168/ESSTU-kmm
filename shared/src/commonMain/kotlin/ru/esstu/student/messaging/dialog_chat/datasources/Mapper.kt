@@ -1,34 +1,27 @@
-package ru.esstu.student.messaging.dialog_chat_new.datasources
+package ru.esstu.student.messaging.dialog_chat.datasources
 
+import com.soywiz.klock.DateTime
 import okio.FileSystem
 import okio.Path.Companion.toPath
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.inner_classes.FileAttachmentResponse
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessagePreview
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessageResponse
 import ru.esstu.domain.modules.account.datasources.datastore.producePath
 import ru.esstu.domain.modules.account.datasources.datastore.storage
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAttachmentEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatMessageEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatReplyMessageEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
-import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.entities.ErredCachedFileEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.UserCachedFileEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.UserMessageEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.relations.UserMessageWithRelated
-import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.toCachedFile
-import ru.esstu.student.messaging.dialog_chat.datasources.toMessage
 import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
-import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.entities.MessageWithRelatedNew
-import ru.esstu.student.messaging.dialog_chat_new.datasources.db.user_messages.entities.UserMessageWithRelatedNew
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.MessageWithRelatedNew
+import ru.esstu.student.messaging.dialog_chat.datasources.db.user_messages.entities.UserMessageWithRelatedNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatAttachmentTableNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatAuthorTableNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatMessageTableNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatReplyMessageTableNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.usermessage.UserCachedFileTable
 import ru.esstu.student.messaging.dialogchat.datasources.db.usermessage.UserMessageEntityTable
-import ru.esstu.student.messaging.entities.Message
-import ru.esstu.student.messaging.entities.MessageAttachment
-import ru.esstu.student.messaging.entities.ReplyMessage
-import ru.esstu.student.messaging.entities.Sender
+import ru.esstu.student.messaging.entities.*
+import ru.esstu.student.messaging.messenger.datasources.toUser
 import kotlin.random.Random
 
 //<editor-fold desc="ToEntityMapper">
@@ -39,16 +32,17 @@ fun Message.toMessageWithRelatedEntity(appUserId: String, dialogId: String) = Me
 )
 
 
-fun Message.toDialogChatMessageEntity(appUserId: String, dialogId: String) = DialogChatMessageTableNew(
-    message = message,
-    opponentId = dialogId,
-    appUserId = appUserId,
-    fromSend = from.toUserEntity(),
-    messageId = id,
-    date = date,
-    status = status.name,
-    replyMessageId = replyMessage?.id
-)
+fun Message.toDialogChatMessageEntity(appUserId: String, dialogId: String) =
+    DialogChatMessageTableNew(
+        message = message,
+        opponentId = dialogId,
+        appUserId = appUserId,
+        fromSend = from.toUserEntity(),
+        messageId = id,
+        date = date,
+        status = status.name,
+        replyMessageId = replyMessage?.id
+    )
 
 fun ReplyMessage.toDialogChatReplyMessageEntity(messageId: Long) = DialogChatReplyMessageTableNew(
     fromSendReplyMessage = from.toUserEntity(),
@@ -84,12 +78,12 @@ fun Sender.toUserEntity(): DialogChatAuthorEntity {
 
 //</editor-fold>
 
-fun  MessageWithRelatedNew.toMessage() = Message(
+fun MessageWithRelatedNew.toMessage() = Message(
     message = message.message,
     id = message.messageId,
     status = enumValueOf(message.status),
     attachments = attachments.map { it.toAttachment() },
-    replyMessage = reply?.toReplyMessage() ,
+    replyMessage = reply?.toReplyMessage(),
     date = message.date,
     from = message.fromSend.toUser()
 )
@@ -155,7 +149,7 @@ fun UserCachedFileTable.toCachedFile(
     fileSystem: FileSystem = storage().fileSystem
 ): CachedFile {
 
-    fileSystem.write("${producePath().path}/$name.$ext".toPath(), true){
+    fileSystem.write("${producePath().path}/$name.$ext".toPath(), true) {
         write(source)
     }
 
@@ -171,7 +165,10 @@ fun UserCachedFileTable.toCachedFile(
     )
 }
 
-fun NewUserMessage.toUserMessageEntity(appUserId: String, dialogId: String): UserMessageEntityTable {
+fun NewUserMessage.toUserMessageEntity(
+    appUserId: String,
+    dialogId: String
+): UserMessageEntityTable {
     return UserMessageEntityTable(
         appUserId = appUserId,
         dialogId = dialogId,
@@ -187,11 +184,10 @@ fun CachedFile.toEntity(
 ): UserCachedFileTable {
 
 
-
     return UserCachedFileTable(
         dialogId = dialogId,
         appUserId = appUserId,
-        source = fileSystem.read(sourceFile.toPath()){
+        source = fileSystem.read(sourceFile.toPath()) {
             readByteArray()
         },
         size = size,
@@ -200,6 +196,73 @@ fun CachedFile.toEntity(
         type = type,
         idCached = Random.nextLong().toInt()
     )
+}
+
+fun MessagePreview.toReplyMessage(authors: List<Sender>): ReplyMessage? {
+    return ReplyMessage(
+        id = id,
+        from = authors.firstOrNull { it.id == from } ?: return null,
+        attachmentsCount = attachments.size,
+        message = message.orEmpty(),
+        date = DateTime(date).unixMillisLong
+    )
+}
+
+fun MessagePreview.toMessage(
+    authors: List<Sender>,
+    replyMessages: List<ReplyMessage>
+): Message? {
+    return Message(
+        id = id,
+        date = DateTime(date).unixMillisLong,
+        message = message.orEmpty(),
+        attachments = attachments.map { it.toAttachment() },
+        from = authors.firstOrNull { user -> user.id == this.from } ?: return null,
+        replyMessage = if (replyToMsgId != null) replyMessages.firstOrNull { it.id == replyToMsgId } else null,
+        status = if (views > 1) DeliveryStatus.READ else DeliveryStatus.DELIVERED
+    )
+}
+
+fun FileAttachmentResponse.toAttachment(): MessageAttachment {
+    val filename =
+        fileName.split('.').let { if (it.size > 1) it.dropLast(1) else it }.joinToString(".")
+    val fileExt = fileName.split('.').let { if (it.size > 1) it.last() else "" }
+
+    return MessageAttachment(
+        id = id,
+        type = type,
+        name = filename,
+        ext = fileExt,
+        fileUri = if (fileCode.isNotBlank()) "https://esstu.ru/aicstorages/publicDownload/$fileCode" else "",
+        size = fileSize,
+        localFileUri = null
+    )
+}
+
+suspend fun MessageResponse.toMessages(
+    provideReplies: suspend (indices: List<Long>) -> List<MessagePreview>,
+    provideUsers: suspend (indices: List<String>) -> List<UserPreview>,
+): List<Message> {
+
+    val existingAuthors = users.mapNotNull { it.toUser() }
+
+    val replyIndices = messages.mapNotNull { it.replyToMsgId }
+    val rawReplyMessages = provideReplies(replyIndices)
+    val missingAuthorIds =
+        rawReplyMessages.map { it.from }.distinct() - existingAuthors.map { it.id }
+
+    val missingAuthors = if (missingAuthorIds.any())
+        provideUsers(missingAuthorIds).mapNotNull { it.toUser() }
+    else emptyList()
+
+    val replyMessages =
+        rawReplyMessages.mapNotNull { it.toReplyMessage(existingAuthors + missingAuthors) }
+    return this.messages.mapNotNull {
+        it.toMessage(
+            authors = existingAuthors,
+            replyMessages = replyMessages
+        )
+    }
 }
 
 

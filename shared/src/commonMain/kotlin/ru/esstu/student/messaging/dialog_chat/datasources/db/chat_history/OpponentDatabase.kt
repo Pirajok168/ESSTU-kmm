@@ -1,8 +1,7 @@
-package ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history
+package ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history
 
 import ru.esstu.student.EsstuDatabase
 
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatAuthorTableNew
 
 class OpponentDatabase(

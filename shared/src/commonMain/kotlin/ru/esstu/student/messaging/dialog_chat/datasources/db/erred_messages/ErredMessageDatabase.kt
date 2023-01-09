@@ -1,51 +1,34 @@
 package ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages
 
 import ru.esstu.student.EsstuDatabase
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAttachmentEntity
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatMessageEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatReplyMessageEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelatedEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.entities.ErredCachedFileEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.entities.ErredMessageEntity
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.MessageWithRelatedEntityNew
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.MessageWithRelatedNew
+import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatAttachmentTableNew
+import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatMessageTableNew
+import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatReplyMessageTableNew
+import ru.esstu.student.messaging.dialogchat.datasources.db.erredmessages.ErredCachedFileTableNew
+import ru.esstu.student.messaging.dialogchat.datasources.db.erredmessages.ErredMessageTableNew
 
 class ErredMessageDatabase(
     database: EsstuDatabase
 ) : ErredMessageDao {
-    private val dbQuery = database.messageWithRelatedTAbleQueries
+    private val dbQuery = database.erredMessagesQueries
 
-    override suspend fun getCachedFiles(messageId: Long): List<ErredCachedFileEntity> {
-        fun map(
-            idCashedFile: Int?,
-            messageId: Long,
-            name: String,
-            ext: String,
-            size: Long,
-            type: String
-        ): ErredCachedFileEntity {
-            return ErredCachedFileEntity(
-                messageId = messageId,
-                source = null,
-                name,
-                ext,
-                size,
-                type
-            )
-        }
-        return dbQuery.getCachedFiles(messageId, ::map).executeAsList()
+    override suspend fun getCachedFiles(messageId: Long): List<ErredCachedFileTableNew> {
+        return dbQuery.getCachedFiles(messageId).executeAsList()
     }
 
-    override suspend fun getReplyMessage(messageId: Long): MessageWithRelated? {
+    override suspend fun getReplyMessage(messageId: Long): MessageWithRelatedNew? {
         fun map(
-            messageId: Long,
             appUserId: String,
+            messageId: Long,
             opponentId: String?,
             fromSend: DialogChatAuthorEntity,
             replyMessageId: Long?,
             date: Long,
-            message: String?,
-            status: String?,
+            message: String,
+            status: String,
             idAttachment: Long?,
             messageId_: Long?,
             fileUri: String?,
@@ -56,61 +39,68 @@ class ErredMessageDatabase(
             size: Long?,
             type: String?,
             idReplyMessage: Long?,
+            messageId__: Long?,
             fromSendReplyMessage: DialogChatAuthorEntity?,
             dateReplyMessage: Long?,
             messageReplayMessage: String?,
-            attachmentsCount: Long?
-        ): MessageWithRelatedEntity {
-            val messages = DialogChatMessageEntity(
+            attachmentsCount: Int?
+        ): MessageWithRelatedEntityNew {
+            val messages = DialogChatMessageTableNew(
                 appUserId = appUserId,
-                id = messageId,
+                messageId = messageId,
                 opponentId = opponentId.orEmpty(),
-                from = fromSend,
+                fromSend = fromSend,
                 replyMessageId = replyMessageId,
                 date = date,
                 message = message.orEmpty(),
                 status = status.orEmpty(),
             )
 
-            val attachment = if (idAttachment == null) null else DialogChatAttachmentEntity(
-                id = idAttachment.toInt(),
+            val attachment = if (idAttachment == null) null else DialogChatAttachmentTableNew(
+                idAttachment = idAttachment,
                 messageId = messageId_!!,
                 fileUri = fileUri.orEmpty(),
                 LocalFileUri = LocalFileUri,
-                loadProgress = loadProgress?.toFloat(),
+                loadProgress = loadProgress,
                 name = name,
                 ext = ext,
-                size = size!!.toInt(),
+                size = size!!,
                 type = type
             )
 
-            return MessageWithRelatedEntity(
+            return MessageWithRelatedEntityNew(
                 message = messages,
                 attachments = attachment,
                 reply = if (idReplyMessage == null) null else {
-                    DialogChatReplyMessageEntity(
-                        id = idReplyMessage,
-                        from = fromSendReplyMessage!!,
-                        date = dateReplyMessage!!,
-                        message = messageReplayMessage.toString(),
-                        attachmentsCount = attachmentsCount!!.toInt()
+                    DialogChatReplyMessageTableNew(
+                        idReplyMessage = idReplyMessage,
+                        fromSendReplyMessage = fromSendReplyMessage!!,
+                        dateReplyMessage = dateReplyMessage!!,
+                        messageReplayMessage = messageReplayMessage.toString(),
+                        attachmentsCount = attachmentsCount?.toInt() ?: 0,
+                        messageId = messageId
                     )
                 }
             )
         }
 
-        val query = dbQuery.getReplyMessage(messageId, ::map).executeAsList()
+
+        val query = dbQuery.getReplyMessage(
+            messageId = messageId,
+            mapper = ::map
+        ).executeAsList()
+
         val a = query.groupBy {
-            it.message.id
+            it.message.messageId
         }
-        val result = mutableListOf<MessageWithRelated>()
+        val result = mutableListOf<MessageWithRelatedNew>()
 
         a.forEach { (key, value) ->
-            val attachments = mutableListOf<DialogChatAttachmentEntity>()
-            var message: DialogChatMessageEntity? = null
-            var reply: DialogChatReplyMessageEntity? = null
+            val attachments = mutableListOf<DialogChatAttachmentTableNew>()
+            var message: DialogChatMessageTableNew? = null
+            var reply: DialogChatReplyMessageTableNew? = null
             value.forEach { messageWith ->
-                if (result.find { it.message.id == messageWith.message.id } == null) {
+                if (result.find { it.message.messageId == messageWith.message.messageId } == null) {
                     message = messageWith.message
                     reply = messageWith.reply
                 }
@@ -120,56 +110,38 @@ class ErredMessageDatabase(
             }
 
             result.add(
-                MessageWithRelated(
-                    message = message ?: return null,
+                MessageWithRelatedNew(
+                    message = message ?: return@forEach ,
                     attachments = attachments,
                     reply = reply
                 )
             )
         }
-        val b = result.firstOrNull()
-        b
         return result.firstOrNull()
     }
 
     override suspend fun getErredMessages(
         appUserId: String,
         dialogId: String
-    ): List<ErredMessageEntity> {
-        fun map(
-            idErredMessage: Long,
-            appUserId: String,
-            dialogId: String,
-            date: Long,
-            text: String,
-            replyMessageId: Long?
-        ): ErredMessageEntity {
-            return ErredMessageEntity(
-                idErredMessage,
-                appUserId,
-                dialogId,
-                date,
-                text,
-                replyMessageId
-            )
-        }
-        return dbQuery.getErredMessages(appUserId, dialogId, ::map).executeAsList()
+    ): List<ErredMessageTableNew> {
+
+        return dbQuery.getErredMessages(appUserId, dialogId).executeAsList()
     }
 
     override suspend fun removeMessage(id: Long) {
         dbQuery.removeMessage(id)
     }
 
-    override suspend fun addMessage(message: ErredMessageEntity) {
+    override suspend fun addMessage(message: ErredMessageTableNew) {
         message.apply {
-            dbQuery.addMessage(id, appUserId, dialogId, date, text, replyMessageId)
+            dbQuery.addMessage(idErredMessage, appUserId, dialogId, date, text, replyMessageId)
         }
     }
 
-    override suspend fun addCachedFiles(files: List<ErredCachedFileEntity>) {
+    override suspend fun addCachedFiles(files: List<ErredCachedFileTableNew>) {
         files.forEach {
             it.apply {
-                dbQuery.addCachedFiles(id, messageId, name, ext, size, type)
+                dbQuery.addCachedFiles(idCahedFile, messageId, name, ext, size, type, source)
             }
         }
     }

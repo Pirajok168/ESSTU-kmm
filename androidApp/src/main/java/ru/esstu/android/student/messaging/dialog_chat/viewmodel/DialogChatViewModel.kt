@@ -1,6 +1,5 @@
 package ru.esstu.android.student.messaging.dialog_chat.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,23 +12,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.esstu.ESSTUSdk
-import ru.esstu.domain.modules.account.datasources.repo.IAccountInfoApiRepository
-import ru.esstu.domain.modules.account.di.accountModule
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.student.messaging.dialog_chat.datasources.di.dialogChatModule
-import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatRepository
-import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatUpdateRepository
 
 import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
 import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
 import ru.esstu.student.messaging.dialog_chat.util.toSentUserMessage
-import ru.esstu.student.messaging.dialog_chat_new.datasources.di.dialogChatModuleNew
-import ru.esstu.student.messaging.dialog_chat_new.datasources.repo.IDialogChatRepositoryNew
-import ru.esstu.student.messaging.dialog_chat_new.datasources.repo.IDialogChatUpdateRepositoryNew
+import ru.esstu.student.messaging.dialog_chat.datasources.di.dialogChatModuleNew
+import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatRepository
+import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatUpdateRepository
 import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.DeliveryStatus
 import ru.esstu.student.messaging.entities.Message
@@ -80,8 +74,8 @@ sealed class DialogChatEvents {
 
 
 class DialogChatViewModel constructor(
-    private val dialogChatRepository: IDialogChatRepositoryNew = ESSTUSdk.dialogChatModuleNew.repo,
-    private val dialogChatUpdateRepository: IDialogChatUpdateRepositoryNew = ESSTUSdk.dialogChatModuleNew.update,
+    private val dialogChatRepository: IDialogChatRepository = ESSTUSdk.dialogChatModuleNew.repo,
+    private val dialogChatUpdateRepository: IDialogChatUpdateRepository = ESSTUSdk.dialogChatModuleNew.update,
 ) : ViewModel() {
 
     var dialogChatState by mutableStateOf(DialogChatState())

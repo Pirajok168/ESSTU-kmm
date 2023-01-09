@@ -1,46 +1,26 @@
 package ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history
 
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAttachmentEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatMessageEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatReplyMessageEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.MessageWithRelatedNew
+import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatAttachmentTableNew
+import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatMessageTableNew
+import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatReplyMessageTableNew
 
 
 interface HistoryCacheDao {
 
-    suspend fun getOpponent(id: String): DialogChatAuthorEntity?
 
 
-    suspend fun insert(opponent: DialogChatAuthorEntity)
+    suspend fun insertMessage(messages: DialogChatMessageTableNew)
 
+    suspend fun insertAttachments(attachments: List<DialogChatAttachmentTableNew>)
+    suspend fun insertReply(reply: DialogChatReplyMessageTableNew)
 
-    suspend fun clear(id: String)
-
-    suspend fun insertMessage(messages: DialogChatMessageEntity)
-
-
-    suspend fun insertAttachments(attachments: List<DialogChatAttachmentEntity>)
-
-
-    suspend fun clearAttachments(messageId: Long)
-
-
-    suspend fun insertReply(reply: DialogChatReplyMessageEntity)
-
-
-    suspend fun insertMessagesWithRelated(messages: List<MessageWithRelated>) {
-
-        messages.forEach { message ->
-            clearAttachments(message.message.id)
+    suspend fun insertMessagesWithRelated(messages: List<MessageWithRelatedNew>) {
+        messages.forEach {
+            insertMessage(it.message)
+            insertAttachments(it.attachments)
+            if (it.reply != null) insertReply(it.reply)
         }
-
-        messages.forEach { msg ->
-            insertMessage(msg.message)
-            insertAttachments(msg.attachments)
-            if (msg.reply != null) insertReply(msg.reply)
-        }
-
     }
 
 
@@ -49,5 +29,5 @@ interface HistoryCacheDao {
         opponentId: String,
         limit: Int,
         offset: Int
-    ): List<MessageWithRelated>
+    ): List<MessageWithRelatedNew>
 }

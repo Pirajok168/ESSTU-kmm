@@ -1,7 +1,6 @@
 package ru.esstu.student.messaging.dialog_chat.datasources.api
 
 
-import io.ktor.client.request.forms.*
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatReadRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatRequestBody
@@ -47,6 +46,8 @@ interface DialogChatApi {
          authToken: String,
         usersIds: String,
     ):List<UserPreview>
+
+
 
 
     //region отправка сообщений

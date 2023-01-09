@@ -1,66 +1,72 @@
 package ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages
 
-
-import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.entities.ErredCachedFileEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.entities.ErredMessageEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.entities.relations.ErredMessageWithRelated
-import ru.esstu.student.messaging.dialog_chat.datasources.toMessage
+import okio.FileSystem
+import okio.Path.Companion.toPath
+import ru.esstu.domain.modules.account.datasources.datastore.producePath
+import ru.esstu.domain.modules.account.datasources.datastore.storage
 import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
 import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
+import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.entities.ErredMessageWithRelatedNew
+import ru.esstu.student.messaging.dialog_chat.datasources.toMessage
+import ru.esstu.student.messaging.dialogchat.datasources.db.erredmessages.ErredCachedFileTableNew
+import ru.esstu.student.messaging.dialogchat.datasources.db.erredmessages.ErredMessageTableNew
 import ru.esstu.student.messaging.entities.DeliveryStatus
+import kotlin.random.Random
 
-fun CachedFile.toEntity(messageId: Long): ErredCachedFileEntity {
 
-    /* val sourceBytes = FileInputStream(source).use { fs ->
-         fs.readBytes()
-     }
- */
-    return ErredCachedFileEntity(
-        messageId = messageId,
-        source = null,
-        size = size,
-        ext = ext,
-        name = name,
-        type = type,
-    )
-}
+fun ErredCachedFileTableNew.toCachedFile(
+    fileSystem: FileSystem = storage().fileSystem
+): CachedFile {
 
-fun ErredCachedFileEntity.toCachedFile(): CachedFile {
+    fileSystem.write("${producePath().path}/$name.$ext".toPath(), true){
+        write(source)
+    }
 
-    /*val cachedFile = File(context.cacheDir, "$name.$ext")
-
-    FileOutputStream(cachedFile).use { cachedFileStream ->
-        cachedFileStream.write(source)
-    }*/
 
     return CachedFile(
         type = type,
         name = name,
         ext = ext,
         size = size,
-        sourceFile = "",
-        uri = ""
+        sourceFile = "${producePath().path}/$name.$ext",
+        uri = "${producePath().path}/$name.$ext"
     )
 }
 
-fun SentUserMessage.toErredMessageEntity(appUserId: String, dialogId: String): ErredMessageEntity? {
+fun ErredMessageWithRelatedNew.toSentUserMessage() = SentUserMessage(
+    attachments = attachments.map { it.toCachedFile() },
+    replyMessage = reply?.toMessage(),
+    id = message.idErredMessage,
+    text = message.text,
+    status = DeliveryStatus.ERRED,
+    date = message.date
+)
+
+fun SentUserMessage.toErredMessageEntity(appUserId: String, dialogId: String):  ErredMessageTableNew? {
     if (status != DeliveryStatus.ERRED) return null
-    return ErredMessageEntity(
+    return  ErredMessageTableNew(
         appUserId = appUserId,
         dialogId = dialogId,
-        id = id,
+        idErredMessage = id,
         text = text,
         replyMessageId = replyMessage?.id,
         date = date
     )
 }
 
+fun CachedFile.toEntity(messageId: Long, fileSystem: FileSystem = storage().fileSystem): ErredCachedFileTableNew {
 
-fun ErredMessageWithRelated.toSentUserMessage() = SentUserMessage(
-    attachments = attachments.map { it.toCachedFile() },
-    replyMessage = reply?.toMessage(),
-    id = message.id,
-    text = message.text,
-    status = DeliveryStatus.ERRED,
-    date = message.date
-)
+
+    return ErredCachedFileTableNew(
+        messageId = messageId,
+        source = fileSystem.read(sourceFile.toPath()){
+            readByteArray()
+        },
+        size = size,
+        ext = ext,
+        name = name,
+        type = type,
+        idCahedFile = Random.nextInt()
+    )
+}
+

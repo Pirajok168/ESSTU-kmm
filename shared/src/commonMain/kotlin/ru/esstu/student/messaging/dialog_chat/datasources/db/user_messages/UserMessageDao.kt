@@ -1,17 +1,13 @@
-package ru.esstu.student.messaging.dialog_chat_new.datasources.db.user_messages
+package ru.esstu.student.messaging.dialog_chat.datasources.db.user_messages
 
 
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.relations.MessageWithRelated
-import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.UserCachedFileEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.UserMessageEntity
-import ru.esstu.student.messaging.dialog_chat.datasources.db.user_message.entities.relations.UserMessageWithRelated
-import ru.esstu.student.messaging.dialog_chat_new.datasources.db.chat_history.entities.MessageWithRelatedNew
-import ru.esstu.student.messaging.dialog_chat_new.datasources.db.user_messages.entities.UserMessageWithRelatedNew
+import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.MessageWithRelatedNew
+import ru.esstu.student.messaging.dialog_chat.datasources.db.user_messages.entities.UserMessageWithRelatedNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.usermessage.UserCachedFileTable
 import ru.esstu.student.messaging.dialogchat.datasources.db.usermessage.UserMessageEntityTable
 
 
-interface UserMessageDaoNew {
+interface UserMessageDao {
 
     suspend fun getCachedFiles(appUserId: String, dialogId: String): List<UserCachedFileTable>
 
