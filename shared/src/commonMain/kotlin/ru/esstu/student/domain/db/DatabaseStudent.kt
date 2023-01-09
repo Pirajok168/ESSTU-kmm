@@ -7,9 +7,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.esstu.student.EsstuDatabase
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
-import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatMessageTable
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatMessageTableNew
-import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatReplyMessageTable
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatReplyMessageTableNew
 import ru.esstu.student.messaging.messanger.dialogs.datasources.db.DialogTableNew
 import ru.esstu.student.messaging.messanger.dialogs.datasources.db.MessageTableNew
@@ -93,8 +91,6 @@ class DatabaseStudent(sqlDriver: SqlDriver): IDatabaseStudent {
     }
 
     private val database = EsstuDatabase(sqlDriver,
-        DialogChatMessageTableAdapter=DialogChatMessageTable.Adapter(adapter2),
-        DialogChatReplyMessageTableAdapter=DialogChatReplyMessageTable.Adapter(adapter3),
         NewsEntityDatabaseAdapter=NewsEntityDatabase.Adapter(adapter, listAdapter),
         DialogTableNewAdapter = DialogTableNew.Adapter(adapter4),
         MessageTableNewAdapter= MessageTableNew.Adapter(adapter4,adapter5),
