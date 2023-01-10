@@ -1,5 +1,7 @@
 package ru.esstu.android.domain.datasources.download_worker
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
@@ -7,6 +9,9 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
@@ -16,20 +21,77 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.esstu.android.R
 import ru.esstu.android.domain.datasources.download_worker.entities.LoadingFile
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
+import kotlin.math.roundToInt
 
+enum class NotificationTypes {
+    NOTIFICATION_WITH_PROGRESS,
+    NOTIFICATION_WITHOUT_PROGRESS,
+    NO_NOTIFICATION
+}
+
+
+private class Notification(context: Context, private val notificationType: NotificationTypes, channel: String, private val file: LoadingFile) {
+
+    init {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Загрузка файлов"
+            val descriptionText = "Канал для отображение загрузки файлов"
+            val importance = NotificationManager.IMPORTANCE_LOW
+            val channel = NotificationChannel(channel, name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager =
+                ContextCompat.getSystemService(context, NotificationManager::class.java)
+
+            notificationManager?.createNotificationChannel(channel)
+        }
+    }
+
+    private val notification: NotificationCompat.Builder = NotificationCompat.Builder(context, channel)
+        .setSmallIcon(R.drawable.ic_notification_logo)
+        .setContentTitle("Выполняется загрузка файла")
+        .setContentText("${file.name}.${file.ext}")
+        .setPriority(NotificationCompat.PRIORITY_LOW)
+        .setOngoing(true)
+
+    private var notificationIsShown = false
+
+    fun show(context: Context, progress: Float? = null) {
+        when (notificationType) {
+
+            NotificationTypes.NOTIFICATION_WITH_PROGRESS -> {
+                progress?.run {
+                    notification.setProgress(100, (progress * 100).roundToInt(), false)
+                }
+                NotificationManagerCompat.from(context).notify(file.id, notification.build())
+            }
+
+            NotificationTypes.NOTIFICATION_WITHOUT_PROGRESS ->
+                if (!notificationIsShown) NotificationManagerCompat.from(context).notify(file.id, notification.build())
+
+            NotificationTypes.NO_NOTIFICATION -> return
+        }
+        notificationIsShown = true
+    }
+
+    fun cancel(context: Context) =
+        NotificationManagerCompat.from(context).cancel(file.id)
+
+}
 class FileDownloadWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted params: WorkerParameters,
 ) : CoroutineWorker(appContext, params) {
     companion object{
         val fileParams get() = FileParams
-
+        val WORKER_ID: String = FileDownloadWorker::class.java.simpleName
         object FileParams {
             val KEY_FILE_ID: String get() = FileParams::KEY_FILE_ID.name
             val KEY_FILE_TYPE: String get() = FileParams::KEY_FILE_TYPE.name
@@ -51,11 +113,19 @@ class FileDownloadWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO){
         val file = inputData.toLoadingFile() ?: return@withContext Result.failure()
-
+        val notification = Notification(
+            channel = WORKER_ID,
+            notificationType =  NotificationTypes.NOTIFICATION_WITH_PROGRESS,
+            context = applicationContext,
+            file = file
+        )
         val result = downloadFile(file){
             isLoading, progress ->
             if (isLoading){
                 setProgress(workDataOf(ResponseParams.KEY_PROGRESS_VAL to progress))
+                notification.show(applicationContext, progress)
+            }else{
+                notification.cancel(applicationContext)
             }
         }
 
