@@ -4,8 +4,10 @@ import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
@@ -17,6 +19,8 @@ import kotlinx.coroutines.withContext
 import ru.esstu.android.domain.datasources.download_worker.entities.LoadingFile
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
+import java.io.File
+import java.io.FileOutputStream
 import java.net.URL
 
 class FileDownloadWorker @AssistedInject constructor(
@@ -111,7 +115,39 @@ class FileDownloadWorker @AssistedInject constructor(
                 return Response.Error(ResponseError(message = "resolver uri is empty"))
             }
         }else{
-            return Response.Error(ResponseError(message = "Не реализовано"))
+            val target = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                "${file.name}.${file.ext}"
+            )
+
+            val result = kotlin.runCatching {
+
+                URL(file.uri).openStream().use { input ->
+                    FileOutputStream(target).use { output ->
+
+                        var bytesCopied: Long = 0
+                        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                        var bytes = input.read(buffer)
+
+
+                        while (bytes >= 0) {
+                            output.write(buffer, 0, bytes)
+                            bytesCopied += bytes
+                            bytes = input.read(buffer)
+
+                            onLoading(true, bytesCopied / file.size.toFloat())
+                        }
+
+                    }
+                }
+            }
+
+            onLoading(false, 1f)
+
+            return if (result.isSuccess)
+                Response.Success(target.toUri())
+            else
+                Response.Error(ResponseError(message = result.exceptionOrNull()?.message))
         }
     }
 }
