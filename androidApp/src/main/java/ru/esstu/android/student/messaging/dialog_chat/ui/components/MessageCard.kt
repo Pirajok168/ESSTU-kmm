@@ -22,6 +22,7 @@ import com.soywiz.klock.DateTime
 import com.soywiz.klock.format
 import ru.esstu.android.R
 import ru.esstu.android.domain.ui.theme.CompPreviewTheme
+import ru.esstu.domain.utill.workingDate.toFormatString
 import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.DeliveryStatus
 import ru.esstu.student.messaging.entities.ReplyMessage
@@ -214,7 +215,7 @@ fun MessageCard(
                 }
                 Text(
                     modifier = Modifier.padding(bottom = 8.dp, end = 8.dp),
-                    text = formatter.format(date),
+                    text = date.toFormatString("HH:mm"),
                     style = MaterialTheme.typography.subtitle2,
                     color = MaterialTheme.colors.onBackground.copy(ContentAlpha.medium)
                 )
@@ -222,46 +223,3 @@ fun MessageCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun sss1() {
-    CompPreviewTheme {
-        /*  MessageCard(
-              message = Message(
-                  id = 0, status = DeliveryStatus.DELIVERED,
-                  message = """
-              sdfks;f;lskf;lsk;lfdsl;kl;skl;dfkl;sdklf;skl;dfkl;kl;fksl;kdl;fkskfl;sk;lfd
-          """,
-                  from = User(id = "", summary = "", photo = null, lastName = "", firstName = "", patronymic = ""),
-                  date = LocalDateTime.now(),
-                  replyMessage = null,
-                  attachments = listOf(
-                      Attachment(
-                          type = "",
-                          fileUri = "https://thumbs.dreamstime.com/b/%D0%BF%D1%80%D0%B5-%D0%BF%D0%BE%D1%81%D1%8B-%D0%BA%D0%B0-%D1%81%D0%B5%D1%80-%D1%86%D0%B0-%D0%B2-%D1%8E%D0%B1-%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D0%B8-%D1%80%D0%B0-%D1%83%D0%B3%D0%B8-60045149.jpg",
-                          id = 0,
-                          name = "",
-                          ext = ".jpg",
-                          size = 1233
-                      ),
-                      Attachment(
-                          type = "",
-                          fileUri = "https://thumbs.dreamstime.com/b/%D0%BF%D1%80%D0%B5-%D0%BF%D0%BE%D1%81%D1%8B-%D0%BA%D0%B0-%D1%81%D0%B5%D1%80-%D1%86%D0%B0-%D0%B2-%D1%8E%D0%B1-%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D0%B8-%D1%80%D0%B0-%D1%83%D0%B3%D0%B8-60045149.jpg",
-                          id = 0,
-                          name = "",
-                          ext = ".jpg",
-                          size = 1233
-                      ),
-                      Attachment(
-                          type = "image",
-                          fileUri = "https://thumbs.dreamstime.com/b/%D0%BF%D1%80%D0%B5-%D0%BF%D0%BE%D1%81%D1%8B-%D0%BA%D0%B0-%D1%81%D0%B5%D1%80-%D1%86%D0%B0-%D0%B2-%D1%8E%D0%B1-%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D0%B8-%D1%80%D0%B0-%D1%83%D0%B3%D0%B8-60045149.jpg",
-                          id = 0,
-                          name = "",
-                          ext = ".jpg",
-                          size = 1233
-                      ),
-                  )
-              )
-          )*/
-    }
-}

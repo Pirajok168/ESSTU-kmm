@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.soywiz.klock.DateFormat
 import com.soywiz.klock.DateTime
 import com.soywiz.klock.DateTimeTz
+import ru.esstu.domain.utill.workingDate.toFormatString
 
 
 private val formatterWithYear: DateFormat = DateFormat("dd MMMM yyyy")
@@ -24,6 +25,7 @@ private val formatter: DateFormat = DateFormat("dd MMMM")
 
 @Composable
 fun TimeDivider(date: DateTimeTz, isCurrentYear:Boolean) {
+
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         Box(
             modifier = Modifier
@@ -35,7 +37,7 @@ fun TimeDivider(date: DateTimeTz, isCurrentYear:Boolean) {
         ) {
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text(
-                    text = if (isCurrentYear) formatter.format(date) else formatterWithYear.format(date),
+                    text = if (isCurrentYear) date.utc.unixMillisLong.toFormatString("dd MMMM") else date.utc.unixMillisLong.toFormatString("dd MMMM yyyy"),
                     style = MaterialTheme.typography.subtitle2,
                 )
             }
