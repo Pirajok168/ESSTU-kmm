@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.conflate
@@ -12,6 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.esstu.ESSTUSdk
+import ru.esstu.android.domain.datasources.download_worker.IFileDownloadRepository
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
@@ -28,6 +30,7 @@ import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.DeliveryStatus
 import ru.esstu.student.messaging.entities.Message
 import ru.esstu.student.messaging.entities.Sender
+import javax.inject.Inject
 
 
 data class DialogChatState(
@@ -72,11 +75,13 @@ sealed class DialogChatEvents {
         DialogChatEvents()
 }
 
-
-class DialogChatViewModel constructor(
-    private val dialogChatRepository: IDialogChatRepository = ESSTUSdk.dialogChatModuleNew.repo,
-    private val dialogChatUpdateRepository: IDialogChatUpdateRepository = ESSTUSdk.dialogChatModuleNew.update,
+@HiltViewModel
+class DialogChatViewModel @Inject constructor(
+    private val downloaderAttachment: IFileDownloadRepository,
 ) : ViewModel() {
+
+    private val dialogChatRepository: IDialogChatRepository = ESSTUSdk.dialogChatModuleNew.repo
+    private val dialogChatUpdateRepository: IDialogChatUpdateRepository = ESSTUSdk.dialogChatModuleNew.update
 
     var dialogChatState by mutableStateOf(DialogChatState())
         private set
@@ -107,7 +112,7 @@ class DialogChatViewModel constructor(
             is DialogChatEvents.ResendMessage -> viewModelScope.launch { onResendMessage(event.message) }
 
             is DialogChatEvents.DownloadAttachment -> {
-                //fileDownloadRepository.downloadFile(event.attachment)
+                downloaderAttachment.downloadFile(event.attachment)
             }
             is DialogChatEvents.UpdateAttachment -> viewModelScope.launch {
                 onUpdateAttachment(
@@ -210,7 +215,7 @@ class DialogChatViewModel constructor(
     private suspend fun updatePreview(message: Message?) {
         val opponent = dialogChatState.opponent ?: return
         val msg = message ?: return
-         dialogChatRepository.updateLastMessageOnPreview(dialogId = opponent.id, message = msg)
+        dialogChatRepository.updateLastMessageOnPreview(dialogId = opponent.id, message = msg)
     }
 
     private suspend fun attachErredMessages(dialogId: String) {
@@ -369,7 +374,8 @@ class DialogChatViewModel constructor(
 
 
     private suspend fun onUpdateAttachment(messageId: Long, attachment: MessageAttachment) {
-        /* mutex.withLock {
+
+     mutex.withLock {
 
              val messageIndex = dialogChatState.pages.indexOfFirst { it.id == messageId }
              if (messageIndex == -1) return
@@ -380,16 +386,16 @@ class DialogChatViewModel constructor(
              if (oldAttachmentIndex == -1) return
 
              attachments[oldAttachmentIndex] = attachment
-             val updatedAttachments = attachments.toImmutableList()
+             val updatedAttachments = attachments.toList()
 
              val updatedMessage = dialogChatState.pages[messageIndex].copy(attachments = updatedAttachments)
              val pages = dialogChatState.pages.toMutableList()
              pages[messageIndex] = updatedMessage
-             val updatedPages = pages.toImmutableList()
+             val updatedPages = pages.toList()
 
              dialogChatState = dialogChatState.copy(pages = updatedPages)
          }
 
-         dialogChatRepository.updateFile(messageId, attachment)*/
+         dialogChatRepository.updateFile(messageId, attachment)
     }
 }

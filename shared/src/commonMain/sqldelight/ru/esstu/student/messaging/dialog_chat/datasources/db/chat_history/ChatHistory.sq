@@ -40,7 +40,10 @@ CREATE TABLE DialogChatReplyMessageTableNew(
     FOREIGN KEY (messageId) REFERENCES DialogChatMessageTableNew (messageId) ON DELETE CASCADE
 );
 
-
+updateAttachemnt:
+    UPDATE DialogChatAttachmentTableNew
+        SET loadProgress = :loadProgress, LocalFileUri = :localFileUri
+        WHERE  idAttachment = :idAttachment;
 
 getMessageHistory:
     SELECT t.*, o.*, q.*

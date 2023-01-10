@@ -29,4 +29,5 @@ interface IDialogChatRepository {
     suspend fun getUserMessage(dialogId: String): NewUserMessage
     suspend fun updateUserMessage(dialogId: String, message: NewUserMessage)
     suspend fun updateFile(messageId: Long, attachment: MessageAttachment)
+
 }
