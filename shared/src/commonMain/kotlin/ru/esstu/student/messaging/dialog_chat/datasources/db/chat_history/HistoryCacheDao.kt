@@ -9,6 +9,7 @@ import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogCh
 interface HistoryCacheDao {
 
 
+    suspend fun updateAttachments(loadProgress:Float, idAttachment: Long, localFileUri: String)
 
     suspend fun insertMessage(messages: DialogChatMessageTableNew)
 

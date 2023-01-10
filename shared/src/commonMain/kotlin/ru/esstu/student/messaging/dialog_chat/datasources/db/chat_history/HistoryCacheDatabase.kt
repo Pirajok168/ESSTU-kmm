@@ -125,7 +125,13 @@ class HistoryCacheDatabase(
         return result
     }
 
-
+    override suspend fun updateAttachments(
+        loadProgress: Float,
+        idAttachment: Long,
+        localFileUri: String
+    ) {
+        dbQuery.updateAttachemnt(loadProgress.toDouble(), localFileUri, idAttachment)
+    }
 
 
     override suspend fun insertMessage(messages: DialogChatMessageTableNew) {

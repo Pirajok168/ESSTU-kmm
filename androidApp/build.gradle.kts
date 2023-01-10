@@ -1,5 +1,9 @@
+
+
 plugins {
     id("com.android.application")
+    id ("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
     kotlin("android")
 }
 
@@ -40,12 +44,15 @@ dependencies {
     implementation("androidx.compose.material:material:1.3.1")
     implementation("androidx.activity:activity-compose:1.6.1")
     implementation ("androidx.appcompat:appcompat:1.5.1")
+    implementation ("androidx.lifecycle:lifecycle-extensions:2.2.0")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
+    implementation ("androidx.core:core:1.9.0")
 
     //Initializer
     implementation ("androidx.startup:startup-runtime:1.1.1")
 
     //compose nav
-    implementation ("androidx.navigation:navigation-compose:2.4.2")
+    implementation ("androidx.navigation:navigation-compose:2.5.3")
 
     //Coroutines
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
@@ -75,6 +82,16 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-pager-indicators:0.23.1")
     implementation ("com.google.accompanist:accompanist-flowlayout:0.23.1")
 
+    //Work Manager
+    implementation ("androidx.work:work-runtime-ktx:2.7.1")
 
+    //Hilt
+    implementation ("com.google.dagger:hilt-android:2.44")
+    kapt ("com.google.dagger:hilt-compiler:2.44")
+    implementation ("androidx.hilt:hilt-work:1.0.0")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
+}
 
+kapt {
+    correctErrorTypes = true
 }

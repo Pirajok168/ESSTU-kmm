@@ -25,7 +25,6 @@ import ru.esstu.android.student.news.selector_screen.viewModel.SelectorViewModel
 import kotlin.time.Duration.Companion.minutes
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.soywiz.klock.DateFormat
-import com.soywiz.klock.TimeFormat
 import ru.esstu.android.student.news.announcement_screen.viewmodel.AnnouncementsEvents
 import ru.esstu.android.student.news.announcement_screen.viewmodel.AnnouncementsViewModel
 
@@ -61,9 +60,6 @@ fun NewsSelectorScreen(
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
         ) {
-            Button(onClick = { announcementsViewModel.download() }) {
-                Text("Download file")
-            }
             val uiState = viewModel.state
             val scope = rememberCoroutineScope()
 

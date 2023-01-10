@@ -36,7 +36,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.statusBarsPadding
@@ -49,6 +53,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 import ru.esstu.android.R
+import ru.esstu.android.domain.datasources.download_worker.FileDownloadWorker
 import ru.esstu.android.domain.ui.theme.CompPreviewTheme
 
 import ru.esstu.android.student.messaging.dialog_chat.ui.components.*
@@ -72,7 +77,7 @@ fun DialogChatScreen(
     onBackPressed: () -> Unit = {},
     onNavToImage: (startUri: String, uris: List<String>) -> Unit = { _, _ -> },
     opponentId: String,
-    viewModel: DialogChatViewModel = viewModel()
+    viewModel: DialogChatViewModel = hiltViewModel()
 ) {
 
     DisposableEffect(Unit) {
@@ -283,6 +288,7 @@ fun DialogChatScreen(
                 reverseLayout = true,
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
+                //<editor-fold desc="Только что отправленные сообщения">
                 uiState.sentMessages
                     .groupBy {
                         dateFormat.parse(
@@ -376,7 +382,7 @@ fun DialogChatScreen(
                                 TimeDivider(date = date, isCurrentYear = isCurrentYear)
                             }
                     }
-
+                //</editor-fold>
 
 
 
@@ -452,7 +458,7 @@ fun DialogChatScreen(
                                                 )
                                             },
                                             onFileContent = { file, content ->
-
+                                                val workManager = remember { WorkManager.getInstance(context.applicationContext) }
 
                                                 val permissionsLauncher =
                                                     rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { response ->
@@ -470,9 +476,44 @@ fun DialogChatScreen(
 
                                                     }
 
+                                                LaunchedEffect(Unit) {
+                                                    workManager.getWorkInfosForUniqueWorkLiveData(file.id.toString()).asFlow().collectLatest { workInfos ->
+                                                        workInfos.forEach { worker ->
+                                                            when (worker?.state) {
+                                                                WorkInfo.State.RUNNING -> {
+                                                                    val progress = worker.progress.getFloat(
+                                                                        FileDownloadWorker.responseParams.KEY_PROGRESS_VAL, -1f)
+                                                                    if (progress >= 0) {
+                                                                        val fileCopy = file.copy(loadProgress = progress)
+                                                                        viewModel.onEvent(DialogChatEvents.UpdateAttachment(messageId = message.id, fileCopy))
+                                                                    }
+                                                                }
+                                                                WorkInfo.State.SUCCEEDED -> {
+                                                                    val loadedUri = worker.outputData.getString(
+                                                                        FileDownloadWorker.responseParams.KEY_FILE_URI)
+
+                                                                    if (file.localFileUri == null && loadedUri != null) {
+                                                                        val fileCopy = file.copy(localFileUri = loadedUri, loadProgress = null)
+                                                                        viewModel.onEvent(DialogChatEvents.UpdateAttachment(messageId = message.id, fileCopy))
+                                                                    }
+                                                                }
+                                                                WorkInfo.State.FAILED,
+                                                                WorkInfo.State.CANCELLED -> {
+                                                                    if (file.loadProgress != null) {
+                                                                        val fileCopy = file.copy(loadProgress = null)
+                                                                        viewModel.onEvent(DialogChatEvents.UpdateAttachment(messageId = message.id, fileCopy))
+                                                                    }
+                                                                }
+                                                                else -> {
+                                                                    // ignored
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
 
                                                 Box(modifier = Modifier.clickable {
-
                                                     if (file.loadProgress == null && file.localFileUri.isNullOrBlank()) {
                                                         withPermissions(
                                                             context = context.applicationContext,

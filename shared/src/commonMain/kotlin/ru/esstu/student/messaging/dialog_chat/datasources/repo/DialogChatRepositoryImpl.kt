@@ -206,7 +206,11 @@ class DialogChatRepositoryImpl constructor(
                     peer = IPeer_.DialoguePeer(userId = dialogId)
                 )
             )
-            historyCacheDaoNew.updateDialogLastMessage(appUserId = appUserId, dialogId = dialogId, message.toPreviewLastMessage())
+            historyCacheDaoNew.updateDialogLastMessage(
+                appUserId = appUserId,
+                dialogId = dialogId,
+                message.toPreviewLastMessage()
+            )
         }
     }
 
@@ -263,7 +267,13 @@ class DialogChatRepositoryImpl constructor(
 
 
     override suspend fun updateFile(messageId: Long, attachment: MessageAttachment) {
-        TODO()
+        cacheDao.updateAttachments(
+            loadProgress = attachment.loadProgress ?: 0f,
+            idAttachment = attachment.id.toLong(),
+            localFileUri = attachment.localFileUri.orEmpty()
+        )
         //cacheDao.insertAttachments(listOf(attachment.toDialogChatAttachmentEntity(messageId)))
     }
+
+
 }

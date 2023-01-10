@@ -13,7 +13,7 @@ class _FileStorage(): _FileSystem{
         get() = FileSystem.SYSTEM
 
     override val path: String
-        get() = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
+        get() = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path
 }
 
 actual fun storage(): _FileSystem = _FileStorage()

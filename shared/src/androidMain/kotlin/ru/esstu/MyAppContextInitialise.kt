@@ -6,7 +6,8 @@ import androidx.startup.AppInitializer
 import androidx.startup.Initializer
 import java.util.*
 
-class MyAppContextInitialise: Initializer<ContextApplication>{
+
+class MyAppContextInitialise: Initializer<ContextApplication> {
     override fun create(context: Context): ContextApplication {
         return ContextApplication.init(context)
     }

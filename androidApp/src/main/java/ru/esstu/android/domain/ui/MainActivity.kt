@@ -17,12 +17,14 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
+import dagger.hilt.android.AndroidEntryPoint
 
 import ru.esstu.android.domain.navigation.SetupNavGraph
 import ru.esstu.android.domain.ui.theme.EsstuTheme
 
 
 
+@AndroidEntryPoint
 class  MainActivity : AppCompatActivity() {
 
     //@Inject
