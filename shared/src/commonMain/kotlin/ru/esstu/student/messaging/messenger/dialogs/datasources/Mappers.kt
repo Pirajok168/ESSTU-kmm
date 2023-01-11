@@ -8,12 +8,11 @@ import ru.esstu.student.messaging.entities.*
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.MessageEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.ReplyMessageEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity
-import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.relations.MessageWithAttachments
 import ru.esstu.student.messaging.messenger.datasources.toUser
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.LastMessageWithCountAttachments
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.relations.DialogWithMessage
 import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
-import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewLastMessage
+import ru.esstu.student.messaging.messenger.datasources.entities.PreviewLastMessage
 
 //<editor-fold desc="DialogsApiRepositoryImpl">
 fun DataResponse.toDialogs(): List<PreviewDialog> {

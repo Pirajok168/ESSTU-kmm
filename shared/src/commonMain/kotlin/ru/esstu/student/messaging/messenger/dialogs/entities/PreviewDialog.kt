@@ -1,7 +1,7 @@
 package ru.esstu.student.messaging.messenger.dialogs.entities
 
-import ru.esstu.student.messaging.entities.Message
 import ru.esstu.student.messaging.entities.Sender
+import ru.esstu.student.messaging.messenger.datasources.entities.PreviewLastMessage
 
 data class PreviewDialog(
     val id: String,

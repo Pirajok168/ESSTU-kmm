@@ -5,34 +5,52 @@ import org.kodein.di.bind
 import org.kodein.di.instance
 import org.kodein.di.singleton
 import ru.esstu.ESSTUSdk
-import ru.esstu.student.messaging.messenger.conversations.datasources.api.ConversationApi
-import ru.esstu.student.messaging.messenger.conversations.datasources.api.ConversationApiImpl
-import ru.esstu.student.messaging.messenger.conversations.datasources.repo.ConversationApiRepositoryImpl
-import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationApiRepository
-import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsApiRepository
-import ru.esstu.student.messaging.messenger.dialogs.di.DialogsModuleNew
+import ru.esstu.student.domain.db.IDatabaseStudent
+import ru.esstu.student.messaging.messenger.conversations.datasources.api.ConversationsApi
+import ru.esstu.student.messaging.messenger.conversations.datasources.api.ConversationsApiImpl
+import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsCacheDao
+import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsCacheDatabase
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.ConversationsApiRepositoryImpl
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.ConversationsDbRepositoryImpl
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsApiRepository
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsDbRepository
 import kotlin.native.concurrent.ThreadLocal
 
 internal val conversationModule = DI.Module("ConversationModule") {
 
-    bind<ConversationApi>() with singleton {
-        ConversationApiImpl(
+    bind<ConversationsApi>() with singleton {
+        ConversationsApiImpl(
             instance()
         )
     }
 
-    bind<IConversationApiRepository>() with singleton {
-        ConversationApiRepositoryImpl(
+    bind<IConversationsApiRepository>() with singleton {
+        ConversationsApiRepositoryImpl(
             instance(),
             instance()
         )
     }
 
+    bind<ConversationsCacheDao>() with singleton {
+        ConversationsCacheDatabase(
+            database = instance<IDatabaseStudent>().getDataBase()
+        )
+    }
+
+    bind<IConversationsDbRepository>() with singleton {
+        ConversationsDbRepositoryImpl(
+            instance(),
+            instance()
+        )
+    }
 }
 
 @ThreadLocal
 object ConversationModule {
-    val repo: IConversationApiRepository
+    val repo: IConversationsApiRepository
+        get() = ESSTUSdk.di.instance()
+
+    val db: IConversationsDbRepository
         get() = ESSTUSdk.di.instance()
 }
 

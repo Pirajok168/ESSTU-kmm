@@ -3,7 +3,7 @@ package ru.esstu.student.messaging.messenger.dialogs.datasources.db
 
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.relations.DialogWithMessage
 import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
-import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewLastMessage
+import ru.esstu.student.messaging.messenger.datasources.entities.PreviewLastMessage
 
 interface CacheDao {
     suspend fun setLastMessage(message: PreviewLastMessage)

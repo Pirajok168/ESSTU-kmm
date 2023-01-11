@@ -1,4 +1,4 @@
-package ru.esstu.student.messaging.messenger.dialogs.entities
+package ru.esstu.student.messaging.messenger.datasources.entities
 
 
 import com.soywiz.klock.DateTime

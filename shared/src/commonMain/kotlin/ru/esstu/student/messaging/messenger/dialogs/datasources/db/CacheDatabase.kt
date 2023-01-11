@@ -10,7 +10,7 @@ import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.rela
 import ru.esstu.student.messaging.messenger.dialogs.datasources.toReplyMessageEntity
 import ru.esstu.student.messaging.messenger.dialogs.datasources.toUserEntity
 import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
-import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewLastMessage
+import ru.esstu.student.messaging.messenger.datasources.entities.PreviewLastMessage
 
 class CacheDatabase(
     database: EsstuDatabase,

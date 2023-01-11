@@ -1,21 +1,20 @@
 package ru.esstu.android.student.messaging.messenger.conversations.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationApiRepository
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsApiRepository
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsDbRepository
 import ru.esstu.student.messaging.messenger.conversations.di.conversationModule
 import ru.esstu.student.messaging.messenger.conversations.entities.Conversation
-import javax.inject.Inject
 
 data class ConversationState(
     val items: List<Conversation> = emptyList(),
@@ -33,8 +32,8 @@ sealed class ConversationEvents {
 
 
 class ConversationViewModel  constructor(
-    conversationApi: IConversationApiRepository = ESSTUSdk.conversationModule.repo,
-    //conversationDb: IConversationDbRepository,
+    conversationApi: IConversationsApiRepository = ESSTUSdk.conversationModule.repo,
+    conversationDb: IConversationsDbRepository = ESSTUSdk.conversationModule.db,
     //conversationUpdates: IConversationUpdatesRepository
 ) : ViewModel() {
     var conversationState by mutableStateOf(ConversationState())
@@ -42,22 +41,21 @@ class ConversationViewModel  constructor(
 
     private val paginator = Paginator(
         initialKey = 0,
-        onReset = { /*if (conversationState.cleanCacheOnRefresh) conversationDb.clear()*/ },
+        onReset = { if (conversationState.cleanCacheOnRefresh) conversationDb.clear() },
         onLoad = { conversationState = conversationState.copy(isLoading = it) },
         onRequest = { key ->
-            val loadedConversations = conversationApi.getConversations(conversationState.pageSize, key)
-            loadedConversations
-            /*val cachedConversations = conversationDb.getConversations(conversationState.pageSize, key)
 
+            val cachedConversations = conversationDb.getConversations(conversationState.pageSize, key)
+            Log.e("cachedConversations", cachedConversations.toString())
             if (cachedConversations.isEmpty()) {
                 val loadedConversations = conversationApi.getConversations(conversationState.pageSize, key)
 
                 if (loadedConversations is Response.Success)
-                    conversationDb.setConversations(loadedConversations.data.mapIndexed { index, conversation -> index + key to conversation }.toMap())
+                    conversationDb.setConversations(loadedConversations.data)
 
                 loadedConversations
             } else
-                Response.Success(cachedConversations)*/
+                Response.Success(cachedConversations)
         },
         getNextKey = { key, _ -> key + conversationState.pageSize },
         onError = { conversationState = conversationState.copy(error = it) },

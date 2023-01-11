@@ -1,9 +1,13 @@
 package ru.esstu.student.messaging.messenger.conversations.datasources
 
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
+import ru.esstu.student.messaging.messenger.conversations.datasources.db.entities.ConversationWithMessage
 import ru.esstu.student.messaging.messenger.conversations.entities.Conversation
 import ru.esstu.student.messaging.messenger.datasources.toUser
+import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.relations.DialogWithMessage
 import ru.esstu.student.messaging.messenger.dialogs.datasources.toMessage
+import ru.esstu.student.messaging.messenger.dialogs.datasources.toUser
+import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 
 fun DataResponse.toConversations(): List<Conversation> {
     return dialogs.filter { dialog -> dialog.type == "CHAT" }.mapNotNull {
@@ -20,3 +24,13 @@ fun DataResponse.toConversations(): List<Conversation> {
         )
     }
 }
+
+
+fun ConversationWithMessage.toMessage() = Conversation(
+    id = conversation.idConversation.toInt(),
+    lastMessage = lastMessage.toMessage(),
+    notifyAboutIt = conversation.notifyAboutIt,
+    unreadMessageCount = conversation.unread,
+    title = conversation.title,
+    author = conversation.author?.toUser()
+)

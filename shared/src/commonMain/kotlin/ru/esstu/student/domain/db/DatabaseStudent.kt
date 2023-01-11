@@ -9,6 +9,9 @@ import ru.esstu.student.EsstuDatabase
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatMessageTableNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatReplyMessageTableNew
+import ru.esstu.student.messaging.messanger.conversation.datasources.db.ConversationTable
+import ru.esstu.student.messaging.messanger.conversation.datasources.db.MessageConversationTable
+
 import ru.esstu.student.messaging.messanger.dialogs.datasources.db.DialogTableNew
 import ru.esstu.student.messaging.messanger.dialogs.datasources.db.MessageTableNew
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.ReplyMessageEntity
@@ -95,7 +98,9 @@ class DatabaseStudent(sqlDriver: SqlDriver): IDatabaseStudent {
         DialogTableNewAdapter = DialogTableNew.Adapter(adapter4),
         MessageTableNewAdapter= MessageTableNew.Adapter(adapter4,adapter5),
         DialogChatMessageTableNewAdapter = DialogChatMessageTableNew.Adapter(adapter2) ,
-        DialogChatReplyMessageTableNewAdapter =  DialogChatReplyMessageTableNew.Adapter(adapter3)
+        DialogChatReplyMessageTableNewAdapter =  DialogChatReplyMessageTableNew.Adapter(adapter3),
+        ConversationTableAdapter = ConversationTable.Adapter(adapter4),
+        MessageConversationTableAdapter = MessageConversationTable.Adapter(adapter4,adapter5)
     )
 
     override fun getDataBase(): EsstuDatabase = database

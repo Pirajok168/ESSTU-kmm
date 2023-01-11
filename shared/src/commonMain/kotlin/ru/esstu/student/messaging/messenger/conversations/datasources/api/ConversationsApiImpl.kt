@@ -5,11 +5,10 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
-import kotlin.collections.get
 
-class ConversationApiImpl(
+class ConversationsApiImpl(
     private val portalApi: HttpClient
-): ConversationApi {
+): ConversationsApi {
     override suspend fun getConversations(
         authToken: String,
         offset: Int,
