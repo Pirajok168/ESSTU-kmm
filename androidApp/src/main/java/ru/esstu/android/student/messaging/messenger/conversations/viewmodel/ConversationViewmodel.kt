@@ -6,11 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationUpdatesRepository
 import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsApiRepository
 import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsDbRepository
 import ru.esstu.student.messaging.messenger.conversations.di.conversationModule
@@ -34,7 +36,7 @@ sealed class ConversationEvents {
 class ConversationViewModel  constructor(
     conversationApi: IConversationsApiRepository = ESSTUSdk.conversationModule.repo,
     conversationDb: IConversationsDbRepository = ESSTUSdk.conversationModule.db,
-    //conversationUpdates: IConversationUpdatesRepository
+    conversationUpdates: IConversationUpdatesRepository =  ESSTUSdk.conversationModule.update,
 ) : ViewModel() {
     var conversationState by mutableStateOf(ConversationState())
         private set
@@ -69,14 +71,14 @@ class ConversationViewModel  constructor(
     )
 
     init {
-        /*viewModelScope.launch {
+        viewModelScope.launch {
             conversationUpdates.updatesFlow.collectLatest {
                 if (it is Response.Success && it.data.isNotEmpty()) {
                     conversationState = conversationState.copy(cleanCacheOnRefresh = true)
                     paginator.refresh()
                 }
             }
-        }*/
+        }
     }
 
     fun onEvent(event: ConversationEvents) {

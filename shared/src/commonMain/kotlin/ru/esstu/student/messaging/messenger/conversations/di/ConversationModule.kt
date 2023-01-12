@@ -10,10 +10,7 @@ import ru.esstu.student.messaging.messenger.conversations.datasources.api.Conver
 import ru.esstu.student.messaging.messenger.conversations.datasources.api.ConversationsApiImpl
 import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsCacheDao
 import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsCacheDatabase
-import ru.esstu.student.messaging.messenger.conversations.datasources.repo.ConversationsApiRepositoryImpl
-import ru.esstu.student.messaging.messenger.conversations.datasources.repo.ConversationsDbRepositoryImpl
-import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsApiRepository
-import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsDbRepository
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.*
 import kotlin.native.concurrent.ThreadLocal
 
 internal val conversationModule = DI.Module("ConversationModule") {
@@ -43,6 +40,14 @@ internal val conversationModule = DI.Module("ConversationModule") {
             instance()
         )
     }
+
+    bind<IConversationUpdatesRepository>() with singleton {
+        ConversationUpdatesRepositoryImpl(
+            instance(),
+            instance(),
+            instance()
+        )
+    }
 }
 
 @ThreadLocal
@@ -51,6 +56,9 @@ object ConversationModule {
         get() = ESSTUSdk.di.instance()
 
     val db: IConversationsDbRepository
+        get() = ESSTUSdk.di.instance()
+
+    val update: IConversationUpdatesRepository
         get() = ESSTUSdk.di.instance()
 }
 
