@@ -9,11 +9,10 @@ import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.api.UpdatesApi
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.messenger.conversations.datasources.toConversations
-import ru.esstu.student.messaging.messenger.conversations.entities.Conversation
+import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
 import ru.esstu.student.messaging.messenger.datasources.db.timestamp.TimestampDao
 import ru.esstu.student.messaging.messenger.datasources.db.timestamp.toTimeStamp
 import ru.esstu.student.messaging.messenger.datasources.db.timestamp.toTimeStampEntity
-import ru.esstu.student.messaging.messenger.dialogs.datasources.toDialogs
 
 
 class ConversationUpdatesRepositoryImpl(
@@ -21,7 +20,7 @@ class ConversationUpdatesRepositoryImpl(
     api: UpdatesApi,
     timestampDao: TimestampDao
 ): IConversationUpdatesRepository {
-    override val updatesFlow: Flow<Response<List<Conversation>>>  = flow {
+    override val updatesFlow: Flow<Response<List<ConversationPreview>>>  = flow {
         while (true) {
             val callTimestamp = DateTime.now().unixMillisLong
             auth.provideToken { token ->

@@ -17,9 +17,9 @@ import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.dialog_chat.datasources.*
 
-import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
-import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
-import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
+import ru.esstu.student.messaging.entities.CachedFile
+import ru.esstu.student.messaging.entities.NewUserMessage
+import ru.esstu.student.messaging.entities.SentUserMessage
 
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatApi
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.HistoryCacheDao

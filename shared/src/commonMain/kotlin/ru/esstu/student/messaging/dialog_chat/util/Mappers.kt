@@ -1,8 +1,8 @@
 package ru.esstu.student.messaging.dialog_chat.util
 
-import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
-import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
-import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
+import ru.esstu.student.messaging.entities.CachedFile
+import ru.esstu.student.messaging.entities.NewUserMessage
+import ru.esstu.student.messaging.entities.SentUserMessage
 import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.Message
 import ru.esstu.student.messaging.entities.ReplyMessage

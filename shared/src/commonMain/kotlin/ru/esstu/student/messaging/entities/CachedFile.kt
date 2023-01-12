@@ -1,6 +1,4 @@
-package ru.esstu.student.messaging.dialog_chat.entities
-
-import okio.Path
+package ru.esstu.student.messaging.entities
 
 
 data class CachedFile(

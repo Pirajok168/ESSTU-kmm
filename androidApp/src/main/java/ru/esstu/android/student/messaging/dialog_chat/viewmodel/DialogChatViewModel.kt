@@ -19,9 +19,9 @@ import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 
-import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
-import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
-import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
+import ru.esstu.student.messaging.entities.CachedFile
+import ru.esstu.student.messaging.entities.NewUserMessage
+import ru.esstu.student.messaging.entities.SentUserMessage
 import ru.esstu.student.messaging.dialog_chat.util.toSentUserMessage
 import ru.esstu.student.messaging.dialog_chat.datasources.di.dialogChatModuleNew
 import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatRepository

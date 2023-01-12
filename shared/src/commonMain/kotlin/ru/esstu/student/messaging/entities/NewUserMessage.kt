@@ -1,6 +1,4 @@
-package ru.esstu.student.messaging.dialog_chat.entities
-
-import ru.esstu.student.messaging.entities.Message
+package ru.esstu.student.messaging.entities
 
 
 data class NewUserMessage(

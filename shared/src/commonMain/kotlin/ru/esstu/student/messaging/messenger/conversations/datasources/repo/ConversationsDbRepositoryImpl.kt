@@ -4,15 +4,14 @@ import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsCacheDao
 import ru.esstu.student.messaging.messenger.conversations.datasources.toMessage
-import ru.esstu.student.messaging.messenger.conversations.entities.Conversation
-import ru.esstu.student.messaging.messenger.dialogs.datasources.toMessage
+import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
 
 class ConversationsDbRepositoryImpl(
     private val auth: IAuthRepository,
     private val cacheDao: ConversationsCacheDao
 ) :
     IConversationsDbRepository {
-    override suspend fun getConversations(limit: Int, offset: Int): List<Conversation> {
+    override suspend fun getConversations(limit: Int, offset: Int): List<ConversationPreview> {
         val dialogs = auth.provideToken {
                 token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Exception("unsupported User Type")
@@ -25,7 +24,7 @@ class ConversationsDbRepositoryImpl(
         cacheDao.clear()
     }
 
-    override suspend fun setConversations(previewDialogs: List<Conversation>) {
+    override suspend fun setConversations(previewDialogs: List<ConversationPreview>) {
         auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Exception("unsupported User Type")
             previewDialogs.forEach {

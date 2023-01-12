@@ -6,7 +6,7 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
+import ru.esstu.student.messaging.entities.CachedFile
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream

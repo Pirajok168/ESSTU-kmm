@@ -10,8 +10,8 @@ import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.messag
 import ru.esstu.domain.modules.account.datasources.datastore.producePath
 import ru.esstu.domain.modules.account.datasources.datastore.storage
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
-import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
-import ru.esstu.student.messaging.dialog_chat.entities.NewUserMessage
+import ru.esstu.student.messaging.entities.CachedFile
+import ru.esstu.student.messaging.entities.NewUserMessage
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.MessageWithRelatedNew
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_messages.entities.UserMessageWithRelatedNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatAttachmentTableNew

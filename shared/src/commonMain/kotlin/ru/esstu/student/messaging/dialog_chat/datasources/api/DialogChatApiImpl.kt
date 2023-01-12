@@ -19,7 +19,7 @@ import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.chat_message_r
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessagePreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessageResponse
 import ru.esstu.domain.modules.account.datasources.api.response.UserResponse
-import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
+import ru.esstu.student.messaging.entities.CachedFile
 
 
 class DialogChatApiImpl(
@@ -126,7 +126,6 @@ class DialogChatApiImpl(
                         })
 
                         files.forEach {
-                            Napier.e("${it.type} - route = ${it.sourceFile} name = ${it.name} ext =${it.ext}")
                             val array = fileSystem.read(it.sourceFile.toPath()){
                                 readByteArray()
                             }
@@ -166,7 +165,6 @@ class DialogChatApiImpl(
                         })
 
                         files.forEach {
-                            Napier.e("${it.type} - route = ${it.sourceFile} name = ${it.name} ext =${it.ext}")
                             val array = fileSystem.read(it.sourceFile.toPath()){
                                 readByteArray()
                             }

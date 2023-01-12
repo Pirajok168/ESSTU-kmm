@@ -4,8 +4,8 @@ import okio.FileSystem
 import okio.Path.Companion.toPath
 import ru.esstu.domain.modules.account.datasources.datastore.producePath
 import ru.esstu.domain.modules.account.datasources.datastore.storage
-import ru.esstu.student.messaging.dialog_chat.entities.CachedFile
-import ru.esstu.student.messaging.dialog_chat.entities.SentUserMessage
+import ru.esstu.student.messaging.entities.CachedFile
+import ru.esstu.student.messaging.entities.SentUserMessage
 import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.entities.ErredMessageWithRelatedNew
 import ru.esstu.student.messaging.dialog_chat.datasources.toMessage
 import ru.esstu.student.messaging.dialogchat.datasources.db.erredmessages.ErredCachedFileTableNew

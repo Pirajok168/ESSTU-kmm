@@ -1,0 +1,43 @@
+CREATE TABLE GroupChatUserMessage (
+    appUserId TEXT NOT NULL,
+    conversationId INTEGER PRIMARY KEY NOT NULL,
+    text Text NOT NULL,
+    replyMessageId INTEGER
+);
+
+
+CREATE TABLE GroupChatUserCachedFileEntity(
+    appUserId TEXT NOT NULL ,
+    conversationId INTEGER  NOT NULL ,
+    source BLOB NOT NULL ,
+    idCached INTEGER AS Int PRIMARY KEY,
+    name TEXT NOT NULL ,
+    ext TEXT NOT NULL ,
+    size INTEGER NOT NULL,
+    type TEXT NOT NULL ,
+    FOREIGN KEY (conversationId) REFERENCES GroupChatUserMessage(conversationId) ON DELETE CASCADE
+);
+
+getCachedFiles:
+    SELECT * FROM GroupChatUserCachedFileEntity WHERE appUserId == :appUserId AND conversationId == :conversationId;
+
+getReplyMessage:
+    SELECT t.*, o.*, q.*
+               FROM GroupChatMessage t
+               LEFT JOIN GroupChatAttachment o ON t.idGroupChatMessage == o.messageIdAttachment
+               LEFT JOIN GroupChatReplyMessage q ON t.replyMessageId == q.idReplyMessage
+               WHERE t.idGroupChatMessage == (:idGroupChatMessage) ;
+
+getUserMessage:
+    SELECT * FROM GroupChatUserMessage WHERE appUserId == :appUserId AND conversationId == :conversationId;
+
+removeMessage:
+    DELETE FROM GroupChatUserMessage WHERE appUserId == :appUserId AND conversationId == :conversationId;
+
+addMessage:
+    INSERT OR REPLACE INTO GroupChatUserMessage(appUserId, conversationId, text, replyMessageId)
+        VALUES (?, ? ,?, ?);
+
+addCachedFiles:
+    INSERT OR REPLACE INTO GroupChatUserCachedFileEntity(idCached, appUserId, conversationId,name,ext,size,type, source)
+        VALUES (?, ? ,?, ?,? ,? ,?, ?);

@@ -1,0 +1,69 @@
+import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.entities.GroupChatAuthorEntity;
+
+
+
+
+
+CREATE TABLE GroupChatMessage (
+    appUserId TEXT NOT NULL,
+    idGroupChatMessage INTEGER PRIMARY KEY NOT NULL ,
+    conversationId INTEGER NOT NULL ,
+    fromGroup TEXT AS GroupChatAuthorEntity NOT NULL,
+    replyMessageId INTEGER,
+    date INTEGER NOT NULL,
+    message TEXT NOT NULL,
+    status TEXT NOT NULL
+);
+
+
+CREATE TABLE GroupChatAttachment(
+    idAttachment INTEGER PRIMARY KEY NOT NULL,
+
+    messageIdAttachment INTEGER NOT NULL ,
+    fileUri TEXT NOT NULL ,
+    LocalFileUri TEXT,
+    loadProgress REAL,
+    name TEXT,
+    ext TEXT,
+    size INTEGER NOT NULL,
+    type TEXT,
+    FOREIGN KEY (messageIdAttachment) REFERENCES GroupChatMessage (idGroupChatMessage) ON DELETE CASCADE
+);
+
+
+
+CREATE TABLE GroupChatReplyMessage(
+    idReplyMessage INTEGER PRIMARY KEY,
+    messageIdReply INTEGER NOT NULL ,
+    fromSendReplyMessage TEXT AS GroupChatAuthorEntity,
+    dateReplyMessage INTEGER NOT NULL,
+    messageReplayMessage TEXT,
+    attachmentsCount INTEGER AS Int NOT NULL,
+    FOREIGN KEY (messageIdReply) REFERENCES GroupChatMessage (idGroupChatMessage) ON DELETE CASCADE
+);
+
+updateAttachemnt:
+    UPDATE GroupChatAttachment
+        SET loadProgress = :loadProgress, LocalFileUri = :localFileUri
+        WHERE  idAttachment = :idAttachment;
+
+insertMessage:
+    INSERT OR REPLACE INTO GroupChatMessage(appUserId, idGroupChatMessage, conversationId, fromGroup, replyMessageId,date, message,status)
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?);
+
+insertAttachments:
+    INSERT OR REPLACE INTO GroupChatAttachment(idAttachment, messageIdAttachment, fileUri,LocalFileUri,name,ext,size, type)
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?);
+
+
+insertReply:
+    INSERT OR REPLACE INTO GroupChatReplyMessage(idReplyMessage, fromSendReplyMessage, dateReplyMessage,messageReplayMessage,attachmentsCount, messageIdReply)
+        VALUES(?, ?, ?, ?, ?, ?);
+
+getMessageHistory:
+    SELECT t.*, o.*, q.*
+        FROM GroupChatMessage t
+        LEFT JOIN GroupChatAttachment o ON t.idGroupChatMessage == o.messageIdAttachment
+        LEFT JOIN GroupChatReplyMessage q ON t.replyMessageId == q.idReplyMessage
+        WHERE t.appUserId == (:appUserId) AND t.conversationId == (:conversationId)
+        ORDER BY date DESC LIMIT (:limit) OFFSET (:offset);

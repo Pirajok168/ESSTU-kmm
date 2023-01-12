@@ -4,11 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserPreview(
-    val id: String?,
-    val firstName: String?,
-    val lastName: String?,
-    val patronymic: String?,
-    val information: String?,
-    val photo: String?,
-    val sex: String?
+    val id: String? = null,
+    val firstName: String? = null,
+    val lastName: String?= null,
+    val patronymic: String?= null,
+    val information: String?= null,
+    val photo: String?= null,
+    val sex: String?= null
 )

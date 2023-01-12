@@ -3,16 +3,14 @@ package ru.esstu.student.messaging.messenger.conversations.datasources.db
 import ru.esstu.student.EsstuDatabase
 import ru.esstu.student.messaging.messanger.conversation.datasources.db.ConversationTable
 import ru.esstu.student.messaging.messenger.conversations.datasources.db.entities.ConversationWithMessage
-import ru.esstu.student.messaging.messenger.conversations.entities.Conversation
+import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.MessageEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.ReplyMessageEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity
 import ru.esstu.student.messaging.messenger.dialogs.datasources.toReplyMessageEntity
 import ru.esstu.student.messaging.messenger.dialogs.datasources.toUserEntity
 import ru.esstu.student.messaging.messenger.datasources.entities.PreviewLastMessage
-import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.DialogEntity
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.LastMessageWithCountAttachments
-import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.relations.DialogWithMessage
 
 class ConversationsCacheDatabase(
     database: EsstuDatabase,
@@ -22,8 +20,8 @@ class ConversationsCacheDatabase(
         dbQueries.clear()
     }
 
-    override suspend fun setDialog(appUserId: String, conversation: Conversation) {
-        conversation.apply {
+    override suspend fun setDialog(appUserId: String, conversationPreview: ConversationPreview) {
+        conversationPreview.apply {
             dbQueries.setDialog(appUserId, id.toLong(), title, author?.toUserEntity(), lastMessage?.id, notifyAboutIt, unreadMessageCount )
         }
     }

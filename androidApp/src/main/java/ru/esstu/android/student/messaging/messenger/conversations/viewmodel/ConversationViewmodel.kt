@@ -16,10 +16,10 @@ import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConv
 import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsApiRepository
 import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsDbRepository
 import ru.esstu.student.messaging.messenger.conversations.di.conversationModule
-import ru.esstu.student.messaging.messenger.conversations.entities.Conversation
+import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
 
 data class ConversationState(
-    val items: List<Conversation> = emptyList(),
+    val items: List<ConversationPreview> = emptyList(),
     val pageSize: Int = 10,
     val isLoading: Boolean = false,
     val isEndReached: Boolean = false,

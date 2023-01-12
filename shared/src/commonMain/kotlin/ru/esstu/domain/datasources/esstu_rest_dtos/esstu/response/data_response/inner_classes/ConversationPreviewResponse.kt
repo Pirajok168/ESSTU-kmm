@@ -3,7 +3,7 @@ package ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ConversationPreview(
+data class ConversationPreviewResponse(
     val id: Int,
     val type: String,
     val name: String,
