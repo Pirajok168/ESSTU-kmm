@@ -146,7 +146,7 @@ class GroupChatUserMessageDatabase(
     override suspend fun addCachedFiles(files: List<GroupChatUserCachedFileEntity>) {
         files.forEach {
             it.apply {
-                dbQuery.addCachedFiles(idCached, appUserId, conversationId, name, ext, size, type, source)
+                dbQuery.addCachedFiles(idCached, appUserId, conversationId, name, ext, size, type, source, sourceFile)
             }
         }
     }

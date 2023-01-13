@@ -18,6 +18,7 @@ import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatUpdateRepository
+import ru.esstu.student.messaging.dialog_chat.util.toSentUserMessage
 import ru.esstu.student.messaging.entities.*
 import ru.esstu.student.messaging.group_chat.datasources.repo.IGroupChatRepository
 import ru.esstu.student.messaging.group_chat.di.groupChatModuleNew
@@ -110,7 +111,7 @@ class GroupChatViewModel  constructor(
 
             attachErredMessages(conv.id)
 
-            //dialogChatState = dialogChatState.copy(message = groupChatRepository.getUserMessage(conv.id))
+            dialogChatState = dialogChatState.copy(message = groupChatRepository.getUserMessage(conv.id))
 
             updatePreview(page.firstOrNull())
         },
@@ -217,7 +218,7 @@ class GroupChatViewModel  constructor(
 
             val conv = dialogChatState.conversation ?: return@launch
             val message = dialogChatState.message
-            //groupChatRepository.updateUserMessage(convId = conv.id, message = message)
+            groupChatRepository.updateUserMessage(convId = conv.id, message = message)
         }
     }
 
@@ -225,7 +226,7 @@ class GroupChatViewModel  constructor(
 
     private suspend fun onSendMessage() {
 
-        /*val conv = dialogChatState.conversation ?: return
+        val conv = dialogChatState.conversation ?: return
 
         val sentUserMessage = dialogChatState.message.toSentUserMessage()
 
@@ -244,7 +245,7 @@ class GroupChatViewModel  constructor(
                     dialogChatState.copy(sentMessages = dialogChatState.sentMessages.map { sent ->
                         if (sent == sentUserMessage) {
                             val erred = sent.copy(status = DeliveryStatus.ERRED)
-                            groupChatRepository.setErredMessage(conv.id, erred)
+                            //groupChatRepository.setErredMessage(conv.id, erred)
                             erred
                         } else
                             sent
@@ -254,13 +255,13 @@ class GroupChatViewModel  constructor(
                     dialogChatState.copy(sentMessages = dialogChatState.sentMessages.map { sent ->
                         if (sent == sentUserMessage) {
                             val success = sent.copy(id = result.data, status = DeliveryStatus.DELIVERED)
-                            groupChatRepository.delErredMessage(sent.id)
+                            //groupChatRepository.delErredMessage(sent.id)
                             success
                         } else
                             sent
                     })
             }
-        }*/
+        }
     }
 
 

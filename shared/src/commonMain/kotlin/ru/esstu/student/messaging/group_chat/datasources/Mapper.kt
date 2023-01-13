@@ -1,21 +1,26 @@
 package ru.esstu.student.messaging.group_chat.datasources
 
 
-import ru.esstu.student.messaging.entities.Message
-import ru.esstu.student.messaging.entities.MessageAttachment
-import ru.esstu.student.messaging.entities.ReplyMessage
-import ru.esstu.student.messaging.entities.Sender
+import okio.FileSystem
+import okio.Path.Companion.toPath
+import ru.esstu.domain.modules.account.datasources.datastore.producePath
+import ru.esstu.domain.modules.account.datasources.datastore.storage
+import ru.esstu.student.messaging.entities.*
 import ru.esstu.student.messaging.group_chat.datasources.api.response.ConversationResponse
 import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.entities.GroupChatAuthorEntity
 import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.entities.MessageGroupChatWithRelated
 import ru.esstu.student.messaging.group_chat.datasources.db.header.entities.ConversationWithParticipants
+import ru.esstu.student.messaging.group_chat.datasources.db.user_messages.entities.GroupChatUserMessageWithRelated
 import ru.esstu.student.messaging.group_chat.entities.Conversation
 import ru.esstu.student.messaging.groupchat.datasources.db.chathistory.GroupChatAttachment
 import ru.esstu.student.messaging.groupchat.datasources.db.chathistory.GroupChatMessage
 import ru.esstu.student.messaging.groupchat.datasources.db.chathistory.GroupChatReplyMessage
 import ru.esstu.student.messaging.groupchat.datasources.db.header.GroupChatConversation
 import ru.esstu.student.messaging.groupchat.datasources.db.header.GroupChatParticipant
+import ru.esstu.student.messaging.groupchat.datasources.db.usermessages.GroupChatUserCachedFileEntity
+import ru.esstu.student.messaging.groupchat.datasources.db.usermessages.GroupChatUserMessage
 import ru.esstu.student.messaging.messenger.datasources.toUser
+import kotlin.random.Random
 
 fun ConversationResponse.toConversation(): Conversation {
     val participants = users.mapNotNull { it.toUser() }
@@ -151,5 +156,58 @@ fun Conversation.toConversationWithParticipantsEntity(appUserId: String): Conver
     return ConversationWithParticipants(
         conversation = toConversationEntity(appUserId = appUserId),
         participants = participants.map { it.toParticipantEntity(id, appUserId) }
+    )
+}
+
+fun NewUserMessage.toUserMessageEntity(appUserId:String, convId: Int): GroupChatUserMessage {
+    return GroupChatUserMessage(
+        appUserId = appUserId,
+        conversationId = convId.toLong(),
+        text = text,
+        replyMessageId = replyMessage?.id,
+    )
+}
+
+fun CachedFile.toEntity(
+    appUserId: String, convId: Int,   fileSystem: FileSystem = storage().fileSystem
+): GroupChatUserCachedFileEntity {
+
+
+    return GroupChatUserCachedFileEntity(
+        conversationId = convId.toLong(),
+        appUserId = appUserId,
+        source =  fileSystem.read(sourceFile.toPath()) {
+            readByteArray()
+        },
+        size = size,
+        ext = ext,
+        name = name,
+        type = type,
+        idCached = Random.nextInt(),
+        sourceFile = sourceFile
+    )
+}
+
+fun GroupChatUserMessageWithRelated.toSentUserMessage() = NewUserMessage(
+    attachments = attachments.map { it.toCachedFile() },
+    replyMessage = reply?.toMessage(),
+    text = message.text,
+)
+
+fun GroupChatUserCachedFileEntity.toCachedFile(
+    fileSystem: FileSystem = storage().fileSystem
+): CachedFile {
+
+  /*  fileSystem.write("${producePath().path}/$name.$ext".toPath(), false) {
+        write(source)
+    }*/
+
+    return CachedFile(
+        type = type,
+        name = name,
+        ext = ext,
+        size = size,
+        sourceFile = sourceFile.orEmpty(),
+        uri =  sourceFile.orEmpty()
     )
 }

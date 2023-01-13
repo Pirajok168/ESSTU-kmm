@@ -10,6 +10,7 @@ CREATE TABLE GroupChatUserCachedFileEntity(
     appUserId TEXT NOT NULL ,
     conversationId INTEGER  NOT NULL ,
     source BLOB NOT NULL ,
+    sourceFile TEXT ,
     idCached INTEGER AS Int PRIMARY KEY,
     name TEXT NOT NULL ,
     ext TEXT NOT NULL ,
@@ -39,5 +40,5 @@ addMessage:
         VALUES (?, ? ,?, ?);
 
 addCachedFiles:
-    INSERT OR REPLACE INTO GroupChatUserCachedFileEntity(idCached, appUserId, conversationId,name,ext,size,type, source)
-        VALUES (?, ? ,?, ?,? ,? ,?, ?);
+    INSERT OR REPLACE INTO GroupChatUserCachedFileEntity(idCached, appUserId, conversationId,name,ext,size,type, source, sourceFile)
+        VALUES (?, ? ,?, ?,? ,? ,?, ?, ?);

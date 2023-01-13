@@ -76,6 +76,7 @@ internal val groupChatModuleNew = DI.Module("groupChatModuleNew"){
             instance(),
             instance(),
             instance(),
+            instance(),
             instance()
         )
     }
