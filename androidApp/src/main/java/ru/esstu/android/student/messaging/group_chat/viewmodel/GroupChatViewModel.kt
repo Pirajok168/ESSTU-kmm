@@ -174,12 +174,12 @@ class GroupChatViewModel @Inject  constructor(
     }
 
     private suspend fun attachErredMessages(convId: Int) {
-        /*dialogChatState = dialogChatState.copy(sentMessages = groupChatRepository.getErredMessages(convId))
+        dialogChatState = dialogChatState.copy(sentMessages = groupChatRepository.getErredMessages(convId))
 
         dialogChatState.sentMessages.forEach { msg ->
             if (msg.status == DeliveryStatus.ERRED)
                 onEvent(GroupChatEvents.ResendMessage(msg))
-        }*/
+        }
     }
 
     private suspend fun onPassOpponent(id: Int) {
@@ -248,7 +248,7 @@ class GroupChatViewModel @Inject  constructor(
                     dialogChatState.copy(sentMessages = dialogChatState.sentMessages.map { sent ->
                         if (sent == sentUserMessage) {
                             val erred = sent.copy(status = DeliveryStatus.ERRED)
-                            //groupChatRepository.setErredMessage(conv.id, erred)
+                            groupChatRepository.setErredMessage(conv.id, erred)
                             erred
                         } else
                             sent
@@ -258,7 +258,7 @@ class GroupChatViewModel @Inject  constructor(
                     dialogChatState.copy(sentMessages = dialogChatState.sentMessages.map { sent ->
                         if (sent == sentUserMessage) {
                             val success = sent.copy(id = result.data, status = DeliveryStatus.DELIVERED)
-                            //groupChatRepository.delErredMessage(sent.id)
+                            groupChatRepository.delErredMessage(sent.id)
                             success
                         } else
                             sent
@@ -270,7 +270,7 @@ class GroupChatViewModel @Inject  constructor(
 
     private suspend fun onResendMessage(message: SentUserMessage) {
 
-        /*val conv = dialogChatState.conversation ?: return
+        val conv = dialogChatState.conversation ?: return
 
         val updatedMessage = message.copy(status = DeliveryStatus.SENT)
 
@@ -310,7 +310,7 @@ class GroupChatViewModel @Inject  constructor(
                             sent
                     })
             }
-        }*/
+        }
     }
 
 

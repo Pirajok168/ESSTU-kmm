@@ -3,6 +3,7 @@ package ru.esstu.student.messaging.group_chat.datasources.repo
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okio.IOException
 import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
@@ -12,13 +13,11 @@ import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.dialog_chat.datasources.toMessages
-import ru.esstu.student.messaging.entities.CachedFile
-import ru.esstu.student.messaging.entities.Message
-import ru.esstu.student.messaging.entities.MessageAttachment
-import ru.esstu.student.messaging.entities.NewUserMessage
+import ru.esstu.student.messaging.entities.*
 import ru.esstu.student.messaging.group_chat.datasources.*
 import ru.esstu.student.messaging.group_chat.datasources.api.GroupChatApi
 import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.GroupChatHistoryCacheDao
+import ru.esstu.student.messaging.group_chat.datasources.db.erred_messages.ErredMessageDao
 import ru.esstu.student.messaging.group_chat.datasources.db.header.HeaderDao
 import ru.esstu.student.messaging.group_chat.datasources.db.user_messages.GroupUserMessageDao
 import ru.esstu.student.messaging.group_chat.entities.Conversation
@@ -31,7 +30,8 @@ class GroupChatRepositoryImpl constructor(
     private val historyCacheDao: GroupChatHistoryCacheDao,
     private val cache: ConversationsCacheDao,
     private val headerDao: HeaderDao,
-    private val userMsgDao: GroupUserMessageDao
+    private val userMsgDao: GroupUserMessageDao,
+    private val erredMsgDao: ErredMessageDao
 ): IGroupChatRepository {
     override suspend fun getHeader(id: Int): Flow<FlowResponse<Conversation>> = flow{
         auth.provideToken { token ->
@@ -182,6 +182,7 @@ class GroupChatRepositoryImpl constructor(
     ): Response<Long> {
         if (message.isNullOrEmpty() && replyMessage == null && attachments.any()) {
             val result = auth.provideToken { type, token ->
+
                 groupChatApi.sendAttachments(
                     authToken = "$token",
                     files = attachments,
@@ -201,6 +202,7 @@ class GroupChatRepositoryImpl constructor(
 
         if ((message != null || replyMessage != null) && attachments.any()) {
             val result = auth.provideToken { type, token ->
+
                 groupChatApi.sendMessageWithAttachments(
                     authToken = "$token",
                     files = attachments,
@@ -219,6 +221,7 @@ class GroupChatRepositoryImpl constructor(
 
         if ((message != null || replyMessage != null) && attachments.isEmpty()) {
             val result = auth.provideToken { type, token ->
+
                 groupChatApi.sendMessage(
                     authToken = "$token",
                     body = ChatMessageRequestBody(
@@ -236,4 +239,24 @@ class GroupChatRepositoryImpl constructor(
 
         return Response.Error(ResponseError(message = "Неизвестное состояние"))
     }
+
+    override suspend fun getErredMessages(convId: Int): List<SentUserMessage> {
+        val messages = auth.provideToken { token ->
+            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
+            return@provideToken erredMsgDao.getErredMessageWithRelated(appUserId, convId).map { it.toSentUserMessage() }
+        }.data ?: emptyList()
+
+        return messages
+    }
+
+    override suspend fun setErredMessage(convId: Int, message: SentUserMessage) {
+        auth.provideToken { token ->
+            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
+            val erredMessage = message.toErredMessageEntity(appUserId, convId) ?: return@provideToken
+            erredMsgDao.addMessage(erredMessage)
+            erredMsgDao.addCachedFiles(message.attachments.map { it.toEntity(message.id) })
+        }
+    }
+
+    override suspend fun delErredMessage(id: Long) = erredMsgDao.removeMessage(id)
 }

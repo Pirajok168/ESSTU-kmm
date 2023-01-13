@@ -1,0 +1,46 @@
+CREATE TABLE GroupChatErredCachedFile (
+    idCahedFile INTEGER AS Int PRIMARY KEY,
+
+    messageId INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    ext TEXT NOT NULL,
+    sourceFile TEXT ,
+    size INTEGER NOT NULL,
+    type TEXT NOT NULL,
+    FOREIGN KEY (messageId) REFERENCES GroupChatErredMessage(idErredMessage) ON DELETE CASCADE
+);
+
+CREATE TABLE GroupChatErredMessage(
+    idErredMessage INTEGER PRIMARY KEY NOT NULL,
+    appUserId TEXT NOT NULL,
+    convId INTEGER NOT NULL,
+    date INTEGER NOT NULL,
+    text TEXT NOT NULL,
+    replyMessageId INTEGER
+);
+
+getReplyMessage:
+    SELECT t.*, o.*, q.*
+           FROM GroupChatMessage t
+           LEFT JOIN GroupChatAttachment o ON t.idGroupChatMessage == o.messageIdAttachment
+           LEFT JOIN GroupChatReplyMessage q ON t.replyMessageId == q.idReplyMessage
+           WHERE t.conversationId == (:conversationId);
+
+getCachedFiles:
+    SELECT * FROM GroupChatErredCachedFile WHERE messageId == (:messageId);
+
+
+getErredMessages:
+   SELECT * FROM GroupChatErredMessage WHERE appUserId == (:appUserId) AND convId == (:convId);
+
+removeMessage:
+   DELETE FROM GroupChatErredMessage WHERE idErredMessage == (:id);
+
+
+addMessage:
+    INSERT OR REPLACE INTO GroupChatErredMessage(idErredMessage,appUserId,convId,date,text,replyMessageId)
+        VALUES(?,?,?,?,?,?);
+
+addCachedFiles:
+    INSERT OR REPLACE INTO GroupChatErredCachedFile(idCahedFile,messageId,name,ext,size,type, sourceFile)
+        VALUES (?,?,?,?,?,?,?);

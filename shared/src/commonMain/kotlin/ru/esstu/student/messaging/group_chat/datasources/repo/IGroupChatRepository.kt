@@ -3,10 +3,7 @@ package ru.esstu.student.messaging.group_chat.datasources.repo
 import kotlinx.coroutines.flow.Flow
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.student.messaging.entities.CachedFile
-import ru.esstu.student.messaging.entities.Message
-import ru.esstu.student.messaging.entities.MessageAttachment
-import ru.esstu.student.messaging.entities.NewUserMessage
+import ru.esstu.student.messaging.entities.*
 import ru.esstu.student.messaging.group_chat.entities.Conversation
 
 interface IGroupChatRepository {
@@ -25,4 +22,9 @@ interface IGroupChatRepository {
         replyMessage: Message? = null,
         attachments: List<CachedFile> = emptyList()
     ): Response<Long>
+
+    suspend fun getErredMessages(convId: Int): List<SentUserMessage>
+    suspend fun setErredMessage(convId: Int, message: SentUserMessage)
+
+    suspend fun delErredMessage(id: Long)
 }

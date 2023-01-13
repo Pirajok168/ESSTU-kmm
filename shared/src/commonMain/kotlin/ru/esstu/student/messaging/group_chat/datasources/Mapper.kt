@@ -9,12 +9,15 @@ import ru.esstu.student.messaging.entities.*
 import ru.esstu.student.messaging.group_chat.datasources.api.response.ConversationResponse
 import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.entities.GroupChatAuthorEntity
 import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.entities.MessageGroupChatWithRelated
+import ru.esstu.student.messaging.group_chat.datasources.db.erred_messages.entities.GroupChatErredMessageWithRelated
 import ru.esstu.student.messaging.group_chat.datasources.db.header.entities.ConversationWithParticipants
 import ru.esstu.student.messaging.group_chat.datasources.db.user_messages.entities.GroupChatUserMessageWithRelated
 import ru.esstu.student.messaging.group_chat.entities.Conversation
 import ru.esstu.student.messaging.groupchat.datasources.db.chathistory.GroupChatAttachment
 import ru.esstu.student.messaging.groupchat.datasources.db.chathistory.GroupChatMessage
 import ru.esstu.student.messaging.groupchat.datasources.db.chathistory.GroupChatReplyMessage
+import ru.esstu.student.messaging.groupchat.datasources.db.erredmessage.GroupChatErredCachedFile
+import ru.esstu.student.messaging.groupchat.datasources.db.erredmessage.GroupChatErredMessage
 import ru.esstu.student.messaging.groupchat.datasources.db.header.GroupChatConversation
 import ru.esstu.student.messaging.groupchat.datasources.db.header.GroupChatParticipant
 import ru.esstu.student.messaging.groupchat.datasources.db.usermessages.GroupChatUserCachedFileEntity
@@ -209,5 +212,56 @@ fun GroupChatUserCachedFileEntity.toCachedFile(
         size = size,
         sourceFile = sourceFile.orEmpty(),
         uri =  sourceFile.orEmpty()
+    )
+}
+
+fun  GroupChatErredCachedFile.toCachedFile(): CachedFile {
+
+
+
+    return CachedFile(
+        type = type,
+        name = name,
+        ext = ext,
+        size = size,
+        sourceFile = sourceFile.orEmpty(),
+        uri = sourceFile.orEmpty()
+    )
+}
+
+
+fun GroupChatErredMessageWithRelated.toSentUserMessage() = SentUserMessage(
+    attachments = attachments.map { it.toCachedFile() },
+    replyMessage = reply?.toMessage(),
+    id = message.idErredMessage,
+    text = message.text,
+    status = DeliveryStatus.ERRED,
+    date = message.date
+)
+
+fun SentUserMessage.toErredMessageEntity(appUserId:String, convId: Int): GroupChatErredMessage? {
+    if(status!=DeliveryStatus.ERRED) return null
+    return GroupChatErredMessage(
+        appUserId = appUserId,
+        convId = convId.toLong(),
+        idErredMessage = id,
+        text = text,
+        replyMessageId = replyMessage?.id,
+        date = date
+    )
+}
+
+fun CachedFile.toEntity(messageId: Long): GroupChatErredCachedFile {
+
+
+
+    return GroupChatErredCachedFile(
+        messageId = messageId,
+        sourceFile = sourceFile,
+        size = size,
+        ext = ext,
+        name = name,
+        type = type,
+        idCahedFile = Random.nextInt()
     )
 }

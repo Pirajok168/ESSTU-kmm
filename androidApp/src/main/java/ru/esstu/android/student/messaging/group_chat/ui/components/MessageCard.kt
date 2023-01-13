@@ -46,7 +46,6 @@ fun MessageCard(
 
     isShowStatus: Boolean = true,
     onImageClick: (selectedId: Int, images: List<MessageAttachment>) -> Unit = { _, _ -> },
-    // onFileClick: (attachment: Attachment) -> Unit = { },
 
     onFileContent: @Composable (attachment: MessageAttachment, content: @Composable () -> Unit) -> Unit = { _, cont -> cont() },
 ) {
@@ -237,8 +236,3 @@ fun MessageCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun sss1() {
-    CompPreviewTheme { }
-}

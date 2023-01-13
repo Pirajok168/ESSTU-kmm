@@ -48,7 +48,6 @@ class ConversationViewModel  constructor(
         onRequest = { key ->
 
             val cachedConversations = conversationDb.getConversations(conversationState.pageSize, key)
-            Log.e("cachedConversations", cachedConversations.toString())
             if (cachedConversations.isEmpty()) {
                 val loadedConversations = conversationApi.getConversations(conversationState.pageSize, key)
 
