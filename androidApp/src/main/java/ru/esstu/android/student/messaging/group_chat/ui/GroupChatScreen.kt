@@ -76,7 +76,7 @@ fun GroupChatScreen(
     onNavToImage: (startUri: String, uris: List<String>) -> Unit = { _, _ -> },
     convId: Int,
     showConvAuthor: Boolean = true,
-    viewModel: GroupChatViewModel = viewModel(),
+    viewModel: GroupChatViewModel = hiltViewModel(),
     accInfoVM: AccountInfoViewModel = viewModel()
 ) {
 

@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
@@ -21,6 +22,7 @@ import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatUpdate
 import ru.esstu.student.messaging.dialog_chat.util.toSentUserMessage
 import ru.esstu.student.messaging.entities.*
 import ru.esstu.student.messaging.group_chat.datasources.repo.IGroupChatRepository
+import ru.esstu.student.messaging.group_chat.datasources.repo.IGroupChatUpdateRepository
 import ru.esstu.student.messaging.group_chat.di.groupChatModuleNew
 import ru.esstu.student.messaging.group_chat.entities.Conversation
 
@@ -63,13 +65,14 @@ sealed class GroupChatEvents {
     data class UpdateAttachment(val messageId: Long, val attachment: MessageAttachment) : GroupChatEvents()
 }
 
-
-class GroupChatViewModel  constructor(
-    private val groupChatRepository: IGroupChatRepository = ESSTUSdk.groupChatModuleNew.repo ,
+@HiltViewModel
+class GroupChatViewModel @Inject  constructor(
+    private val downloaderAttachment: IFileDownloadRepository,
     //private val dialogChatUpdateRepository: IDialogChatUpdateRepository,
     //private val fileDownloadRepository: IFileDownloadRepository
 ) : ViewModel() {
-
+    private val groupChatRepository: IGroupChatRepository = ESSTUSdk.groupChatModuleNew.repo
+    private val dialogChatUpdateRepository: IGroupChatUpdateRepository = ESSTUSdk.groupChatModuleNew.update
     var dialogChatState by mutableStateOf(GroupChatState())
         private set
 
@@ -88,7 +91,7 @@ class GroupChatViewModel  constructor(
             is GroupChatEvents.SendMessage -> withCachedMsg { onSendMessage() }
             is GroupChatEvents.ResendMessage -> viewModelScope.launch { onResendMessage(event.message) }
 
-            is GroupChatEvents.DownloadAttachment -> { /*fileDownloadRepository.downloadFile(event.attachment)*/}
+            is GroupChatEvents.DownloadAttachment -> { downloaderAttachment.downloadFile(event.attachment)}
             is GroupChatEvents.UpdateAttachment -> viewModelScope.launch { onUpdateAttachment(event.messageId, event.attachment) }
         }
     }
@@ -134,7 +137,7 @@ class GroupChatViewModel  constructor(
     }
 
     private fun installObserver(convId: Int, lastMessageId: Long) {
-       /* if (updatesObserver?.isCancelled != true)
+        if (updatesObserver?.isCancelled != true)
             updatesObserver?.cancel()
 
         val updatesFlow = dialogChatUpdateRepository
@@ -161,13 +164,13 @@ class GroupChatViewModel  constructor(
                     }
                 }
             }
-        }*/
+        }
     }
 
     private suspend fun updatePreview(message: Message?){
         val conv = dialogChatState.conversation ?: return
         val msg = message?:return
-        //groupChatRepository.updateLastMessageOnPreview(convId = conv.id, message = msg)
+        groupChatRepository.updateLastMessageOnPreview(convId = conv.id, message = msg)
     }
 
     private suspend fun attachErredMessages(convId: Int) {
@@ -312,7 +315,7 @@ class GroupChatViewModel  constructor(
 
 
     private suspend fun onUpdateAttachment(messageId: Long, attachment: MessageAttachment) {
-       /* mutex.withLock {
+        mutex.withLock(Dispatchers.Main) {
 
             val messageIndex = dialogChatState.pages.indexOfFirst { it.id == messageId }
             if (messageIndex == -1) return
@@ -323,16 +326,16 @@ class GroupChatViewModel  constructor(
             if (oldAttachmentIndex == -1) return
 
             attachments[oldAttachmentIndex] = attachment
-            val updatedAttachments = attachments.toImmutableList()
+            val updatedAttachments = attachments.toList()
 
             val updatedMessage = dialogChatState.pages[messageIndex].copy(attachments = updatedAttachments)
             val pages = dialogChatState.pages.toMutableList()
             pages[messageIndex] = updatedMessage
-            val updatedPages = pages.toImmutableList()
+            val updatedPages = pages.toList()
 
             dialogChatState = dialogChatState.copy(pages = updatedPages)
         }
 
-        groupChatRepository.updateFile(messageId, attachment)*/
+        groupChatRepository.updateFile(messageId, attachment)
     }
 }

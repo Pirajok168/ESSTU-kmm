@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.flow
 import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
+import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatReadRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.IPeer_
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
@@ -21,11 +22,14 @@ import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.GroupCh
 import ru.esstu.student.messaging.group_chat.datasources.db.header.HeaderDao
 import ru.esstu.student.messaging.group_chat.datasources.db.user_messages.GroupUserMessageDao
 import ru.esstu.student.messaging.group_chat.entities.Conversation
+import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsCacheDao
+import ru.esstu.student.messaging.messenger.dialogs.datasources.toPreviewLastMessage
 
 class GroupChatRepositoryImpl constructor(
     private val auth: IAuthRepository,
     private val groupChatApi: GroupChatApi,
     private val historyCacheDao: GroupChatHistoryCacheDao,
+    private val cache: ConversationsCacheDao,
     private val headerDao: HeaderDao,
     private val userMsgDao: GroupUserMessageDao
 ): IGroupChatRepository {
@@ -56,7 +60,11 @@ class GroupChatRepositoryImpl constructor(
     }
 
     override suspend fun updateFile(messageId: Long, attachment: MessageAttachment) {
-        TODO("Not yet implemented")
+        historyCacheDao.updateAttachments(
+            loadProgress = attachment.loadProgress ?: 0f,
+            idAttachment = attachment.id.toLong(),
+            localFileUri = attachment.localFileUri.orEmpty()
+        )
     }
 
     override suspend fun getPage(
@@ -149,7 +157,21 @@ class GroupChatRepositoryImpl constructor(
     }
 
     override suspend fun updateLastMessageOnPreview(convId: Int, message: Message) {
-        TODO("Not yet implemented")
+        auth.provideToken { token ->
+            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
+            groupChatApi.readMessages(
+                "${token.access}",
+                ChatReadRequestBody(
+                    message.id.toInt(),
+                    peer = IPeer_.ConversionPeer(convId)
+                )
+            )
+            cache.updateDialogLastMessage(
+                appUserId = appUserId,
+                convId = convId,
+                message.toPreviewLastMessage()
+            )
+        }
     }
 
     override suspend fun sendMessage(

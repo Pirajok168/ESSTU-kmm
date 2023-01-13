@@ -9,4 +9,6 @@ interface ConversationsCacheDao {
     suspend fun setDialog(appUserId: String, conversationPreview: ConversationPreview)
     suspend fun setLastMessage(message: PreviewLastMessage)
     suspend fun getDialogWithLastMessage(appUserId: String, pageSize: Int, pageOffset: Int): List<ConversationWithMessage>
+
+    suspend fun updateDialogLastMessage(appUserId: String, convId: Int, lastMessage: PreviewLastMessage)
 }

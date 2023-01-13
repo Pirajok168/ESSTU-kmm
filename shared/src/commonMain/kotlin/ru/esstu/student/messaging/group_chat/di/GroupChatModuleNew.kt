@@ -34,7 +34,9 @@ import ru.esstu.student.messaging.group_chat.datasources.db.header.HeaderDatabas
 import ru.esstu.student.messaging.group_chat.datasources.db.user_messages.GroupChatUserMessageDatabase
 import ru.esstu.student.messaging.group_chat.datasources.db.user_messages.GroupUserMessageDao
 import ru.esstu.student.messaging.group_chat.datasources.repo.GroupChatRepositoryImpl
+import ru.esstu.student.messaging.group_chat.datasources.repo.GroupChatUpdateRepositoryImpl
 import ru.esstu.student.messaging.group_chat.datasources.repo.IGroupChatRepository
+import ru.esstu.student.messaging.group_chat.datasources.repo.IGroupChatUpdateRepository
 import kotlin.native.concurrent.ThreadLocal
 
 internal val groupChatModuleNew = DI.Module("groupChatModuleNew"){
@@ -77,6 +79,15 @@ internal val groupChatModuleNew = DI.Module("groupChatModuleNew"){
             instance(),
             instance(),
             instance(),
+            instance(),
+            instance()
+        )
+    }
+
+    bind<IGroupChatUpdateRepository>() with singleton {
+        GroupChatUpdateRepositoryImpl(
+            instance(),
+            instance(),
             instance()
         )
     }
@@ -89,7 +100,7 @@ object GroupChatModuleNew {
     val repo: IGroupChatRepository
         get() = ESSTUSdk.di.instance()
 
-    val update: IDialogChatUpdateRepository
+    val update: IGroupChatUpdateRepository
         get() = ESSTUSdk.di.instance()
 }
 

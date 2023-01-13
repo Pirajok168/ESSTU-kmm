@@ -38,32 +38,32 @@ class ConversationsCacheDatabase(
         pageOffset: Int
     ): List<ConversationWithMessage> {
         fun map(
-            appUserId: String,
-            idConversation: Long,
-            title: String,
+            messageId: Long,
+            fromUser: UserEntity?,
+            date: Long,
+            message: String,
+            status: String,
+            replyMessage: ReplyMessageEntity?,
+            countAttachments: Int?,
+            appUserId: String?,
+            idConversation: Long?,
+            title: String?,
             author: UserEntity?,
             lastMessageId: Long?,
-            notifyAboutIt: Boolean,
-            unread: Int,
-            messageId: Long?,
-            fromUser: UserEntity?,
-            date: Long?,
-            message: String?,
-            status: String?,
-            replyMessage: ReplyMessageEntity?,
-            countAttachments: Int?
+            notifyAboutIt: Boolean?,
+            unread: Int?
         ): ConversationWithMessage {
             return ConversationWithMessage(
                 conversation = ConversationTable(
-                   appUserId, idConversation, title, author, lastMessageId, notifyAboutIt, unread
+                   appUserId!!, idConversation!!, title!!, author, lastMessageId, notifyAboutIt!!, unread!!
                 ),
                 lastMessage = LastMessageWithCountAttachments(
                     message = MessageEntity(
-                        messageId!!,
+                        messageId,
                         fromUser!!,
-                        date!!,
+                        date,
                         message,
-                        status!!,
+                        status,
                         replyMessage,
                     ),
                     attachments = countAttachments!!
@@ -71,6 +71,25 @@ class ConversationsCacheDatabase(
             )
         }
         return dbQueries.getDialogsWithLastMessage(pageSize.toLong(), pageOffset.toLong(), ::map).executeAsList()
+    }
+
+    override suspend fun updateDialogLastMessage(
+        appUserId: String,
+        convId: Int,
+        lastMessage: PreviewLastMessage
+    ) {
+        val dialog = dbQueries.getDialog(convId.toLong(), appUserId).executeAsOneOrNull()
+        if (dialog != null){
+            dbQueries.deleteDialog(dialog.lastMessageId!!)
+
+            lastMessage.apply {
+                dbQueries.setLastMessage(id, from.toUserEntity(), date, message, status.name,replyMessage?.toReplyMessageEntity(), attachments)
+            }
+
+            dialog.apply {
+                dbQueries.setDialog(appUserId, idConversation, title, author, lastMessage.id, notifyAboutIt, 0 )
+            }
+        }
     }
 
 
