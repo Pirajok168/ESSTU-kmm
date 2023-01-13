@@ -1,0 +1,40 @@
+import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.entities.GroupChatAuthorEntity;
+
+CREATE TABLE GroupChatConversation(
+    id INTEGER PRIMARY KEY NOT NULL ,
+    appUserId TEXT NOT NULL ,
+    title TEXT NOT NULL ,
+    author TEXT AS GroupChatAuthorEntity,
+    notifyAboutIt INTEGER AS Boolean NOT NULL
+);
+
+CREATE TABLE GroupChatParticipant(
+    idParticipant TEXT PRIMARY KEY  NOT NULL,
+    appUserId TEXT NOT NULL  NOT NULL,
+    conversationId INTEGER NOT NULL,
+
+    firstName TEXT,
+    lastName TEXT,
+    patronymic TEXT,
+    summary TEXT,
+    photo TEXT,
+    FOREIGN KEY (conversationId) REFERENCES GroupChatConversation(id)  ON DELETE CASCADE
+);
+
+getParticipants:
+    SELECT * FROM GroupChatParticipant WHERE appUserId == :appUserId AND conversationId == :convId;
+
+getConversation:
+    SELECT * FROM GroupChatConversation WHERE appUserId == :appUserId AND id == :id;
+
+deleteConversation:
+    DELETE FROM GroupChatConversation WHERE appUserId == :appUserId AND id == :id;
+
+
+setConversation:
+    INSERT OR REPLACE INTO GroupChatConversation(id, appUserId, title,author, notifyAboutIt)
+        VALUES (?,?,?,?,?);
+
+setParticipants:
+    INSERT OR REPLACE INTO  GroupChatParticipant(idParticipant, appUserId, conversationId, firstName, lastName, patronymic, summary, photo)
+        VALUES (?,?,?,?,?,?,?,?);

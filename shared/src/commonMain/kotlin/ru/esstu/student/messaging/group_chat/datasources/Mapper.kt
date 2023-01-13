@@ -8,10 +8,13 @@ import ru.esstu.student.messaging.entities.Sender
 import ru.esstu.student.messaging.group_chat.datasources.api.response.ConversationResponse
 import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.entities.GroupChatAuthorEntity
 import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.entities.MessageGroupChatWithRelated
+import ru.esstu.student.messaging.group_chat.datasources.db.header.entities.ConversationWithParticipants
 import ru.esstu.student.messaging.group_chat.entities.Conversation
 import ru.esstu.student.messaging.groupchat.datasources.db.chathistory.GroupChatAttachment
 import ru.esstu.student.messaging.groupchat.datasources.db.chathistory.GroupChatMessage
 import ru.esstu.student.messaging.groupchat.datasources.db.chathistory.GroupChatReplyMessage
+import ru.esstu.student.messaging.groupchat.datasources.db.header.GroupChatConversation
+import ru.esstu.student.messaging.groupchat.datasources.db.header.GroupChatParticipant
 import ru.esstu.student.messaging.messenger.datasources.toUser
 
 fun ConversationResponse.toConversation(): Conversation {
@@ -111,3 +114,42 @@ fun Message.toMessageWithRelatedGroupChat(appUserId: String, conversationId: Int
     reply = replyMessage?.toDialogChatReplyMessageEntity(id),
     attachments = attachments.map { it.toDialogChatAttachmentEntity(id) }
 )
+
+fun GroupChatParticipant.toUser() = Sender(
+    id = idParticipant,
+    summary = summary.orEmpty(),
+    photo = photo,
+    lastName = lastName.orEmpty(),
+    firstName = firstName.orEmpty(),
+    patronymic = patronymic.orEmpty()
+)
+
+fun ConversationWithParticipants.toConversation() = Conversation(
+    id = conversation.id.toInt(),
+    participants = participants.map{ it.toUser() },
+    author = conversation.author?.toUser(),
+    notifyAboutIt = conversation.notifyAboutIt,
+    title = conversation.title,
+)
+fun Conversation.toConversationEntity(appUserId: String) = GroupChatConversation(
+    appUserId = appUserId,
+    title = title,
+    notifyAboutIt = notifyAboutIt,
+    id = id.toLong(),
+    author = author?.toUserEntity()
+)
+
+fun Sender.toParticipantEntity(conversationId: Int, appUserId: String) = GroupChatParticipant(
+    appUserId = appUserId,
+    idParticipant = id,
+    conversationId = conversationId.toLong(),
+    patronymic = patronymic, firstName = firstName,
+    lastName = lastName, photo = photo, summary = summary,
+)
+
+fun Conversation.toConversationWithParticipantsEntity(appUserId: String): ConversationWithParticipants {
+    return ConversationWithParticipants(
+        conversation = toConversationEntity(appUserId = appUserId),
+        participants = participants.map { it.toParticipantEntity(id, appUserId) }
+    )
+}

@@ -14,8 +14,10 @@ import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.NewUserMessage
 import ru.esstu.student.messaging.group_chat.datasources.api.GroupChatApi
 import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.GroupChatHistoryCacheDao
+import ru.esstu.student.messaging.group_chat.datasources.db.header.HeaderDao
 import ru.esstu.student.messaging.group_chat.datasources.db.user_messages.GroupUserMessageDao
 import ru.esstu.student.messaging.group_chat.datasources.toConversation
+import ru.esstu.student.messaging.group_chat.datasources.toConversationWithParticipantsEntity
 import ru.esstu.student.messaging.group_chat.datasources.toMessage
 import ru.esstu.student.messaging.group_chat.datasources.toMessageWithRelatedGroupChat
 import ru.esstu.student.messaging.group_chat.entities.Conversation
@@ -24,6 +26,7 @@ class GroupChatRepositoryImpl constructor(
     private val auth: IAuthRepository,
     private val groupChatApi: GroupChatApi,
     private val historyCacheDao: GroupChatHistoryCacheDao,
+    private val headerDao: HeaderDao
     //private val userMsgDao: GroupUserMessageDao
 ): IGroupChatRepository {
     override suspend fun getHeader(id: Int): Flow<FlowResponse<Conversation>> = flow{
@@ -31,9 +34,9 @@ class GroupChatRepositoryImpl constructor(
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Error("unsupported user type")
             emit(FlowResponse.Loading())
 
-            //val cachedHeader = headerDao.getConversationWithParticipants(appUserId = appUserId, id = id)?.toConversation()
-           // if (cachedHeader != null)
-             //   emit(FlowResponse.Success(cachedHeader))
+            val cachedHeader = headerDao.getConversationWithParticipants(appUserId = appUserId, id = id)?.toConversation()
+            if (cachedHeader != null)
+               emit(FlowResponse.Success(cachedHeader))
 
             when (val response = auth.provideToken { type, access -> groupChatApi.getConversation("$access", id.toString()) }) {
                 is Response.Error -> emit(FlowResponse.Error(response.error))
@@ -42,8 +45,8 @@ class GroupChatRepositoryImpl constructor(
                     if (remoteHeader == null)
                         emit(FlowResponse.Error(ResponseError(message = "Cast Exception")))
                     else {
-                       // headerDao.setConversationWithParticipants(remoteHeader.toConversationWithParticipantsEntity(appUserId))
-                        //if (remoteHeader != cachedHeader)
+                        headerDao.setConversationWithParticipants(remoteHeader.toConversationWithParticipantsEntity(appUserId))
+                        if (remoteHeader != cachedHeader)
                             emit(FlowResponse.Success(remoteHeader))
                     }
                 }

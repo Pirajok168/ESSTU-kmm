@@ -29,6 +29,8 @@ import ru.esstu.student.messaging.group_chat.datasources.api.GroupChatUpdateApi
 import ru.esstu.student.messaging.group_chat.datasources.api.GroupChatUpdateApiImpl
 import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.GroupChatHistoryCacheDao
 import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.GroupChatHistoryCacheDatabase
+import ru.esstu.student.messaging.group_chat.datasources.db.header.HeaderDao
+import ru.esstu.student.messaging.group_chat.datasources.db.header.HeaderDatabase
 import ru.esstu.student.messaging.group_chat.datasources.db.user_messages.GroupChatUserMessageDatabase
 import ru.esstu.student.messaging.group_chat.datasources.db.user_messages.GroupUserMessageDao
 import ru.esstu.student.messaging.group_chat.datasources.repo.GroupChatRepositoryImpl
@@ -63,9 +65,15 @@ internal val groupChatModuleNew = DI.Module("groupChatModuleNew"){
         )
     }
 
+    bind<HeaderDao>() with singleton {
+        HeaderDatabase(
+            instance<IDatabaseStudent>().getDataBase()
+        )
+    }
 
     bind<IGroupChatRepository>() with singleton {
         GroupChatRepositoryImpl(
+            instance(),
             instance(),
             instance(),
             instance()

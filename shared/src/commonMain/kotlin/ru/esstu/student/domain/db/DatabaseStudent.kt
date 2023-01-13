@@ -12,6 +12,7 @@ import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogCh
 import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.entities.GroupChatAuthorEntity
 import ru.esstu.student.messaging.groupchat.datasources.db.chathistory.GroupChatMessage
 import ru.esstu.student.messaging.groupchat.datasources.db.chathistory.GroupChatReplyMessage
+import ru.esstu.student.messaging.groupchat.datasources.db.header.GroupChatConversation
 import ru.esstu.student.messaging.messanger.conversation.datasources.db.ConversationTable
 import ru.esstu.student.messaging.messanger.conversation.datasources.db.MessageConversationTable
 
@@ -116,7 +117,8 @@ class DatabaseStudent(sqlDriver: SqlDriver): IDatabaseStudent {
         ConversationTableAdapter = ConversationTable.Adapter(adapter4),
         MessageConversationTableAdapter = MessageConversationTable.Adapter(adapter4,adapter5),
         GroupChatMessageAdapter = GroupChatMessage.Adapter(adapter6),
-        GroupChatReplyMessageAdapter = GroupChatReplyMessage.Adapter(adapter6)
+        GroupChatReplyMessageAdapter = GroupChatReplyMessage.Adapter(adapter6),
+        GroupChatConversationAdapter = GroupChatConversation.Adapter(adapter6)
     )
 
     override fun getDataBase(): EsstuDatabase = database
