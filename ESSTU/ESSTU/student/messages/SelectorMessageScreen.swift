@@ -111,6 +111,7 @@ struct SelectorMessageScreen: View {
                                 return Color.clear.preference(key: ViewOffsetKey.self,
                                                               value: -$0.frame(in: .named("scroll")).origin.y)
                             })
+            
                 .onPreferenceChange(ViewOffsetKey.self) { offset in
                     
                     contactsModel.offsetChange = offset
