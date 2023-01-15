@@ -24,6 +24,7 @@ import ru.esstu.android.student.messaging.messenger.navigation.viewmodel.Messeng
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.esstu.android.student.messaging.messenger.conversations.ui.ConversationScreen
 import ru.esstu.android.student.messaging.messenger.navigation.viewmodel.toNormalView
+import ru.esstu.android.student.messaging.messenger.supports.ui.SupportScreen
 
 enum class Pages(val description: String) {
     DIALOGS("Диалоги"),
@@ -171,16 +172,8 @@ fun MessengerScreen(
                         CONVERSATION -> ConversationScreen(
                             onNavToConversationChat = onNavToConversationChat
                         )
-                        TECH_SUPPORT -> DialogsScreen(
-                            onNavToDialogChat = onNavToDialogChat,
-                            updateTitle = {
-                                title = it
-                            },
-                            onEditingDialogs = {
-                                viewModel.addDialog(it)
-                            },
-                            isEditing = uiState.isEditing,
-                            selectedList = uiState.selectedPreviewDialog
+                        TECH_SUPPORT -> SupportScreen(
+                            onNavToSupportChat = onNavToSupportChat
                         )
                         APPEALS -> DialogsScreen(
                             onNavToDialogChat = onNavToDialogChat,
