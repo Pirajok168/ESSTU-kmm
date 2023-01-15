@@ -82,6 +82,7 @@ fun DialogChatScreen(
 
     DisposableEffect(Unit) {
         viewModel.onEvent(DialogChatEvents.PassOpponent(opponentId))
+
         onDispose {
             viewModel.onEvent(DialogChatEvents.CancelObserver)
         }

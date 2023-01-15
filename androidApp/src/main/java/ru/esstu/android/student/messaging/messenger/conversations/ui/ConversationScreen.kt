@@ -1,5 +1,6 @@
 package ru.esstu.android.student.messaging.messenger.conversations.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -40,12 +41,14 @@ fun ConversationScreen(
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START)
                 dialogViewModel.onEvent(ConversationEvents.Reload)
+
         }
 
         lifecycleOwner.lifecycle.addObserver(observer)
 
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
+            dialogViewModel.onEvent(ConversationEvents.CancelObserving)
         }
     }
 

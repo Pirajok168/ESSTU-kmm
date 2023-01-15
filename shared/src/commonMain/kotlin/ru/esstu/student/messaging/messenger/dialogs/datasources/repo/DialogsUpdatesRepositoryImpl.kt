@@ -1,7 +1,7 @@
 package ru.esstu.student.messaging.messenger.dialogs.datasources.repo
 
 import com.soywiz.klock.DateTime
-import com.soywiz.klock.DateTimeTz
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -9,7 +9,7 @@ import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.api.UpdatesApi
 import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.student.EsstuDatabase
+import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
 
 import ru.esstu.student.messaging.messenger.datasources.db.timestamp.TimestampDao
 
@@ -20,13 +20,13 @@ import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 
 
 class DialogsUpdatesRepositoryImpl(
-    auth: IAuthRepository,
-    api: UpdatesApi,
-    timestampDao: TimestampDao
+    private val auth: IAuthRepository,
+    private val api: UpdatesApi,
+    private val timestampDao: TimestampDao
 ) : IDialogsUpdatesRepository {
-
-    override val updatesFlow: Flow<Response<List<PreviewDialog>>> = flow {
+    override suspend fun installObserving(): Flow<Response<List<PreviewDialog>>> = flow {
         while (true) {
+            Napier.e("DialogsUpdatesRepositoryImpl", tag = "lifecycle")
             val callTimestamp = DateTime.now().unixMillisLong
             auth.provideToken { token ->
 
@@ -52,4 +52,6 @@ class DialogsUpdatesRepositoryImpl(
             }
         }
     }
+
+
 }

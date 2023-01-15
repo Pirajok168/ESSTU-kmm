@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 
 import kotlinx.coroutines.launch
@@ -35,13 +36,15 @@ data class DialogState(
 sealed class DialogEvents {
     object GetNext : DialogEvents()
     object Reload : DialogEvents()
+
+    object CancelObserving: DialogEvents()
 }
 
 
 class DialogsViewModel constructor(
-    dialogUpdate: IDialogsUpdatesRepository = ESSTUSdk.messengerModule.update,
+    private val dialogUpdate: IDialogsUpdatesRepository = ESSTUSdk.messengerModule.update,
 
-    dialogApi: IDialogsApiRepository = ESSTUSdk.dialogsModuleNew.repo,
+     dialogApi: IDialogsApiRepository = ESSTUSdk.dialogsModuleNew.repo,
     dialogDB: IDialogsDbRepository = ESSTUSdk.dialogsModuleNew.repoDialogs,
 
     ) : ViewModel() {
@@ -86,29 +89,39 @@ class DialogsViewModel constructor(
     )
 
 
-    init {
 
+    private var job: Job? = null
+    private fun installObserving(){
 
-
-
-        viewModelScope.launch {
-
-            dialogUpdate.updatesFlow.collectLatest {
-                if (it is Response.Success && it.data.isNotEmpty()) {
-                    dialogState = dialogState.copy(cleanCacheOnRefresh = true)
-                    paginator.refresh()
+        if (job?.isActive != true) {
+            job = viewModelScope.launch {
+                dialogUpdate
+                    .installObserving()
+                    .collectLatest {
+                    if (it is Response.Success && it.data.isNotEmpty()) {
+                        dialogState = dialogState.copy(cleanCacheOnRefresh = true)
+                        paginator.refresh()
+                    }
                 }
+
+
             }
         }
+    }
+
+    private fun cancelObserving(){
+        job?.cancel()
     }
 
     fun onEvent(event: DialogEvents) {
         when (event) {
             is DialogEvents.GetNext -> viewModelScope.launch { paginator.loadNext() }
             is DialogEvents.Reload -> viewModelScope.launch {
+                installObserving()
                 dialogState = dialogState.copy(cleanCacheOnRefresh = false)
                 paginator.refresh()
             }
+            DialogEvents.CancelObserving -> cancelObserving()
         }
     }
 }

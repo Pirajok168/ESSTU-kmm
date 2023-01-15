@@ -105,7 +105,9 @@ fun MessengerScreen(
                 },
                 buttons = {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(10.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
                         horizontalArrangement = Arrangement.End
                     ){
                         OutlinedButton(
@@ -129,6 +131,9 @@ fun MessengerScreen(
         }
         val pagerState = rememberPagerState()
         val scope = rememberCoroutineScope()
+        val screens = remember {
+            mutableStateOf(values().toList())
+        }
         Box(contentAlignment = Alignment.BottomEnd) {
 
             Column(modifier = Modifier.padding(it)) {
@@ -142,7 +147,7 @@ fun MessengerScreen(
                         )
                     }
                 ) {
-                    values().forEachIndexed { index, title ->
+                    screens.value.forEachIndexed { index, title ->
                         Tab(
                             text = { Text(title.description) },
                             selected = pagerState.currentPage == index,
@@ -153,11 +158,11 @@ fun MessengerScreen(
 
                 HorizontalPager(
                     modifier = Modifier.fillMaxSize(),
-                    count = values().size,
+                    count = screens.value.size,
                     state = pagerState,
                 ) { index ->
 
-                    when (values()[index]) {
+                    when (screens.value[index]) {
                         DIALOGS -> DialogsScreen(
                             onNavToDialogChat = onNavToDialogChat,
                             updateTitle = {

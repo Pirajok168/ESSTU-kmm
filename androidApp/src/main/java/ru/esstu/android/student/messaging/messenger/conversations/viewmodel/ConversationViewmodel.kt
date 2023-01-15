@@ -6,7 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
 import ru.esstu.domain.utill.paginator.Paginator
@@ -30,13 +32,14 @@ data class ConversationState(
 sealed class ConversationEvents {
     object GetNext : ConversationEvents()
     object Reload : ConversationEvents()
+    object CancelObserving: ConversationEvents()
 }
 
 
 class ConversationViewModel  constructor(
     conversationApi: IConversationsApiRepository = ESSTUSdk.conversationModule.repo,
     conversationDb: IConversationsDbRepository = ESSTUSdk.conversationModule.db,
-    conversationUpdates: IConversationUpdatesRepository =  ESSTUSdk.conversationModule.update,
+    private val conversationUpdates: IConversationUpdatesRepository =  ESSTUSdk.conversationModule.update,
 ) : ViewModel() {
     var conversationState by mutableStateOf(ConversationState())
         private set
@@ -69,23 +72,42 @@ class ConversationViewModel  constructor(
         }
     )
 
-    init {
-        viewModelScope.launch {
-            conversationUpdates.updatesFlow.collectLatest {
-                if (it is Response.Success && it.data.isNotEmpty()) {
-                    conversationState = conversationState.copy(cleanCacheOnRefresh = true)
-                    paginator.refresh()
-                }
+
+    private var job: Job? = null
+    private fun installObserving(){
+
+        if (job?.isActive != true) {
+            job = viewModelScope.launch {
+                conversationUpdates
+                    .installObserving()
+                    .collectLatest {
+                        if (it is Response.Success && it.data.isNotEmpty()) {
+                            conversationState = conversationState.copy(cleanCacheOnRefresh = true)
+                            paginator.refresh()
+                        }
+                    }
+
+
             }
         }
+    }
+
+    private fun cancelObserving(){
+        job?.cancel()
     }
 
     fun onEvent(event: ConversationEvents) {
         when (event) {
             is ConversationEvents.GetNext -> viewModelScope.launch { paginator.loadNext() }
-            ConversationEvents.Reload -> viewModelScope.launch {
-                conversationState = conversationState.copy(cleanCacheOnRefresh = false)
-                paginator.refresh()
+            ConversationEvents.Reload -> {
+                installObserving()
+                viewModelScope.launch {
+                    conversationState = conversationState.copy(cleanCacheOnRefresh = false)
+                    paginator.refresh()
+                }
+            }
+            ConversationEvents.CancelObserving -> {
+                cancelObserving()
             }
         }
     }

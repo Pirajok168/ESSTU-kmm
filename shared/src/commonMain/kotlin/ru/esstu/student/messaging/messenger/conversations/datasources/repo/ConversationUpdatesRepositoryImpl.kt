@@ -1,9 +1,9 @@
 package ru.esstu.student.messaging.messenger.conversations.datasources.repo
 
 import com.soywiz.klock.DateTime
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.api.UpdatesApi
@@ -16,15 +16,17 @@ import ru.esstu.student.messaging.messenger.datasources.db.timestamp.toTimeStamp
 
 
 class ConversationUpdatesRepositoryImpl(
-    auth: IAuthRepository,
-    api: UpdatesApi,
-    timestampDao: TimestampDao
+    private val auth: IAuthRepository,
+    private val api: UpdatesApi,
+    private val timestampDao: TimestampDao
 ): IConversationUpdatesRepository {
-    override val updatesFlow: Flow<Response<List<ConversationPreview>>>  = flow {
-        while (true) {
-            val callTimestamp = DateTime.now().unixMillisLong
-            auth.provideToken { token ->
 
+
+    override suspend fun installObserving(): Flow<Response<List<ConversationPreview>>>  = flow {
+        while (true){
+            val callTimestamp = DateTime.now().unixMillisLong
+            Napier.e("Вызов", tag = "ConversationUpdates")
+            auth.provideToken { token ->
                 val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Exception("unsupported User Type")
 
                 val latestTimestamp = timestampDao.getTimestamp(appUserId)?.toTimeStamp() ?: 0L
@@ -47,5 +49,6 @@ class ConversationUpdatesRepositoryImpl(
             }
         }
     }
+
 
 }

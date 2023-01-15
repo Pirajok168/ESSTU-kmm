@@ -1,5 +1,6 @@
 package ru.esstu.android.student.messaging.messenger.dialogs.ui
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -18,6 +19,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ru.esstu.android.student.messaging.messenger.conversations.viewmodel.ConversationEvents
 import ru.esstu.android.student.messaging.messenger.dialogs.ui.components.MessengerCard
 import ru.esstu.android.student.messaging.messenger.dialogs.viewmodel.DialogEvents
 import ru.esstu.android.student.messaging.messenger.dialogs.viewmodel.DialogsViewModel
@@ -45,6 +47,7 @@ fun DialogsScreen(
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
+            Log.e("DialogsScreen", event.toString())
             if (event == Lifecycle.Event.ON_START)
                 dialogsViewModel.onEvent(DialogEvents.Reload)
         }
@@ -53,6 +56,8 @@ fun DialogsScreen(
 
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
+            dialogsViewModel.onEvent(DialogEvents.CancelObserving)
+            Log.e("DialogsScreen", "Диалоги отключены")
         }
     }
 
