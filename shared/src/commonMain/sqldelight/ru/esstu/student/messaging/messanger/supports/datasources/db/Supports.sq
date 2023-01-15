@@ -1,8 +1,6 @@
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.ReplyMessageEntity;
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity;
-
-
-CREATE TABLE MessageConversationTable(
+CREATE TABLE MessageSuppotTable(
     messageId INTEGER PRIMARY KEY NOT NULL,
     fromUser TEXT AS UserEntity,
     date INTEGER NOT NULL,
@@ -14,7 +12,7 @@ CREATE TABLE MessageConversationTable(
 
 
 
-CREATE TABLE ConversationTable(
+CREATE TABLE SuppotTable(
       appUserId TEXT NOT NULL,
       idConversation INTEGER PRIMARY KEY NOT NULL,
       title TEXT NOT NULL,
@@ -22,30 +20,32 @@ CREATE TABLE ConversationTable(
       lastMessageId INTEGER,
       notifyAboutIt INTEGER AS Boolean NOT NULL,
       unread INTEGER AS Int DEFAULT 0 NOT NULL,
-      FOREIGN KEY (lastMessageId) REFERENCES MessageConversationTable(messageId) ON DELETE CASCADE
+      FOREIGN KEY (lastMessageId) REFERENCES MessageSuppotTable(messageId) ON DELETE CASCADE
 );
 
+
 setLastMessage:
-    INSERT OR REPLACE INTO MessageConversationTable(messageId, fromUser,date, message, status, replyMessage, countAttachments)
+    INSERT OR REPLACE INTO MessageSuppotTable(messageId, fromUser,date, message, status, replyMessage, countAttachments)
        VALUES (?,?,?,?,?,?,?);
 
 setDialog:
-    INSERT OR REPLACE INTO ConversationTable(appUserId, idConversation, title, author, lastMessageId, notifyAboutIt, unread)
+    INSERT OR REPLACE INTO SuppotTable(appUserId, idConversation, title, author, lastMessageId, notifyAboutIt, unread)
         VALUES (?,?,?,?,?,?,?);
 
 
 getDialogsWithLastMessage:
-    SELECT d.*, m.* FROM MessageConversationTable d
-    LEFT JOIN ConversationTable m ON d.messageId == m.lastMessageId
+    SELECT d.*, m.* FROM MessageSuppotTable d
+    LEFT JOIN SuppotTable m ON d.messageId == m.lastMessageId
     ORDER BY d.date DESC LIMIT :pageSize OFFSET :pageOffset;
 
 clear:
-    DELETE FROM MessageConversationTable;
+    DELETE FROM SuppotTable;
 
 getDialog:
-    SELECT * FROM ConversationTable
+    SELECT * FROM SuppotTable
         WHERE idConversation = :idConversation AND  appUserId = :appUserId;
 
 
 deleteDialog:
-    DELETE FROM MessageConversationTable WHERE messageId = (:lastMessageId);
+    DELETE FROM MessageSuppotTable WHERE messageId = (:lastMessageId);
+

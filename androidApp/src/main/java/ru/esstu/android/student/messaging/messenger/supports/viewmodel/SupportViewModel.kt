@@ -8,9 +8,11 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
 import ru.esstu.domain.utill.paginator.Paginator
+import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
 import ru.esstu.student.messaging.messenger.supports.datasource.repo.ISupportsApiRepository
+import ru.esstu.student.messaging.messenger.supports.datasource.repo.ISupportsDbRepository
 import ru.esstu.student.messaging.messenger.supports.di.supportsModule
 
 data class SupportState(
@@ -30,7 +32,8 @@ sealed class SupportEvents {
 
 class SupportViewModel  constructor(
     supportApi: ISupportsApiRepository = ESSTUSdk.supportsModule.apiRepo,
-    /*supportDb: ISupportsDbRepository,
+    supportDb: ISupportsDbRepository = ESSTUSdk.supportsModule.dbRepo
+    /*
     updates: ISupportsUpdateRepository*/
 ) : ViewModel() {
     var supportState by mutableStateOf(SupportState())
@@ -38,21 +41,20 @@ class SupportViewModel  constructor(
 
     private val paginator = Paginator(
         initialKey = 0,
-        onReset = {/* if (supportState.cleanCacheOnRefresh) supportDb.clear()*/ },
+        onReset = { if (supportState.cleanCacheOnRefresh) supportDb.clear() },
         onLoad = { supportState = supportState.copy(isLoading = it) },
         onRequest = { key ->
-            supportApi.getSupports(supportState.pageSize, key)
-           /* val cachedConversations = supportDb.getSupports(supportState.pageSize, key)
+            val cachedConversations = supportDb.getSupports(supportState.pageSize, key)
 
             if (cachedConversations.isEmpty()) {
                 val loadedConversations = supportApi.getSupports(supportState.pageSize, key)
 
                 if (loadedConversations is Response.Success)
-                    supportDb.setSupports(loadedConversations.data.mapIndexed { index, support -> index + key to support }.toMap())
+                    supportDb.setSupports(loadedConversations.data)
 
                 loadedConversations
             } else
-                Response.Success(cachedConversations)*/
+                Response.Success(cachedConversations)
         },
         getNextKey = { key, _ -> key + supportState.pageSize },
         onError = { supportState = supportState.copy(error = it) },
