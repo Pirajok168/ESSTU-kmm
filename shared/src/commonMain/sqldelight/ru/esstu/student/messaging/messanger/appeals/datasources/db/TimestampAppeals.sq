@@ -1,0 +1,12 @@
+CREATE TABLE TimstampAppeals (
+    appUserId TEXT PRIMARY KEY NOT NULL,
+    timestamp INTEGER
+);
+
+
+getTimestamp:
+    SELECT * FROM TimstampAppeals WHERE appUserId == (:appUserId);
+
+setTimestamp:
+        INSERT OR REPLACE INTO TimstampAppeals(appUserId, timestamp)
+        VALUES (?,?);

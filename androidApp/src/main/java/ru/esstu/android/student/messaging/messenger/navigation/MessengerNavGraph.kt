@@ -31,7 +31,7 @@ fun NavGraphBuilder.messengerNavGraph(
                     parentNavController.navigate(GroupChatScreen.navigate(it))
                 },
                 onNavToAppealChat = {
-                   // parentNavController.navigate(GroupChatScreen.navigate(it))
+                    parentNavController.navigate(GroupChatScreen.navigate(it))
                 },
                 onNavToSupportChat = {
                     parentNavController.navigate(GroupChatScreen.navigate(it))

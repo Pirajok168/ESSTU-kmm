@@ -84,10 +84,8 @@ class SupportViewModel  constructor(
                 updates
                     .installObserving()
                     .collectLatest {
-                        Log.e("Support", it.toString())
                         if (it is Response.Success) {
                             withContext(Dispatchers.Main){
-                                Log.e("Support", "ЧТО ТО ПРИШЛО")
                                 supportState = supportState.copy(cleanCacheOnRefresh = true)
                                 paginator.refresh()
                             }

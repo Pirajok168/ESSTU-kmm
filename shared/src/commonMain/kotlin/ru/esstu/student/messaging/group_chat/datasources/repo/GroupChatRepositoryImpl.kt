@@ -21,6 +21,7 @@ import ru.esstu.student.messaging.group_chat.datasources.db.erred_messages.Erred
 import ru.esstu.student.messaging.group_chat.datasources.db.header.HeaderDao
 import ru.esstu.student.messaging.group_chat.datasources.db.user_messages.GroupUserMessageDao
 import ru.esstu.student.messaging.group_chat.entities.Conversation
+import ru.esstu.student.messaging.messenger.appeals.datasources.db.AppealsCacheDao
 import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsCacheDao
 import ru.esstu.student.messaging.messenger.dialogs.datasources.toPreviewLastMessage
 import ru.esstu.student.messaging.messenger.supports.datasource.db.SupportsCacheDao
@@ -33,7 +34,8 @@ class GroupChatRepositoryImpl constructor(
     private val headerDao: HeaderDao,
     private val userMsgDao: GroupUserMessageDao,
     private val erredMsgDao: ErredMessageDao,
-    private val supportMsgDao: SupportsCacheDao
+    private val supportMsgDao: SupportsCacheDao,
+    private val appealMsgDao: AppealsCacheDao
 ): IGroupChatRepository {
     override suspend fun getHeader(id: Int): Flow<FlowResponse<Conversation>> = flow{
         auth.provideToken { token ->
@@ -127,9 +129,7 @@ class GroupChatRepositoryImpl constructor(
 
         val message = auth.provideToken { token ->
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
-            Napier.e("$appUserId - $convId")
             val a = userMsgDao.getUserMessageWithRelated(appUserId, convId.toLong())?.toSentUserMessage()
-            a
             return@provideToken a
         }
 
@@ -173,10 +173,17 @@ class GroupChatRepositoryImpl constructor(
                 convId = convId,
                 message.toPreviewLastMessage()
             )
+
             supportMsgDao.updateDialogLastMessage(
                 appUserId = appUserId,
                 convId = convId,
                 lastMessage = message.toPreviewLastMessage()
+            )
+
+            appealMsgDao.updateDialogLastMessage(
+                appUserId,
+                convId,
+                message.toPreviewLastMessage()
             )
         }
     }

@@ -17,7 +17,7 @@ fun Long.toTimeStampEntity(appUserId:String) = TimstampConversations(
 )
 
 fun DataResponse.toConversations(): List<ConversationPreview> {
-    return dialogs.filter { dialog -> dialog.type == "CHAT" }.mapNotNull {
+    return dialogs.filter { dialog -> dialog.type == "APPEAL" }.mapNotNull {
         val rawConv = conversations.firstOrNull { conv -> conv.id.toString() == it.peerId } ?: return@mapNotNull null
         val author = loadedUsers.firstOrNull { user -> user.id == rawConv.creatorId }?.toUser()
         val laseMessage = messages.firstOrNull { message -> message.id == it.lastMessageId }
