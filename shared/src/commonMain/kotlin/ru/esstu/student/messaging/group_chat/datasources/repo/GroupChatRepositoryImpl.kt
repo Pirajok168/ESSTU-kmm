@@ -23,6 +23,7 @@ import ru.esstu.student.messaging.group_chat.datasources.db.user_messages.GroupU
 import ru.esstu.student.messaging.group_chat.entities.Conversation
 import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsCacheDao
 import ru.esstu.student.messaging.messenger.dialogs.datasources.toPreviewLastMessage
+import ru.esstu.student.messaging.messenger.supports.datasource.db.SupportsCacheDao
 
 class GroupChatRepositoryImpl constructor(
     private val auth: IAuthRepository,
@@ -31,7 +32,8 @@ class GroupChatRepositoryImpl constructor(
     private val cache: ConversationsCacheDao,
     private val headerDao: HeaderDao,
     private val userMsgDao: GroupUserMessageDao,
-    private val erredMsgDao: ErredMessageDao
+    private val erredMsgDao: ErredMessageDao,
+    private val supportMsgDao: SupportsCacheDao
 ): IGroupChatRepository {
     override suspend fun getHeader(id: Int): Flow<FlowResponse<Conversation>> = flow{
         auth.provideToken { token ->
@@ -170,6 +172,11 @@ class GroupChatRepositoryImpl constructor(
                 appUserId = appUserId,
                 convId = convId,
                 message.toPreviewLastMessage()
+            )
+            supportMsgDao.updateDialogLastMessage(
+                appUserId = appUserId,
+                convId = convId,
+                lastMessage = message.toPreviewLastMessage()
             )
         }
     }

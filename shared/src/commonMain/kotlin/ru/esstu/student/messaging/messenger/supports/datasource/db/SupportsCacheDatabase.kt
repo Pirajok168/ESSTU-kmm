@@ -1,5 +1,6 @@
 package ru.esstu.student.messaging.messenger.supports.datasource.db
 
+import io.github.aakira.napier.Napier
 import ru.esstu.student.EsstuDatabase
 import ru.esstu.student.messaging.messanger.conversation.datasources.db.ConversationTable
 import ru.esstu.student.messaging.messanger.supports.datasources.db.SuppotTable
@@ -84,6 +85,7 @@ class SupportsCacheDatabase(
         lastMessage: PreviewLastMessage
     ) {
         val dialog = dbQueries.getDialog(convId.toLong(), appUserId).executeAsOneOrNull()
+        Napier.e(dialog?.toString() ?: "Ничего нет", tag = "Support")
         if (dialog != null){
             dbQueries.deleteDialog(dialog.lastMessageId!!)
 

@@ -9,9 +9,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import ru.esstu.ESSTUSdk
 import ru.esstu.android.domain.datasources.download_worker.IFileDownloadRepository
 import ru.esstu.domain.utill.paginator.Paginator
@@ -114,12 +118,18 @@ class GroupChatViewModel @Inject  constructor(
 
             attachErredMessages(conv.id)
 
-            dialogChatState = dialogChatState.copy(message = groupChatRepository.getUserMessage(conv.id))
+            withContext(Dispatchers.Main){
+                dialogChatState = dialogChatState.copy(message = groupChatRepository.getUserMessage(conv.id))
+            }
+
 
             updatePreview(page.firstOrNull())
         },
         onNext = { _, page ->
-            dialogChatState = dialogChatState.copy(pages = dialogChatState.pages + page, error = null, isEndReached = page.isEmpty())
+            withContext(Dispatchers.Main){
+                dialogChatState = dialogChatState.copy(pages = dialogChatState.pages + page, error = null, isEndReached = page.isEmpty())
+            }
+
         },
 
         onLoad = { dialogChatState = dialogChatState.copy(isPageLoading = it) },
@@ -145,25 +155,31 @@ class GroupChatViewModel @Inject  constructor(
             .cancellable()
 
         updatesObserver = viewModelScope.launch {
-            updatesFlow.collect { response ->
+            updatesFlow
+                .collectLatest { response ->
                 when (response) {
                     is Response.Error -> dialogChatState = dialogChatState.copy(error = response.error)
                     is Response.Success -> {
                         dialogChatState = dialogChatState.copy(error = null)
-                        if (response.data.isEmpty()) return@collect
+                        if (response.data.isEmpty()) return@collectLatest
 
                         val updates = response.data
 
                         groupChatRepository.setMessages(convId, updates)
-                        dialogChatState = dialogChatState.copy(
-                            pages = (updates + dialogChatState.pages).distinctBy { it.id },
-                            sentMessages = dialogChatState.sentMessages.filter { sent -> updates.none { upd -> upd.id == sent.id } }
-                        )
+
+                        withContext(Dispatchers.Main){
+                            dialogChatState = dialogChatState.copy(
+                                pages = (updates + dialogChatState.pages).distinctBy { it.id },
+                                sentMessages = dialogChatState.sentMessages.filter { sent -> updates.none { upd -> upd.id == sent.id } }
+                            )
+                        }
+
 
                         updatePreview(updates.firstOrNull())
                     }
                 }
             }
+
         }
     }
 
