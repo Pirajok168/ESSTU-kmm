@@ -46,7 +46,9 @@ class ConversationViewModel  constructor(
 
     private val paginator = Paginator(
         initialKey = 0,
-        onReset = { if (conversationState.cleanCacheOnRefresh) conversationDb.clear() },
+        onReset = {
+            if (conversationState.cleanCacheOnRefresh) conversationDb.clear()
+                  },
         onLoad = { conversationState = conversationState.copy(isLoading = it) },
         onRequest = { key ->
 
@@ -93,7 +95,8 @@ class ConversationViewModel  constructor(
     }
 
     private fun cancelObserving(){
-        job?.cancel()
+        if (job?.isActive == true)
+            job?.cancel()
     }
 
     fun onEvent(event: ConversationEvents) {

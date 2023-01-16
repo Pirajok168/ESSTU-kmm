@@ -9,20 +9,17 @@ import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.api.UpdatesApi
 import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
-
-import ru.esstu.student.messaging.messenger.datasources.db.timestamp.TimestampDao
-
-import ru.esstu.student.messaging.messenger.datasources.db.timestamp.toTimeStamp
-import ru.esstu.student.messaging.messenger.datasources.db.timestamp.toTimeStampEntity
+import ru.esstu.student.messaging.messenger.dialogs.datasources.db.DialogsTimestampDao
 import ru.esstu.student.messaging.messenger.dialogs.datasources.toDialogs
+import ru.esstu.student.messaging.messenger.dialogs.datasources.toTimeStamp
+import ru.esstu.student.messaging.messenger.dialogs.datasources.toTimeStampEntity
 import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 
 
 class DialogsUpdatesRepositoryImpl(
     private val auth: IAuthRepository,
     private val api: UpdatesApi,
-    private val timestampDao: TimestampDao
+    private val timestampDao: DialogsTimestampDao
 ) : IDialogsUpdatesRepository {
     override suspend fun installObserving(): Flow<Response<List<PreviewDialog>>> = flow {
         while (true) {

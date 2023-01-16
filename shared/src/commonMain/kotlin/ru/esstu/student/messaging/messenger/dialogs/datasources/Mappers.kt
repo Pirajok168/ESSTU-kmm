@@ -5,14 +5,25 @@ import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.Cha
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
 import ru.esstu.student.messaging.entities.*
+import ru.esstu.student.messaging.messanger.dialogs.datasources.db.TimstampDialogs
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.MessageEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.ReplyMessageEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity
+import ru.esstu.student.messaging.messenger.datasources.db.timestamp.entities.TimestampEntity
 import ru.esstu.student.messaging.messenger.datasources.toUser
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.LastMessageWithCountAttachments
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.entities.relations.DialogWithMessage
 import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 import ru.esstu.student.messaging.messenger.datasources.entities.PreviewLastMessage
+
+//<editor-fold desc="Timestamp">
+fun TimstampDialogs.toTimeStamp() = timestamp
+
+fun Long.toTimeStampEntity(appUserId:String) = TimstampDialogs(
+    appUserId = appUserId,
+    timestamp = this
+)
+//</editor-fold>
 
 //<editor-fold desc="DialogsApiRepositoryImpl">
 fun DataResponse.toDialogs(): List<PreviewDialog> {

@@ -1,11 +1,20 @@
 package ru.esstu.student.messaging.messenger.conversations.datasources
 
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
+import ru.esstu.student.messaging.messanger.conversation.datasources.db.TimstampConversations
 import ru.esstu.student.messaging.messenger.conversations.datasources.db.entities.ConversationWithMessage
 import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
+import ru.esstu.student.messaging.messenger.datasources.db.timestamp.entities.TimestampEntity
 import ru.esstu.student.messaging.messenger.datasources.toUser
 import ru.esstu.student.messaging.messenger.dialogs.datasources.toMessage
 import ru.esstu.student.messaging.messenger.dialogs.datasources.toUser
+
+fun TimstampConversations.toTimeStamp() = timestamp
+
+fun Long.toTimeStampEntity(appUserId:String) = TimstampConversations(
+    appUserId = appUserId,
+    timestamp = this
+)
 
 fun DataResponse.toConversations(): List<ConversationPreview> {
     return dialogs.filter { dialog -> dialog.type == "CHAT" }.mapNotNull {

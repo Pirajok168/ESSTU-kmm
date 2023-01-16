@@ -20,13 +20,7 @@ internal val messengerModule  = DI.Module("MessengerModule"){
         )
     }
 
-    bind<IDialogsUpdatesRepository>() with singleton {
-        DialogsUpdatesRepositoryImpl(
-            instance(),
-            instance(),
-            instance()
-        )
-    }
+
 }
 
 @ThreadLocal

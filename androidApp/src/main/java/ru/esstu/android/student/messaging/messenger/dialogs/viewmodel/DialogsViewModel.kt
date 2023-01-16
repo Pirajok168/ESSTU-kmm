@@ -37,14 +37,14 @@ sealed class DialogEvents {
     object GetNext : DialogEvents()
     object Reload : DialogEvents()
 
-    object CancelObserving: DialogEvents()
+    object CancelObserving : DialogEvents()
 }
 
 
 class DialogsViewModel constructor(
-    private val dialogUpdate: IDialogsUpdatesRepository = ESSTUSdk.messengerModule.update,
+    private val dialogUpdate: IDialogsUpdatesRepository = ESSTUSdk.dialogsModuleNew.update,
 
-     dialogApi: IDialogsApiRepository = ESSTUSdk.dialogsModuleNew.repo,
+    dialogApi: IDialogsApiRepository = ESSTUSdk.dialogsModuleNew.repo,
     dialogDB: IDialogsDbRepository = ESSTUSdk.dialogsModuleNew.repoDialogs,
 
     ) : ViewModel() {
@@ -53,17 +53,16 @@ class DialogsViewModel constructor(
         private set
 
 
-
-
-
-
     private val paginator = Paginator(
         initialKey = 0,
         onReset = {
             if (dialogState.cleanCacheOnRefresh)
                 dialogDB.clear()
-                  },
-        onLoad = { dialogState = dialogState.copy(isLoading = it, title = if (it) "Обновление" else "Мессенджер") },
+        },
+        onLoad = {
+            dialogState =
+                dialogState.copy(isLoading = it, title = if (it) "Обновление" else "Мессенджер")
+        },
         onRequest = { key ->
             val cachedDialogs = dialogDB.getDialogs(dialogState.pageSize, key)
 
@@ -81,36 +80,41 @@ class DialogsViewModel constructor(
         onError = { dialogState = dialogState.copy(error = it) },
 
         onRefresh = { items ->
-            dialogState = dialogState.copy(items = items, error = null, isEndReached = items.isEmpty())
+            dialogState =
+                dialogState.copy(items = items, error = null, isEndReached = items.isEmpty())
         },
         onNext = { _, items ->
-            dialogState = dialogState.copy(items = dialogState.items + items, error = null, isEndReached = items.isEmpty())
+            dialogState = dialogState.copy(
+                items = dialogState.items + items,
+                error = null,
+                isEndReached = items.isEmpty()
+            )
         }
     )
 
 
-
     private var job: Job? = null
-    private fun installObserving(){
+    private fun installObserving() {
 
         if (job?.isActive != true) {
             job = viewModelScope.launch {
                 dialogUpdate
                     .installObserving()
                     .collectLatest {
-                    if (it is Response.Success && it.data.isNotEmpty()) {
-                        dialogState = dialogState.copy(cleanCacheOnRefresh = true)
-                        paginator.refresh()
+                        if (it is Response.Success && it.data.isNotEmpty()) {
+                            dialogState = dialogState.copy(cleanCacheOnRefresh = true)
+                            paginator.refresh()
+                        }
                     }
-                }
 
 
             }
         }
     }
 
-    private fun cancelObserving(){
-        job?.cancel()
+    private fun cancelObserving() {
+        if (job?.isActive == true)
+            job?.cancel()
     }
 
     fun onEvent(event: DialogEvents) {

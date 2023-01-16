@@ -10,6 +10,8 @@ import ru.esstu.student.messaging.messenger.conversations.datasources.api.Conver
 import ru.esstu.student.messaging.messenger.conversations.datasources.api.ConversationsApiImpl
 import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsCacheDao
 import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsCacheDatabase
+import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsTimestampDao
+import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsTimestampDatabase
 import ru.esstu.student.messaging.messenger.conversations.datasources.repo.*
 import kotlin.native.concurrent.ThreadLocal
 
@@ -38,6 +40,11 @@ internal val conversationModule = DI.Module("ConversationModule") {
         ConversationsDbRepositoryImpl(
             instance(),
             instance()
+        )
+    }
+    bind<ConversationsTimestampDao>() with singleton {
+        ConversationsTimestampDatabase(
+            database = instance<IDatabaseStudent>().getDataBase()
         )
     }
 

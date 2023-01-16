@@ -1,18 +1,25 @@
 package ru.esstu.android.student.messaging.messenger.supports.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.esstu.ESSTUSdk
+import ru.esstu.android.student.messaging.messenger.dialogs.viewmodel.DialogEvents
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
 import ru.esstu.student.messaging.messenger.supports.datasource.repo.ISupportsApiRepository
 import ru.esstu.student.messaging.messenger.supports.datasource.repo.ISupportsDbRepository
+import ru.esstu.student.messaging.messenger.supports.datasource.repo.ISupportsUpdatesRepository
 import ru.esstu.student.messaging.messenger.supports.di.supportsModule
 
 data class SupportState(
@@ -27,14 +34,14 @@ data class SupportState(
 sealed class SupportEvents {
     object GetNext : SupportEvents()
     object Reload : SupportEvents()
+    object CancelObserving: SupportEvents()
 }
 
 
 class SupportViewModel  constructor(
     supportApi: ISupportsApiRepository = ESSTUSdk.supportsModule.apiRepo,
-    supportDb: ISupportsDbRepository = ESSTUSdk.supportsModule.dbRepo
-    /*
-    updates: ISupportsUpdateRepository*/
+    supportDb: ISupportsDbRepository = ESSTUSdk.supportsModule.dbRepo,
+    private val updates: ISupportsUpdatesRepository = ESSTUSdk.supportsModule.update
 ) : ViewModel() {
     var supportState by mutableStateOf(SupportState())
         private set
@@ -45,7 +52,7 @@ class SupportViewModel  constructor(
         onLoad = { supportState = supportState.copy(isLoading = it) },
         onRequest = { key ->
             val cachedConversations = supportDb.getSupports(supportState.pageSize, key)
-
+            Log.e("Support", cachedConversations.toString())
             if (cachedConversations.isEmpty()) {
                 val loadedConversations = supportApi.getSupports(supportState.pageSize, key)
 
@@ -67,24 +74,44 @@ class SupportViewModel  constructor(
         }
     )
 
-    init {
-       /* viewModelScope.launch {
-            updates.updatesFlow.collectLatest {
-                if (it is Response.Success && it.data.isNotEmpty()) {
-                    supportState = supportState.copy(cleanCacheOnRefresh = true)
-                    paginator.refresh()
-                }
-            }
-        }*/
-    }
 
+    private var job: Job? = null
+
+    private fun installObserving(){
+
+        if (job?.isActive != true) {
+            job = viewModelScope.launch(Dispatchers.IO) {
+                updates
+                    .installObserving()
+                    .collectLatest {
+                        Log.e("Support", it.toString())
+                        if (it is Response.Success) {
+                            withContext(Dispatchers.Main){
+                                Log.e("Support", "ЧТО ТО ПРИШЛО")
+                                supportState = supportState.copy(cleanCacheOnRefresh = true)
+                                paginator.refresh()
+                            }
+
+                        }
+                    }
+
+
+            }
+        }
+    }
+    private fun cancelObserving(){
+        if (job?.isActive == true)
+            job?.cancel()
+    }
     fun onEvent(event: SupportEvents) {
         when (event) {
             is SupportEvents.GetNext -> viewModelScope.launch { paginator.loadNext() }
             SupportEvents.Reload -> viewModelScope.launch {
+                installObserving()
                 supportState = supportState.copy(cleanCacheOnRefresh = false)
                 paginator.refresh()
             }
+            SupportEvents.CancelObserving -> cancelObserving()
         }
     }
 }

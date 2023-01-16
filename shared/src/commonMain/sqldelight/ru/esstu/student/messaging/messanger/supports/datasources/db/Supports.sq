@@ -39,7 +39,7 @@ getDialogsWithLastMessage:
     ORDER BY d.date DESC LIMIT :pageSize OFFSET :pageOffset;
 
 clear:
-    DELETE FROM SuppotTable;
+    DELETE FROM MessageSuppotTable;
 
 getDialog:
     SELECT * FROM SuppotTable

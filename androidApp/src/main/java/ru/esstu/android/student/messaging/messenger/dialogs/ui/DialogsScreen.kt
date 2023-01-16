@@ -47,9 +47,10 @@ fun DialogsScreen(
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
-            Log.e("DialogsScreen", event.toString())
             if (event == Lifecycle.Event.ON_START)
                 dialogsViewModel.onEvent(DialogEvents.Reload)
+            if (event == Lifecycle.Event.ON_STOP)
+                dialogsViewModel.onEvent(DialogEvents.CancelObserving)
         }
 
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -57,7 +58,6 @@ fun DialogsScreen(
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
             dialogsViewModel.onEvent(DialogEvents.CancelObserving)
-            Log.e("DialogsScreen", "Диалоги отключены")
         }
     }
 

@@ -13,6 +13,8 @@ import ru.esstu.student.messaging.messenger.dialogs.datasources.api.DialogsApi
 import ru.esstu.student.messaging.messenger.dialogs.datasources.api.DialogsApiImpl
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.CacheDao
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.CacheDatabase
+import ru.esstu.student.messaging.messenger.dialogs.datasources.db.DialogsTimestampDao
+import ru.esstu.student.messaging.messenger.dialogs.datasources.db.DialogsTimestampDatabase
 import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.*
 import kotlin.native.concurrent.ThreadLocal
 
@@ -45,6 +47,19 @@ internal val dialogsModuleNew = DI.Module("dialogsModuleNew"){
             cacheDao = instance()
         )
     }
+    bind<DialogsTimestampDao>() with singleton {
+        DialogsTimestampDatabase(
+            database = instance<IDatabaseStudent>().getDataBase(),
+        )
+    }
+
+    bind<IDialogsUpdatesRepository>() with singleton {
+        DialogsUpdatesRepositoryImpl(
+            instance(),
+            instance(),
+            instance()
+        )
+    }
 }
 
 @ThreadLocal
@@ -55,7 +70,8 @@ object DialogsModuleNew {
     val repoDialogs: IDialogsDbRepository
         get() = ESSTUSdk.di.instance()
 
-
+    val update: IDialogsUpdatesRepository
+        get() = ESSTUSdk.di.instance()
 }
 
 val ESSTUSdk.dialogsModuleNew: DialogsModuleNew

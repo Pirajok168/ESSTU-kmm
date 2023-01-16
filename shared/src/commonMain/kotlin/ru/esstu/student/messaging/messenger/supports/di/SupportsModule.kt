@@ -10,10 +10,9 @@ import ru.esstu.student.messaging.messenger.supports.datasource.api.SupportsApi
 import ru.esstu.student.messaging.messenger.supports.datasource.api.SupportsApiImpl
 import ru.esstu.student.messaging.messenger.supports.datasource.db.SupportsCacheDao
 import ru.esstu.student.messaging.messenger.supports.datasource.db.SupportsCacheDatabase
-import ru.esstu.student.messaging.messenger.supports.datasource.repo.ISupportsApiRepository
-import ru.esstu.student.messaging.messenger.supports.datasource.repo.ISupportsDbRepository
-import ru.esstu.student.messaging.messenger.supports.datasource.repo.SupportsApiRepositoryImpl
-import ru.esstu.student.messaging.messenger.supports.datasource.repo.SupportsDbRepositoryImpl
+import ru.esstu.student.messaging.messenger.supports.datasource.db.SupportsTimestampDao
+import ru.esstu.student.messaging.messenger.supports.datasource.db.SupportsTimestampDatabase
+import ru.esstu.student.messaging.messenger.supports.datasource.repo.*
 import kotlin.native.concurrent.ThreadLocal
 
 internal val supportsModule = DI.Module("SupportsModule") {
@@ -43,6 +42,20 @@ internal val supportsModule = DI.Module("SupportsModule") {
         )
     }
 
+    bind<SupportsTimestampDao>() with singleton {
+        SupportsTimestampDatabase(
+            database = instance<IDatabaseStudent>().getDataBase()
+        )
+    }
+
+    bind<ISupportsUpdatesRepository>() with singleton {
+        SupportsUpdatesRepositoryImpl(
+            instance(),
+            instance(),
+            timestampDao = instance(),
+        )
+    }
+
 }
 
 
@@ -52,6 +65,9 @@ object SupportsModule {
         get() = ESSTUSdk.di.instance()
 
     val dbRepo: ISupportsDbRepository
+        get() = ESSTUSdk.di.instance()
+
+    val update: ISupportsUpdatesRepository
         get() = ESSTUSdk.di.instance()
 }
 

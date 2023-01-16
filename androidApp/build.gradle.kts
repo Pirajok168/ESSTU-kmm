@@ -90,6 +90,8 @@ dependencies {
     kapt ("com.google.dagger:hilt-compiler:2.44")
     implementation ("androidx.hilt:hilt-work:1.0.0")
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.7.20")
 }
 
 kapt {

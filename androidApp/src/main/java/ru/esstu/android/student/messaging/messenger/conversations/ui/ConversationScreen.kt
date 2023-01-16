@@ -24,6 +24,7 @@ import ru.esstu.android.domain.modules.account.viewmodel.AccountInfoViewModel
 import ru.esstu.android.student.messaging.messenger.conversations.viewmodel.ConversationEvents
 import ru.esstu.android.student.messaging.messenger.conversations.viewmodel.ConversationViewModel
 import ru.esstu.android.student.messaging.messenger.dialogs.ui.components.MessengerCard
+import ru.esstu.android.student.messaging.messenger.dialogs.viewmodel.DialogEvents
 import java.util.*
 
 @Composable
@@ -41,6 +42,8 @@ fun ConversationScreen(
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START)
                 dialogViewModel.onEvent(ConversationEvents.Reload)
+            if (event == Lifecycle.Event.ON_STOP)
+                dialogViewModel.onEvent(ConversationEvents.CancelObserving)
 
         }
 

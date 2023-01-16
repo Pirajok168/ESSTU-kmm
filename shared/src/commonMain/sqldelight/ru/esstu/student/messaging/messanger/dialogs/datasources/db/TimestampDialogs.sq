@@ -1,0 +1,12 @@
+CREATE TABLE TimstampDialogs (
+    appUserId TEXT PRIMARY KEY NOT NULL,
+    timestamp INTEGER
+);
+
+
+getTimestamp:
+    SELECT * FROM TimstampDialogs WHERE appUserId == (:appUserId);
+
+setTimestamp:
+        INSERT OR REPLACE INTO TimstampDialogs(appUserId, timestamp)
+        VALUES (?,?);

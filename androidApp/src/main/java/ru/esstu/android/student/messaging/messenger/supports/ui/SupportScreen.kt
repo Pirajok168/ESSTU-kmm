@@ -19,6 +19,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.esstu.android.domain.modules.account.viewmodel.AccountInfoViewModel
 import ru.esstu.android.student.messaging.messenger.dialogs.ui.components.MessengerCard
+import ru.esstu.android.student.messaging.messenger.dialogs.viewmodel.DialogEvents
 import ru.esstu.android.student.messaging.messenger.supports.viewmodel.SupportEvents
 import ru.esstu.android.student.messaging.messenger.supports.viewmodel.SupportViewModel
 import java.util.*
@@ -37,12 +38,15 @@ fun SupportScreen(
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START)
                 supportViewModel.onEvent(SupportEvents.Reload)
+            if (event == Lifecycle.Event.ON_STOP)
+                supportViewModel.onEvent(SupportEvents.CancelObserving)
         }
 
         lifecycleOwner.lifecycle.addObserver(observer)
 
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
+            supportViewModel.onEvent(SupportEvents.CancelObserving)
         }
     }
     LazyColumn(modifier = Modifier.fillMaxSize()) {

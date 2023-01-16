@@ -25,12 +25,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.esstu.android.student.messaging.messenger.conversations.ui.ConversationScreen
 import ru.esstu.android.student.messaging.messenger.navigation.viewmodel.toNormalView
 import ru.esstu.android.student.messaging.messenger.supports.ui.SupportScreen
-
+@Stable
 enum class Pages(val description: String) {
-    DIALOGS("Диалоги"),
-    CONVERSATION("Обсуждения"),
-    TECH_SUPPORT("Тех. поддержка"),
-    APPEALS("Обращения"),
+    @Stable DIALOGS("Диалоги"),
+    @Stable CONVERSATION("Обсуждения"),
+    @Stable TECH_SUPPORT("Тех. поддержка"),
+    //@Stable APPEALS("Обращения"),
 }
 
 @OptIn(ExperimentalPagerApi::class)
@@ -134,6 +134,7 @@ fun MessengerScreen(
         val screens = remember {
             mutableStateOf(values().toList())
         }
+
         Box(contentAlignment = Alignment.BottomEnd) {
 
             Column(modifier = Modifier.padding(it)) {
@@ -180,7 +181,7 @@ fun MessengerScreen(
                         TECH_SUPPORT -> SupportScreen(
                             onNavToSupportChat = onNavToSupportChat
                         )
-                        APPEALS -> DialogsScreen(
+                        /*APPEALS -> DialogsScreen(
                             onNavToDialogChat = onNavToDialogChat,
                             updateTitle = {
                                 title = it
@@ -190,7 +191,7 @@ fun MessengerScreen(
                             },
                             isEditing = uiState.isEditing,
                             selectedList = uiState.selectedPreviewDialog
-                        )
+                        )*/
                     }
                 }
             }

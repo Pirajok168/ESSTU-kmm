@@ -1,0 +1,12 @@
+CREATE TABLE TimstampConversations (
+    appUserId TEXT PRIMARY KEY NOT NULL,
+    timestamp INTEGER
+);
+
+
+getTimestamp:
+    SELECT * FROM TimstampConversations WHERE appUserId == (:appUserId);
+
+setTimestamp:
+        INSERT OR REPLACE INTO TimstampConversations(appUserId, timestamp)
+        VALUES (?,?);
