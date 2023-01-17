@@ -15,6 +15,7 @@ import ru.esstu.android.student.messaging.dialog_chat.ui.DialogChatScreen
 import ru.esstu.android.student.messaging.group_chat.navigation.GroupChatArguments
 import ru.esstu.android.student.messaging.group_chat.navigation.GroupChatScreen
 import ru.esstu.android.student.messaging.group_chat.ui.GroupChatScreen
+import ru.esstu.android.student.messaging.new_message.selector.navigation.newMsgSelectorNavGraph
 
 
 @ExperimentalFoundationApi
@@ -68,6 +69,8 @@ fun NavGraphBuilder.studentNavGraph(
                     }
                 )
         }
+
+        newMsgSelectorNavGraph(navController = navController)
     /*
 
 
