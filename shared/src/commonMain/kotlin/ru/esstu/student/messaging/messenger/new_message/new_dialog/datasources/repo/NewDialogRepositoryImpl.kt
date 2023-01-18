@@ -10,10 +10,9 @@ import ru.esstu.student.messaging.dialog_chat.datasources.toMessage
 import ru.esstu.student.messaging.dialog_chat.datasources.toReplyMessage
 import ru.esstu.student.messaging.entities.CachedFile
 import ru.esstu.student.messaging.entities.Sender
-import ru.esstu.student.messaging.messenger.appeals.datasources.db.AppealsCacheDao
-import ru.esstu.student.messaging.messenger.datasources.entities.PreviewLastMessage
 import ru.esstu.student.messaging.messenger.datasources.toUser
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.CacheDao
+import ru.esstu.student.messaging.messenger.dialogs.datasources.toPreviewLastMessage
 import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 import ru.esstu.student.messaging.messenger.new_message.new_dialog.datasources.api.NewDialogApi
 
@@ -24,7 +23,7 @@ class NewDialogRepositoryImpl(
 ): INewDialogRepository {
     override suspend fun findUsers(query: String, limit: Int, offset: Int): Response<List<Sender>> {
         return auth.provideToken { type, token ->
-            api.findUsers("$type $token", query = query, offset = offset, limit = limit).mapNotNull { it.toUser() }
+            api.findUsers("$token", query = query, offset = offset, limit = limit).mapNotNull { it.toUser() }
         }
     }
 
@@ -87,6 +86,7 @@ class NewDialogRepositoryImpl(
         return Response.Error(ResponseError(message = "Неизвестное состояние"))
     }
 
+    // TODO: Потесить быть её 
     override suspend fun updateDialogOnPreview(opponent: Sender, messageId: Long): Response<Unit> {
         return auth.provideToken {
                 token ->
@@ -102,7 +102,7 @@ class NewDialogRepositoryImpl(
                 null
 
             val authors = api.pickUsers(
-                authToken = "${token.type} ${token.access}",
+                authToken = "${token.access}",
                 usersIds = listOfNotNull(replyResponse?.from, messageResponse?.from)
                     .joinToString()
             ).mapNotNull { it.toUser() }
@@ -114,7 +114,19 @@ class NewDialogRepositoryImpl(
                 authors = authors
             )
 
-
+            val dialog = PreviewDialog(
+                id = opponent.id,
+                opponent,
+                lastMessage = message?.toPreviewLastMessage(),
+                notifyAboutIt = true,
+                unreadMessageCount = 0
+            )
+            dialogCacheDao.updateDialogLastMessage(
+                appUserId,
+                dialogId = opponent.id,
+                lastMessage = message?.toPreviewLastMessage()!!,
+                dialog
+            )
         }
     }
 }

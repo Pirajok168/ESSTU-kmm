@@ -10,7 +10,7 @@ interface CacheDao {
     suspend fun setDialog(appUserId: String, previewDialog: PreviewDialog)
     suspend fun getDialogWithLastMessage(appUserId: String, pageSize: Int, pageOffset: Int): List<DialogWithMessage>
 
-    suspend fun updateDialogLastMessage(appUserId: String, dialogId: String, lastMessage: PreviewLastMessage)
+    suspend fun updateDialogLastMessage(appUserId: String, dialogId: String, lastMessage: PreviewLastMessage, newDialog: PreviewDialog?)
 
     suspend fun deleteDialog(idDialog: Long)
 

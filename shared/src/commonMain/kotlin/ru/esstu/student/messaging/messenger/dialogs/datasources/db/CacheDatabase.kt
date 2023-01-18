@@ -82,7 +82,8 @@ class CacheDatabase(
     override suspend fun updateDialogLastMessage(
         appUserId: String,
         dialogId: String,
-        lastMessage: PreviewLastMessage
+        lastMessage: PreviewLastMessage,
+        newDialog: PreviewDialog?
     ) {
         val dialog = dbQueries.getDialog(dialogId, appUserId).executeAsOneOrNull()
         if (dialog != null){
@@ -95,6 +96,9 @@ class CacheDatabase(
             dialog.apply {
                 dbQueries.setDialog(idDialog, appUserId, lastMessage.id, opponent, 0, notifyAboutIt)
             }
+        }else{
+            setLastMessage(lastMessage)
+            setDialog(appUserId, newDialog!!)
         }
 
 

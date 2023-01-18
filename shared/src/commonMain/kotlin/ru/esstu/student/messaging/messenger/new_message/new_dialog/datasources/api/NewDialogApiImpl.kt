@@ -1,9 +1,11 @@
 package ru.esstu.student.messaging.messenger.new_message.new_dialog.datasources.api
 
+import io.github.aakira.napier.Napier
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
@@ -26,9 +28,8 @@ class NewDialogApiImpl(
         limit: Int,
         offset: Int
     ): List<UserPreview> {
-        val response = portalApi.get{
+        val response = portalApi.get("lk/api/v1/users/findUsers"){
             url{
-                path("mlk/api/v1/users/findUsers")
                 bearerAuth(authToken)
                 encodedParameters.append("query", query)
                 encodedParameters.append("limit", limit.toString())
@@ -52,7 +53,7 @@ class NewDialogApiImpl(
     override suspend fun pickUsers(authToken: String, usersIds: String): List<UserPreview> {
         val request = portalApi.get {
             url {
-                path("mlk/api/v1/users/getUsers")
+                path("lk/api/v1/users/getUsers")
                 bearerAuth(authToken)
                 encodedParameters.append("ids", usersIds)
             }

@@ -1,7 +1,6 @@
 package ru.esstu.student.messaging.messenger.appeals.datasources.repo
 
 import com.soywiz.klock.DateTime
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import ru.esstu.auth.datasources.repo.IAuthRepository
@@ -9,13 +8,10 @@ import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.api.UpdatesApi
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.messenger.appeals.datasources.db.AppealsTimestampDao
+import ru.esstu.student.messaging.messenger.appeals.toAppeals
 import ru.esstu.student.messaging.messenger.appeals.toTimeStamp
 import ru.esstu.student.messaging.messenger.appeals.toTimeStampEntity
-import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsTimestampDao
-import ru.esstu.student.messaging.messenger.conversations.datasources.toConversations
 import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
-import ru.esstu.student.messaging.messenger.datasources.db.timestamp.TimestampDao
-
 
 
 class AppealsUpdatesRepositoryImpl(
@@ -45,7 +41,7 @@ class AppealsUpdatesRepositoryImpl(
                     is Response.Success -> {
                         timestampDao.setTimestamp(callTimestamp.toTimeStampEntity(appUserId = appUserId))
 
-                        emit(Response.Success(result.data.toConversations()))
+                        emit(Response.Success(result.data.toAppeals()))
                     }
                 }
             }

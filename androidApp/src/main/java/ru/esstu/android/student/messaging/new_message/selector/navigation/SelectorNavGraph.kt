@@ -6,6 +6,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import ru.esstu.android.student.messaging.dialog_chat.navigation.DialogChatScreen
 import ru.esstu.android.student.messaging.group_chat.navigation.GroupChatScreen
+import ru.esstu.android.student.messaging.new_message.new_dialog.navigation.NewDialogScreens
+import ru.esstu.android.student.messaging.new_message.new_dialog.navigation.newDialogNavGraph
 import ru.esstu.android.student.messaging.new_message.selector.ui.NewMessageSelectorScreen
 
 fun NavGraphBuilder.newMsgSelectorNavGraph(
@@ -35,7 +37,7 @@ fun NavGraphBuilder.newMsgSelectorNavGraph(
                     }
                 },
                 onNavToNewDialog = {
-                    //navController.navigate(NewDialogScreens.NewDialogScreen.navigate())
+                    navController.navigate(NewDialogScreens.NewDialogScreen.navigate())
                 },
                 onNavToNewConversation = {
                     //navController.navigate(NewConvScreens.MembersScreen.navigate())
@@ -49,7 +51,7 @@ fun NavGraphBuilder.newMsgSelectorNavGraph(
             )
         }
 
-        //newDialogNavGraph(navController = navController)
+        newDialogNavGraph(navController = navController)
 
        // newConvNavGraph(navController = navController)
 

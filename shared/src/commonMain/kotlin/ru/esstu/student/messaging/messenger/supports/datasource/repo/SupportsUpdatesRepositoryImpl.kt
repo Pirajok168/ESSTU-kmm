@@ -9,9 +9,9 @@ import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.api.UpdatesApi
 import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.student.messaging.messenger.conversations.datasources.toConversations
 import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
 import ru.esstu.student.messaging.messenger.supports.datasource.db.SupportsTimestampDao
+import ru.esstu.student.messaging.messenger.supports.toSupports
 
 class SupportsUpdatesRepositoryImpl(
     private val auth: IAuthRepository,
@@ -38,8 +38,8 @@ class SupportsUpdatesRepositoryImpl(
                     }
                     is Response.Success -> {
                         timestampDao.setTimestamp(callTimestamp.toTimeStampEntity(appUserId = appUserId))
-                        Napier.e(result.data.toConversations().toString(), tag = "Support")
-                        emit(Response.Success(result.data.toConversations()))
+                        Napier.e(result.data.toSupports().toString(), tag = "Support")
+                        emit(Response.Success(result.data.toSupports()))
                     }
                 }
             }

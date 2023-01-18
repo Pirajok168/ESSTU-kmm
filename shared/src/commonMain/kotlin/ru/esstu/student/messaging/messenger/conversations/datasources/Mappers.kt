@@ -4,7 +4,6 @@ import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.
 import ru.esstu.student.messaging.messanger.conversation.datasources.db.TimstampConversations
 import ru.esstu.student.messaging.messenger.conversations.datasources.db.entities.ConversationWithMessage
 import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
-import ru.esstu.student.messaging.messenger.datasources.db.timestamp.entities.TimestampEntity
 import ru.esstu.student.messaging.messenger.datasources.toUser
 import ru.esstu.student.messaging.messenger.dialogs.datasources.toMessage
 import ru.esstu.student.messaging.messenger.dialogs.datasources.toUser
@@ -17,7 +16,7 @@ fun Long.toTimeStampEntity(appUserId:String) = TimstampConversations(
 )
 
 fun DataResponse.toConversations(): List<ConversationPreview> {
-    return dialogs.filter { dialog -> dialog.type == "APPEAL" }.mapNotNull {
+    return dialogs.filter { dialog -> dialog.type == "CHAT" }.mapNotNull {
         val rawConv = conversations.firstOrNull { conv -> conv.id.toString() == it.peerId } ?: return@mapNotNull null
         val author = loadedUsers.firstOrNull { user -> user.id == rawConv.creatorId }?.toUser()
         val laseMessage = messages.firstOrNull { message -> message.id == it.lastMessageId }
@@ -31,6 +30,9 @@ fun DataResponse.toConversations(): List<ConversationPreview> {
         )
     }
 }
+
+
+
 
 
 fun ConversationWithMessage.toMessage() = ConversationPreview(

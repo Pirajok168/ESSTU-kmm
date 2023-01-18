@@ -25,8 +25,6 @@ class AppealsApiImpl(
                 encodedParameters.append("limit", limit.toString())
             }
         }
-        val a = response.bodyAsText()
-        a
         return response.body()
     }
 }

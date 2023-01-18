@@ -1,23 +1,26 @@
 package ru.esstu.student.news.announcement.datasources.repo
 
 import com.soywiz.klock.DateTime
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.domain.api.UpdatesApi
 import ru.esstu.domain.utill.wrappers.Response
+import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.news.announcement.datasources.db.timestamp.TimestampDao
 import ru.esstu.student.news.announcement.datasources.toAnnouncements
 import ru.esstu.student.news.announcement.db.announcement.toTimeStamp
 import ru.esstu.student.news.announcement.db.announcement.toTimeStampEntity
+import ru.esstu.student.news.entities.NewsNode
 
 class AnnouncementsUpdateRepositoryImpl(
     private val auth: IAuthRepository,
     private val api: UpdatesApi,
     private val timestampDao: TimestampDao,
 ) : IAnnouncementsUpdateRepository{
-    override fun getUpdates() = flow {
+    override fun getUpdates() = flow<Response<List<NewsNode>>> {
         while (true) {
             val callTimestamp = DateTime.now().unixMillisLong
             auth.provideToken { token ->

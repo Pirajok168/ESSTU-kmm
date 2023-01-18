@@ -209,7 +209,8 @@ class DialogChatRepositoryImpl constructor(
             historyCacheDaoNew.updateDialogLastMessage(
                 appUserId = appUserId,
                 dialogId = dialogId,
-                message.toPreviewLastMessage()
+                message.toPreviewLastMessage(),
+                null
             )
         }
     }
