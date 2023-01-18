@@ -630,5 +630,7 @@ fun withPermissions(
         ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
     }
 
+
+
     if (hasPermissions) onGranted() else onRequest()
 }

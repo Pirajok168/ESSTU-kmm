@@ -105,7 +105,7 @@ fun NewDialogSearchScreen(
                     .fillMaxSize(),
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
-                itemsIndexed(uiState.queryPages) {index,  user ->
+                itemsIndexed(uiState.queryPages, key = { index, item ->  item.id}) {index,  user ->
 
                     if (index == uiState.queryPages.lastIndex && !uiState.isQueryPageEndReached && !uiState.isQueryLoading)
                         viewModel.onEvent(NewDialogEvents.LoadNext)
@@ -183,7 +183,7 @@ fun NewDialogSearchScreen(
                             Spacer(modifier = Modifier.height(8.dp))
                         }
 
-                        items(uiState.recentOpponents) {  user ->
+                        items(uiState.recentOpponents, key = { it.id }) {  user ->
 
                             Box(modifier = Modifier.clickable {
                                 viewModel.onEvent(NewDialogEvents.SelectOpponent(user))

@@ -38,7 +38,7 @@ fun Uri.cacheToFile(context: Context): CachedFile? {
     }
 
     val cachedFileUri = cachedFile.toUri()
-
+    parcelFileDescriptor.close()
     return CachedFile(
         size = fileSize!!,
         ext = cachedFile.extension,
