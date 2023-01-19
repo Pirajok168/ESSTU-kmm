@@ -1,8 +1,14 @@
 package ru.esstu.android.domain.ui
 
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
 
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -10,6 +16,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 
 import androidx.core.view.WindowCompat
 
@@ -29,6 +37,7 @@ class  MainActivity : AppCompatActivity() {
 
     //@Inject
    // lateinit var uiStateObserver: IUiObserver
+    @RequiresApi(Build.VERSION_CODES.Q)
     @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class, ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class, ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +51,7 @@ class  MainActivity : AppCompatActivity() {
         setContent {
             EsstuTheme {
 
+                val context = LocalContext.current
 
                 val navController = rememberNavController()
 

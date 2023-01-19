@@ -1,5 +1,6 @@
 package ru.esstu.android.student.messaging.dialog_chat.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -199,6 +200,11 @@ class DialogChatViewModel @Inject constructor(
                         if (response.data.isEmpty()) return@collect
 
                         val updates = response.data
+                        val itWas = dialogChatState.pages
+                        val itWill = mutableListOf<Message>()
+
+
+
                         dialogChatRepository.setMessages(dialogId, updates)
                         dialogChatState = dialogChatState.copy(
                             pages = (updates + dialogChatState.pages).distinctBy { it.id },

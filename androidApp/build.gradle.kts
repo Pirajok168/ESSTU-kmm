@@ -66,7 +66,7 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-insets:0.23.1")
 
     //system ui controller
-    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
 
     //Material
     implementation ("com.google.android.material:material:1.7.0")
@@ -80,7 +80,7 @@ dependencies {
     //pager
     implementation ("com.google.accompanist:accompanist-pager:0.23.1")
     implementation ("com.google.accompanist:accompanist-pager-indicators:0.23.1")
-    implementation ("com.google.accompanist:accompanist-flowlayout:0.23.1")
+    implementation ("com.google.accompanist:accompanist-flowlayout:0.28.0")
 
     //Work Manager
     implementation ("androidx.work:work-runtime-ktx:2.7.1")
@@ -92,6 +92,8 @@ dependencies {
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.7.20")
+
+    implementation ("com.google.accompanist:accompanist-permissions:0.28.0")
 }
 
 kapt {
