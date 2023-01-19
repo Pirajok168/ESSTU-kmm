@@ -468,6 +468,8 @@ fun DialogChatScreen(
                                                 )
                                             },
                                             onFileClick = { file ->
+
+
                                                 if (filesPermissionsState.permissions.all { it.status.isGranted }) {
                                                     if(file.loadProgress == null && file.localFileUri.isNullOrBlank()){
                                                         scope.launch {
@@ -486,7 +488,7 @@ fun DialogChatScreen(
                                                                                 val fileCopy =
                                                                                     file.copy(
                                                                                         loadProgress = progress,
-                                                                                        fileUri = ""
+                                                                                        localFileUri = null
                                                                                     )
                                                                                 viewModel.onEvent(
                                                                                     DialogChatEvents.UpdateAttachment(
@@ -545,9 +547,6 @@ fun DialogChatScreen(
                                                             )
                                                         )
                                                     }
-
-
-
 
                                                 } else {
                                                     filesPermissionsState.launchMultiplePermissionRequest()

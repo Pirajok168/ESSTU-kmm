@@ -68,21 +68,29 @@ private class Notification(context: Context, private val notificationType: Notif
     private var notificationIsShown = false
 
     fun show(context: Context, progress: Float? = null) {
-        when (notificationType) {
+        if (
+            ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ){
+            when (notificationType) {
 
-            NotificationTypes.NOTIFICATION_WITH_PROGRESS -> {
-                progress?.run {
-                    notification.setProgress(100, (progress * 100).roundToInt(), false)
+                NotificationTypes.NOTIFICATION_WITH_PROGRESS -> {
+                    progress?.run {
+                        notification.setProgress(100, (progress * 100).roundToInt(), false)
+                    }
+                    NotificationManagerCompat.from(context).notify(file.id, notification.build())
                 }
-                NotificationManagerCompat.from(context).notify(file.id, notification.build())
+
+                NotificationTypes.NOTIFICATION_WITHOUT_PROGRESS ->
+                    if (!notificationIsShown) NotificationManagerCompat.from(context).notify(file.id, notification.build())
+
+                NotificationTypes.NO_NOTIFICATION -> return
             }
-
-            NotificationTypes.NOTIFICATION_WITHOUT_PROGRESS ->
-                if (!notificationIsShown) NotificationManagerCompat.from(context).notify(file.id, notification.build())
-
-            NotificationTypes.NO_NOTIFICATION -> return
+            notificationIsShown = true
         }
-        notificationIsShown = true
+
     }
 
     fun cancel(context: Context) =
@@ -152,7 +160,7 @@ class FileDownloadWorker @AssistedInject constructor(
 
                 put(
                     MediaStore.MediaColumns.RELATIVE_PATH,
-                    "Download"
+                    Environment.DIRECTORY_DOWNLOADS
                 )
             }
             val resolver = applicationContext.contentResolver
