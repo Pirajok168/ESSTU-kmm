@@ -40,6 +40,9 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.soywiz.klock.DateFormat
 import com.soywiz.klock.DateTime
 import com.soywiz.klock.parse
@@ -50,15 +53,13 @@ import ru.esstu.android.R
 import ru.esstu.android.domain.ui.theme.CompPreviewTheme
 import ru.esstu.android.domain.modules.account.viewmodel.AccountInfoViewModel
 import ru.esstu.android.domain.datasources.download_worker.FileDownloadWorker
-import ru.esstu.android.student.messaging.dialog_chat.ui.components.NewAttachment
-import ru.esstu.android.student.messaging.dialog_chat.ui.components.ReplyPreview
-import ru.esstu.android.student.messaging.dialog_chat.ui.components.SwipeableCard
-import ru.esstu.android.student.messaging.dialog_chat.ui.components.TimeDivider
+import ru.esstu.android.student.messaging.dialog_chat.ui.components.*
 import ru.esstu.android.student.messaging.dialog_chat.util.cacheToFile
 import ru.esstu.android.student.messaging.dialog_chat.util.withPermissions
 import ru.esstu.android.student.messaging.dialog_chat.viewmodel.DialogChatEvents
 import ru.esstu.android.student.messaging.group_chat.ui.components.ChatPreview
 import ru.esstu.android.student.messaging.group_chat.ui.components.MessageCard
+import ru.esstu.android.student.messaging.group_chat.ui.components.NewMessageCardGroupChat
 import ru.esstu.android.student.messaging.group_chat.viewmodel.GroupChatEvents
 import ru.esstu.android.student.messaging.group_chat.viewmodel.GroupChatViewModel
 import ru.esstu.student.messaging.dialog_chat.util.toAttachment
@@ -69,7 +70,7 @@ import ru.esstu.student.messaging.entities.DeliveryStatus
 private val todayYear = DateTime.now().year
 private val dateFormat: DateFormat = DateFormat("d MMM yyyy")
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun GroupChatScreen(
     onBackPressed: () -> Unit = {},
@@ -113,6 +114,13 @@ fun GroupChatScreen(
 
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+    val workManager = remember { WorkManager.getInstance(context.applicationContext) }
+    val filesPermissionsState = rememberMultiplePermissionsState(
+        listOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+    )
 
     Scaffold(modifier = Modifier
         .fillMaxSize()
@@ -415,8 +423,7 @@ fun GroupChatScreen(
                                                 )
                                             }
                                         }) {
-
-                                        MessageCard(
+                                        NewMessageCardGroupChat(
                                             from = if (!isNextSameAuthorAndDate && !isMessageFromYou)
                                                 message.from else null,
                                             attachments = message.attachments,
@@ -431,137 +438,142 @@ fun GroupChatScreen(
                                                     attachments.map { it.closestUri }
                                                 )
                                             },
-                                            onFileContent = { file, content ->
+                                            onFileClick = {
+                                                    file ->
+                                                if (filesPermissionsState.permissions.all { it.status.isGranted }) {
+                                                    if(file.loadProgress == null && file.localFileUri.isNullOrBlank()){
+                                                        scope.launch {
+                                                            workManager.getWorkInfosForUniqueWorkLiveData(
+                                                                file.id.toString()
+                                                            ).asFlow().collectLatest { workInfos ->
+                                                                workInfos.forEach { worker ->
+                                                                    when (worker?.state) {
+                                                                        WorkInfo.State.RUNNING -> {
+                                                                            val progress =
+                                                                                worker.progress.getFloat(
+                                                                                    FileDownloadWorker.responseParams.KEY_PROGRESS_VAL,
+                                                                                    -1f
+                                                                                )
+                                                                            if (progress >= 0) {
+                                                                                val fileCopy =
+                                                                                    file.copy(
+                                                                                        loadProgress = progress,
+                                                                                        fileUri = ""
+                                                                                    )
+                                                                                viewModel.onEvent(
+                                                                                    GroupChatEvents.UpdateAttachment(
+                                                                                        messageId = message.id,
+                                                                                        fileCopy
+                                                                                    )
+                                                                                )
+                                                                            }
+                                                                        }
+                                                                        WorkInfo.State.SUCCEEDED -> {
+                                                                            val loadedUri =
+                                                                                worker.outputData.getString(
+                                                                                    FileDownloadWorker.responseParams.KEY_FILE_URI
+                                                                                )
 
-                                                val workManager = remember { WorkManager.getInstance(context.applicationContext) }
-
-                                                val permissionsLauncher =
-                                                    rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { response ->
-
-                                                        val allPermissionsGranted =
-                                                            response.all { (_, isGranted) -> isGranted }
-
-                                                        if (allPermissionsGranted)
-                                                            viewModel.onEvent(
-                                                                GroupChatEvents.DownloadAttachment(
-                                                                    message.id,
-                                                                    file
-                                                                )
-                                                            )
-
-                                                    }
-
-                                                LaunchedEffect(Unit) {
-                                                    workManager.getWorkInfosForUniqueWorkLiveData(file.id.toString()).asFlow().collectLatest { workInfos ->
-                                                        workInfos.forEach { worker ->
-                                                            when (worker?.state) {
-                                                                WorkInfo.State.RUNNING -> {
-                                                                    val progress = worker.progress.getFloat(
-                                                                        FileDownloadWorker.responseParams.KEY_PROGRESS_VAL, -1f)
-                                                                    if (progress >= 0) {
-                                                                        val fileCopy = file.copy(loadProgress = progress)
-                                                                        viewModel.onEvent(
-                                                                            GroupChatEvents.UpdateAttachment(messageId = message.id, fileCopy))
+                                                                            if (file.localFileUri == null && loadedUri != null) {
+                                                                                val fileCopy =
+                                                                                    file.copy(
+                                                                                        localFileUri = loadedUri,
+                                                                                        loadProgress = null
+                                                                                    )
+                                                                                viewModel.onEvent(
+                                                                                    GroupChatEvents.UpdateAttachment(
+                                                                                        messageId = message.id,
+                                                                                        fileCopy
+                                                                                    )
+                                                                                )
+                                                                            }
+                                                                        }
+                                                                        WorkInfo.State.FAILED,
+                                                                        WorkInfo.State.CANCELLED -> {
+                                                                            if (file.loadProgress != null) {
+                                                                                val fileCopy =
+                                                                                    file.copy(
+                                                                                        loadProgress = null
+                                                                                    )
+                                                                                viewModel.onEvent(
+                                                                                    GroupChatEvents.UpdateAttachment(
+                                                                                        messageId = message.id,
+                                                                                        fileCopy
+                                                                                    )
+                                                                                )
+                                                                            }
+                                                                        }
+                                                                        else -> {
+                                                                            // ignored
+                                                                        }
                                                                     }
-                                                                }
-                                                                WorkInfo.State.SUCCEEDED -> {
-                                                                    val loadedUri = worker.outputData.getString(
-                                                                        FileDownloadWorker.responseParams.KEY_FILE_URI)
-
-                                                                    if (file.localFileUri == null && loadedUri != null) {
-                                                                        val fileCopy = file.copy(localFileUri = loadedUri, loadProgress = null)
-                                                                        viewModel.onEvent(
-                                                                            GroupChatEvents.UpdateAttachment(messageId = message.id, fileCopy))
-                                                                    }
-                                                                }
-                                                                WorkInfo.State.FAILED,
-                                                                WorkInfo.State.CANCELLED -> {
-                                                                    if (file.loadProgress != null) {
-                                                                        val fileCopy = file.copy(loadProgress = null)
-                                                                        viewModel.onEvent(
-                                                                            GroupChatEvents.UpdateAttachment(messageId = message.id, fileCopy))
-                                                                    }
-                                                                }
-                                                                else -> {
-                                                                    // ignored
                                                                 }
                                                             }
                                                         }
-                                                    }
-                                                }
-
-
-                                                Box(modifier = Modifier.clickable {
-                                                    if (file.loadProgress == null && file.localFileUri.isNullOrBlank()) {
-                                                        ru.esstu.android.student.messaging.dialog_chat.ui.withPermissions(
-                                                            context = context.applicationContext,
-                                                            permissions = arrayOf(
-                                                                Manifest.permission.READ_EXTERNAL_STORAGE,
-                                                                Manifest.permission.WRITE_EXTERNAL_STORAGE
-                                                            ),
-                                                            onRequest = {
-                                                                permissionsLauncher.launch(
-                                                                    arrayOf(
-                                                                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                                                                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                                                                    )
-                                                                )
-                                                            },
-                                                            onGranted = {
-                                                                viewModel.onEvent(
-                                                                    GroupChatEvents.DownloadAttachment(
-                                                                        message.id,
-                                                                        file
-                                                                    )
-                                                                )
-                                                            }
+                                                        viewModel.onEvent(
+                                                            GroupChatEvents.DownloadAttachment(
+                                                                message.id,
+                                                                file
+                                                            )
                                                         )
                                                     }
 
-                                                    if (file.localFileUri?.isNotBlank() == true) {
-                                                        val localUri =
-                                                            file.localFileUri.orEmpty().toUri()
 
-                                                        try {
-                                                            val intent = Intent(Intent.ACTION_VIEW)
 
-                                                            val photoUri: Uri =
-                                                                if (localUri.toString()
-                                                                        .contains("content")
-                                                                )
-                                                                    localUri
-                                                                else
-                                                                    FileProvider.getUriForFile(
-                                                                        context,
-                                                                        context.applicationContext.packageName.toString() + ".provider",
-                                                                        localUri.toFile()
-                                                                    )
 
-                                                            intent.setDataAndType(
-                                                                photoUri,
-                                                                file.type
+                                                } else {
+                                                    filesPermissionsState.launchMultiplePermissionRequest()
+                                                    scope.launch {
+                                                        scaffoldState.snackbarHostState.showSnackbar(
+                                                            "Нет разрешений"
+                                                        )
+                                                    }
+
+                                                }
+                                                if (file.localFileUri?.isNotBlank() == true && file.loadProgress == null){
+                                                    val localUri =
+                                                        file.localFileUri.orEmpty().toUri()
+
+                                                    try {
+                                                        val intent = Intent(Intent.ACTION_VIEW)
+
+                                                        val photoUri: Uri =
+                                                            if (localUri.toString()
+                                                                    .contains("content")
                                                             )
-                                                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                                                localUri
+                                                            else
+                                                                FileProvider.getUriForFile(
+                                                                    context,
+                                                                    context.applicationContext.packageName.toString() + ".provider",
+                                                                    localUri.toFile()
+                                                                )
 
-                                                            context.startActivity(intent)
+                                                        intent.setDataAndType(
+                                                            photoUri,
+                                                            file.type
+                                                        )
+                                                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
-                                                        } catch (e: ActivityNotFoundException) {
-                                                            scope.launch {
-                                                                scaffoldState.snackbarHostState.let { snackbarState ->
-                                                                    if (snackbarState.currentSnackbarData == null)
-                                                                        scaffoldState.snackbarHostState.showSnackbar(
-                                                                            message = "Неподдерживаемый формат файла",
-                                                                            duration = SnackbarDuration.Short
-                                                                        )
-                                                                }
+                                                        context.startActivity(intent)
 
+                                                    } catch (e: ActivityNotFoundException) {
+                                                        scope.launch {
+                                                            scaffoldState.snackbarHostState.let { snackbarState ->
+                                                                if (snackbarState.currentSnackbarData == null)
+                                                                    scaffoldState.snackbarHostState.showSnackbar(
+                                                                        message = "Неподдерживаемый формат файла",
+                                                                        duration = SnackbarDuration.Short
+                                                                    )
                                                             }
+
                                                         }
                                                     }
 
-                                                }) { content() }
+                                                }
                                             }
                                         )
+
                                     }
                                 }
                                 if (!isMessageFromYou)

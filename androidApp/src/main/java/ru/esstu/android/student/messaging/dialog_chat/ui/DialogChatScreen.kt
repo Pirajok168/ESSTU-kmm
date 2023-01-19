@@ -125,21 +125,7 @@ fun DialogChatScreen(
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
     )
-    val permissionsLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { response ->
 
-            val allPermissionsGranted =
-                response.all { (_, isGranted) -> isGranted }
-
-            /*if (allPermissionsGranted)
-                viewModel.onEvent(
-                    DialogChatEvents.DownloadAttachment(
-                        message.id,
-                        file
-                    )
-                )*/
-
-        }
     Scaffold(modifier = Modifier
         .fillMaxSize()
         .statusBarsPadding()

@@ -164,12 +164,26 @@ class GroupChatViewModel @Inject  constructor(
                         if (response.data.isEmpty()) return@collectLatest
 
                         val updates = response.data
+                        val updatesBaseData = mutableListOf<Message>()
 
+                        updates.forEach {
+                            val oldMessage = dialogChatState.pages.firstOrNull {
+                                    oldM ->
+                                oldM.id == it.id
+                            }
+                            if (oldMessage == null){
+                                updatesBaseData.add(it)
+                            }else{
+                                updatesBaseData.add(
+                                    oldMessage.copy(status = it.status)
+                                )
+                            }
+                        }
                         groupChatRepository.setMessages(convId, updates)
 
                         withContext(Dispatchers.Main){
                             dialogChatState = dialogChatState.copy(
-                                pages = (updates + dialogChatState.pages).distinctBy { it.id },
+                                pages = (updatesBaseData + dialogChatState.pages).distinctBy { it.id },
                                 sentMessages = dialogChatState.sentMessages.filter { sent -> updates.none { upd -> upd.id == sent.id } }
                             )
                         }
