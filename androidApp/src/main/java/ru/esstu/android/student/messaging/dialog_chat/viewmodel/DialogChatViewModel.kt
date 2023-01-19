@@ -200,14 +200,26 @@ class DialogChatViewModel @Inject constructor(
                         if (response.data.isEmpty()) return@collect
 
                         val updates = response.data
-                        val itWas = dialogChatState.pages
-                        val itWill = mutableListOf<Message>()
+
+                        val updatesBaseData = mutableListOf<Message>()
+                        updates.forEach {
+                            val oldMessage = dialogChatState.pages.firstOrNull {
+                                    oldM ->
+                                oldM.id == it.id
+                            }
+                            if (oldMessage == null){
+                                updatesBaseData.add(it)
+                            }else{
+                                updatesBaseData.add(
+                                    oldMessage.copy(status = it.status)
+                                )
+                            }
+                        }
 
 
-
-                        dialogChatRepository.setMessages(dialogId, updates)
+                        dialogChatRepository.setMessages(dialogId, updatesBaseData.toList())
                         dialogChatState = dialogChatState.copy(
-                            pages = (updates + dialogChatState.pages).distinctBy { it.id },
+                            pages = (updatesBaseData + dialogChatState.pages).distinctBy { it.id },
                             sentMessages = dialogChatState.sentMessages.filter { sent -> updates.none { upd -> upd.id == sent.id } }
                         )
 
