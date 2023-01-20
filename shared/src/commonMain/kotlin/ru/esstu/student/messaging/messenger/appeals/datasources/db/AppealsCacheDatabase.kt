@@ -2,9 +2,7 @@ package ru.esstu.student.messaging.messenger.appeals.datasources.db
 
 import ru.esstu.student.EsstuDatabase
 import ru.esstu.student.messaging.messanger.appeals.datasources.db.AppealTable
-import ru.esstu.student.messaging.messanger.conversation.datasources.db.ConversationTable
 import ru.esstu.student.messaging.messenger.appeals.datasources.db.entities.AppealWithMessage
-import ru.esstu.student.messaging.messenger.conversations.datasources.db.entities.ConversationWithMessage
 import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.MessageEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.ReplyMessageEntity
@@ -78,7 +76,9 @@ class AppealsCacheDatabase(
     override suspend fun updateDialogLastMessage(
         appUserId: String,
         convId: Int,
-        lastMessage: PreviewLastMessage
+        lastMessage: PreviewLastMessage,
+        appeal: ConversationPreview?,
+        isCreate: Boolean
     ) {
         val dialog = dbQueries.getDialog(convId.toLong(), appUserId).executeAsOneOrNull()
         if (dialog != null){
@@ -90,6 +90,11 @@ class AppealsCacheDatabase(
 
             dialog.apply {
                 dbQueries.setDialog(appUserId, idConversation, title, author, lastMessage.id, notifyAboutIt, 0 )
+            }
+        }else{
+            if (isCreate){
+                setLastMessage(lastMessage)
+                setDialog(appUserId, appeal!!)
             }
         }
     }

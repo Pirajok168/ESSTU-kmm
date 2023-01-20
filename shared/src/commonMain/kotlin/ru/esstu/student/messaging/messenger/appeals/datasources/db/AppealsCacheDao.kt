@@ -18,6 +18,8 @@ interface AppealsCacheDao {
     suspend fun updateDialogLastMessage(
         appUserId: String,
         convId: Int,
-        lastMessage: PreviewLastMessage
+        lastMessage: PreviewLastMessage,
+        appeal: ConversationPreview? = null,
+        isCreate: Boolean = false
     )
 }

@@ -136,7 +136,7 @@ fun NewMessageCard(
 
                             Text(
                                 modifier = Modifier.padding(4.dp),
-                                text = formatter.format(date),
+                                text = date.toFormatString("HH:mm"),
                                 style = MaterialTheme.typography.subtitle2,
                                 color = MaterialTheme.colors.background
                             )

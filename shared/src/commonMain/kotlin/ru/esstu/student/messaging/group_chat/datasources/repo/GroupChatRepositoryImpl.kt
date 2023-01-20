@@ -182,7 +182,7 @@ class GroupChatRepositoryImpl constructor(
             appealMsgDao.updateDialogLastMessage(
                 appUserId,
                 convId,
-                message.toPreviewLastMessage()
+                message.toPreviewLastMessage(),
             )
         }
     }

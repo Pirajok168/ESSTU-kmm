@@ -6,6 +6,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import ru.esstu.android.student.messaging.dialog_chat.navigation.DialogChatScreen
 import ru.esstu.android.student.messaging.group_chat.navigation.GroupChatScreen
+import ru.esstu.android.student.messaging.new_message.new_appeal.navigation.NewAppealsScreens
+import ru.esstu.android.student.messaging.new_message.new_appeal.navigation.newAppealNavGraph
 import ru.esstu.android.student.messaging.new_message.new_dialog.navigation.NewDialogScreens
 import ru.esstu.android.student.messaging.new_message.new_dialog.navigation.newDialogNavGraph
 import ru.esstu.android.student.messaging.new_message.new_support.navigation.NewSupportScreens
@@ -48,7 +50,7 @@ fun NavGraphBuilder.newMsgSelectorNavGraph(
                     navController.navigate(NewSupportScreens.NewSupportScreen.navigate())
                 },
                 onNavToNewAllies = {
-                   // navController.navigate(NewAppealsScreens.NewAppealsScreen.navigate())
+                   navController.navigate(NewAppealsScreens.NewAppealsScreen.navigate())
                 }
             )
         }
@@ -59,6 +61,6 @@ fun NavGraphBuilder.newMsgSelectorNavGraph(
 
         newSupportNavGraph(navController = navController)
 
-        //newAppealNavGraph(navController = navController)
+        newAppealNavGraph(navController = navController)
     }
 }
