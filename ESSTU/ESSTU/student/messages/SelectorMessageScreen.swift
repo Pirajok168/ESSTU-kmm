@@ -45,10 +45,17 @@ class ContactsModel : ObservableObject {
     //MARK:- Variables
     var contactData : [Contact]
     @Published var sectionDictionary : Dictionary<String , [Contact]>
+    @Published var offsetChange: CGFloat = 0
     
-    @Published  var offsetChange: CGFloat = 0
+    
     func test(offsetChange: CGFloat){
-        self.offsetChange = offsetChange
+       
+        if offsetChange <= 40{
+            
+            self.offsetChange = offsetChange
+        }
+       
+           
     }
     
     //MARK:- initializer
@@ -67,6 +74,7 @@ class ContactsModel : ObservableObject {
         sectionDictionary = [:]
         sectionDictionary = getSectionedDictionary()
     }
+    
     func getSectionedDictionary() -> Dictionary <String , [Contact]> {
             let sectionDictionary: Dictionary<String, [Contact]> = {
                 return Dictionary(grouping: contactData, by: {
@@ -113,8 +121,9 @@ struct SelectorMessageScreen: View {
                             })
             
                 .onPreferenceChange(ViewOffsetKey.self) { offset in
-                    
-                    contactsModel.offsetChange = offset
+                    print("old value - \(offset)")
+                    contactsModel.test(offsetChange: offset)
+                
                 }
                
             }
@@ -125,7 +134,8 @@ struct SelectorMessageScreen: View {
             })
             .onChange(of: contactsModel.offsetChange, perform: {
                 value in
-                if heightNavBar < 70{
+                
+                if heightNavBar <= 61{
                     if value > heightNavBar{
                         return
                     }
@@ -135,6 +145,7 @@ struct SelectorMessageScreen: View {
                 }else{
                     heightNavBar = 100
                 }
+    
             })
             .overlay{
                
@@ -173,6 +184,7 @@ struct SelectorMessageScreen: View {
                                         Text("Поиск по чатам и собеседникам")
                                             .opacity(searchValue.isEmpty ? 1 : 0)
                                             .foregroundColor(.gray)
+                                            .transition(.opacity)
                                             
                                     }
                                 }

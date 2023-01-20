@@ -16,10 +16,6 @@ class SelectorViewModel:  ObservableObject{
     @Published var node: NewsNode? = nil
     @Published var alert = ""
     @Published var showAlert = false
-    
-
-    
-    
 }
 
 extension SelectorViewModel{

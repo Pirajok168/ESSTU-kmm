@@ -24,36 +24,42 @@ struct SplashScreen: View {
    
     
     var body: some View {
-        
-        if authViewModel.token == nil{
-            NavigationStack(path: $authNavigation.path){
-                VStack{
-                    Image("logo_splash_screen")
-                        .navigationDestination(for: AuthDestination.self){
-                            destation in
-                            
-                            if destation == AuthDestination.LoginScreen{
-                                LoginScreen()
-                                    .environmentObject(authNavigation)
-                                    .environmentObject(authViewModel)
-                            }else if destation == AuthDestination.PasswordScreen{
-                                PasswordScreen()
-                                    .environmentObject(authNavigation)
-                                    .environmentObject(authViewModel)
-                            }
-                        }
-                    Button(action: {authNavigation.toLoginScreen()}, label: {Text("авторизироваться")})
-                }
-            
-            }
-            .onAppear{
-                authViewModel.onRestoreSession()
-            }
-        }else if authViewModel.token?.owner is TokenOwners.Student{
-    
-            BottomNavigationStudent(sdkESSTU: self.sdkESSTU)
-        
+        NavigationStack{
+            LoginScreen()
+                .environmentObject(authNavigation)
+                .environmentObject(authViewModel)
         }
+        
+        
+//        if authViewModel.token == nil{
+//            NavigationStack(path: $authNavigation.path){
+//                VStack{
+//                    Image("logo_splash_screen")
+//                        .navigationDestination(for: AuthDestination.self){
+//                            destation in
+//
+//                            if destation == AuthDestination.LoginScreen{
+//                                LoginScreen()
+//                                    .environmentObject(authNavigation)
+//                                    .environmentObject(authViewModel)
+//                            }else if destation == AuthDestination.PasswordScreen{
+//                                PasswordScreen()
+//                                    .environmentObject(authNavigation)
+//                                    .environmentObject(authViewModel)
+//                            }
+//                        }
+//                    Button(action: {authNavigation.toLoginScreen()}, label: {Text("авторизироваться")})
+//                }
+//
+//            }
+//            .onAppear{
+//                authViewModel.onRestoreSession()
+//            }
+//        }else if authViewModel.token?.owner is TokenOwners.Student{
+//
+//           // BottomNavigationStudent(sdkESSTU: self.sdkESSTU)
+//
+//        }
             
     }
     

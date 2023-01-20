@@ -33,8 +33,6 @@ struct BottomNavigationStudent: View {
                     Text("Главная")
                 }
             
-            
-            
             SelectorMessageScreen()
                 .tabItem{
                     Image(systemName: "message")

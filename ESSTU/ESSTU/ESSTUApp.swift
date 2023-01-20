@@ -17,9 +17,9 @@ struct ESSTUApp: App {
     var body: some Scene {
         WindowGroup {
             SplashScreen(sdkESSTU: sdk)
-            //SelectorMessageScreen()
-            //SelectorMessageScreen()
+                
         }
+        
     }
 }
 
