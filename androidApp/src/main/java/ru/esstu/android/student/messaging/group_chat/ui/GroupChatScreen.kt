@@ -493,7 +493,8 @@ fun GroupChatScreen(
                                                                             if (file.loadProgress != null) {
                                                                                 val fileCopy =
                                                                                     file.copy(
-                                                                                        loadProgress = null
+                                                                                        loadProgress = null,
+                                                                                        localFileUri = null
                                                                                     )
                                                                                 viewModel.onEvent(
                                                                                     GroupChatEvents.UpdateAttachment(

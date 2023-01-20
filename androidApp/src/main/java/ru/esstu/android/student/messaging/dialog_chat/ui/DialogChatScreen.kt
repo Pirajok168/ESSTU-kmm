@@ -351,9 +351,7 @@ fun DialogChatScreen(
                                                     try {
                                                         val intent = Intent(Intent.ACTION_VIEW)
 
-                                                        val photoUri: Uri = if (localUri.toString()
-                                                                .contains("content")
-                                                        )
+                                                        val photoUri: Uri = if (localUri.toString().contains("content"))
                                                             localUri
                                                         else
                                                             FileProvider.getUriForFile(
@@ -471,7 +469,7 @@ fun DialogChatScreen(
 
 
                                                 if (filesPermissionsState.permissions.all { it.status.isGranted }) {
-                                                    if(file.loadProgress == null && file.localFileUri.isNullOrBlank()){
+                                                    if (file.loadProgress == null && file.localFileUri.isNullOrBlank()) {
                                                         scope.launch {
                                                             workManager.getWorkInfosForUniqueWorkLiveData(
                                                                 file.id.toString()
@@ -523,7 +521,8 @@ fun DialogChatScreen(
                                                                             if (file.loadProgress != null) {
                                                                                 val fileCopy =
                                                                                     file.copy(
-                                                                                        loadProgress = null
+                                                                                        loadProgress = null,
+                                                                                        localFileUri = null
                                                                                     )
                                                                                 viewModel.onEvent(
                                                                                     DialogChatEvents.UpdateAttachment(
@@ -558,7 +557,7 @@ fun DialogChatScreen(
 
                                                 }
 
-                                                if (file.localFileUri?.isNotBlank() == true && file.loadProgress == null){
+                                                if (file.localFileUri?.isNotBlank() == true && file.loadProgress == null) {
                                                     val localUri =
                                                         file.localFileUri.orEmpty().toUri()
 
@@ -636,17 +635,4 @@ fun DialogChatScreen(
     }
 }
 
-fun withPermissions(
-    context: Context,
-    vararg permissions: String,
-    onRequest: () -> Unit,
-    onGranted: () -> Unit
-) {
-    val hasPermissions = permissions.all { permission ->
-        ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
-    }
 
-
-
-    if (hasPermissions) onGranted() else onRequest()
-}

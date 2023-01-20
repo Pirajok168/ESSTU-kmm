@@ -40,7 +40,7 @@ fun NavGraphBuilder.newMsgSelectorNavGraph(
                     navController.navigate(NewDialogScreens.NewDialogScreen.navigate())
                 },
                 onNavToNewConversation = {
-                    //navController.navigate(NewConvScreens.MembersScreen.navigate())
+
                 },
                 onNavToNewTechSupport = {
                    // navController.navigate(NewSupportScreens.NewSupportScreen.navigate())
@@ -53,7 +53,7 @@ fun NavGraphBuilder.newMsgSelectorNavGraph(
 
         newDialogNavGraph(navController = navController)
 
-       // newConvNavGraph(navController = navController)
+
 
        // newSupportNavGraph(navController = navController)
 

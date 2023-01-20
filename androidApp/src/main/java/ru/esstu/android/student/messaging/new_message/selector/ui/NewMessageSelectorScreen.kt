@@ -31,7 +31,6 @@ import java.util.*
 
 enum class MessageButtons(val icon: IconResource, val caption: String) {
     DIALOG(icon = IconResource.DrawableResource(R.drawable.ic_new_message_dialog), "Новый диалог"),
-    CONVERSATION(icon = IconResource.DrawableResource(R.drawable.ic_new_message_conversation), "Новое обсуждение"),
     TECH_SUPPORT(icon = IconResource.DrawableResource(R.drawable.ic_new_message_tech_support), "Обратиться в тех. поддержку"),
     APPEALS(icon = IconResource.DrawableResource(R.drawable.ic_new_message_info), "Обратиться к подразделению")
 }
@@ -93,7 +92,6 @@ fun NewMessageSelectorScreen(
                                 .clickable {
                                     when (button) {
                                         MessageButtons.DIALOG -> onNavToNewDialog()
-                                        MessageButtons.CONVERSATION -> onNavToNewConversation()
                                         MessageButtons.TECH_SUPPORT -> onNavToNewTechSupport()
                                         MessageButtons.APPEALS -> onNavToNewAllies()
                                     }

@@ -20,7 +20,8 @@ internal val featureModuleMessaging = DI.Module("featureModuleMessaging") {
         appealsModule,
         supportsModule,
         groupChatModuleNew,
-        newDialogModule
+        newDialogModule,
+
     )
 
 }
