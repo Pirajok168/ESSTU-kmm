@@ -1,6 +1,5 @@
 package ru.esstu.student.messaging.messenger.supports.datasource.db
 
-import ru.esstu.student.messaging.messenger.conversations.datasources.db.entities.ConversationWithMessage
 import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
 import ru.esstu.student.messaging.messenger.datasources.entities.PreviewLastMessage
 import ru.esstu.student.messaging.messenger.supports.datasource.db.entities.SupportWithMessage
@@ -19,6 +18,8 @@ interface SupportsCacheDao {
     suspend fun updateDialogLastMessage(
         appUserId: String,
         convId: Int,
-        lastMessage: PreviewLastMessage
+        lastMessage: PreviewLastMessage,
+        conversationPreview: ConversationPreview? = null,
+        isCreateNewSupport: Boolean = false
     )
 }

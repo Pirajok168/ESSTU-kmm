@@ -2,9 +2,7 @@ package ru.esstu.student.messaging.messenger.supports.datasource.db
 
 import io.github.aakira.napier.Napier
 import ru.esstu.student.EsstuDatabase
-import ru.esstu.student.messaging.messanger.conversation.datasources.db.ConversationTable
 import ru.esstu.student.messaging.messanger.supports.datasources.db.SuppotTable
-import ru.esstu.student.messaging.messenger.conversations.datasources.db.entities.ConversationWithMessage
 import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.MessageEntity
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.ReplyMessageEntity
@@ -82,10 +80,11 @@ class SupportsCacheDatabase(
     override suspend fun updateDialogLastMessage(
         appUserId: String,
         convId: Int,
-        lastMessage: PreviewLastMessage
+        lastMessage: PreviewLastMessage,
+        conversationPreview: ConversationPreview?,
+        isCreateNewSupport: Boolean
     ) {
         val dialog = dbQueries.getDialog(convId.toLong(), appUserId).executeAsOneOrNull()
-        Napier.e(dialog?.toString() ?: "Ничего нет", tag = "Support")
         if (dialog != null){
             dbQueries.deleteDialog(dialog.lastMessageId!!)
 
@@ -95,6 +94,11 @@ class SupportsCacheDatabase(
 
             dialog.apply {
                 dbQueries.setDialog(appUserId, idConversation, title, author, lastMessage.id, notifyAboutIt, 0 )
+            }
+        }else{
+            if (isCreateNewSupport){
+                setLastMessage(lastMessage)
+                setDialog(appUserId, conversationPreview!!)
             }
         }
     }
