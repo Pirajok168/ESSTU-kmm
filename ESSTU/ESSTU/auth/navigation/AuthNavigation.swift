@@ -8,20 +8,17 @@
 import Foundation
 
 enum AuthDestination: Hashable{
-    case LoginScreen
-    case PasswordScreen
+    case AuthScree
 }
 
-class AuthNavigation: ObservableObject{
+class AuthNavigation: ObservableObject {
     @Published var path:[AuthDestination] = []
 
     
-    func toLoginScreen(){
-        path.append(AuthDestination.LoginScreen)
+    func toAuthScreen(){
+        path.append(AuthDestination.AuthScree)
     }
     
-    func toPasswordScreen(){
-        path.append(AuthDestination.PasswordScreen)
-    }
+    
 }
 
