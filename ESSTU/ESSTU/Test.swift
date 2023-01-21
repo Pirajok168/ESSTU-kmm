@@ -2,16 +2,14 @@ import SwiftUI
 import Combine
 
 struct ContentView: View {
-    
-    
+    @State var rotation = 0.0
     var body: some View {
-        List(0...5, id: \.self){
-            _ in
-            Text("Hello world")
-                 .preferredColorScheme(.dark)
+        VStack{
+            Text("Hello World")
+                .padding(.bottom, 1)
+            Text("Hello World")
+            Image(systemName: "message")
         }
-     
-        
     }
 
     

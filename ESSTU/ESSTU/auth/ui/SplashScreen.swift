@@ -25,9 +25,10 @@ struct SplashScreen: View {
     
     var body: some View {
         NavigationStack{
-            LoginScreen()
-                .environmentObject(authNavigation)
-                .environmentObject(authViewModel)
+            BottomStudentNavigation()
+//            AuthScreen()
+//                .environmentObject(authNavigation)
+//                .environmentObject(authViewModel)
         }
         
         

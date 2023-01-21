@@ -7,28 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		29287E4728D7373D00180DA7 /* PasswordScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29287E4628D7373D00180DA7 /* PasswordScreen.swift */; };
 		29287E4928D73C6100180DA7 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29287E4828D73C6100180DA7 /* SplashScreen.swift */; };
 		29287E4B28D73C9200180DA7 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29287E4A28D73C9200180DA7 /* AuthViewModel.swift */; };
 		292C451B28D5E0D7005F176D /* ESSTUApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292C451A28D5E0D7005F176D /* ESSTUApp.swift */; };
 		292C451F28D5E0D8005F176D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 292C451E28D5E0D8005F176D /* Assets.xcassets */; };
 		292C452228D5E0D8005F176D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 292C452128D5E0D8005F176D /* Preview Assets.xcassets */; };
-		292C452C28D5F502005F176D /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292C452B28D5F502005F176D /* LoginScreen.swift */; };
+		292C452C28D5F502005F176D /* AuthScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292C452B28D5F502005F176D /* AuthScreen.swift */; };
 		292DBC8A291DFFC500214521 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292DBC89291DFFC500214521 /* Test.swift */; };
 		297B9CC528DF044000A11505 /* AuthNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297B9CC428DF044000A11505 /* AuthNavigation.swift */; };
+		299AF6D0297AC71000F5A58C /* NewsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299AF6CF297AC71000F5A58C /* NewsScreen.swift */; };
+		299AF6D3297AD51E00F5A58C /* CardNews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299AF6D2297AD51E00F5A58C /* CardNews.swift */; };
+		299AF6D6297BD03B00F5A58C /* BottomStudentNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299AF6D5297BD03B00F5A58C /* BottomStudentNavigation.swift */; };
+		299AF6DB297BD7A500F5A58C /* RootStudentNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299AF6DA297BD7A500F5A58C /* RootStudentNavigation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		29287E4628D7373D00180DA7 /* PasswordScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordScreen.swift; sourceTree = "<group>"; };
 		29287E4828D73C6100180DA7 /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
 		29287E4A28D73C9200180DA7 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		292C451728D5E0D7005F176D /* ЛК ВСГУТУ.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ЛК ВСГУТУ.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		292C451A28D5E0D7005F176D /* ESSTUApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ESSTUApp.swift; sourceTree = "<group>"; };
 		292C451E28D5E0D8005F176D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		292C452128D5E0D8005F176D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		292C452B28D5F502005F176D /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
+		292C452B28D5F502005F176D /* AuthScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthScreen.swift; sourceTree = "<group>"; };
 		292DBC89291DFFC500214521 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		297B9CC428DF044000A11505 /* AuthNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNavigation.swift; sourceTree = "<group>"; };
+		299AF6CF297AC71000F5A58C /* NewsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsScreen.swift; sourceTree = "<group>"; };
+		299AF6D2297AD51E00F5A58C /* CardNews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNews.swift; sourceTree = "<group>"; };
+		299AF6D5297BD03B00F5A58C /* BottomStudentNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomStudentNavigation.swift; sourceTree = "<group>"; };
+		299AF6DA297BD7A500F5A58C /* RootStudentNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootStudentNavigation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +75,7 @@
 		292C451928D5E0D7005F176D /* ESSTU */ = {
 			isa = PBXGroup;
 			children = (
+				299AF6CC297AC6AF00F5A58C /* student */,
 				292C452928D5F497005F176D /* auth */,
 				292C451A28D5E0D7005F176D /* ESSTUApp.swift */,
 				292C451E28D5E0D8005F176D /* Assets.xcassets */,
@@ -99,8 +106,7 @@
 		292C452A28D5F4CC005F176D /* ui */ = {
 			isa = PBXGroup;
 			children = (
-				292C452B28D5F502005F176D /* LoginScreen.swift */,
-				29287E4628D7373D00180DA7 /* PasswordScreen.swift */,
+				292C452B28D5F502005F176D /* AuthScreen.swift */,
 				29287E4828D73C6100180DA7 /* SplashScreen.swift */,
 			);
 			path = ui;
@@ -110,6 +116,49 @@
 			isa = PBXGroup;
 			children = (
 				297B9CC428DF044000A11505 /* AuthNavigation.swift */,
+			);
+			path = navigation;
+			sourceTree = "<group>";
+		};
+		299AF6CC297AC6AF00F5A58C /* student */ = {
+			isa = PBXGroup;
+			children = (
+				299AF6D4297BD01C00F5A58C /* navigation */,
+				299AF6CD297AC6E900F5A58C /* news */,
+			);
+			path = student;
+			sourceTree = "<group>";
+		};
+		299AF6CD297AC6E900F5A58C /* news */ = {
+			isa = PBXGroup;
+			children = (
+				299AF6CE297AC70000F5A58C /* ui */,
+			);
+			path = news;
+			sourceTree = "<group>";
+		};
+		299AF6CE297AC70000F5A58C /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				299AF6D1297AD50A00F5A58C /* compotent */,
+				299AF6CF297AC71000F5A58C /* NewsScreen.swift */,
+			);
+			path = ui;
+			sourceTree = "<group>";
+		};
+		299AF6D1297AD50A00F5A58C /* compotent */ = {
+			isa = PBXGroup;
+			children = (
+				299AF6D2297AD51E00F5A58C /* CardNews.swift */,
+			);
+			path = compotent;
+			sourceTree = "<group>";
+		};
+		299AF6D4297BD01C00F5A58C /* navigation */ = {
+			isa = PBXGroup;
+			children = (
+				299AF6D5297BD03B00F5A58C /* BottomStudentNavigation.swift */,
+				299AF6DA297BD7A500F5A58C /* RootStudentNavigation.swift */,
 			);
 			path = navigation;
 			sourceTree = "<group>";
@@ -206,12 +255,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				299AF6D6297BD03B00F5A58C /* BottomStudentNavigation.swift in Sources */,
+				299AF6D3297AD51E00F5A58C /* CardNews.swift in Sources */,
+				299AF6D0297AC71000F5A58C /* NewsScreen.swift in Sources */,
 				29287E4928D73C6100180DA7 /* SplashScreen.swift in Sources */,
 				29287E4B28D73C9200180DA7 /* AuthViewModel.swift in Sources */,
-				292C452C28D5F502005F176D /* LoginScreen.swift in Sources */,
+				299AF6DB297BD7A500F5A58C /* RootStudentNavigation.swift in Sources */,
+				292C452C28D5F502005F176D /* AuthScreen.swift in Sources */,
 				297B9CC528DF044000A11505 /* AuthNavigation.swift in Sources */,
 				292DBC8A291DFFC500214521 /* Test.swift in Sources */,
-				29287E4728D7373D00180DA7 /* PasswordScreen.swift in Sources */,
 				292C451B28D5E0D7005F176D /* ESSTUApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

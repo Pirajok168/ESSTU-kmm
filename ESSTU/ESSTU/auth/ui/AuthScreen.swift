@@ -8,11 +8,11 @@
 import SwiftUI
 import shared
 
-struct LoginScreen: View {
+struct AuthScreen: View {
     @EnvironmentObject  var authViewModel: AuthViewModel
     @EnvironmentObject  var authNavigation: AuthNavigation
     
-   
+
     
     var body: some View {
        
@@ -28,6 +28,7 @@ struct LoginScreen: View {
                 .fontWeight(.light)
                 .frame(maxWidth: .infinity)
                 .multilineTextAlignment(.center)
+            
                 
         
             
@@ -46,7 +47,7 @@ struct LoginScreen: View {
             
             
             Button(action: {
-                authNavigation.toPasswordScreen()
+                
             }, label: {
                 Text("Продолжить")
                     .frame(maxWidth: .infinity)
