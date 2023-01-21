@@ -13,21 +13,20 @@ struct News: Hashable{
     let FIO: String
     let described: String
     let countViewed: Int
-    let image: String?
+    let image: [String]
 }
 
 struct NewsScreen: View {
     let news = [
-        News(title: "Вебинары компании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: nil),
-        News(title: "Вебинары коgмпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: nil),
-        News(title: "Вебинары коbмпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компfании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: "copybook"),
-        News(title: "Вебинары компbании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компаfнии в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: nil),
-        News(title: "Вебинаfры комbпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Стуfдент 3 курса группы Б760", countViewed: 456, image: "copybook"),
-        News(title: "Вебинары комbпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 bкурса группы Б760", countViewed: 456, image: "copybook"),
-        News(title: "Вебинfары комbпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: "copybook"),
-        News(title: "Вебинары комnпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: "copybook"),
-        News(title: "Вебинары компnании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: "copybook"),
-        News(title: "Вебинары коnмпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: "copybook")
+        News(title: "Вебинары компании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
+        News(title: "Вебинары коgмпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
+        News(title: "Вебинары коbмпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компfании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
+        News(title: "Вебинары компbании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компаfнии в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
+        News(title: "Вебинаfры комbпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Стуfдент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
+        News(title: "Вебинаfры комbпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Стуfдент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
+        News(title: "Вебинаfры комbпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Стуfдент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
+        News(title: "Вебинаfры комbпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Стуfдент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
+        News(title: "Вебинаfры комbпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Стуfдент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
         
     ]
     @EnvironmentObject var rootNavigation: RootStudentNavigation
@@ -47,7 +46,7 @@ struct NewsScreen: View {
                            
                         }, label: {
                             VStack {
-                                CardNews(title: news.title, subTitle: news.subTitle, FIO: news.FIO, described: news.described, countViewed: news.countViewed, image: news.image)
+                                CardNews(title: news.title, subTitle: news.subTitle, FIO: news.FIO, described: news.described, countViewed: news.countViewed, image: news.image.first)
                                     .padding(.horizontal)
                                 
                                 Divider()

@@ -46,29 +46,9 @@ struct CardNews: View {
             .frame( maxWidth: .infinity, maxHeight: 100, alignment: .leading)
             .padding(.bottom, 2)
             
-            HStack{
-                if(image != nil){
-                    Image(image!)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 35, height: 35)
-                        .clipShape(Circle())
-                }
-                VStack{
-                    Text(FIO)
-                        .font(.system(size: 14, weight: .regular, design: .rounded))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .lineLimit(1)
-                        
-                    Text(described)
-                        .font(.system(size: 12, weight: .ultraLight, design: .rounded))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .lineLimit(1)
-                        
-                }
-                  
-            }
-            .frame(maxWidth: .infinity, maxHeight: 35, alignment: .leading)
+            
+            PreviewAuthor(image: image, FIO: FIO, described: described)
+            
             
         }
         
