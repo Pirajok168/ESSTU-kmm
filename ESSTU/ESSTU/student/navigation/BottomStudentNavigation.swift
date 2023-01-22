@@ -16,12 +16,26 @@ struct BottomStudentNavigation: View {
     var body: some View {
         NavigationStack(path: $rootController.path){
             TabView{
-                NewsScreen()
-                    .environmentObject(rootController)
-                    .tabItem{
-                        Image(systemName: "homekit")
-                        Text("Главная")
+                GeometryReader {
+                    reader in
+                    let topEdge = reader.safeAreaInsets.top
+                    let bottomEdge = reader.safeAreaInsets.bottom
+                    NavigationView{
+                        NewsScreen(topEdge: topEdge, bottomEdge: bottomEdge)
+                            .environmentObject(rootController)
+                            .ignoresSafeArea()
                     }
+                   
+                        
+                }
+                .tabItem{
+                    Image(systemName: "homekit")
+                    Text("Главная")
+                }
+                
+               
+                    
+                   
                 
                 Text("Hello World!")
                     .tabItem{
@@ -38,6 +52,7 @@ struct BottomStudentNavigation: View {
                     GeometryReader {
                         reader in
                         let topEdge = reader.safeAreaInsets.top
+                        let bottomEdge = reader.safeAreaInsets.bottom
                         FullScreenNews(news: News(title: "Вебинары компании \"Антиплагиат\" в январе", subTitle: """
                                                   Расписание вебинаров компании «Антиплагиат» в январе 2023 г.
 
@@ -73,12 +88,14 @@ struct BottomStudentNavigation: View {
                                                   Спикер: Ольга Филиппова, ведущий специалист учебно-методического центра компании Антиплагиат
                                                   Регистрация по ссылке: https://events.webinar.ru/1176571/213703439
                                                 """,
-                                                  FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook"]), topEdge: topEdge)
-                                .ignoresSafeArea()
+                                                  FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook"]), topEdge: topEdge, bottomEdge: bottomEdge)
+                        
+                        .ignoresSafeArea()
                     }
                 }
                 
             }
+            
         }
         .onChange(of: rootController.path, perform: {
             value in

@@ -9,21 +9,43 @@ import SwiftUI
 
 struct FullScreenNews: View {
     let news: News
-    let topEdge: CGFloat 
+    let topEdge: CGFloat
+    let bottomEdge: CGFloat
     @State private var offset: CGFloat = 0
     var body: some View {
         ScrollView(.vertical, showsIndicators: false){
+            
             VStack{
                 Header()
                     .scaleEffect(getScaleEffect(), anchor: .center)
                 
+               
+                
+    
+        
                 Text(news.subTitle)
                     .padding(.horizontal)
                     .multilineTextAlignment(.leading)
                     .monospacedDigit()
                     .fontWeight(.regular)
+                    .padding(.bottom)
+                
+                ForEach(0...3, id: \.self){ _ in
+                    Button(action: {
+                        
+                    }) {
+                        HStack{
+                            Image(systemName: "arrow.down.doc")
+                            Text("Вебинар.docx")
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                    .padding(.bottom)
+                }
             }
             .padding(.top, topEdge)
+            .padding(.bottom, bottomEdge)
             .background{
                 GeometryReader{
                     proxy -> Color in
@@ -33,7 +55,10 @@ struct FullScreenNews: View {
                     return Color.clear
                 }
             }
+            
         }
+        
+      
     }
     
     @ViewBuilder
@@ -45,19 +70,13 @@ struct FullScreenNews: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.title)
                 .fontWeight(.medium)
-                .padding()
+                .padding(.horizontal)
+                
                 
             
                 
             CorouselPager(images: news.image)
             
-//            Image(news.image)
-//                .resizable()
-//                .aspectRatio(contentMode: .fill)
-//                .frame(maxWidth: .infinity)
-//                .frame(height: 200)
-//                .clipShape(RoundedRectangle(cornerRadius: 25.0))
-//                .padding(.horizontal)
             
             PreviewAuthor(image: news.image.first, FIO: news.FIO, described: news.described)
                 .padding()
@@ -76,6 +95,7 @@ struct FullScreenNews_Previews: PreviewProvider {
         GeometryReader {
             reader in
             let topEdge = reader.safeAreaInsets.top
+            let bottomEdge = reader.safeAreaInsets.bottom
             FullScreenNews(news: News(title: "Вебинары компании \"Антиплагиат\" в январе", subTitle: """
                                       Расписание вебинаров компании «Антиплагиат» в январе 2023 г.
 
@@ -111,7 +131,7 @@ struct FullScreenNews_Previews: PreviewProvider {
                                       Спикер: Ольга Филиппова, ведущий специалист учебно-методического центра компании Антиплагиат
                                       Регистрация по ссылке: https://events.webinar.ru/1176571/213703439
                                     """,
-                                      FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]), topEdge: topEdge)
+                                      FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]), topEdge: topEdge, bottomEdge: bottomEdge)
             .ignoresSafeArea()
         }
     }
