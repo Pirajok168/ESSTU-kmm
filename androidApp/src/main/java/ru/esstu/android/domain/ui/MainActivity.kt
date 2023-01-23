@@ -14,9 +14,11 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 
 import androidx.core.view.WindowCompat
@@ -61,7 +63,7 @@ class  MainActivity : AppCompatActivity() {
                     color = MaterialTheme.colors.background,
                 ) {
 
-                    SetupNavGraph(navController)
+                    //SetupNavGraph(navController)
                 }
 
 

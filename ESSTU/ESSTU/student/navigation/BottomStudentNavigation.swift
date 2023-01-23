@@ -88,7 +88,7 @@ struct BottomStudentNavigation: View {
                                                   Спикер: Ольга Филиппова, ведущий специалист учебно-методического центра компании Антиплагиат
                                                   Регистрация по ссылке: https://events.webinar.ru/1176571/213703439
                                                 """,
-                                                  FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook"]), topEdge: topEdge, bottomEdge: bottomEdge)
+                                                  FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "logo_esstu"]), topEdge: topEdge, bottomEdge: bottomEdge)
                         
                         .ignoresSafeArea()
                     }

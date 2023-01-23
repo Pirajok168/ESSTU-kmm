@@ -33,7 +33,7 @@ enum TypeNews: CaseIterable, Identifiable, Hashable {
 
 struct NewsScreen: View {
     let news = [
-        News(title: "Вебинары компании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
+        News(title: "Вебинары компании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "logo_esstu"]),
         News(title: "Вебинары коgмпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
         News(title: "Вебинары коbмпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компfании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студdент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
         News(title: "Вебинары компbании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компdаfнии в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
@@ -59,6 +59,7 @@ struct NewsScreen: View {
                 LazyVStack(alignment: .leading){
                     Button(action: {
                         rootNavigation.toWatchFullNews()
+                        
                     }, label: {
                         firstNews(news: news[0])
                             .padding(.bottom, 8)
@@ -170,7 +171,8 @@ struct NewsScreen: View {
     @ViewBuilder
     private func firstNews(news: News) -> some View{
         
-      
+        
+            
         VStack{
             CorouselPager(images: ["copybook", "copybook"])
             
@@ -191,9 +193,15 @@ struct NewsScreen: View {
             
             PreviewAuthor(image: news.image.first, FIO: news.FIO, described: news.described)
                 .padding(.leading)
+            
+            
    
         }
         .padding(.top, topEdge)
+            
+           
+        
+        
         
         
     
