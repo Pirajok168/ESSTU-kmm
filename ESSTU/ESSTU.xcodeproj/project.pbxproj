@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2924C245297F892E00744CDB /* TestInset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2924C244297F892E00744CDB /* TestInset.swift */; };
+		2924C249297FF2BF00744CDB /* SelectorScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2924C248297FF2BF00744CDB /* SelectorScreen.swift */; };
 		29287E4928D73C6100180DA7 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29287E4828D73C6100180DA7 /* SplashScreen.swift */; };
 		29287E4B28D73C9200180DA7 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29287E4A28D73C9200180DA7 /* AuthViewModel.swift */; };
 		292C451B28D5E0D7005F176D /* ESSTUApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292C451A28D5E0D7005F176D /* ESSTUApp.swift */; };
@@ -28,6 +29,7 @@
 
 /* Begin PBXFileReference section */
 		2924C244297F892E00744CDB /* TestInset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInset.swift; sourceTree = "<group>"; };
+		2924C248297FF2BF00744CDB /* SelectorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorScreen.swift; sourceTree = "<group>"; };
 		29287E4828D73C6100180DA7 /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
 		29287E4A28D73C9200180DA7 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		292C451728D5E0D7005F176D /* ЛК ВСГУТУ.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ЛК ВСГУТУ.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +60,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2924C246297FF28800744CDB /* messages */ = {
+			isa = PBXGroup;
+			children = (
+				2924C247297FF2A200744CDB /* ui */,
+			);
+			path = messages;
+			sourceTree = "<group>";
+		};
+		2924C247297FF2A200744CDB /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				2924C248297FF2BF00744CDB /* SelectorScreen.swift */,
+			);
+			path = ui;
+			sourceTree = "<group>";
+		};
 		29287E4528D7368700180DA7 /* viewmodel */ = {
 			isa = PBXGroup;
 			children = (
@@ -135,6 +153,7 @@
 		299AF6CC297AC6AF00F5A58C /* student */ = {
 			isa = PBXGroup;
 			children = (
+				2924C246297FF28800744CDB /* messages */,
 				299AF6D4297BD01C00F5A58C /* navigation */,
 				299AF6CD297AC6E900F5A58C /* news */,
 			);
@@ -270,6 +289,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2924C249297FF2BF00744CDB /* SelectorScreen.swift in Sources */,
 				299AF6E2297BF5AE00F5A58C /* CorouselPager.swift in Sources */,
 				299AF6D6297BD03B00F5A58C /* BottomStudentNavigation.swift in Sources */,
 				299AF6D3297AD51E00F5A58C /* CardNews.swift in Sources */,

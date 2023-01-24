@@ -32,15 +32,27 @@ struct BottomStudentNavigation: View {
                 .tabItem{
                     Image(systemName: "house")
                     Text("Главная")
+                        
 
                 }
                 
-                Text("Hello World!")
-                    .tabItem{
-                        Image(systemName: "message")
-                        Text("Сообщения")
-                            
-                    }
+                
+                GeometryReader{
+                    proxy in
+                    let topEdge = proxy.safeAreaInsets.top
+                    let bottomEdge = proxy.safeAreaInsets.top
+                    SelectorScreen(topEdge: topEdge, bottomEdge: bottomEdge)
+                        .environmentObject(rootController)
+                        .ignoresSafeArea()
+                
+                  
+                }
+                .tabItem{
+                    Image(systemName: "message")
+                    Text("Сообщения")
+                        
+                }
+                   
                 
             }
             .frame( maxWidth: .infinity, maxHeight: .infinity)

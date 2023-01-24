@@ -63,7 +63,7 @@ class  MainActivity : AppCompatActivity() {
                     color = MaterialTheme.colors.background,
                 ) {
 
-                    //SetupNavGraph(navController)
+                    SetupNavGraph(navController)
                 }
 
 
