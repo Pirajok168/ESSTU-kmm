@@ -43,6 +43,22 @@ let dialogs: [Dialogs] = [
     Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello worlddddddddddd", newMessage: 2, isMe: false),
     
     Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 20, isMe: true),
+    
+    Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 3, isMe: true),
+    
+    Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 0, isMe: false),
+    
+    Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello worlddddddddddd", newMessage: 2, isMe: false),
+    
+    Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 20, isMe: true),
+    
+    Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 3, isMe: true),
+    
+    Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 0, isMe: false),
+    
+    Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello worlddddddddddd", newMessage: 2, isMe: false),
+    
+    Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 20, isMe: true),
 ]
 
 struct SelectorScreen: View {
@@ -51,11 +67,14 @@ struct SelectorScreen: View {
     @State var offset: CGFloat = .zero
     
     @State private var selectedType: TypeMessage = .Dialogs
-    
+    @State var text = ""
     @Namespace var animations
+    
+    @State var isExpanSearchView: Bool = false
     var body: some View {
         ScrollView {
             LazyVStack{
+                Text("\(offset)")
                 ForEach(dialogs){
                     dialog in
                     HStack{
@@ -105,7 +124,10 @@ struct SelectorScreen: View {
                     .padding(.vertical, 5)
                 }
             }
-            .padding(.top, topEdge + 90)
+            
+            .padding(.top, getHightTopBar())
+            
+           
             .padding(.bottom, bottomEdge)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background{
@@ -117,7 +139,11 @@ struct SelectorScreen: View {
                     return Color.clear
                 }
             }
+            
         }
+        .onChange(of: isExpanSearchView, perform: { newValue in
+            print(newValue)
+        })
         .overlay{
             ZStack{
                 Color.clear.background(.ultraThinMaterial)
@@ -143,8 +169,10 @@ struct SelectorScreen: View {
                     }
                     .frame(maxWidth: .infinity , maxHeight: topEdge + 80, alignment: .top)
                     .padding(.top, topEdge)
-                   
                     
+                    TextEditor(text: $text)
+                        .padding(.horizontal)
+                        .frame(height: isExpanSearchView ? 35.0 : getHightSearhView())
                     
                     
                     ScrollView(.horizontal, showsIndicators: false){
@@ -166,10 +194,12 @@ struct SelectorScreen: View {
                                         Rectangle()
                                             .frame(height: 3)
                                             .foregroundColor(Color("AccentColor"))
+                                            .cornerRadius(25)
                                             .matchedGeometryEffect(id: "titlePreview", in: animations)
+                                            
                                     }
                                 }
-                                .padding(.leading)
+                                .padding(.horizontal)
                                 
                             }
                         })
@@ -185,10 +215,49 @@ struct SelectorScreen: View {
                 
                 
             }
-            .frame(height: topEdge + 80)
+           
+            .frame(height:  getHightTopBar())
+            
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
 
         }
+       
+    
+    }
+    
+  
+    
+    private func getHightSearhView() -> CGFloat{
+        guard offset != 0.0 else { return 0.0 }
+        
+        guard offset < 35 else { return 35.0 }
+        
+        return offset
+    }
+    
+    private func getHightTopBar() -> CGFloat {
+        guard !isExpanSearchView else {
+            if offset < 0 {
+                DispatchQueue.main.async {
+                    self.isExpanSearchView = false
+                }
+            }
+            return topEdge + 80 + 45.0
+            
+        }
+        
+        guard offset > 0 else { return topEdge + 80 }
+        
+        guard offset != 0.0 else { return topEdge + 80 }
+        
+        guard offset < 45 else {
+            DispatchQueue.main.async {
+                self.isExpanSearchView = true
+            }
+            
+            return topEdge + 80 + 45.0
+        }
+        return topEdge + 80 + offset
     }
     
     private func getScaleEffect() -> CGSize {
