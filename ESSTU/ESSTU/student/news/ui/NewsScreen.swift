@@ -32,6 +32,10 @@ enum TypeNews: CaseIterable, Identifiable, Hashable {
 }
 
 struct NewsScreen: View {
+    @State var offset: CGFloat = .zero
+    let topEdge: CGFloat
+    let bottomEdge: CGFloat
+    
     let news = [
         News(title: "Вебинары компании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "logo_esstu"]),
         News(title: "Вебинары коgмпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
@@ -45,18 +49,16 @@ struct NewsScreen: View {
         
     ]
     @EnvironmentObject var rootNavigation: RootStudentNavigation
-    @State private var offset: CGFloat = 0
-    let topEdge: CGFloat
-    let bottomEdge: CGFloat
     
     @State private var selectedType: TypeNews = .recentAnnouncement
     
     @Namespace var animations
+    
     var body: some View {
         
-        
-            ScrollView(.vertical, showsIndicators: false){
+            ScrollView{
                 LazyVStack(alignment: .leading){
+                    
                     Button(action: {
                         rootNavigation.toWatchFullNews()
                         
@@ -68,7 +70,6 @@ struct NewsScreen: View {
                     })
                     .clipped()
                     .buttonStyle(.plain)
-                    
                     
                     
                     HStack{
@@ -104,9 +105,6 @@ struct NewsScreen: View {
                     }
                     .padding(.bottom, 5)
                     
-                    
-                    
-                    
                     ForEach(0..<news.count, id: \.self){
                         index in
                        
@@ -134,9 +132,11 @@ struct NewsScreen: View {
 
                     }
                 }
-               
+                .padding(.top, topEdge)
                 .padding(.bottom, bottomEdge)
-                .background {
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+               
+                .background{
                     GeometryReader{
                         proxy -> Color in
                         DispatchQueue.main.async {
@@ -147,27 +147,28 @@ struct NewsScreen: View {
                 }
                 
                 
-                
             }
-           
+            .navigationTitle("ВСГУТУ")
             .toolbar{
                 ToolbarItem(placement: .navigationBarLeading){
-                    HStack{
+
                         Image("logo_esstu")
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(width: 35, height: 34)
                             .padding(.trailing)
 
-                        Text("ВСГУТУ")
-                            .font(.title.bold())
-                    }
+
 
                 }
             }
-        
-        
             
+            
+            
+        
+        
+        
+       
     }
     
     @ViewBuilder
@@ -199,14 +200,8 @@ struct NewsScreen: View {
             
    
         }
-        .padding(.top, topEdge + 20)
-            
-           
         
-        
-        
-        
-    
+
         
     }
     
