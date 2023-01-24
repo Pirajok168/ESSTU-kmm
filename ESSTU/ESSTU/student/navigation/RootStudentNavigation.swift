@@ -18,4 +18,8 @@ class RootStudentNavigation: ObservableObject{
     func toWatchFullNews(){
         path.append(RootStudentDestination.WatchFullNews)
     }
+    
+    func popBackStack(){
+        path.removeLast()
+    }
 }

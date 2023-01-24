@@ -16,9 +16,9 @@ struct FullScreenNews: View {
     @State var isExpand: Bool = false
     @State var selectedImages: [String] = []
     @State var loadExpandedContent = false
-    @State var offsetGesture: CGFloat = .zero
+
     @State var hiddenBackNavigationButton = false
-    
+    @EnvironmentObject var rootNavigation: RootStudentNavigation
     @Namespace var animation
     
     var body: some View {
@@ -50,7 +50,7 @@ struct FullScreenNews: View {
                     .padding(.bottom)
                 }
             }
-            .padding(.top, topEdge)
+            .padding(.top, topEdge + 50)
             .padding(.bottom, bottomEdge)
             .background{
                 GeometryReader{
@@ -63,12 +63,34 @@ struct FullScreenNews: View {
             }
  
         }
-        .navigationBarBackButtonHidden(hiddenBackNavigationButton)
+        .navigationBarBackButtonHidden(true)
+        .overlay(alignment: .top, content: {
+            ZStack{
+                Color.clear.background(.ultraThinMaterial)
+                
+                Button {
+                    rootNavigation.popBackStack()
+                } label: {
+                    Image(systemName: "arrow.backward")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.top, topEdge)
+                        .padding()
+                    
+                    
+                }
+
+                
+
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(height: topEdge + 25)
+            
+        })
         .overlay{
             
             Rectangle()
                 .fill(.black)
-                .opacity(getOpacity())
+                
                 .opacity(loadExpandedContent ? 1 : 0)
                 
             
@@ -76,7 +98,10 @@ struct FullScreenNews: View {
         }
         .overlay{
             if let expandedListImages = selectedImages, isExpand{
+                
+                
                 VStack{
+                    
                     GeometryReader{
                         proxy in
                         let size = proxy.size
@@ -86,7 +111,7 @@ struct FullScreenNews: View {
                                 Image(image)
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
-                                    .frame(height: 300)
+                                    
 //                                    .offset(y: loadExpandedContent ? offsetGesture : .zero)
 //                                    .gesture(
 //                                       DragGesture()
@@ -121,12 +146,17 @@ struct FullScreenNews: View {
                           
                         }
                         .frame(width: size.width, height: size.height)
+
                         .cornerRadius(loadExpandedContent ? 0 : 25)
                         .tabViewStyle(.page)
+                       
                         
                     }
                     .matchedGeometryEffect(id: news.image.first, in: animation)
-                    .frame(maxHeight: .infinity, alignment: .center)
+                    .frame(height: 300)
+                    .frame(maxHeight: .infinity)
+                    
+                    
                 }
                 .overlay(alignment: .top, content: {
                     HStack{
@@ -151,7 +181,7 @@ struct FullScreenNews: View {
                     }
                     .padding(.leading)
                     .opacity(loadExpandedContent ? 1 : 0)
-                    .opacity(getOpacity())
+                    
                 
                 })
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -170,13 +200,7 @@ struct FullScreenNews: View {
       
     }
     
-    private func getOpacity() -> Double{
-        
-        guard self.offsetGesture != .zero else { return 1 }
-       
-      
-        return 1.0 - abs( offsetGesture / CGFloat(100))
-    }
+   
     
     @ViewBuilder
     private func Header() -> some View{
@@ -197,6 +221,7 @@ struct FullScreenNews: View {
                         
                 }else{
                     CorouselPager(images: news.image)
+                        .cornerRadius(25)
                         .matchedGeometryEffect(id: news.image.first, in: animation)
                         
                 }

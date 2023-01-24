@@ -61,7 +61,7 @@ struct NewsScreen: View {
                         rootNavigation.toWatchFullNews()
                         
                     }, label: {
-                        firstNews(news: news[0])
+                        FirstNews(news: news[0])
                             .padding(.bottom, 8)
                             .scaleEffect(getScaleEffect())
                             
@@ -134,7 +134,7 @@ struct NewsScreen: View {
 
                     }
                 }
-                .padding(.top, topEdge)
+               
                 .padding(.bottom, bottomEdge)
                 .background {
                     GeometryReader{
@@ -147,7 +147,9 @@ struct NewsScreen: View {
                 }
                 
                 
+                
             }
+           
             .toolbar{
                 ToolbarItem(placement: .navigationBarLeading){
                     HStack{
@@ -169,7 +171,7 @@ struct NewsScreen: View {
     }
     
     @ViewBuilder
-    private func firstNews(news: News) -> some View{
+    private func FirstNews(news: News) -> some View{
         
         
             
@@ -197,7 +199,7 @@ struct NewsScreen: View {
             
    
         }
-        .padding(.top, topEdge)
+        .padding(.top, topEdge + 20)
             
            
         

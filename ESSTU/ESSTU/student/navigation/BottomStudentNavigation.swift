@@ -16,18 +16,21 @@ struct BottomStudentNavigation: View {
     var body: some View {
         NavigationStack(path: $rootController.path){
             TabView{
-                GeometryReader {
-                    reader in
-                    let topEdge = reader.safeAreaInsets.top
-                    let bottomEdge = reader.safeAreaInsets.bottom
-                    NavigationView{
+                NavigationView{
+                    GeometryReader {
+                        reader in
+                        let topEdge = reader.safeAreaInsets.top
+                        let bottomEdge = reader.safeAreaInsets.bottom
+                       
                         NewsScreen(topEdge: topEdge, bottomEdge: bottomEdge)
                             .environmentObject(rootController)
                             .ignoresSafeArea()
-                    }
-                   
                         
+                       
+                            
+                    }
                 }
+               
                 .tabItem{
                     Image(systemName: "homekit")
                     Text("Главная")
@@ -91,6 +94,7 @@ struct BottomStudentNavigation: View {
                                                   FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "logo_esstu"]), topEdge: topEdge, bottomEdge: bottomEdge)
                         
                         .ignoresSafeArea()
+                        .environmentObject(rootController)
                     }
                 }
                 

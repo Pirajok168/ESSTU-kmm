@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2924C245297F892E00744CDB /* TestInset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2924C244297F892E00744CDB /* TestInset.swift */; };
 		29287E4928D73C6100180DA7 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29287E4828D73C6100180DA7 /* SplashScreen.swift */; };
 		29287E4B28D73C9200180DA7 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29287E4A28D73C9200180DA7 /* AuthViewModel.swift */; };
 		292C451B28D5E0D7005F176D /* ESSTUApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292C451A28D5E0D7005F176D /* ESSTUApp.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2924C244297F892E00744CDB /* TestInset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInset.swift; sourceTree = "<group>"; };
 		29287E4828D73C6100180DA7 /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
 		29287E4A28D73C9200180DA7 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		292C451728D5E0D7005F176D /* ЛК ВСГУТУ.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ЛК ВСГУТУ.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,6 +92,7 @@
 				292C452028D5E0D8005F176D /* Preview Content */,
 				292DBC89291DFFC500214521 /* Test.swift */,
 				299AF6E3297E438B00F5A58C /* TestImage.swift */,
+				2924C244297F892E00744CDB /* TestInset.swift */,
 			);
 			path = ESSTU;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 				299AF6E4297E438B00F5A58C /* TestImage.swift in Sources */,
 				29287E4928D73C6100180DA7 /* SplashScreen.swift in Sources */,
 				29287E4B28D73C9200180DA7 /* AuthViewModel.swift in Sources */,
+				2924C245297F892E00744CDB /* TestInset.swift in Sources */,
 				299AF6DB297BD7A500F5A58C /* RootStudentNavigation.swift in Sources */,
 				299AF6DF297BE04900F5A58C /* PreviewAuthor.swift in Sources */,
 				292C452C28D5F502005F176D /* AuthScreen.swift in Sources */,
