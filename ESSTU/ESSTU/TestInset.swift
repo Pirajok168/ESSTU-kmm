@@ -8,28 +8,19 @@
 import SwiftUI
 
 struct TestInset: View {
-    @State var offser: CGFloat = .zero
-    let topEdge: CGFloat
+    
+    @State var text = ""
     var body: some View {
         
-        ScrollView(.vertical){
-            VStack{
-                Text("\(offser)")
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.top, topEdge)
-            .background{
-                GeometryReader{
-                    proxy -> Color in
-                    DispatchQueue.main.async {
-                        self.offser = proxy.frame(in: .global).minY
-                    }
-                    return Color.clear
-                }
-            }
-            
+        ZStack{
+            Color.clear.background(
+                .ultraThinMaterial)
+            TextEditor(text: $text)
+                .cornerRadius(25.0)
+                .frame( height: 40)
+                .padding()
+               
         }
-        .navigationTitle("123")
             
         
     }
@@ -37,12 +28,6 @@ struct TestInset: View {
 
 struct TestInset_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView{
-            GeometryReader{ proxy in
-                let topEdge = proxy.safeAreaInsets.top
-                TestInset(topEdge: topEdge)
-                    .ignoresSafeArea()
-            }
-        }
+        TestInset()
     }
 }

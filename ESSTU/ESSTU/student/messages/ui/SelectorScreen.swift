@@ -71,10 +71,11 @@ struct SelectorScreen: View {
     @Namespace var animations
     
     @State var isExpanSearchView: Bool = false
+    @State var isExpandedSheet: Bool = false
     var body: some View {
         ScrollView {
             LazyVStack{
-                Text("\(offset)")
+        
                 ForEach(dialogs){
                     dialog in
                     HStack{
@@ -125,10 +126,10 @@ struct SelectorScreen: View {
                 }
             }
             
-            .padding(.top, getHightTopBar())
+            .padding(.top, getHightTopBar() + 20)
             
            
-            .padding(.bottom, bottomEdge)
+            .padding(.bottom, bottomEdge + 45.0)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background{
                 GeometryReader{
@@ -141,9 +142,7 @@ struct SelectorScreen: View {
             }
             
         }
-        .onChange(of: isExpanSearchView, perform: { newValue in
-            print(newValue)
-        })
+        //MARK: TOP BAR
         .overlay{
             ZStack{
                 Color.clear.background(.ultraThinMaterial)
@@ -159,7 +158,7 @@ struct SelectorScreen: View {
                         Spacer()
                         
                         Button {
-                            
+                            isExpandedSheet = true
                         } label: {
                             Image(systemName: "envelope")
                         }
@@ -170,10 +169,20 @@ struct SelectorScreen: View {
                     .frame(maxWidth: .infinity , maxHeight: topEdge + 80, alignment: .top)
                     .padding(.top, topEdge)
                     
-                    TextEditor(text: $text)
-                        .padding(.horizontal)
-                        .frame(height: isExpanSearchView ? 35.0 : getHightSearhView())
                     
+                    
+                    TextEditor(text: $text)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                        
+                        .cornerRadius(25.0)
+                        .padding(.horizontal)
+                        
+                        .frame(height: isExpanSearchView ? 35.0 : getHightSearhView())
+                        .frame(maxWidth: .infinity)
+                        .lineLimit(1)
+                        
+                  
                     
                     ScrollView(.horizontal, showsIndicators: false){
                         LazyHStack( content: {
@@ -216,10 +225,13 @@ struct SelectorScreen: View {
                 
             }
            
-            .frame(height:  getHightTopBar())
+            .frame(height:  getHightTopBar() )
             
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
 
+        }
+        .sheet(isPresented: $isExpandedSheet){
+            
         }
        
     
@@ -229,6 +241,7 @@ struct SelectorScreen: View {
     
     private func getHightSearhView() -> CGFloat{
         guard offset != 0.0 else { return 0.0 }
+        guard offset > 0 else { return 0.0 }
         
         guard offset < 35 else { return 35.0 }
         
@@ -239,25 +252,28 @@ struct SelectorScreen: View {
         guard !isExpanSearchView else {
             if offset < 0 {
                 DispatchQueue.main.async {
-                    self.isExpanSearchView = false
+                    withAnimation{
+                        self.isExpanSearchView = false
+                    }
+                    
                 }
             }
-            return topEdge + 80 + 45.0
+            return topEdge + 90 + 45.0
             
         }
         
-        guard offset > 0 else { return topEdge + 80 }
+        guard offset > 0 else { return topEdge + 90 }
         
-        guard offset != 0.0 else { return topEdge + 80 }
+        guard offset != 0.0 else { return topEdge + 90 }
         
         guard offset < 45 else {
             DispatchQueue.main.async {
                 self.isExpanSearchView = true
             }
             
-            return topEdge + 80 + 45.0
+            return topEdge + 90 + 45.0
         }
-        return topEdge + 80 + offset
+        return topEdge + 90 + offset
     }
     
     private func getScaleEffect() -> CGSize {
