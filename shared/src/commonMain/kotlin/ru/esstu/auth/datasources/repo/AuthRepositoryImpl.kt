@@ -24,12 +24,14 @@ class AuthRepositoryImpl constructor(
     private val logoutChannel: Channel<Token?> = Channel()
     override val logoutFlow = logoutChannel.receiveAsFlow()
 
+    // TODO: ТУТ УБРАНО 
     override suspend fun refreshToken(): Response<Token> {
         return try {
+            Napier.e("мы тут")
             val token = cache.getToken()?.toToken()
 
             if (token == null) {
-                goToLoginScreen(null)
+                //goToLoginScreen(null)
                 return Response.Error(ResponseError(code = 401, message = "unauthorised"))
             }
 

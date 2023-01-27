@@ -14,7 +14,7 @@ struct SplashScreen: View {
     @ObservedObject  var authViewModel: AuthViewModel
     @ObservedObject  var authNavigation: AuthNavigation
     
-    private var sdkESSTU:ESSTUSdk
+    private var sdkESSTU: ESSTUSdk
     
     init(sdkESSTU: ESSTUSdk){
         self.sdkESSTU = sdkESSTU
@@ -24,11 +24,32 @@ struct SplashScreen: View {
    
     
     var body: some View {
-        NavigationStack{
-            BottomStudentNavigation()
-//            AuthScreen()
-//                .environmentObject(authNavigation)
-//                .environmentObject(authViewModel)
+        
+        
+        if authViewModel.token == nil {
+            NavigationStack(path: $authNavigation.path){
+                VStack{
+                    Image("logo_splash_screen")
+                        .navigationDestination(for: AuthDestination.self) { destation in
+                            switch destation{
+                            case .AuthScree:
+                                AuthScreen()
+                                    .environmentObject(authViewModel)
+                            }
+                        }
+                }
+            }
+            .onAppear{
+                authViewModel.onRestoreSession()
+                print("появились")
+            }
+            .onChange(of: authViewModel.toAuthScreen) { newValue in
+                if newValue {
+                    authNavigation.toAuthScreen()
+                }
+            }
+        }else if authViewModel.token?.owner is TokenOwners.Student {
+            BottomStudentNavigation(sdkESSTU: sdkESSTU)
         }
         
         

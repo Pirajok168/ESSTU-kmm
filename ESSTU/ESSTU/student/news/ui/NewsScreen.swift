@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import shared
 struct News: Hashable{
     
     let title: String
@@ -21,14 +22,14 @@ enum TypeNews: CaseIterable, Identifiable, Hashable {
     var id: Self { self }
     
     var title: String{
-            switch self{
-            case.events:
-                return "Мероприятия"
-            case.recentAnnouncement:
-                return "Объявления"
-            }
+        switch self{
+        case.events:
+            return "Мероприятия"
+        case.recentAnnouncement:
+            return "Объявления"
         }
-
+    }
+    
 }
 
 struct NewsScreen: View {
@@ -36,172 +37,219 @@ struct NewsScreen: View {
     let topEdge: CGFloat
     let bottomEdge: CGFloat
     
-    let news = [
-        News(title: "Вебинары компании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "logo_esstu"]),
-        News(title: "Вебинары коgмпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
-        News(title: "Вебинары коbмпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компfании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студdент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
-        News(title: "Вебинары компbании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компdаfнии в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
-        News(title: "Вебинаfры комbпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаdров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Стуfдент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
-        News(title: "Вебинаfры комbпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаdров компанииd в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Стуfдент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
-        News(title: "Вебинаfры комbпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компdании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Стуfдент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
-        News(title: "Вебинаfры комbпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров комdпании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Стуfдент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
-        News(title: "Вебиdнаfры комbпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Стуfдент 3 курса группы Б760", countViewed: 456, image: ["copybook", "copybook", "copybook"]),
-        
-    ]
+   
     @EnvironmentObject var rootNavigation: RootStudentNavigation
-    
     @State private var selectedType: TypeNews = .recentAnnouncement
-    
     @Namespace var animations
+    
+    @StateObject var recentAnnouncementViewModel: RecentAnnouncementViewModel = RecentAnnouncementViewModel()
+    
+    init(topEdge: CGFloat, bottomEdge: CGFloat){
+        self.topEdge = topEdge
+        self.bottomEdge = bottomEdge
+    }
     
     var body: some View {
         
-            ScrollView{
-                LazyVStack(alignment: .leading){
-                    
-                    Button(action: {
-                        rootNavigation.toWatchFullNews()
-                        
-                    }, label: {
-                        FirstNews(news: news[0])
-                            .padding(.bottom, 8)
-                            .scaleEffect(getScaleEffect())
-                            
-                    })
-                    .clipped()
-                    .buttonStyle(.plain)
-                    
-                    
-                    HStack{
-                        ForEach(TypeNews.allCases, id: \TypeNews.self){
-                            type in
-                            Button(action: {
-                                withAnimation{
-                                    self.selectedType = type
-                                }
-                               
-                            }, label: {
-                                Text(type.title)
-                                    .frame(height: 30)
-                                    .opacity(selectedType == type ? 1 : 0.5)
-                                    
-                            })
-                            .buttonStyle(.plain)
-                            .overlay(alignment: .bottom){
-                                if (selectedType == type){
-                                    Rectangle()
-                                        .frame(height: 1)
-                                        .foregroundColor(Color("AccentColor"))
-                                        .matchedGeometryEffect(id: "titlePreview", in: animations)
-                                }
-                            }
-                            .padding(.leading)
-                        }
-                       
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .overlay(alignment: .bottom){
-                        Divider()
-                    }
-                    .padding(.bottom, 5)
-                    
-                    ForEach(0..<news.count, id: \.self){
-                        index in
-                       
-
-                        Button(action: {
-
-                            rootNavigation.toWatchFullNews()
-
-
-                        }, label: {
-                            VStack {
-                                CardNews(title: news[index].title, subTitle: news[index].subTitle, FIO: news[index].FIO, described: news[index].described, countViewed: news[index].countViewed, image: news[index].image.first)
-                                    .padding(.horizontal)
-
-                                Divider()
-                                    .padding(.leading)
-                                    .padding(.vertical, 5)
-                            }
-
-
-
-                        })
-                        
-                        .buttonStyle(.plain)
-
-                    }
-                }
-                .padding(.top, topEdge)
-                .padding(.bottom, bottomEdge)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        ScrollView{
+            
+            LazyVStack(alignment: .leading){
                
-                .background{
-                    GeometryReader{
-                        proxy -> Color in
-                        DispatchQueue.main.async {
-                            self.offset = proxy.frame(in: .global).minY
+
+                Button(action: {
+                    rootNavigation.toWatchFullNews()
+                    
+                }, label: {
+                    FirstNews(news: recentAnnouncementViewModel.pages.first)
+                        .padding(.bottom, 8)
+                        .scaleEffect(getScaleEffect())
+                    
+                })
+                .clipped()
+                .buttonStyle(.plain)
+                
+                
+                HStack{
+                    ForEach(TypeNews.allCases, id: \TypeNews.self){
+                        type in
+                        Button(action: {
+                            withAnimation{
+                                self.selectedType = type
+                            }
+                            
+                        }, label: {
+                            Text(type.title)
+                                .frame(height: 30)
+                                .opacity(selectedType == type ? 1 : 0.5)
+                            
+                        })
+                        .buttonStyle(.plain)
+                        .overlay(alignment: .bottom){
+                            if (selectedType == type){
+                                Rectangle()
+                                    .frame(height: 1)
+                                    .foregroundColor(Color("AccentColor"))
+                                    .matchedGeometryEffect(id: "titlePreview", in: animations)
+                            }
                         }
-                        return Color.clear
+                        .padding(.leading)
                     }
+                    
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .overlay(alignment: .bottom){
+                    Divider()
+                }
+                .padding(.bottom, 5)
+                
+                switch selectedType {
+                case .recentAnnouncement:
+                    if !recentAnnouncementViewModel.pages.isEmpty{
+                        RecentNews()
+                            .environmentObject(rootNavigation)
+                            .environmentObject(recentAnnouncementViewModel)
+                    }else{
+                        PlaceHolderItemNews()
+                        PlaceHolderItemNews()
+                        PlaceHolderItemNews()
+                        PlaceHolderItemNews()
+                        PlaceHolderItemNews()
+                        PlaceHolderItemNews()
+                    }
+                   
+                case .events:
+                   Text("123")
                 }
                 
                 
+//                if recentAnnouncementViewModel.pages.isEmpty {
+//                    ForEach(1..<10, id:\.self){
+//                        _ in
+//                        VStack{
+//                            Text("Я крутой программист лалал лала лал")
+//                                .lineLimit(2)
+//                                .font(.title3)
+//                                .fontWeight(.medium)
+//                                .padding(.bottom, 1)
+//                                .frame(maxWidth: .infinity, alignment: .leading)
+//
+//
+//
+//                            Text("Этого всё равно никто никогда, никогда никогда не заметит хехе хе хе хехехех ")
+//                                .lineLimit(2)
+//                                .font(.subheadline.weight(.thin))
+//                                .frame(maxWidth: .infinity, alignment: .leading)
+//                        }
+//                        .frame(maxWidth: .infinity, alignment: .leading)
+//                        .padding()
+//                    }
+//                }
+                
             }
-            .navigationTitle("ВСГУТУ")
-            .toolbar{
-                ToolbarItem(placement: .navigationBarLeading){
-
-                        Image("logo_esstu")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 35, height: 34)
-                            .padding(.trailing)
-
-
-
+            .padding(.top, topEdge)
+            .padding(.bottom, bottomEdge)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            .background{
+                GeometryReader{
+                    proxy -> Color in
+                    DispatchQueue.main.async {
+                        self.offset = proxy.frame(in: .global).minY
+                    }
+                    return Color.clear
                 }
             }
             
             
-            
+        }
+        .onAppear{
+            recentAnnouncementViewModel.loadAndRefresh()
+        }
+        .navigationTitle("ВСГУТУ")
+        .toolbar{
+            ToolbarItem(placement: .navigationBarLeading){
+                
+                Image("logo_esstu")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 35, height: 34)
+                    .padding(.trailing)
+                
+                
+                
+            }
+        }
         
         
         
-       
+        
+        
+        
+        
     }
     
     @ViewBuilder
-    private func FirstNews(news: News) -> some View{
+    private func PlaceHolderItemNews() -> some View{
+        CardNews(title: "13hefkjshk dkfjghkdjhfg dkjgfhkdjfhgk", subTitle: "jfrfjlksjljsldkfjljfd", FIO: "fklfkg gkkgkg kgkgkgkgk", described: "kfdklfkdlkfdlfldldlld", countViewed: 3, image: nil, creator: Creator(id: UUID().uuidString, firstName: "rererere", lastName: "erere", patronymic: "rererere", summary: "effdfdfd", photo: "fdfdfdf"))
+            .padding()
+            .redacted(reason: .placeholder)
+    }
+    
+    @ViewBuilder
+    private func FirstNews(news: NewsNode?) -> some View{
         
-        
+        if news != nil {
             
-        VStack{
-            CorouselPager(images: ["copybook", "copybook"])
+            VStack{
+                CorouselPager(images: ["logo_esstu"])
+                
+                Text(news!.title)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .lineLimit(2)
+                    .font(.title3)
+                    .fontWeight(.medium)
+                    .padding(.bottom, 1)
+                    .padding(.horizontal)
+                
+                Text(news!.message)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .lineLimit(2)
+                    .font(.subheadline.weight(.thin))
+                    .padding(.horizontal)
+                    .padding(.bottom, 2)
+                
+                PreviewAuthor(image: news!.from.photo, FIO: news!.from.fio, described: news!.from.summary, initials: String(news!.from.initials.prefix(2)))
+                    .padding(.leading)
+                
+            }
+        }else{
+            VStack{
+                CorouselPager(images: ["logo_esstu"])
+                   
+                
+                Text("123jjgj gjjgjg pj qq3 ififp")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .lineLimit(2)
+                    .font(.title3)
+                    .fontWeight(.medium)
+                    .padding(.bottom, 1)
+                    .padding(.horizontal)
+                
+                Text("fjfwlj fwjdjj ;j;js jvfhq kkk kk;k;kll lllllll vll vll vl")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .lineLimit(2)
+                    .font(.subheadline.weight(.thin))
+                    .padding(.horizontal)
+                    .padding(.bottom, 2)
+                
+               
+            }
+            .redacted(reason: .placeholder)
             
-            Text(news.title)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .lineLimit(2)
-                .font(.title3)
-                .fontWeight(.medium)
-                .padding(.bottom, 1)
-                .padding(.horizontal)
-            
-            Text(news.subTitle)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .lineLimit(2)
-                .font(.subheadline.weight(.thin))
-                .padding(.horizontal)
-                .padding(.bottom, 2)
-            
-            PreviewAuthor(image: news.image.first, FIO: news.FIO, described: news.described)
-                .padding(.leading)
-            
-            
-   
         }
+       
         
-
+        
         
     }
     

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import shared
 
 struct CardNews: View {
     let title: String
@@ -13,17 +14,25 @@ struct CardNews: View {
     let FIO: String
     let described: String
     let countViewed: Int
-    let image: String?
+    let image: AttachmentNews?
+    let creator: Creator
     
     var body: some View {
         VStack(alignment: .leading){
             HStack {
                 if(image != nil){
-                    Image(image!)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 100, height: 100)
-                        .clipShape(RoundedRectangle(cornerRadius: 25.0))
+                    AsyncImage(url: URL(string: image!.fileUri)) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 100, height: 100)
+                            .clipShape(RoundedRectangle(cornerRadius: 25.0))
+                    } placeholder: {
+                        ProgressView()
+                    }
+
+                   
+                       
                 }
                 
                 VStack(alignment: .leading) {
@@ -47,7 +56,9 @@ struct CardNews: View {
             .padding(.bottom, 2)
             
             
-            PreviewAuthor(image: image, FIO: FIO, described: described)
+            PreviewAuthor(image: creator.photo, FIO: FIO, described: described, initials: String(creator.initials.prefix(2)))
+            
+            
             
             
         }
@@ -57,12 +68,12 @@ struct CardNews: View {
     }
 }
 
-struct CardNews_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            CardNews(title: "Вебинары коnмпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: "copybook")
-            
-            CardNews(title: "Вебинары коnмпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: nil)
-        }
-    }
-}
+//struct CardNews_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Group {
+//            CardNews(title: "Вебинары коnмпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: "copybook")
+//
+//            CardNews(title: "Вебинары коnмпании \"Антиплагиат\" в январе", subTitle: "Расписание вебинаров компании в яванаре 2023 года", FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: nil)
+//        }
+//    }
+//}

@@ -10,7 +10,7 @@ import shared
 
 struct AuthScreen: View {
     @EnvironmentObject  var authViewModel: AuthViewModel
-    @EnvironmentObject  var authNavigation: AuthNavigation
+    
     
 
     
@@ -30,31 +30,37 @@ struct AuthScreen: View {
                 .multilineTextAlignment(.center)
             
                 
-        
+            
             
             TextField("Логин", text: $authViewModel.login)
+                
                 .textFieldStyle(.roundedBorder)
                 .disableAutocorrection(true)
                 .textInputAutocapitalization(.never)
             
             
-            TextField("Пароль", text: $authViewModel.login)
+            TextField("Пароль", text: $authViewModel.password)
                 .textFieldStyle(.roundedBorder)
                 .disableAutocorrection(true)
                 .textInputAutocapitalization(.never)
                 
             
             
+            if authViewModel.isLoading {
+                ProgressView()
+            }else{
+                Button(action: {
+                    authViewModel.onAutorise()
+                }, label: {
+                    Text("Продолжить")
+                        .frame(maxWidth: .infinity)
+                        .font(.title)
+                    
+                })
+                .buttonStyle(.borderedProminent)
+            }
             
-            Button(action: {
-                
-            }, label: {
-                Text("Продолжить")
-                    .frame(maxWidth: .infinity)
-                    .font(.title)
-                
-            })
-            .buttonStyle(.borderedProminent)
+           
             
             Spacer()
             

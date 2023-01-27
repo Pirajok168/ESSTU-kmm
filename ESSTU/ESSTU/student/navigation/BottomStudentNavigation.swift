@@ -6,13 +6,16 @@
 //
 
 import SwiftUI
+import shared
 
 struct BottomStudentNavigation: View {
     @ObservedObject private var rootController: RootStudentNavigation
     let topEdge: CGFloat
-    init(topEdge: CGFloat = .zero) {
+    private var sdkESSTU: ESSTUSdk
+    init(topEdge: CGFloat = .zero, sdkESSTU: ESSTUSdk = ESSTUSdk()) {
         self.rootController = RootStudentNavigation()
         self.topEdge = topEdge
+        self.sdkESSTU = sdkESSTU
     }
     var body: some View {
         NavigationStack(path: $rootController.path){
@@ -126,7 +129,7 @@ struct BottomStudentNavigation_Previews: PreviewProvider {
             GeometryReader{
                 proxy in
                 let topEdge = proxy.safeAreaInsets.top
-                BottomStudentNavigation(topEdge: topEdge)
+                BottomStudentNavigation(topEdge: topEdge, sdkESSTU: ESSTUSdk())
                     .ignoresSafeArea()
             }
            
