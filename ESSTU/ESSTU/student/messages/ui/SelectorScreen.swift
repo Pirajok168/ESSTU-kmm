@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct Dialogs: Identifiable{
     let id: String = UUID().uuidString
@@ -185,7 +186,8 @@ struct SelectorScreen: View {
                   
                     
                     ScrollView(.horizontal, showsIndicators: false){
-                        LazyHStack( content: {
+                    
+                        LazyHStack( alignment: .bottom, content: {
                             ForEach(TypeMessage.allCases) { type in
                                 Button {
                                     withAnimation{
@@ -231,7 +233,7 @@ struct SelectorScreen: View {
 
         }
         .sheet(isPresented: $isExpandedSheet){
-            
+            AddMessage(isExpandAddMessafe: $isExpandedSheet)
         }
        
     
@@ -269,6 +271,8 @@ struct SelectorScreen: View {
         guard offset < 45 else {
             DispatchQueue.main.async {
                 self.isExpanSearchView = true
+                let generator = UINotificationFeedbackGenerator()
+               generator.notificationOccurred(.success)
             }
             
             return topEdge + 90 + 45.0

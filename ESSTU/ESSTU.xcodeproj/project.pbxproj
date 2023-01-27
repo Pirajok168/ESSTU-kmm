@@ -16,6 +16,7 @@
 		292C452228D5E0D8005F176D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 292C452128D5E0D8005F176D /* Preview Assets.xcassets */; };
 		292C452C28D5F502005F176D /* AuthScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292C452B28D5F502005F176D /* AuthScreen.swift */; };
 		292DBC8A291DFFC500214521 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292DBC89291DFFC500214521 /* Test.swift */; };
+		2973C7642981054C00D80043 /* AddMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2973C7632981054C00D80043 /* AddMessage.swift */; };
 		297B9CC528DF044000A11505 /* AuthNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297B9CC428DF044000A11505 /* AuthNavigation.swift */; };
 		299AF6D0297AC71000F5A58C /* NewsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299AF6CF297AC71000F5A58C /* NewsScreen.swift */; };
 		299AF6D3297AD51E00F5A58C /* CardNews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299AF6D2297AD51E00F5A58C /* CardNews.swift */; };
@@ -38,6 +39,7 @@
 		292C452128D5E0D8005F176D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		292C452B28D5F502005F176D /* AuthScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthScreen.swift; sourceTree = "<group>"; };
 		292DBC89291DFFC500214521 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
+		2973C7632981054C00D80043 /* AddMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMessage.swift; sourceTree = "<group>"; };
 		297B9CC428DF044000A11505 /* AuthNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNavigation.swift; sourceTree = "<group>"; };
 		299AF6CF297AC71000F5A58C /* NewsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsScreen.swift; sourceTree = "<group>"; };
 		299AF6D2297AD51E00F5A58C /* CardNews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNews.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				2924C248297FF2BF00744CDB /* SelectorScreen.swift */,
+				2973C7632981054C00D80043 /* AddMessage.swift */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -290,6 +293,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2924C249297FF2BF00744CDB /* SelectorScreen.swift in Sources */,
+				2973C7642981054C00D80043 /* AddMessage.swift in Sources */,
 				299AF6E2297BF5AE00F5A58C /* CorouselPager.swift in Sources */,
 				299AF6D6297BD03B00F5A58C /* BottomStudentNavigation.swift in Sources */,
 				299AF6D3297AD51E00F5A58C /* CardNews.swift in Sources */,
@@ -433,6 +437,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ESSTU/Preview Content\"";
+				DEVELOPMENT_TEAM = J5HJ4663N7;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -471,6 +476,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ESSTU/Preview Content\"";
+				DEVELOPMENT_TEAM = J5HJ4663N7;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;

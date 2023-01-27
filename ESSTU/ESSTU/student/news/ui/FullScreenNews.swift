@@ -163,7 +163,7 @@ struct FullScreenNews: View {
                         Button {
                             withAnimation(.easeInOut(duration: 0.4)){
                                 loadExpandedContent = false
-                                selectedImages = []
+                                
                             }
                             withAnimation(.easeInOut(duration: 0.4).delay(0.05)){
                                 isExpand = false
