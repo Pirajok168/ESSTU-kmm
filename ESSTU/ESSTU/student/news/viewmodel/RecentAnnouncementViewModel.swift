@@ -14,10 +14,11 @@ protocol RecentAnnouncementState{
     var pageLoadingError: ResponseError? { get }
     var isEndReached: Bool { get }
     var pageSize: Int { get }
-    
+    var selectedNewsNode: NewsNode? { get }
 }
 protocol IntentAnnouncement{
     func loadAndRefresh()
+    func selecteNewsNode(news: NewsNode)
 }
 
 class RecentAnnouncementViewModel: ObservableObject, RecentAnnouncementState{
@@ -26,7 +27,7 @@ class RecentAnnouncementViewModel: ObservableObject, RecentAnnouncementState{
     @Published private(set) var pageLoadingError: ResponseError? = nil
     @Published private(set) var isEndReached: Bool = false
     @Published private(set) var pageSize: Int = 10
-   
+    @Published private(set) var selectedNewsNode: NewsNode? = nil
     
     private let repo: IAnnouncementsRepository = ESSTUSdk().announcementsModule.repo
     
@@ -35,6 +36,7 @@ class RecentAnnouncementViewModel: ObservableObject, RecentAnnouncementState{
 
 extension RecentAnnouncementViewModel: IntentAnnouncement{
     func loadAndRefresh() {
+        
         DispatchQueue.main.async {
             self.isPagingLoading = true
         }
@@ -43,7 +45,6 @@ extension RecentAnnouncementViewModel: IntentAnnouncement{
                 switch response{
                 case let data as ResponseSuccess<NSArray>:
                     self.pages = data.data as! [NewsNode]
-                    print("\(self.pages)")
                 case let error as ResponseError_<NSArray>:
                     self.pageLoadingError = error.error
                    
@@ -53,6 +54,10 @@ extension RecentAnnouncementViewModel: IntentAnnouncement{
                 self.isPagingLoading = false
             }
         }
+    }
+    
+    func selecteNewsNode(news: NewsNode) {
+        self.selectedNewsNode = news
     }
     
     

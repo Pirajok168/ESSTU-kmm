@@ -16,8 +16,8 @@ struct RecentNews: View {
             index in
 
             Button(action: {
-
-                rootNavigation.toWatchFullNews()
+                recentAnnouncementViewModel.selecteNewsNode(news: recentAnnouncementViewModel.pages[index])
+                rootNavigation.toWatchFullNews(news: recentAnnouncementViewModel.pages[index])
 
 
             }, label: {

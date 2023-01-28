@@ -6,20 +6,98 @@
 //
 
 import SwiftUI
+import shared
+
+class DownloadManager: NSObject, URLSessionTaskDelegate,  URLSessionDownloadDelegate{
+    
+    
+   
+    private lazy var urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+    private var downloadAttachment: AttachmentNews?
+    
+    func dowloadFile(downloadAttachment: AttachmentNews){
+        let downloadTask = urlSession.downloadTask(with: URLRequest(url: URL(string: downloadAttachment.fileUri)!))
+        downloadTask.resume()
+        self.downloadAttachment = downloadAttachment
+        
+    }
+    
+
+    
+    func urlSession(_ session: URLSession,
+                    downloadTask: URLSessionDownloadTask,
+                    didWriteData bytesWritten: Int64,
+                    totalBytesWritten: Int64,
+                    totalBytesExpectedToWrite: Int64) {
+        
+         
+        let calculatedProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+        DispatchQueue.main.async {
+            print(calculatedProgress)
+        }
+    }
+    
+    
+    
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+       
+        
+        do {
+            let documentsURL = try
+            FileManager.default.url(for: .documentDirectory,
+                                    in: .userDomainMask,
+                                    appropriateFor: nil,
+                                    create: false)
+            
+            let url = (downloadAttachment?.nameWithExt)!
+            var savedURL = documentsURL.appendingPathComponent(url)
+           
+            try FileManager.default.moveItem(at: location, to: savedURL)
+        } catch  {
+            
+        }
+    }
+}
+
+class FullScrennNewsViewModel: ObservableObject {
+    private let downloadManager: DownloadManager = DownloadManager()
+
+    func downloadFile(url: AttachmentNews){
+        downloadManager.dowloadFile(downloadAttachment: url)
+        
+    }
+}
 
 struct FullScreenNews: View {
-    let news: News
+    
     let topEdge: CGFloat
     let bottomEdge: CGFloat
-    @State private var offset: CGFloat = 0
     
+    @State private var offset: CGFloat = 0
     @State var isExpand: Bool = false
     @State var selectedImages: [String] = []
     @State var loadExpandedContent = false
-
     @State var hiddenBackNavigationButton = false
+    
     @EnvironmentObject var rootNavigation: RootStudentNavigation
     @Namespace var animation
+    @ObservedObject var downloadViewModel: FullScrennNewsViewModel = FullScrennNewsViewModel()
+    
+    let newsNode: NewsNode
+    let urlImages: [String]
+    let files: [AttachmentNews]
+    init(topEdge: CGFloat, bottomEdge: CGFloat, newsNode: NewsNode){
+        self.newsNode = newsNode
+        
+        self.topEdge = topEdge
+        self.bottomEdge = bottomEdge
+        self.urlImages = newsNode.attachments.filter({ AttachmentNews in
+            AttachmentNews.isImage
+        }).map({ AttachmentNews in
+            AttachmentNews.fileUri
+        })
+        self.files = newsNode.attachments
+    }
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false){
@@ -29,21 +107,20 @@ struct FullScreenNews: View {
                     .scaleEffect(getScaleEffect(), anchor: .center)
                     
                 
-                Text(news.subTitle)
+                Text(newsNode.message)
                     .padding(.horizontal)
                     .multilineTextAlignment(.leading)
                     .monospacedDigit()
                     .fontWeight(.regular)
                     .padding(.bottom)
                 
-                ForEach(0...3, id: \.self){ _ in
+                ForEach(files, id: \.self){ file in
                     Button(action: {
-                        
+                        downloadViewModel.downloadFile(url: file)
                     }) {
-                        HStack{
-                            Image(systemName: "arrow.down.doc")
-                            Text("Вебинар.docx")
-                        }
+                        Label(file.nameWithExt ?? "Неизвестно", systemImage: "arrow.down.doc")
+                       
+                            
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
@@ -59,11 +136,13 @@ struct FullScreenNews: View {
                         self.offset = proxy.frame(in: .global).minY
                     }
                     return Color.clear
+        
                 }
             }
  
         }
         .navigationBarBackButtonHidden(true)
+        //MARK: AppBar
         .overlay(alignment: .top, content: {
             ZStack{
                 Color.clear.background(.ultraThinMaterial)
@@ -86,6 +165,7 @@ struct FullScreenNews: View {
             .frame(height: topEdge + 25)
             
         })
+        //MARK: Black background
         .overlay{
             
             Rectangle()
@@ -96,6 +176,7 @@ struct FullScreenNews: View {
             
                 
         }
+        //MARK: Foregroung image
         .overlay{
             if let expandedListImages = selectedImages, isExpand{
                 
@@ -152,7 +233,7 @@ struct FullScreenNews: View {
                        
                         
                     }
-                    .matchedGeometryEffect(id: news.image.first, in: animation)
+                    .matchedGeometryEffect(id: urlImages.first, in: animation)
                     .frame(height: 300)
                     .frame(maxHeight: .infinity)
                     
@@ -207,33 +288,36 @@ struct FullScreenNews: View {
         VStack {
             
             
-            Text(news.title)
+            Text(newsNode.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.title)
                 .fontWeight(.medium)
                 .padding(.horizontal)
-                
-            VStack{
-                if(isExpand){
-                    CorouselPager(images: news.image)
-                        .cornerRadius(25)
-                        .opacity(0)
+            if !urlImages.isEmpty{
+                VStack{
+                    
+                    if(isExpand){
+                        CorouselPager(images: self.urlImages)
+                            .cornerRadius(25)
+                            .opacity(0)
                         
-                }else{
-                    CorouselPager(images: news.image)
-                        .cornerRadius(25)
-                        .matchedGeometryEffect(id: news.image.first, in: animation)
+                    }else{
+                        CorouselPager(images: self.urlImages)
+                            .cornerRadius(25)
+                            .matchedGeometryEffect(id: urlImages.first, in: animation)
                         
+                    }
                 }
-            }
-            .onTapGesture {
-                withAnimation{
-                    hiddenBackNavigationButton = true
-                }
-                withAnimation(.easeInOut(duration: 0.4)){
-                    selectedImages = news.image
-                    self.isExpand = true
-                     
+                .padding(.bottom)
+                .onTapGesture {
+                    withAnimation{
+                        hiddenBackNavigationButton = true
+                    }
+                    withAnimation(.easeInOut(duration: 0.4)){
+                        selectedImages = self.urlImages
+                        self.isExpand = true
+                        
+                    }
                 }
             }
            
@@ -241,8 +325,9 @@ struct FullScreenNews: View {
             
             
             
-            PreviewAuthor(image: news.image.first, FIO: news.FIO, described: news.described)
-                .padding()
+            PreviewAuthor(image: newsNode.from.photo, FIO: newsNode.from.fio, described: newsNode.from.summary)
+                .padding(.horizontal)
+                .padding(.bottom)
         }
     }
     
@@ -253,49 +338,4 @@ struct FullScreenNews: View {
     }
 }
 
-struct FullScreenNews_Previews: PreviewProvider {
-    static var previews: some View {
-        GeometryReader {
-            reader in
-            let topEdge = reader.safeAreaInsets.top
-            let bottomEdge = reader.safeAreaInsets.bottom
-            FullScreenNews(news: News(title: "Вебинары компании \"Антиплагиат\" в январе", subTitle: """
-                                      Расписание вебинаров компании «Антиплагиат» в январе 2023 г.
 
-                                      19.01.2023   11:00  (МСК)
-                                      БАЗОВЫЙ
-                                      Знакомство с системой «Антиплагиат». Часть 1. Начала.
-                                      Спикер: Ольга Филиппова, ведущий специалист учебно-методического центра компании Антиплагиат
-                                      Регистрация по ссылке: https://events.webinar.ru/1176571/967466096?utm_source=ap&utm_medium=webinar&utm_campaign=nachala19-01-2023
-
-                                      24.01.2023   15:15 (МСК)
-                                      БАЗОВЫЙ
-                                      Авторам
-                                      Заимствования в научных публикациях. Культура цитирования
-                                      Спикер: Ирина Стрелкова, зав. кафедрой технологий профессионального образования Республиканского института профессионального образования; канд. пед. наук, доцент
-                                      Регистрация Регистрация по ссылке: https://events.webinar.ru/1176571/201816082
-
-                                      25.01.2023    11:00 (МСК)
-                                      БАЗОВЫЙ
-                                      Знакомство с системой «Антиплагиат». Часть 2. Основы работы с отчетом
-                                      Спикер: Ольга Филиппова, ведущий специалист учебно-методического центра компании Антиплагиат
-                                      Регистрация по ссылке: https://events.webinar.ru/1176571/626019332
-
-                                      26.01.2023    15:15 (МСК)
-                                      ЭКСПЕРТНЫЙ
-                                      Экспертная оценка оригинальности научных работ с помощью системы «Антиплагиат»
-                                      Спикер: Оксана Молчанова, ведущий специалист учебно-методического центра компании Антиплагиат
-                                      Регистрация по ссылке: https://events.webinar.ru/1176571/884557524
-
-                                      31.01.2023    15:15 (МСК)
-                                      БАЗОВЫЙ
-                                      Авторам
-                                      Антиплагиат частным пользователям: инструкция по применению
-                                      Спикер: Ольга Филиппова, ведущий специалист учебно-методического центра компании Антиплагиат
-                                      Регистрация по ссылке: https://events.webinar.ru/1176571/213703439
-                                    """,
-                                      FIO: "Еремин Данила Александрович", described: "Студент 3 курса группы Б760", countViewed: 456, image: ["copybook", "logo_esstu"]), topEdge: topEdge, bottomEdge: bottomEdge)
-            .ignoresSafeArea()
-        }
-    }
-}

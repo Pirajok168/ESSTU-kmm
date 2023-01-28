@@ -27,7 +27,7 @@ class AuthRepositoryImpl constructor(
     // TODO: ТУТ УБРАНО 
     override suspend fun refreshToken(): Response<Token> {
         return try {
-            Napier.e("мы тут")
+
             val token = cache.getToken()?.toToken()
 
             if (token == null) {

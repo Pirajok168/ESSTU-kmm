@@ -6,17 +6,18 @@
 //
 
 import Foundation
+import shared
 
 enum RootStudentDestination: Hashable{
-    case WatchFullNews
+    case WatchFullNews(news: NewsNode)
 }
 
 
 class RootStudentNavigation: ObservableObject{
     @Published var path: [RootStudentDestination] = []
     
-    func toWatchFullNews(){
-        path.append(RootStudentDestination.WatchFullNews)
+    func toWatchFullNews(news: NewsNode){
+        path.append(RootStudentDestination.WatchFullNews(news: news))
     }
     
     func popBackStack(){

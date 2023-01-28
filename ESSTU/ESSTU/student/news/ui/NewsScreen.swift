@@ -57,7 +57,7 @@ struct NewsScreen: View {
                
 
                 Button(action: {
-                    rootNavigation.toWatchFullNews()
+                    rootNavigation.toWatchFullNews(news: recentAnnouncementViewModel.pages.first!)
                     
                 }, label: {
                     FirstNews(news: recentAnnouncementViewModel.pages.first)
@@ -108,6 +108,7 @@ struct NewsScreen: View {
                         RecentNews()
                             .environmentObject(rootNavigation)
                             .environmentObject(recentAnnouncementViewModel)
+                           
                     }else{
                         PlaceHolderItemNews()
                         PlaceHolderItemNews()
