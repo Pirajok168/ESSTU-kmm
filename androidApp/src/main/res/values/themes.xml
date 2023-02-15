@@ -9,4 +9,6 @@
         <item name="colorPrimaryDark">@color/new_primary_variant</item>
         <item name="colorSecondary">@color/new_secondary</item>
     </style>
+
+
 </resources>
