@@ -11,14 +11,27 @@ struct PreviewAuthor: View {
     let image: String?
     let FIO: String
     let described: String
+    let initials: String
+    
+    init(image: String?, FIO: String, described: String, initials: String = "ЕД") {
+        self.image = image
+        self.FIO = FIO
+        self.described = described
+        self.initials = initials
+    }
     var body: some View {
         HStack{
             if(image != nil){
-                Image(image!)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 35, height: 35)
-                    .clipShape(Circle())
+                AsyncImage(url: URL(string: image!)) { Image in
+                    Image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 35, height: 35)
+                        .clipShape(Circle())
+                } placeholder: {
+                    PlaceHolderPhoto()
+                }
+
             }
             VStack{
                 Text(FIO)
@@ -35,5 +48,19 @@ struct PreviewAuthor: View {
               
         }
         .frame(maxWidth: .infinity, maxHeight: 35, alignment: .leading)
+    }
+    
+    @ViewBuilder
+    func PlaceHolderPhoto() -> some View {
+        ZStack{
+            Color("AccentColor")
+            Text(initials)
+                .foregroundColor(.white)
+                .font(.system(size: 12))
+        }
+        .frame(width: 35, height: 35)
+        .clipShape(Circle())
+        
+       
     }
 }
