@@ -16,5 +16,13 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "ESSTU"
-include(":androidApp")
-include(":shared")
+//include(":androidApp")
+//include(":shared")
+
+include(":core:theme")
+
+
+
+
+
+include(":feature:news")
