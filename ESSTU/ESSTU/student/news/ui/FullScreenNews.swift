@@ -14,10 +14,12 @@ class DownloadManager: NSObject, URLSessionTaskDelegate,  URLSessionDownloadDele
    
     private lazy var urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
     private var downloadAttachment: AttachmentNews?
+    private var downloadTask: URLSessionDownloadTask?
     
     func dowloadFile(downloadAttachment: AttachmentNews){
         let downloadTask = urlSession.downloadTask(with: URLRequest(url: URL(string: downloadAttachment.fileUri)!))
         downloadTask.resume()
+        self.downloadTask = downloadTask
         self.downloadAttachment = downloadAttachment
         
     }
@@ -50,7 +52,7 @@ class DownloadManager: NSObject, URLSessionTaskDelegate,  URLSessionDownloadDele
                                     create: false)
             
             let url = (downloadAttachment?.nameWithExt)!
-            var savedURL = documentsURL.appendingPathComponent(url)
+            let savedURL = documentsURL.appendingPathComponent(url)
            
             try FileManager.default.moveItem(at: location, to: savedURL)
         } catch  {
@@ -134,6 +136,7 @@ struct FullScreenNews: View {
                     proxy -> Color in
                     DispatchQueue.main.async {
                         self.offset = proxy.frame(in: .global).minY
+                       
                     }
                     return Color.clear
         
@@ -141,23 +144,40 @@ struct FullScreenNews: View {
             }
  
         }
+        
         .navigationBarBackButtonHidden(true)
         //MARK: AppBar
         .overlay(alignment: .top, content: {
             ZStack{
-                Color.clear.background(.ultraThinMaterial)
-                
-                Button {
-                    rootNavigation.popBackStack()
-                } label: {
-                    Image(systemName: "arrow.backward")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.top, topEdge)
-                        .padding()
+                if(offset >= -25){
+                    Color.clear
+                }else{
+                    Color.clear.background(.ultraThinMaterial)
+                }
+                HStack{
+                    Button {
+                        rootNavigation.popBackStack()
+                    } label: {
+                        Image(systemName: "arrow.backward")
+                        
+                    }
                     
+                    if(offset < -25 ){
+                        Text(newsNode.title)
+                            .lineLimit(1)
+                            .padding(.leading)
+                            .font(.title3)
+                            .transition(.opacity)
+                
+                    }
                     
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, topEdge)
+                .padding()
 
+                
+                
                 
 
             }

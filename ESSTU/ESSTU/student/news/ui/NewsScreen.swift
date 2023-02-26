@@ -122,30 +122,6 @@ struct NewsScreen: View {
                    Text("123")
                 }
                 
-                
-//                if recentAnnouncementViewModel.pages.isEmpty {
-//                    ForEach(1..<10, id:\.self){
-//                        _ in
-//                        VStack{
-//                            Text("Я крутой программист лалал лала лал")
-//                                .lineLimit(2)
-//                                .font(.title3)
-//                                .fontWeight(.medium)
-//                                .padding(.bottom, 1)
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//
-//
-//
-//                            Text("Этого всё равно никто никогда, никогда никогда не заметит хехе хе хе хехехех ")
-//                                .lineLimit(2)
-//                                .font(.subheadline.weight(.thin))
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//                        }
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding()
-//                    }
-//                }
-                
             }
             .padding(.top, topEdge)
             .padding(.bottom, bottomEdge)

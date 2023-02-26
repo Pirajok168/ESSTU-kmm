@@ -7,27 +7,42 @@
 
 import SwiftUI
 
-struct TestInset: View {
-    
-    @State var text = ""
+struct ControlSize: View {
     var body: some View {
-        
-        ZStack{
-            Color.clear.background(
-                .ultraThinMaterial)
-            TextEditor(text: $text)
-                .cornerRadius(25.0)
-                .frame( height: 40)
-                .padding()
-               
+        VStack {
+            MyControls(label: "Mini")
+                .controlSize(.mini)
+            MyControls(label: "Small")
+                .controlSize(.small)
+            MyControls(label: "Regular")
+                .controlSize(.regular)
         }
-            
-        
+        .padding()
+        .frame(width: 450)
+        .border(Color.gray)
     }
 }
 
+
+struct MyControls: View {
+    var label: String
+    @State private var value = 3.0
+    @State private var selected = 1
+    var body: some View {
+        HStack {
+            Text(label + ":")
+            Picker("Selection", selection: $selected) {
+                Text("option 1").tag(1)
+                Text("option 2").tag(2)
+                Text("option 3").tag(3)
+            }
+            Slider(value: $value, in: 1...10)
+            Button("OK") { }
+        }
+    }
+}
 struct TestInset_Previews: PreviewProvider {
     static var previews: some View {
-        TestInset()
+        ControlSize()
     }
 }
