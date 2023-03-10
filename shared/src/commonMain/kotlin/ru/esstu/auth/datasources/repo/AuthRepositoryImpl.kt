@@ -4,6 +4,9 @@ import io.github.aakira.napier.Napier
 import io.ktor.client.plugins.*
 import io.ktor.utils.io.errors.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import ru.esstu.auth.datasources.api.student_teacher.AuthApi
 import ru.esstu.auth.datasources.toToken
@@ -21,8 +24,9 @@ class AuthRepositoryImpl constructor(
     private val portalApi: AuthApi,
     private val cache: ITokenDSManager,
 ) : IAuthRepository {
-    private val logoutChannel: Channel<Token?> = Channel()
-    override val logoutFlow = logoutChannel.receiveAsFlow()
+    private val sharedFlow = MutableSharedFlow<Token?>()
+
+    override val logoutFlow: SharedFlow<Token?> = sharedFlow.asSharedFlow()
 
     // TODO: ТУТ УБРАНО 
     override suspend fun refreshToken(): Response<Token> {
@@ -31,7 +35,7 @@ class AuthRepositoryImpl constructor(
             val token = cache.getToken()?.toToken()
 
             if (token == null) {
-                //goToLoginScreen(null)
+                goToLoginScreen(null)
                 return Response.Error(ResponseError(code = 401, message = "unauthorised"))
             }
 
@@ -89,7 +93,7 @@ class AuthRepositoryImpl constructor(
         TODO("Not yet implemented")
     }
 
-    private suspend fun goToLoginScreen(token: Token? = null) = logoutChannel.send(token)
+    private suspend fun goToLoginScreen(token: Token? = null) = sharedFlow.emit(token)
 
     override suspend fun <T> provideToken(call: suspend (type: String, token: String) -> T): Response<T> =
         provideToken { token -> call(token.type, token.access) }

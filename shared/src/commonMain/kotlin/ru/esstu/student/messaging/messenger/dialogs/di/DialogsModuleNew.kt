@@ -60,6 +60,8 @@ internal val dialogsModuleNew = DI.Module("dialogsModuleNew"){
             instance()
         )
     }
+
+    bind<IDialogsRepository>() with singleton { DialogsRepositoryImpl(instance(), instance()) }
 }
 
 @ThreadLocal
@@ -71,6 +73,9 @@ object DialogsModuleNew {
         get() = ESSTUSdk.di.instance()
 
     val update: IDialogsUpdatesRepository
+        get() = ESSTUSdk.di.instance()
+
+    val abstractRepo: IDialogsRepository
         get() = ESSTUSdk.di.instance()
 }
 

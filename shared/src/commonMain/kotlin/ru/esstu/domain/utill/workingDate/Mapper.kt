@@ -8,3 +8,9 @@ fun Long.toFormatString(regexDate: String): String{
     val locale = KlockLocale.russian
     return DateTime(this).local.format(format = regexDate, locale = locale)
 }
+
+
+fun toFormatString(regexDate: String, currentTime: Long): String{
+    val locale = KlockLocale.russian
+    return DateTime(currentTime).local.format(format = regexDate, locale = locale)
+}

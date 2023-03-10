@@ -209,9 +209,16 @@ struct FullScreenNews: View {
                         TabView{
                             ForEach(expandedListImages, id: \.self){
                                 image in
-                                Image(image)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
+                                AsyncImage(url: URL(string: image), content: {
+                                    image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                }, placeholder: {
+                                    
+                                })
+                            
+                                    
                                     
 //                                    .offset(y: loadExpandedContent ? offsetGesture : .zero)
 //                                    .gesture(

@@ -13,13 +13,19 @@ struct CorouselPager: View {
         TabView{
             ForEach(images, id: \.self){
                 index in
-                Image(index)
-                    .resizable()
-                    
-                    .scaledToFill()
-                    .frame(height: 200)
-                    .clipShape(RoundedRectangle(cornerRadius: 25.0))
-                    .padding(.horizontal)
+                AsyncImage(url: URL(string: index), content: {
+                    image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 200)
+                        .clipShape(RoundedRectangle(cornerRadius: 25.0))
+                        .padding(.horizontal)
+                }, placeholder: {
+                    ProgressView()
+                })
+                
+                   
                     
             }
         }

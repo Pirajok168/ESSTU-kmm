@@ -1,12 +1,13 @@
 package ru.esstu.auth.datasources.repo
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 import ru.esstu.auth.entities.Token
 import ru.esstu.domain.utill.wrappers.Response
 
 
 interface IAuthRepository {
-    val logoutFlow: Flow<Token?>
+    val logoutFlow: SharedFlow<Token?>
     suspend fun refreshToken(): Response<Token>
     suspend fun auth(login: String, Password: String): Response<Token>
     suspend fun entrantAuth(login: String, Password: String): Response<Token>

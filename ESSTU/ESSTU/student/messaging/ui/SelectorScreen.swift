@@ -8,16 +8,7 @@
 import SwiftUI
 import UIKit
 
-struct Dialogs: Identifiable{
-    let id: String = UUID().uuidString
-    let photo: String
-    let name: String
-    let surname: String
-    let lastname: String
-    let message: String
-    let newMessage: Int
-    let isMe: Bool
-}
+
 enum TypeMessage: CaseIterable, Identifiable{
     var id: Self { self }
     case Dialogs, Conversations, Supports, Appeals
@@ -36,31 +27,17 @@ enum TypeMessage: CaseIterable, Identifiable{
         }
 }
 
-let dialogs: [Dialogs] = [
-    Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 3, isMe: true),
-    
-    Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 0, isMe: false),
-    
-    Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello worlddddddddddd", newMessage: 2, isMe: false),
-    
-    Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 20, isMe: true),
-    
-    Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 3, isMe: true),
-    
-    Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 0, isMe: false),
-    
-    Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello worlddddddddddd", newMessage: 2, isMe: false),
-    
-    Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 20, isMe: true),
-    
-    Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 3, isMe: true),
-    
-    Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 0, isMe: false),
-    
-    Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello worlddddddddddd", newMessage: 2, isMe: false),
-    
-    Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 20, isMe: true),
-]
+struct Dialogs: Identifiable{
+    let id: String = UUID().uuidString
+    let photo: String
+    let name: String
+    let surname: String
+    let lastname: String
+    let message: String
+    let newMessage: Int
+    let isMe: Bool
+}
+
 
 struct SelectorScreen: View {
     let topEdge: CGFloat
@@ -70,77 +47,38 @@ struct SelectorScreen: View {
     @State private var selectedType: TypeMessage = .Dialogs
     @State var text = ""
     @Namespace var animations
-    
+    let dialogs: [Dialogs] = [
+        Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 3, isMe: true),
+        
+        Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 0, isMe: false),
+        
+        Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello worlddddddddddd", newMessage: 2, isMe: false),
+        
+        Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 20, isMe: true),
+        
+        Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 3, isMe: true),
+        
+        Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 0, isMe: false),
+        
+        Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello worlddddddddddd", newMessage: 2, isMe: false),
+        
+        Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 20, isMe: true),
+        
+        Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 3, isMe: true),
+        
+        Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 0, isMe: false),
+        
+        Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello worlddddddddddd", newMessage: 2, isMe: false),
+        
+        Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 20, isMe: true),
+    ]
     @State var isExpanSearchView: Bool = false
     @State var isExpandedSheet: Bool = false
+   
     var body: some View {
         ScrollView {
-            LazyVStack{
-        
-                ForEach(dialogs){
-                    dialog in
-                    HStack{
-                        Image(dialog.photo)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 60, height: 60)
-                            .clipShape(Circle())
-                        
-                        VStack(alignment: .leading, spacing: 5){
-                            Text("\(dialog.name) \(dialog.surname)")
-                                .font(.title3)
-                                .fontWeight(.semibold)
-                                .lineLimit(1)
-                                
-                            HStack{
-                                Text("123fffffffffffffffffffffffff")
-                                    .fontWeight(.thin)
-                                    .lineLimit(1)
-                                
-                                Circle()
-                                    .frame(width: 2, height: 2)
-                                Text("12:05")
-                                    .fontWeight(.ultraLight)
-                                    .font(.subheadline)
-                                    .lineLimit(1)
-                            }
-                          
-                            
-                        }
-                        
-                        
-                        Spacer()
-                        if dialog.newMessage > 0{
-                            ZStack{
-                                Color("AccentColor")
-                                Text("\(dialog.newMessage)")
-                                    .foregroundColor(.white)
-                            }
-                            .frame(width: 30, height: 30)
-                            .clipShape(Circle())
-                        }
-                       
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                    .padding(.vertical, 5)
-                }
-            }
+            DialogsScreen(hightTopBar: getHightTopBar(), bottomEdge: bottomEdge, offset: $offset)
             
-            .padding(.top, getHightTopBar() + 20)
-            
-           
-            .padding(.bottom, bottomEdge + 45.0)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background{
-                GeometryReader{
-                    proxy -> Color in
-                    DispatchQueue.main.async {
-                        self.offset = proxy.frame(in: .global).minY
-                    }
-                    return Color.clear
-                }
-            }
             
         }
         //MARK: TOP BAR
@@ -240,6 +178,8 @@ struct SelectorScreen: View {
     }
     
   
+    
+    
     
     private func getHightSearhView() -> CGFloat{
         guard offset != 0.0 else { return 0.0 }

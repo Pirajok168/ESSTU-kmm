@@ -178,7 +178,7 @@ struct NewsScreen: View {
         if news != nil {
             
             VStack{
-                CorouselPager(images: ["logo_esstu"])
+                CorouselPager(images: news?.attachments.filter{ att in att.isImage}.map{att in att.fileUri } ?? [] )
                 
                 Text(news!.title)
                     .frame(maxWidth: .infinity, alignment: .leading)
