@@ -1,6 +1,9 @@
 package ru.esstu.student.messaging.messenger.conversations.datasources.repo
 
 import com.soywiz.klock.DateTime
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import ru.esstu.auth.datasources.repo.IAuthRepository
@@ -12,7 +15,9 @@ import ru.esstu.student.messaging.messenger.conversations.datasources.toConversa
 import ru.esstu.student.messaging.messenger.conversations.datasources.toTimeStamp
 import ru.esstu.student.messaging.messenger.conversations.datasources.toTimeStampEntity
 import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
-
+import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.KotlinNativeFlowWrapper
+import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
+import kotlin.coroutines.CoroutineContext
 
 
 class ConversationUpdatesRepositoryImpl(
@@ -22,7 +27,7 @@ class ConversationUpdatesRepositoryImpl(
 ): IConversationUpdatesRepository {
 
 
-    override suspend fun installObserving(): Flow<Response<List<ConversationPreview>>>  = flow {
+    override  fun installObserving(): Flow<Response<List<ConversationPreview>>>  = flow {
         while (true){
             val callTimestamp = DateTime.now().unixMillisLong
             auth.provideToken { token ->
@@ -47,6 +52,14 @@ class ConversationUpdatesRepositoryImpl(
                 }
             }
         }
+    }
+
+    override fun iosObserving(): KotlinNativeFlowWrapper<Response<List<ConversationPreview>>>
+            = KotlinNativeFlowWrapper(installObserving())
+
+    override val iosScope: CoroutineScope = object : CoroutineScope {
+        override val coroutineContext: CoroutineContext
+            get() = SupervisorJob() + Dispatchers.Main
     }
 
 
