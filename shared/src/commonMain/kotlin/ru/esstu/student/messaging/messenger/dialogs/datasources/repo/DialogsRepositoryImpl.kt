@@ -40,6 +40,20 @@ class DialogsRepositoryImpl(
 
     }
 
+    override suspend fun getNextPage(offset: Int) {
+        val recentDialogs = dialogDB.getDialogs(10, offset)
+
+        if (recentDialogs.isEmpty()){
+            val loadedDialogs = dialogApi.getDialogs(10, offset)
+            if (loadedDialogs is Response.Success){
+                dialogDB.setDialogs(loadedDialogs.data)
+                _dialogs.emit(loadedDialogs.data)
+            }
+        }else{
+            _dialogs.emit(recentDialogs)
+        }
+    }
+
     override val iosScope: CoroutineScope = object : CoroutineScope {
         override val coroutineContext: CoroutineContext
             get() = SupervisorJob() + Dispatchers.Main

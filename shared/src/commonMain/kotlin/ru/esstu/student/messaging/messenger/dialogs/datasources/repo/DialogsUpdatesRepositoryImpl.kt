@@ -25,6 +25,7 @@ class KotlinNativeFlowWrapper<T>(private val flow: Flow<T>) {
         onComplete: () -> Unit,
         onThrow: (error: Throwable) -> Unit
     ) = flow
+        .conflate()
         .onEach { onEach(it) }
         .catch { onThrow(it) }
         .onCompletion { onComplete() }

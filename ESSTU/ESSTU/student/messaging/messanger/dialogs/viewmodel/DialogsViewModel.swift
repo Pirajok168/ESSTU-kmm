@@ -12,7 +12,7 @@ import Combine
 protocol DialogsState{
     var dialogs: [PreviewDialog] { get }
     var isLoading: Bool { get }
-    
+    var page: Int { get }
 }
 
 protocol EventDialogs{
@@ -20,6 +20,9 @@ protocol EventDialogs{
     func cansellObserving()
     func update()
     func hasNewMessage(countMessage: Int32) -> Bool
+
+    func nextPage()
+    func loadMoreDialogs(dialog: PreviewDialog)
 }
 
 
@@ -27,6 +30,7 @@ protocol EventDialogs{
 class DialogsViewModel: ObservableObject, DialogsState {
     @Published private(set) var dialogs: [PreviewDialog] = []
     @Published private(set) var isLoading: Bool = false
+    private(set) var page: Int = 0
     
     private let repository: IDialogsUpdatesRepository = ESSTUSdk().dialogsModuleNew.update
     private let mainDialogsRepo: IDialogsRepository = ESSTUSdk().dialogsModuleNew.abstractRepo
@@ -35,8 +39,35 @@ class DialogsViewModel: ObservableObject, DialogsState {
     init(){
         mainDialogsRepo.dialogs
             .subscribe(scope: mainDialogsRepo.iosScope, onEach: {
-                dialogs in
-                self.dialogs = dialogs as! [PreviewDialog]
+                    dialogs in
+                let restoreDialogs = dialogs as! [PreviewDialog]
+                
+
+        
+        //        let test = Set(restoreDialogs).symmetricDifference(self.dialogs)
+                var t = Set(self.dialogs)
+                restoreDialogs.forEach{
+                        item in
+                    
+                    if !t.contains(where: { it in it.id == item.id }){
+                        t.insert(item)
+                    }else{
+                        if let oldItem = t.first(where: { it in
+                            it.id == item.id
+                        }){
+                            t.remove(oldItem)
+                            t.insert(item)
+                        }else{
+                            t.insert(item)
+                        }
+                        
+                       
+                    }
+                }
+                DispatchQueue.main.async {
+                    self.dialogs =  t.sorted(by: {$0.lastMessage!.date > $1.lastMessage!.date})
+                }
+               
             }, onComplete: {
                 
             }, onThrow: {
@@ -49,6 +80,22 @@ class DialogsViewModel: ObservableObject, DialogsState {
 
 
 extension DialogsViewModel: EventDialogs{
+    func loadMoreDialogs(dialog: PreviewDialog) {
+    
+        if let index = dialogs.firstIndex(of: dialog){
+            if index >= dialogs.count-1 {
+                nextPage()
+            }
+        }
+        
+       
+    }
+    
+    func nextPage() {
+        page += 10
+        mainDialogsRepo.getNextPage(offset: Int32(page), completionHandler: {_ in})
+    }
+    
     func hasNewMessage(countMessage: Int32) -> Bool {
         return countMessage > 0 ? true : false
     }
@@ -59,6 +106,8 @@ extension DialogsViewModel: EventDialogs{
     
     func cansellObserving() {
         job?.cancel(cause: nil)
+        self.dialogs = []
+        self.page = 0
     }
     
     
@@ -69,7 +118,7 @@ extension DialogsViewModel: EventDialogs{
                        onEach: {
                 response in
                 switch response{
-                case let data as ResponseSuccess<NSArray>:
+                case response as ResponseSuccess<NSArray>:
                     self.update()
                     
                     

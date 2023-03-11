@@ -34,7 +34,6 @@ struct DialogsScreen: View {
     var body: some View {
         LazyVStack{
             ForEach(dialogsViewModel.dialogs, id: \PreviewDialog.id) { dialog in
-                
                 HStack{
                     AsyncImage(url: URL(string: dialog.opponent.photo ?? ""), content: {
                         image in
@@ -48,8 +47,8 @@ struct DialogsScreen: View {
                         PlaceHolderPhoto(initials: String(dialog.opponent.initials.prefix(2)))
                     })
                     
-                
-                       
+                    
+                    
                     
                     VStack(alignment: .leading, spacing: 5){
                         
@@ -66,10 +65,10 @@ struct DialogsScreen: View {
                                 .fontWeight(.thin)
                                 .lineLimit(1)
                         }
-                    
-                       
-                            
-                    
+                        
+                        
+                        
+                        
                         HStack{
                             Text("\(dialog.lastMessage?.message ?? "[Вложение]")")
                                 .fontWeight(.thin)
@@ -82,12 +81,12 @@ struct DialogsScreen: View {
                                 .font(.subheadline)
                                 .lineLimit(1)
                         }
-                      
+                        
                         
                     }
                     
                     
-                   
+                    
                     
                     Spacer()
                     if( dialogsViewModel.hasNewMessage(countMessage: dialog.unreadMessageCount)){
@@ -99,14 +98,19 @@ struct DialogsScreen: View {
                         .frame(width: 30, height: 30)
                         .clipShape(Circle())
                     }
-
-                  
-                   
+                    
+                    
+                    
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
                 .padding(.vertical, 5)
+                .onAppear{
+                    dialogsViewModel.loadMoreDialogs(dialog: dialog)
+                }
+                
             }
+            
         }
         .padding(.top, hightTopBar + 20)
         .padding(.bottom, bottomEdge + 45.0)

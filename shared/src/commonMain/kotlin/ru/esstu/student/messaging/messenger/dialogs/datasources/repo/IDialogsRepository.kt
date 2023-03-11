@@ -9,4 +9,6 @@ interface IDialogsRepository {
 
     val iosScope: CoroutineScope
     suspend fun refresh()
+
+    suspend fun getNextPage(offset: Int)
 }
