@@ -1,21 +1,18 @@
 //
-//  DialogsScreen.swift
+//  ConversationsScreen.swift
 //  ESSTU
 //
-//  Created by Данила Еремин on 26.02.2023.
+//  Created by Данила Еремин on 11.03.2023.
 //
 
 import SwiftUI
 import shared
 
-
-struct DialogsScreen: View {
-
+struct ConversationsScreen: View {
     let hightTopBar: CGFloat
     let bottomEdge: CGFloat
     @Binding var offset: CGFloat
-    
-    @EnvironmentObject var dialogsViewModel: DialogsViewModel 
+    @EnvironmentObject var converstionsViewModel: ConversationsViewModel
     
     @ViewBuilder
     func PlaceHolderPhoto(initials: String) -> some View {
@@ -33,19 +30,9 @@ struct DialogsScreen: View {
     
     var body: some View {
         LazyVStack{
-            ForEach(dialogsViewModel.dialogs, id: \PreviewDialog.id) { dialog in
+            ForEach(converstionsViewModel.converstions, id: \ConversationPreview.id) { conv in
                 HStack{
-                    AsyncImage(url: URL(string: dialog.opponent.photo ?? ""), content: {
-                        image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 60, height: 60)
-                            .clipShape(Circle())
-                        
-                    }, placeholder: {
-                        PlaceHolderPhoto(initials: String(dialog.opponent.initials.prefix(2)))
-                    })
+                    PlaceHolderPhoto(initials: String(conv.title.prefix(2)))
                     
                     
                     
@@ -53,30 +40,24 @@ struct DialogsScreen: View {
                     VStack(alignment: .leading, spacing: 5){
                         
                         HStack(alignment: .firstTextBaseline){
-                            Text("\(dialog.opponent.shortFio)")
+                            Text("\(conv.title)")
                                 .font(.title3)
                                 .fontWeight(.semibold)
                                 .lineLimit(1)
                             
-                            Text("|")
-                            
-                            Text("\(dialog.opponent.summary)")
-                                .font(.footnote)
-                                .fontWeight(.thin)
-                                .lineLimit(1)
                         }
                         
                         
                         
                         
                         HStack{
-                            Text("\(dialog.lastMessage?.message ?? "[Вложение]")")
+                            Text("\(conv.lastMessage?.message ?? "[Вложение]")")
                                 .fontWeight(.thin)
                                 .lineLimit(1)
                             
                             Circle()
                                 .frame(width: 2, height: 2)
-                            Text(MapperKt.toFormatString(regexDate: "HH:mm", currentTime: dialog.lastMessage!.date))
+                            Text(MapperKt.toFormatString(regexDate: "HH:mm", currentTime: conv.lastMessage!.date))
                                 .fontWeight(.ultraLight)
                                 .font(.subheadline)
                                 .lineLimit(1)
@@ -89,10 +70,10 @@ struct DialogsScreen: View {
                     
                     
                     Spacer()
-                    if( dialogsViewModel.hasNewMessage(countMessage: dialog.unreadMessageCount)){
+                    if( converstionsViewModel.hasNewMessage(countMessage: conv.unreadMessageCount)){
                         ZStack{
                             Color("AccentColor")
-                            Text("\(dialog.unreadMessageCount)")
+                            Text("\(conv.unreadMessageCount)")
                                 .foregroundColor(.white)
                         }
                         .frame(width: 30, height: 30)
@@ -106,7 +87,7 @@ struct DialogsScreen: View {
                 .padding(.horizontal)
                 .padding(.vertical, 5)
                 .onAppear{
-                    dialogsViewModel.loadMoreDialogs(dialog: dialog)
+                    converstionsViewModel.loadMoreDialogs(dialog: conv)
                 }
                 
             }
@@ -115,10 +96,10 @@ struct DialogsScreen: View {
         .padding(.top, hightTopBar + 20)
         .padding(.bottom, bottomEdge + 45.0)
         .onDisappear{
-            dialogsViewModel.cansellObserving()
+            converstionsViewModel.cansellObserving()
         }
         .onAppear{
-            dialogsViewModel.installObserving()
+            converstionsViewModel.installObserving()
         }
         .background{
             GeometryReader{
@@ -130,10 +111,9 @@ struct DialogsScreen: View {
             }
         }
     }
-    
 }
 
-struct DialogsScreen_Previews: PreviewProvider {
+struct ConversationsScreen_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader{
             proxy in

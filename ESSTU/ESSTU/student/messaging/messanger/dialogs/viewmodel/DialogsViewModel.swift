@@ -106,7 +106,7 @@ extension DialogsViewModel: EventDialogs{
     
     func cansellObserving() {
         job?.cancel(cause: nil)
-        self.dialogs = []
+        //self.dialogs = []
         self.page = 0
     }
     

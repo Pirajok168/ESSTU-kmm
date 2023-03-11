@@ -27,16 +27,7 @@ enum TypeMessage: CaseIterable, Identifiable{
         }
 }
 
-struct Dialogs: Identifiable{
-    let id: String = UUID().uuidString
-    let photo: String
-    let name: String
-    let surname: String
-    let lastname: String
-    let message: String
-    let newMessage: Int
-    let isMe: Bool
-}
+
 
 
 struct SelectorScreen: View {
@@ -47,37 +38,28 @@ struct SelectorScreen: View {
     @State private var selectedType: TypeMessage = .Dialogs
     @State var text = ""
     @Namespace var animations
-    let dialogs: [Dialogs] = [
-        Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 3, isMe: true),
-        
-        Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 0, isMe: false),
-        
-        Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello worlddddddddddd", newMessage: 2, isMe: false),
-        
-        Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 20, isMe: true),
-        
-        Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 3, isMe: true),
-        
-        Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 0, isMe: false),
-        
-        Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello worlddddddddddd", newMessage: 2, isMe: false),
-        
-        Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 20, isMe: true),
-        
-        Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 3, isMe: true),
-        
-        Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 0, isMe: false),
-        
-        Dialogs(photo: "copybook", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello worlddddddddddd", newMessage: 2, isMe: false),
-        
-        Dialogs(photo: "logo_esstu", name: "Danila", surname: "Eremin", lastname: "Alexandrovich", message: "Hello world", newMessage: 20, isMe: true),
-    ]
+   
     @State var isExpanSearchView: Bool = false
     @State var isExpandedSheet: Bool = false
+    
+    @StateObject var dialogsViewModel: DialogsViewModel = DialogsViewModel()
+    @StateObject var converstionsViewModel: ConversationsViewModel = ConversationsViewModel()
    
     var body: some View {
         ScrollView {
-            DialogsScreen(hightTopBar: getHightTopBar(), bottomEdge: bottomEdge, offset: $offset)
+            switch selectedType {
+            case .Dialogs:
+                DialogsScreen(hightTopBar: getHightTopBar(), bottomEdge: bottomEdge, offset: $offset)
+                    .environmentObject(dialogsViewModel)
+            case .Conversations:
+                ConversationsScreen(hightTopBar: getHightTopBar(), bottomEdge: bottomEdge, offset: $offset)
+                    .environmentObject(converstionsViewModel)
+            case .Supports:
+                Text("")
+            case .Appeals:
+                Text("")
+            }
+           
             
             
         }

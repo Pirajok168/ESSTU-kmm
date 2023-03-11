@@ -20,6 +20,8 @@
 		292DBC8A291DFFC500214521 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292DBC89291DFFC500214521 /* Test.swift */; };
 		295281C329AB6E6B000360D5 /* DialogsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295281C229AB6E6B000360D5 /* DialogsScreen.swift */; };
 		295281C729B70898000360D5 /* DialogsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295281C629B70898000360D5 /* DialogsViewModel.swift */; };
+		295281CB29BC8DBD000360D5 /* ConversationsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295281CA29BC8DBD000360D5 /* ConversationsScreen.swift */; };
+		295281D029BCA01F000360D5 /* ConversationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295281CF29BCA01F000360D5 /* ConversationsViewModel.swift */; };
 		2973C7642981054C00D80043 /* AddMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2973C7632981054C00D80043 /* AddMessage.swift */; };
 		297B9CC528DF044000A11505 /* AuthNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297B9CC428DF044000A11505 /* AuthNavigation.swift */; };
 		299AF6D0297AC71000F5A58C /* NewsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299AF6CF297AC71000F5A58C /* NewsScreen.swift */; };
@@ -47,6 +49,8 @@
 		292DBC89291DFFC500214521 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		295281C229AB6E6B000360D5 /* DialogsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogsScreen.swift; sourceTree = "<group>"; };
 		295281C629B70898000360D5 /* DialogsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogsViewModel.swift; sourceTree = "<group>"; };
+		295281CA29BC8DBD000360D5 /* ConversationsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsScreen.swift; sourceTree = "<group>"; };
+		295281CF29BCA01F000360D5 /* ConversationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsViewModel.swift; sourceTree = "<group>"; };
 		2973C7632981054C00D80043 /* AddMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMessage.swift; sourceTree = "<group>"; };
 		297B9CC428DF044000A11505 /* AuthNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNavigation.swift; sourceTree = "<group>"; };
 		299AF6CF297AC71000F5A58C /* NewsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsScreen.swift; sourceTree = "<group>"; };
@@ -165,6 +169,7 @@
 		295281C029AB6E25000360D5 /* messanger */ = {
 			isa = PBXGroup;
 			children = (
+				295281C929BC8DA0000360D5 /* conversations */,
 				295281C129AB6E37000360D5 /* dialogs */,
 			);
 			path = messanger;
@@ -191,6 +196,31 @@
 			isa = PBXGroup;
 			children = (
 				295281C629B70898000360D5 /* DialogsViewModel.swift */,
+			);
+			path = viewmodel;
+			sourceTree = "<group>";
+		};
+		295281C929BC8DA0000360D5 /* conversations */ = {
+			isa = PBXGroup;
+			children = (
+				295281CD29BC9FE8000360D5 /* viewmodel */,
+				295281CC29BC9FE0000360D5 /* ui */,
+			);
+			path = conversations;
+			sourceTree = "<group>";
+		};
+		295281CC29BC9FE0000360D5 /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				295281CA29BC8DBD000360D5 /* ConversationsScreen.swift */,
+			);
+			path = ui;
+			sourceTree = "<group>";
+		};
+		295281CD29BC9FE8000360D5 /* viewmodel */ = {
+			isa = PBXGroup;
+			children = (
+				295281CF29BCA01F000360D5 /* ConversationsViewModel.swift */,
 			);
 			path = viewmodel;
 			sourceTree = "<group>";
@@ -348,6 +378,7 @@
 				295281C329AB6E6B000360D5 /* DialogsScreen.swift in Sources */,
 				2973C7642981054C00D80043 /* AddMessage.swift in Sources */,
 				299AF6E2297BF5AE00F5A58C /* CorouselPager.swift in Sources */,
+				295281CB29BC8DBD000360D5 /* ConversationsScreen.swift in Sources */,
 				299AF6D6297BD03B00F5A58C /* BottomStudentNavigation.swift in Sources */,
 				299AF6D3297AD51E00F5A58C /* CardNews.swift in Sources */,
 				299AF6DD297BDD3500F5A58C /* FullScreenNews.swift in Sources */,
@@ -356,6 +387,7 @@
 				299AF6E4297E438B00F5A58C /* TestImage.swift in Sources */,
 				29287E4928D73C6100180DA7 /* SplashScreen.swift in Sources */,
 				29287E4B28D73C9200180DA7 /* AuthViewModel.swift in Sources */,
+				295281D029BCA01F000360D5 /* ConversationsViewModel.swift in Sources */,
 				2924C245297F892E00744CDB /* TestInset.swift in Sources */,
 				299AF6DB297BD7A500F5A58C /* RootStudentNavigation.swift in Sources */,
 				290DF4322983BA62003EB3FA /* RecentAnnouncementViewModel.swift in Sources */,
