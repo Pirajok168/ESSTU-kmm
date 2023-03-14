@@ -44,6 +44,7 @@ struct SelectorScreen: View {
     
     @StateObject var dialogsViewModel: DialogsViewModel = DialogsViewModel()
     @StateObject var converstionsViewModel: ConversationsViewModel = ConversationsViewModel()
+    @StateObject var supportsViewModel: SupportsViewModel = SupportsViewModel()
    
     var body: some View {
         ScrollView {
@@ -55,7 +56,8 @@ struct SelectorScreen: View {
                 ConversationsScreen(hightTopBar: getHightTopBar(), bottomEdge: bottomEdge, offset: $offset)
                     .environmentObject(converstionsViewModel)
             case .Supports:
-                Text("")
+                SupportsScreen(hightTopBar: getHightTopBar(), bottomEdge: bottomEdge, offset: $offset)
+                    .environmentObject(supportsViewModel)
             case .Appeals:
                 Text("")
             }

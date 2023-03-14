@@ -2,6 +2,9 @@ package ru.esstu.student.messaging.messenger.supports.datasource.repo
 
 import com.soywiz.klock.DateTime
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -10,15 +13,17 @@ import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.api.UpdatesApi
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
+import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.KotlinNativeFlowWrapper
 import ru.esstu.student.messaging.messenger.supports.datasource.db.SupportsTimestampDao
 import ru.esstu.student.messaging.messenger.supports.toSupports
+import kotlin.coroutines.CoroutineContext
 
 class SupportsUpdatesRepositoryImpl(
     private val auth: IAuthRepository,
     private val api: UpdatesApi,
     private val timestampDao: SupportsTimestampDao
 ): ISupportsUpdatesRepository {
-    override suspend fun installObserving(): Flow<Response<List<ConversationPreview>>> = flow {
+    override  fun installObserving(): Flow<Response<List<ConversationPreview>>> = flow {
         while (true){
             val callTimestamp = DateTime.now().unixMillisLong
             Napier.e("Идёт отслеживание", tag = "Support")
@@ -44,6 +49,14 @@ class SupportsUpdatesRepositoryImpl(
                 }
             }
         }
+    }
+
+    override fun iosObserving(): KotlinNativeFlowWrapper<Response<List<ConversationPreview>>>
+    = KotlinNativeFlowWrapper(installObserving())
+
+    override val iosScope: CoroutineScope = object : CoroutineScope {
+        override val coroutineContext: CoroutineContext
+            get() = SupervisorJob() + Dispatchers.Main
     }
 
 }

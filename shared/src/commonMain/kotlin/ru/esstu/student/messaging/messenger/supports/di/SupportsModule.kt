@@ -56,6 +56,9 @@ internal val supportsModule = DI.Module("SupportsModule") {
         )
     }
 
+    bind<ISupportsRepository>() with singleton {
+        SupportsRepositoryImpl(instance(), instance())
+    }
 }
 
 
@@ -68,6 +71,9 @@ object SupportsModule {
         get() = ESSTUSdk.di.instance()
 
     val update: ISupportsUpdatesRepository
+        get() = ESSTUSdk.di.instance()
+
+    val abstract: ISupportsRepository
         get() = ESSTUSdk.di.instance()
 }
 
