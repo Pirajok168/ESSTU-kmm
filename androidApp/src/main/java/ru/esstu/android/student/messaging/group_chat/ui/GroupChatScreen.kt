@@ -518,10 +518,6 @@ fun GroupChatScreen(
                                                             )
                                                         )
                                                     }
-
-
-
-
                                                 } else {
                                                     filesPermissionsState.launchMultiplePermissionRequest()
                                                     scope.launch {

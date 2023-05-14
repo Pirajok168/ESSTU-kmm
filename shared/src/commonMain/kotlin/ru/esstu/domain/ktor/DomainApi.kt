@@ -44,6 +44,9 @@ internal val domainApi = DI.Module(
                         ignoreUnknownKeys = true
                     })
                 }
+                install(UserAgent) {
+                    agent = "Mobile client"
+                }
 
                 install(Logging){
                     logger = object : Logger{
