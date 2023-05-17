@@ -3,6 +3,7 @@ package ru.esstu.android.auth.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,7 +68,7 @@ fun Splashscreen(
                 )
                 Text(
                     modifier = Modifier.padding(end = 20.dp, bottom = 20.dp),
-                    color = MaterialTheme.colors.primary,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Medium,
                     text = "esstu.ru"
                 )
@@ -91,7 +92,7 @@ fun Splashscreen(
         AlertDialog(onDismissRequest = { isServiceUnavailable = false; onFinishApp() },
             title = { Text(text = "Ошибка подключения") },
             text = { Text(text = "К сожалению сервисы сайта ВСГУТУ сейчас недоступны. Попробуйте позже.") },
-            buttons = {
+            confirmButton = {
                 TextButton(onClick = { isServiceUnavailable = false; onFinishApp() }) {
                     Text(text = "ок")
                 }

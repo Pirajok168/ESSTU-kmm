@@ -4,6 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,14 +27,14 @@ fun Attachment(modifier: Modifier = Modifier, fileName: String, fileDesc: String
             modifier = Modifier
                 .size(42.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colors.primary/*.onBackground.copy(alpha = ContentAlpha.high)*/),
+                .background(MaterialTheme.colorScheme.primary/*.onBackground.copy(alpha = ContentAlpha.high)*/),
             contentAlignment = Alignment.Center
         ) {
             Box(
                 modifier = Modifier
                     .size(38.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colors.primary),
+                    .background(MaterialTheme.colorScheme.primary),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -44,18 +48,18 @@ fun Attachment(modifier: Modifier = Modifier, fileName: String, fileDesc: String
                                 R.drawable.ic_chat_loading
                     ),
                     contentDescription = null,
-                    tint = MaterialTheme.colors.background.copy(alpha = ContentAlpha.high)
+                    tint = MaterialTheme.colorScheme.background.copy(alpha = ContentAlpha.high)
                 )
 
                 if (loadProgress != null)
-                    CircularProgressIndicator(progress = loadProgress, color = MaterialTheme.colors.background.copy(alpha = ContentAlpha.high))
+                    CircularProgressIndicator(progress = loadProgress, color = MaterialTheme.colorScheme.background.copy(alpha = ContentAlpha.high))
             }
         }
         Spacer(modifier = Modifier.size(8.dp))
         Column {
-            Text(text = fileName, style = MaterialTheme.typography.body1.copy(fontSize = 14.sp), maxLines = 2, overflow = TextOverflow.Ellipsis)
+            Text(text = fileName, style = MaterialTheme.typography.bodyMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
             if (fileDesc.isNotBlank())
-                Text(text = fileDesc, style = MaterialTheme.typography.body2.copy(fontSize = 14.sp), maxLines = 1)
+                Text(text = fileDesc, style = MaterialTheme.typography.bodyMedium, maxLines = 1)
         }
     }
 }

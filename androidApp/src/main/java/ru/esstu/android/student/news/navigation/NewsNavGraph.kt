@@ -50,7 +50,7 @@ fun NavGraphBuilder.newsNavGraph(
         }
 
         composable(route = NewsScreens.DetailScreen.passRoute()) {
-            val parent = remember {
+            val parent = remember(it) {
                 navController.getBackStackEntry(NewsScreens.SelectorScreen.popTo())
             }
 
@@ -65,7 +65,7 @@ fun NavGraphBuilder.newsNavGraph(
         }
 
         composable(route = NewsScreens.AnnouncementsScreen.passRoute()) {
-            val parent = remember {
+            val parent = remember(it) {
                 navController.getBackStackEntry(NewsScreens.SelectorScreen.popTo())
             }
 

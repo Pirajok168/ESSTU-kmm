@@ -1,10 +1,10 @@
 package ru.esstu.android.student.news.selector_screen.ui.component
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
@@ -13,7 +13,8 @@ import ru.esstu.android.domain.ui.component_ui.UserPreview
 import ru.esstu.student.news.entities.Creator
 
 
-@OptIn(ExperimentalMaterialApi::class)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PreviewCard(
     modifier: Modifier = Modifier,
@@ -24,8 +25,8 @@ fun PreviewCard(
 ) {
     Surface(
         modifier = modifier.size(width = 268.dp, height = 240.dp),
-        elevation = 8.dp,
-        color = MaterialTheme.colors.background,
+        shadowElevation = 8.dp,
+        color = MaterialTheme.colorScheme.background,
         shape = MaterialTheme.shapes.medium,
         onClick = onClick
     ) {
@@ -40,11 +41,11 @@ fun PreviewCard(
                 subtitle = user.summary
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = title, style = MaterialTheme.typography.body1, maxLines = 2, overflow = TextOverflow.Ellipsis)
+            Text(text = title, style = MaterialTheme.typography.bodyLarge, maxLines = 2, overflow = TextOverflow.Ellipsis)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = body, style = MaterialTheme.typography.body2, maxLines = 4, overflow = TextOverflow.Ellipsis)
+            Text(text = body, style = MaterialTheme.typography.bodyMedium, maxLines = 4, overflow = TextOverflow.Ellipsis)
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = "читать далее...", style = MaterialTheme.typography.body1, color = MaterialTheme.colors.primary)
+            Text(text = "читать далее...", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.primary)
         }
     }
 }

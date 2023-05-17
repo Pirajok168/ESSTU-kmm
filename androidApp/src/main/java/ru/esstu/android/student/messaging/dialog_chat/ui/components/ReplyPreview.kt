@@ -3,10 +3,8 @@ package ru.esstu.android.student.messaging.dialog_chat.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -39,10 +37,10 @@ fun ReplyPreview(
             modifier = Modifier
                 .size(32.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colors.primary),
+                .background(MaterialTheme.colorScheme.primary),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = initials.uppercase().take(2), style = MaterialTheme.typography.h6.copy(fontSize = 14.sp), color = MaterialTheme.colors.background)
+            Text(text = initials.uppercase().take(2), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.background)
         }
     }
 
@@ -53,14 +51,14 @@ fun ReplyPreview(
                 .fillMaxHeight()
                 .width(4.dp)
                 .clip(MaterialTheme.shapes.medium)
-                .background(MaterialTheme.colors.primary)
+                .background(MaterialTheme.colorScheme.primary)
         )
 
         Spacer(modifier = Modifier.width(8.dp))
 
         Column {
             Row {
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+               // CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                     val localDate = remember { DateTime.now() }
                     Text(
                         text = when {
@@ -68,23 +66,23 @@ fun ReplyPreview(
                             localDate.year == time.year && localDate.dayOfYear != time.dayOfYear -> dateFormatter.format(time.local)
                             else -> yearFormatter.format(time.local)
                         },
-                        style = MaterialTheme.typography.body1.copy(fontSize = 14.sp)
+                        style = MaterialTheme.typography.bodyLarge.copy(fontSize = 14.sp)
                     )
-                }
+              //  }
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     modifier = Modifier
                         .weight(1f)
                         .alignByBaseline(),
                     text = title,
-                    style = MaterialTheme.typography.body1.copy(fontSize = 14.sp),
+                    style = MaterialTheme.typography.bodyLarge.copy(fontSize = 14.sp),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
 
             }
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = subtitle, style = MaterialTheme.typography.body2, maxLines = 3, overflow = TextOverflow.Ellipsis)
+            Text(text = subtitle, style = MaterialTheme.typography.bodyMedium, maxLines = 3, overflow = TextOverflow.Ellipsis)
         }
 
     }

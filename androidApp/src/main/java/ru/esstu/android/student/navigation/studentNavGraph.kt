@@ -22,7 +22,7 @@ import ru.esstu.android.student.messaging.new_message.selector.navigation.newMsg
 @ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 
-@ExperimentalMaterialApi
+
 fun NavGraphBuilder.studentNavGraph(
     navController: NavHostController
 ) {

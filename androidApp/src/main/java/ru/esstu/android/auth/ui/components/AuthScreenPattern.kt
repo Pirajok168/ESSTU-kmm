@@ -9,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -26,7 +27,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.valentinilk.shimmer.shimmer
 import ru.esstu.android.R
 import ru.esstu.android.domain.ui.theme.CompPreviewTheme
 import ru.esstu.android.domain.ui.theme.tertiary
@@ -58,7 +58,7 @@ fun AuthScreenPattern(
                 ) {
                     Icon(
                         modifier = Modifier.padding(0.dp),
-                        tint = MaterialTheme.colors.primary,
+                        tint = MaterialTheme.colorScheme.primary,
                         imageVector = Icons.Rounded.ArrowBack,
                         contentDescription = null
                     )
@@ -75,16 +75,16 @@ fun AuthScreenPattern(
                         modifier = Modifier.paddingFromBaseline(128.dp),
                         text = title,
                         overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.h4
+                        style = MaterialTheme.typography.headlineMedium
                     )
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                    //CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                         Text(
                             modifier = Modifier.paddingFromBaseline(32.dp),
                             text = subtitle,
                             overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.subtitle1
+                            style = MaterialTheme.typography.titleMedium
                         )
-                    }
+                  //  }
                     Spacer(modifier = Modifier.weight(1f))
                     Spacer(modifier = Modifier.height(20.dp))
                 }
@@ -115,10 +115,7 @@ fun AuthScreenPattern(
                         visualTransformation = textFieldVisualTransformation,
                         label = {
                             Text(text = textFieldLabel)
-                        }, colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = Color.Transparent,
-                            focusedIndicatorColor = MaterialTheme.colors.tertiary
-                        ),
+                        },
                         keyboardActions = KeyboardActions(onDone = {
                             focusManager.clearFocus()
                             onNavToNext()
@@ -137,7 +134,7 @@ fun AuthScreenPattern(
                                     }) {
                                     Icon(
                                         Icons.Default.Close,
-                                        tint = if (error != null) MaterialTheme.colors.error else MaterialTheme.colors.primary,
+                                        tint = if (error != null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                                         contentDescription = null
                                     )
                                 }
@@ -156,25 +153,21 @@ fun AuthScreenPattern(
                                     .padding(horizontal = 8.dp)
                                     .paddingFromBaseline(16.dp),
                                 text = if (error.code == 400 || error.code == 401) "Неверно введен логин или пароль" else "Неизвестная ошибка, попробуйте позже",
-                                color = MaterialTheme.colors.error,
-                                style = MaterialTheme.typography.caption,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall,
                             )
                         }
                     }
 
                     var buttonModifier: Modifier = Modifier
-                    if (isLoadingState)
-                        buttonModifier = buttonModifier.shimmer()
+                  //  if (isLoadingState)
+                       // buttonModifier = buttonModifier.shimmer()
 
                     Button(
                         enabled = !isLoadingState,
                         modifier = buttonModifier
                             .fillMaxWidth()
                             .height(54.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = MaterialTheme.colors.primary,
-                            contentColor = MaterialTheme.colors.onPrimary
-                        ),
                         onClick = {
                             focusManager.clearFocus()
                             onNavToNext()

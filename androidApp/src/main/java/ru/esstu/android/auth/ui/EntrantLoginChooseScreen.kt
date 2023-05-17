@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -48,7 +49,7 @@ fun EntrantLoginChooseScreen(
         ) {
             Icon(
                 modifier = Modifier.padding(0.dp),
-                tint = MaterialTheme.colors.primary,
+                tint = MaterialTheme.colorScheme.primary,
                 imageVector = Icons.Rounded.ArrowBack,
                 contentDescription = null
             )
@@ -62,17 +63,17 @@ fun EntrantLoginChooseScreen(
                 modifier = Modifier.paddingFromBaseline(128.dp),
                 text = "Личный кабинет абитуриента ВСГУТУ",
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.h4
+                style = MaterialTheme.typography.headlineMedium
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+            //CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text(
                     text = "В случае если вы уже подали вступительные документы, выполните вход с данными, выданными приёмной комиссией",
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.subtitle1
+                    style = MaterialTheme.typography.titleMedium
                 )
-            }
+           // }
             Spacer(modifier = Modifier.height(44.dp))
 
 
@@ -86,23 +87,19 @@ fun EntrantLoginChooseScreen(
                 Text(text = "Авторизация")
             }
             Spacer(modifier = Modifier.height(14.dp))
-            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+           // CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text(
                     text = "Авторизация позволит вам получить доступ к личным данным, а также к онлайн чату приемной комиссии",
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.subtitle1
+                    style = MaterialTheme.typography.titleMedium
                 )
-            }
+        //    }
             Spacer(modifier = Modifier.height(36.dp))
             Button(
                 enabled = !uiState.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.secondary,
-                    contentColor = MaterialTheme.colors.onSecondary
-                ),
                 onClick = {
                     authViewModel.onEvent(AuthEvents.AuthoriseGuest)
                 }

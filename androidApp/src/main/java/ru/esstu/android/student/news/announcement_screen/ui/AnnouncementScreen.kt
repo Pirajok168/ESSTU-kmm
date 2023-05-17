@@ -6,19 +6,20 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.statusBarsPadding
 import kotlinx.coroutines.launch
 import ru.esstu.android.student.news.announcement_screen.ui.components.NewsPage
 import ru.esstu.android.student.news.announcement_screen.viewmodel.AnnouncementsEvents
 import ru.esstu.android.student.news.announcement_screen.viewmodel.AnnouncementsViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnnouncementScreen(
     parentPadding: PaddingValues,
@@ -28,19 +29,25 @@ fun AnnouncementScreen(
 ) {
     val uiState = viewModel.state
     val scope = rememberCoroutineScope()
-    val scaffoldState = rememberScaffoldState()
+    //val scaffoldState = rememberScaffoldState()
     Scaffold(
-        scaffoldState = scaffoldState,
-        modifier = Modifier.fillMaxSize().statusBarsPadding().padding(parentPadding),
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .padding(parentPadding),
         topBar = {
-            TopAppBar(
-                backgroundColor = MaterialTheme.colors.background,
+            MediumTopAppBar(
+                title = {
+                    Text(text = "Объявления")
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
                     }
                 },
-                title = { Text(text = "Объявления") }
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
             )
         }
     ) {
@@ -60,9 +67,9 @@ fun AnnouncementScreen(
                     viewModel.onEvent(AnnouncementsEvents.LoadNext)
 
                 Surface(
-                    elevation = 4.dp,
+                    shadowElevation = 4.dp,
                     shape = MaterialTheme.shapes.large,
-                    color = MaterialTheme.colors.background
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     NewsPage(
                         horizontalPadding = 16.dp,
@@ -70,8 +77,8 @@ fun AnnouncementScreen(
                         node = announcement,
                         onError = { message ->
                             scope.launch {
-                                if (scaffoldState.snackbarHostState.currentSnackbarData == null)
-                                    scaffoldState.snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
+                            //    if (scaffoldState.snackbarHostState.currentSnackbarData == null)
+                             //       scaffoldState.snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
                             }
                         },
                         onImageClick = { selected, uris ->
@@ -89,7 +96,9 @@ fun AnnouncementScreen(
 
             if (uiState.isPagesLoading)
                 item {
-                    Box(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp), contentAlignment = Alignment.Center) {
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
                     }
                 }

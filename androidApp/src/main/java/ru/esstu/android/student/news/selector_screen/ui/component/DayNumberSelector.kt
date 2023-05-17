@@ -3,8 +3,8 @@ package ru.esstu.android.student.news.selector_screen.ui.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,18 +19,18 @@ fun DayNumberSelector(modifier: Modifier = Modifier,weekNumber: Int, weekTitle: 
             modifier = Modifier
                 .clip(CircleShape)
                 .size(28.dp)
-                .background(MaterialTheme.colors.primary),
+                .background(MaterialTheme.colorScheme.primary),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = weekNumber.toString(),
-                color = MaterialTheme.colors.background,
-                style = MaterialTheme.typography.h6.copy(fontSize = 16.sp)
+                color = MaterialTheme.colorScheme.background,
+                style = MaterialTheme.typography.titleMedium
             )
         }
         Spacer(modifier = Modifier.width(8.dp))
 
-        Text(text = weekTitle, style = MaterialTheme.typography.h6)
+        Text(text = weekTitle, style = MaterialTheme.typography.titleMedium)
 
     }
 }

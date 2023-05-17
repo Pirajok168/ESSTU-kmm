@@ -3,23 +3,24 @@ package ru.esstu.android.student.news.selector_screen.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.accompanist.insets.statusBarsPadding
 import kotlinx.coroutines.launch
 import ru.esstu.android.student.news.announcement_screen.ui.components.NewsPage
-import ru.esstu.android.student.news.selector_screen.viewModel.SelectorScreenEvents
 import ru.esstu.android.student.news.selector_screen.viewModel.SelectorViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailNewsScreen(
     parentPadding: PaddingValues,
@@ -35,19 +36,24 @@ fun DetailNewsScreen(
             onBackPressed()
     })
 
-    val scaffoldState = rememberScaffoldState()
+    //val scaffoldState = rememberScaffoldState()
     Scaffold(
-        modifier = Modifier.padding(parentPadding).statusBarsPadding(),
-        scaffoldState = scaffoldState,
+        modifier = Modifier
+            .padding(parentPadding)
+            .statusBarsPadding(),
+
+        //scaffoldState = scaffoldState,
         topBar = {
-            TopAppBar(
-                backgroundColor = MaterialTheme.colors.background,
+            MediumTopAppBar(
+                title = {Text(text = uiState.title.ifBlank { "Запись" })},
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
                     }
                 },
-                title = { Text(text = uiState.title.ifBlank { "Запись" }) },
+                colors =  TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                )
             )
         }) { padding ->
         Column(
@@ -64,8 +70,8 @@ fun DetailNewsScreen(
                     node = uiState.node,
                     onError = { message ->
                         scope.launch {
-                            if (scaffoldState.snackbarHostState.currentSnackbarData == null)
-                                scaffoldState.snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
+                            //if (scaffoldState.snackbarHostState.currentSnackbarData == null)
+                            //    scaffoldState.snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
                         }
                     },
                     onImageClick = { selected, uris ->

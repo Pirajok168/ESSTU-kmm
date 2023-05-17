@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,6 +31,7 @@ import ru.esstu.android.student.news.announcement_screen.viewmodel.Announcements
 
 private val formatter: DateFormat = DateFormat("HH:mm")
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsSelectorScreen(
     onNavToAnnouncements: () -> Unit = {},
@@ -49,11 +51,14 @@ fun NewsSelectorScreen(
             .padding(parentPadding)
             .statusBarsPadding(),
         topBar = {
-        TopAppBar(
-            elevation = 0.dp,
-            backgroundColor = MaterialTheme.colors.background,
-            title = { Text(text = "Главная ВСГУТУ") },
-        )
+            MediumTopAppBar(
+                title = {Text(text = "Главная ВСГУТУ")}
+            )
+//        TopAppBar(
+//            elevation = 0.dp,
+//            backgroundColor = MaterialTheme.colorScheme.background,
+//            title = {  },
+//        )
     }) { padding ->
         Column(
             Modifier
@@ -188,7 +193,7 @@ fun NewsSelectorScreen(
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Недавние объявления", style = MaterialTheme.typography.h6)
+                Text(text = "Недавние объявления", style = MaterialTheme.typography.titleLarge)
             }
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -246,7 +251,7 @@ fun NewsSelectorScreen(
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Новости университета", style = MaterialTheme.typography.h6)
+                Text(text = "Новости университета", style = MaterialTheme.typography.titleLarge)
             }
             Spacer(modifier = Modifier.height(16.dp))
 

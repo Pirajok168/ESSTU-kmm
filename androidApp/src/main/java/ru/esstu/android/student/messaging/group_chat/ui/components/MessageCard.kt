@@ -5,6 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +37,7 @@ private val formatter: DateFormat = DateFormat("HH:mm")
 @Composable
 fun NewMessageCardGroupChat(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colors.primary.copy(alpha = 0.1f),
+    backgroundColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
     from: Sender? = null,
     messageText: String,
     attachments: List<MessageAttachment>,
@@ -81,7 +85,7 @@ fun NewMessageCardGroupChat(
                 Text(
                     modifier = Modifier.padding(8.dp),
                     text = messageText,
-                    style = MaterialTheme.typography.body2
+                    style = MaterialTheme.typography.bodyMedium
                 )
 
             if (images.any()) {
@@ -112,7 +116,7 @@ fun NewMessageCardGroupChat(
                             modifier = Modifier
                                 .padding(8.dp)
                                 .clip(shape = MaterialTheme.shapes.small)
-                                .background(MaterialTheme.colors.onBackground.copy(alpha = 0.5f))
+                                .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f))
                         ) {
                             if (isShowStatus) {
                                 val iconModifier = Modifier
@@ -124,33 +128,33 @@ fun NewMessageCardGroupChat(
                                         modifier = iconModifier,
                                         painter = painterResource(id = R.drawable.ic_chat_done_1),
                                         contentDescription = null,
-                                        tint = MaterialTheme.colors.background
+                                        tint = MaterialTheme.colorScheme.background
                                     )
                                     DeliveryStatus.READ -> Icon(
                                         modifier = iconModifier,
                                         painter = painterResource(id = R.drawable.ic_chat_done_all_1),
                                         contentDescription = null,
-                                        tint = MaterialTheme.colors.background
+                                        tint = MaterialTheme.colorScheme.background
                                     )
                                     DeliveryStatus.SENT -> Icon(
                                         modifier = iconModifier,
                                         painter = painterResource(id = R.drawable.ic_chat_loading),
                                         contentDescription = null,
-                                        tint = MaterialTheme.colors.background
+                                        tint = MaterialTheme.colorScheme.background
                                     )
                                     DeliveryStatus.ERRED -> Icon(
                                         modifier = iconModifier,
                                         painter = painterResource(id = R.drawable.ic_chat_error),
                                         contentDescription = null,
-                                        tint = MaterialTheme.colors.error
+                                        tint = MaterialTheme.colorScheme.error
                                     )
                                 }
                             }
                             Text(
                                 modifier = Modifier.padding(4.dp),
                                 text = date.toFormatString("HH:mm"),
-                                style = MaterialTheme.typography.subtitle2,
-                                color = MaterialTheme.colors.background
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.background
                             )
                         }
                 }
@@ -207,33 +211,33 @@ fun NewMessageCardGroupChat(
                             modifier = iconModifier,
                             painter = painterResource(id = R.drawable.ic_chat_loading),
                             contentDescription = null,
-                            tint = MaterialTheme.colors.onBackground.copy(ContentAlpha.medium)
+                            tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                         )
                         DeliveryStatus.DELIVERED -> Icon(
                             modifier = iconModifier,
                             painter = painterResource(id = R.drawable.ic_chat_done_1),
                             contentDescription = null,
-                            tint = MaterialTheme.colors.primary.copy(alpha = 0.6f)
+                            tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
                         )
                         DeliveryStatus.READ -> Icon(
                             modifier = iconModifier,
                             painter = painterResource(id = R.drawable.ic_chat_done_all_1),
                             contentDescription = null,
-                            tint = MaterialTheme.colors.primary.copy(alpha = 0.6f)
+                            tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
                         )
                         DeliveryStatus.ERRED -> Icon(
                             modifier = iconModifier,
                             painter = painterResource(id = R.drawable.ic_chat_error),
                             contentDescription = null,
-                            tint = MaterialTheme.colors.error
+                            tint = MaterialTheme.colorScheme.error
                         )
                     }
                 }
                 Text(
                     modifier = Modifier.padding(bottom = 8.dp, end = 8.dp),
                     text = date.toFormatString("HH:mm"),
-                    style = MaterialTheme.typography.subtitle2,
-                    color = MaterialTheme.colors.onBackground.copy(ContentAlpha.medium)
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                 )
             }
     }
@@ -241,7 +245,7 @@ fun NewMessageCardGroupChat(
 @Composable
 fun MessageCard(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colors.primary.copy(alpha = 0.1f),
+    backgroundColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
     from: Sender? = null,
     messageText: String,
     attachments: List<MessageAttachment>,
@@ -291,7 +295,7 @@ fun MessageCard(
                 Text(
                     modifier = Modifier.padding(8.dp),
                     text = messageText,
-                    style = MaterialTheme.typography.body2
+                    style = MaterialTheme.typography.bodyMedium
                 )
 
             if (images.any()) {
@@ -322,7 +326,7 @@ fun MessageCard(
                             modifier = Modifier
                                 .padding(8.dp)
                                 .clip(shape = MaterialTheme.shapes.small)
-                                .background(MaterialTheme.colors.onBackground.copy(alpha = 0.5f))
+                                .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f))
                         ) {
                             if (isShowStatus) {
                                 val iconModifier = Modifier
@@ -334,33 +338,33 @@ fun MessageCard(
                                         modifier = iconModifier,
                                         painter = painterResource(id = R.drawable.ic_chat_done_1),
                                         contentDescription = null,
-                                        tint = MaterialTheme.colors.background
+                                        tint = MaterialTheme.colorScheme.background
                                     )
                                     DeliveryStatus.READ -> Icon(
                                         modifier = iconModifier,
                                         painter = painterResource(id = R.drawable.ic_chat_done_all_1),
                                         contentDescription = null,
-                                        tint = MaterialTheme.colors.background
+                                        tint = MaterialTheme.colorScheme.background
                                     )
                                     DeliveryStatus.SENT -> Icon(
                                         modifier = iconModifier,
                                         painter = painterResource(id = R.drawable.ic_chat_loading),
                                         contentDescription = null,
-                                        tint = MaterialTheme.colors.background
+                                        tint = MaterialTheme.colorScheme.background
                                     )
                                     DeliveryStatus.ERRED -> Icon(
                                         modifier = iconModifier,
                                         painter = painterResource(id = R.drawable.ic_chat_error),
                                         contentDescription = null,
-                                        tint = MaterialTheme.colors.error
+                                        tint = MaterialTheme.colorScheme.error
                                     )
                                 }
                             }
                             Text(
                                 modifier = Modifier.padding(4.dp),
                                 text = date.toFormatString("HH:mm"),
-                                style = MaterialTheme.typography.subtitle2,
-                                color = MaterialTheme.colors.background
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.background
                             )
                         }
                 }
@@ -409,33 +413,33 @@ fun MessageCard(
                             modifier = iconModifier,
                             painter = painterResource(id = R.drawable.ic_chat_loading),
                             contentDescription = null,
-                            tint = MaterialTheme.colors.onBackground.copy(ContentAlpha.medium)
+                            tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                         )
                         DeliveryStatus.DELIVERED -> Icon(
                             modifier = iconModifier,
                             painter = painterResource(id = R.drawable.ic_chat_done_1),
                             contentDescription = null,
-                            tint = MaterialTheme.colors.primary.copy(alpha = 0.6f)
+                            tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
                         )
                         DeliveryStatus.READ -> Icon(
                             modifier = iconModifier,
                             painter = painterResource(id = R.drawable.ic_chat_done_all_1),
                             contentDescription = null,
-                            tint = MaterialTheme.colors.primary.copy(alpha = 0.6f)
+                            tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
                         )
                         DeliveryStatus.ERRED -> Icon(
                             modifier = iconModifier,
                             painter = painterResource(id = R.drawable.ic_chat_error),
                             contentDescription = null,
-                            tint = MaterialTheme.colors.error
+                            tint = MaterialTheme.colorScheme.error
                         )
                     }
                 }
                 Text(
                     modifier = Modifier.padding(bottom = 8.dp, end = 8.dp),
                     text = date.toFormatString("HH:mm"),
-                    style = MaterialTheme.typography.subtitle2,
-                    color = MaterialTheme.colors.onBackground.copy(ContentAlpha.medium)
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                 )
             }
     }

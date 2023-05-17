@@ -3,10 +3,10 @@ package ru.esstu.android.student.news.selector_screen.ui.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,10 +37,10 @@ private fun WhiteUserPreview(
             modifier = Modifier
                 .size(42.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colors.primary),
+                .background(MaterialTheme.colorScheme.primary),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = initials.uppercase().take(2), style = MaterialTheme.typography.h6.copy(fontSize = 16.sp), color = MaterialTheme.colors.background)
+            Text(text = initials.uppercase().take(2), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.background)
         }
     }
 
@@ -65,19 +65,19 @@ private fun WhiteUserPreview(
         Column {
             Text(
                 text = title,
-                style = MaterialTheme.typography.body1.copy(fontSize = 14.sp),
+                style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colors.background
+                color = MaterialTheme.colorScheme.background
             )
             if (subtitle.isNotBlank())
 
                 Text(
                     text = subtitle,
-                    style = MaterialTheme.typography.body2.copy(fontSize = 14.sp),
+                    style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colors.background
+                    color = MaterialTheme.colorScheme.background
                 )
 
 
@@ -86,7 +86,8 @@ private fun WhiteUserPreview(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImagePreviewCard(
     modifier: Modifier = Modifier,
@@ -97,8 +98,8 @@ fun ImagePreviewCard(
 ) {
     Surface(
         modifier = modifier.size(width = 268.dp, height = 240.dp),
-        elevation = 8.dp,
-        color = MaterialTheme.colors.background,
+        shadowElevation = 8.dp,
+        color = MaterialTheme.colorScheme.background,
         shape = MaterialTheme.shapes.medium,
         onClick = onClick
     ) {
@@ -125,7 +126,7 @@ fun ImagePreviewCard(
                         .weight(1f)
                         .background(
                             brush = Brush.verticalGradient(
-                                colors = listOf(MaterialTheme.colors.onBackground.copy(alpha =alpha), Color.Transparent)
+                                colors = listOf(MaterialTheme.colorScheme.onBackground.copy(alpha =alpha), Color.Transparent)
                             )
                         )
                 )
@@ -136,14 +137,14 @@ fun ImagePreviewCard(
                         .weight(1f)
                         .background(
                             brush = Brush.verticalGradient(
-                                colors = listOf(Color.Transparent, MaterialTheme.colors.onBackground.copy(alpha = alpha))
+                                colors = listOf(Color.Transparent, MaterialTheme.colorScheme.onBackground.copy(alpha = alpha))
                             )
                         )
                 )
             }
 
             Column(Modifier.padding(16.dp)) {
-                Text(text = title, style = MaterialTheme.typography.body1, maxLines = 2, overflow = TextOverflow.Ellipsis, color = MaterialTheme.colors.background)
+                Text(text = title, style = MaterialTheme.typography.bodyLarge, maxLines = 2, overflow = TextOverflow.Ellipsis, color = MaterialTheme.colorScheme.background)
                 Spacer(modifier = Modifier.weight(1f))
                 WhiteUserPreview(
                     abbreviation = user.initials,

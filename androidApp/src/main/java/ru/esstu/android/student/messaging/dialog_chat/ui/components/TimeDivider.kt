@@ -4,10 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -31,16 +29,16 @@ fun TimeDivider(date: DateTimeTz, isCurrentYear:Boolean) {
             modifier = Modifier
                 .padding(vertical = 8.dp)
                 .clip(MaterialTheme.shapes.medium)
-                .background(MaterialTheme.colors.primary.copy(alpha = 0.1f))
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
                 .padding(vertical = 4.dp, horizontal = 16.dp),
             contentAlignment = Alignment.Center
         ) {
-            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+            //CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text(
                     text = if (isCurrentYear) date.utc.unixMillisLong.toFormatString("dd MMMM") else date.utc.unixMillisLong.toFormatString("dd MMMM yyyy"),
-                    style = MaterialTheme.typography.subtitle2,
+                    style = MaterialTheme.typography.titleMedium,
                 )
-            }
+            //}
         }
     }
 }

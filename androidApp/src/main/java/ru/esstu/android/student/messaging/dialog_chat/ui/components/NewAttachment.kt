@@ -4,9 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,14 +29,14 @@ fun NewAttachment(modifier: Modifier = Modifier, title: String, uri: String? = n
                 Modifier
                     .size(60.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colors.primary),
+                    .background(MaterialTheme.colorScheme.primary),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     modifier = Modifier.size(30.dp),
                     painter = painterResource(id = R.drawable.ic_chat_attachment),
                     contentDescription = null,
-                    tint = MaterialTheme.colors.onBackground
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
                 if (uri != null)
                     GlideImage(
@@ -51,20 +51,20 @@ fun NewAttachment(modifier: Modifier = Modifier, title: String, uri: String? = n
                     .offset(x = 4.dp, y = (-4).dp)
                     .clip(CircleShape)
                     .clickable { onClose() }
-                    .background(MaterialTheme.colors.background),
+                    .background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
                 Box(
                     modifier = Modifier
                         .size(22.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colors.secondary),
+                        .background(MaterialTheme.colorScheme.secondary),
                 ) {
                     Icon(
                         modifier = Modifier.fillMaxSize(),
                         painter = painterResource(id = R.drawable.ic_chat_cancel_1),
                         contentDescription = null,
-                        tint = MaterialTheme.colors.onBackground
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
 
@@ -75,7 +75,7 @@ fun NewAttachment(modifier: Modifier = Modifier, title: String, uri: String? = n
             textAlign = TextAlign.Center,
             modifier = Modifier.widthIn(max = 88.dp),
             text = title,
-            style = MaterialTheme.typography.subtitle2,
+            style = MaterialTheme.typography.titleMedium,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )

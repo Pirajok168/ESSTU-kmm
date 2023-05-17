@@ -3,6 +3,10 @@ package ru.esstu.android.auth.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -44,16 +48,16 @@ fun LoginChooseScreen(
                     modifier = Modifier.paddingFromBaseline(128.dp),
                     text = "Добро пожаловать в личный кабинет ВСГУТУ",
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.h4
+                    style = MaterialTheme.typography.headlineMedium
                 )
                 Spacer(modifier = Modifier.height(14.dp))
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                //CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                     Text(
                         text = "Выберите способ входа",
                         overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.subtitle1
+                        style = MaterialTheme.typography.titleMedium
                     )
-                }
+             //   }
             }
 
             Button(modifier = Modifier
@@ -66,10 +70,6 @@ fun LoginChooseScreen(
             Button(modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.secondary,
-                    contentColor = MaterialTheme.colors.onSecondary
-                ),
                 onClick = onNavToEntrant) {
                 Text(text = "Я абитуриент")
             }

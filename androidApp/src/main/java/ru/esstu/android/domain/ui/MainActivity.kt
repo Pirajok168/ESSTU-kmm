@@ -7,6 +7,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 
+
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -24,14 +27,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.google.accompanist.insets.statusBarsPadding
-import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 
 import ru.esstu.android.domain.navigation.SetupNavGraph
 import ru.esstu.android.domain.ui.theme.EsstuTheme
-
+import ru.esstu.android.domain.ui_version_3.theme.MyApplicationTheme
 
 
 @AndroidEntryPoint
@@ -40,7 +40,7 @@ class  MainActivity : AppCompatActivity() {
     //@Inject
    // lateinit var uiStateObserver: IUiObserver
     @RequiresApi(Build.VERSION_CODES.Q)
-    @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class, ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class, ExperimentalPagerApi::class)
+    @OptIn(ExperimentalAnimationApi::class,  ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -51,7 +51,7 @@ class  MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            EsstuTheme {
+            MyApplicationTheme {
 
                 val context = LocalContext.current
 
@@ -60,9 +60,8 @@ class  MainActivity : AppCompatActivity() {
                 //observe current destination
                 //SetupUiObserver(navController = navController, listener = uiStateObserver)
                 Surface(
-                    color = MaterialTheme.colors.background,
+                    color = MaterialTheme.colorScheme.background,
                 ) {
-
                     SetupNavGraph(navController)
                 }
 

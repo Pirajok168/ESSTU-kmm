@@ -11,6 +11,8 @@ import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -79,7 +81,7 @@ fun NewsPage(
             )
             if (node.title.isNotBlank()) {
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = node.title, style = MaterialTheme.typography.body1)
+                Text(text = node.title, style = MaterialTheme.typography.bodyLarge)
             }
         }
         if (images.isNotEmpty()) {
@@ -119,7 +121,7 @@ fun NewsPage(
                         text = node.message,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = if (isTextExpanded) Int.MAX_VALUE else maxTextLines,
-                        style = MaterialTheme.typography.body2,
+                        style = MaterialTheme.typography.bodyMedium,
                         onTextLayout = { isTextOverflow = it.hasVisualOverflow }
                     )
                     if (isTextOverflow)
@@ -130,15 +132,15 @@ fun NewsPage(
                                     .fillMaxHeight()
                                     .background(
                                         brush = Brush.horizontalGradient(
-                                            colors = listOf(Color.Transparent, MaterialTheme.colors.background)
+                                            colors = listOf(Color.Transparent, MaterialTheme.colorScheme.background)
                                         )
                                     )
                             )
                             Text(
-                                modifier = Modifier.background(MaterialTheme.colors.background),
+                                modifier = Modifier.background(MaterialTheme.colorScheme.background),
                                 text = "Показать полностью",
-                                color = MaterialTheme.colors.primary,
-                                style = MaterialTheme.typography.body1,
+                                color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.bodyLarge,
                             )
                         }
                 }
@@ -266,7 +268,7 @@ fun NewsPage(
 
 
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                Text(text = date, style = MaterialTheme.typography.subtitle2)
+                Text(text = date, style = MaterialTheme.typography.titleSmall)
             }
         }
     }

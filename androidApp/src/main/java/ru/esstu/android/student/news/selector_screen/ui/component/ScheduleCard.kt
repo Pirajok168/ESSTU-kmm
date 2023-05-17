@@ -2,10 +2,10 @@ package ru.esstu.android.student.news.selector_screen.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -16,7 +16,8 @@ import androidx.compose.ui.unit.sp
 import ru.esstu.android.R
 import ru.esstu.android.domain.ui.theme.CompPreviewTheme
 
-@OptIn(ExperimentalMaterialApi::class)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleCard(
     modifier: Modifier = Modifier,
@@ -31,16 +32,16 @@ fun ScheduleCard(
 ) {
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colors.background,
+        color = MaterialTheme.colorScheme.background,
         shape = MaterialTheme.shapes.medium,
-        elevation = 8.dp,
+        shadowElevation = 8.dp,
         onClick = onClick
     ) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            val headerTextStyle = MaterialTheme.typography.body1
+            val headerTextStyle = MaterialTheme.typography.bodyLarge
 
             Row {
                 Image(
@@ -59,8 +60,8 @@ fun ScheduleCard(
                 )
             }
 
-            val body1Style = MaterialTheme.typography.body1
-            val body2Style = MaterialTheme.typography.body2
+            val body1Style = MaterialTheme.typography.bodyLarge
+            val body2Style = MaterialTheme.typography.bodyMedium
 
 
             Spacer(modifier = Modifier.height(8.dp))

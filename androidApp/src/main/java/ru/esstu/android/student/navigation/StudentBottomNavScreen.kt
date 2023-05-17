@@ -1,11 +1,9 @@
 package ru.esstu.android.student.navigation
 
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.composable
-import com.google.accompanist.insets.navigationBarsPadding
 import ru.esstu.android.R
 
 import ru.esstu.android.domain.navigation.bottom_navigation.BottomNavScreen

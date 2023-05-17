@@ -25,8 +25,6 @@ import ru.esstu.android.student.navigation.studentNavGraph
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @ExperimentalAnimationApi
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
