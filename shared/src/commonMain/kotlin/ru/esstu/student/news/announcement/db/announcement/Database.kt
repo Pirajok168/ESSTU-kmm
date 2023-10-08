@@ -1,7 +1,6 @@
 package ru.esstu.student.news.announcement.db.announcement
 
-import com.squareup.sqldelight.ColumnAdapter
-import com.squareup.sqldelight.db.SqlDriver
+import app.cash.sqldelight.ColumnAdapter
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -30,7 +29,7 @@ internal class Database(database: EsstuDatabase): NewsDao {
 
     }
 
-    private val listAdapter = object : ColumnAdapter<List<NewsAttachmentEntity>, String>{
+    private val listAdapter = object : ColumnAdapter<List<NewsAttachmentEntity>, String> {
         override fun decode(databaseValue: String): List<NewsAttachmentEntity> {
             return Json{ }.decodeFromString(databaseValue)
         }

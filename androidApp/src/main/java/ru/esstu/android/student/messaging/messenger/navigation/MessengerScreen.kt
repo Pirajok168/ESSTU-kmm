@@ -1,7 +1,11 @@
 package ru.esstu.android.student.messaging.messenger.navigation
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.*
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
@@ -12,10 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.statusBarsPadding
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import ru.esstu.android.R
 import ru.esstu.android.student.messaging.messenger.dialogs.ui.DialogsScreen
@@ -34,7 +34,7 @@ enum class Pages(val description: String) {
     @Stable APPEALS("Обращения"),
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn( ExperimentalFoundationApi::class)
 @Composable
 fun MessengerScreen(
     onNavToDialogChat: (id: String) -> Unit = { },
@@ -130,11 +130,15 @@ fun MessengerScreen(
                 }
             )
         }
-        val pagerState = rememberPagerState()
-        val scope = rememberCoroutineScope()
         val screens = remember {
             mutableStateOf(values().toList())
         }
+
+        val pagerState = rememberPagerState {
+            screens.value.size
+        }
+        val scope = rememberCoroutineScope()
+
 
         Box(contentAlignment = Alignment.BottomEnd) {
 
@@ -144,7 +148,7 @@ fun MessengerScreen(
                     selectedTabIndex = pagerState.currentPage,
                     indicator = { tabPositions ->
                         TabRowDefaults.Indicator(
-                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
+                            Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
                             color = MaterialTheme.colors.secondary
                         )
                     }
@@ -160,7 +164,6 @@ fun MessengerScreen(
 
                 HorizontalPager(
                     modifier = Modifier.fillMaxSize(),
-                    count = screens.value.size,
                     state = pagerState,
                 ) { index ->
 

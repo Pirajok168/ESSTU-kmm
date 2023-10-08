@@ -1,3 +1,5 @@
+import kotlin.Boolean;
+import kotlin.Int;
 CREATE TABLE UserMessageEntityTable (
     appUserId TEXT NOT NULL,
     dialogId TEXT PRIMARY KEY NOT NULL,

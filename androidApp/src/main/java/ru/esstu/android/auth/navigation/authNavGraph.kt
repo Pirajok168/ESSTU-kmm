@@ -22,7 +22,8 @@ fun NavGraphBuilder.authNavGraph(
 ) {
 
     fun popToStartDest(onNavToDest: () -> Unit) {
-        navController.backQueue.clear()
+
+        //Todo("")  navController.backQueue.clear()
         onNavToDest()
     }
 

@@ -1,6 +1,6 @@
 package ru.esstu.student.domain.db
 
-import com.squareup.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlDriver
 
 
 interface IDatabaseFactory {

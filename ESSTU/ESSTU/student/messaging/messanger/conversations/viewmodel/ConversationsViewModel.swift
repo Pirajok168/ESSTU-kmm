@@ -41,7 +41,7 @@ class ConversationsViewModel: ObservableObject, ConversationsState {
                     dialogs in
                 let restoreDialogs = dialogs as! [ConversationPreview]
                 
-
+              
         
                 var t = Set(self.converstions)
                 restoreDialogs.forEach{

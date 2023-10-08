@@ -26,7 +26,6 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.statusBarsPadding
-import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 
 import ru.esstu.android.domain.navigation.SetupNavGraph
@@ -40,7 +39,7 @@ class  MainActivity : AppCompatActivity() {
     //@Inject
    // lateinit var uiStateObserver: IUiObserver
     @RequiresApi(Build.VERSION_CODES.Q)
-    @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class, ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class, ExperimentalPagerApi::class)
+    @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class, ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

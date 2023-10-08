@@ -1,12 +1,15 @@
 package ru.esstu.android.domain.modules.image_viewer.ui
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -21,14 +24,11 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import com.google.accompanist.insets.statusBarsPadding
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ImageScreen(
     imageUris: List<String>,
@@ -44,7 +44,9 @@ fun ImageScreen(
         contentAlignment = Alignment.TopStart
     ) {
         val scope = rememberCoroutineScope()
-        val pagerState = rememberPagerState()
+        val pagerState = rememberPagerState {
+            imageUris.size
+        }
 
         val systemUiController = rememberSystemUiController()
 
@@ -69,7 +71,6 @@ fun ImageScreen(
 
         HorizontalPager(
             state = pagerState,
-            count = imageUris.size,
             verticalAlignment = Alignment.CenterVertically
         ) { index ->
             val defaultScale = 1f.coerceIn(minScale, maxScale)

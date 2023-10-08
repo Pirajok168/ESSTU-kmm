@@ -40,7 +40,7 @@ class SupportsViewModel: ObservableObject, SupportsState {
                     dialogs in
                 let restoreDialogs = dialogs as! [ConversationPreview]
                 
-
+                
         
                 var t = Set(self.converstions)
                 restoreDialogs.forEach{

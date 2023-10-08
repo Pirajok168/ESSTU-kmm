@@ -3,13 +3,12 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("com.android.library")
-    id("com.squareup.sqldelight")
-
+    id("app.cash.sqldelight")
 }
 
 
 kotlin {
-    android()
+    androidTarget()
     
     listOf(
         iosX64(),
@@ -27,7 +26,7 @@ kotlin {
         val commonMain by getting{
             dependencies{
                 //Coroutines
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
                 //serialization
 
@@ -50,7 +49,10 @@ kotlin {
                 implementation ("com.soywiz.korlibs.klock:klock:3.0.1")
 
                 //SqlDelight
-                implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")
+                //implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")
+                //implementation("app.cash.sqldelight:sqlite-driver:2.0.0")
+
+                implementation("app.cash.sqldelight:primitive-adapters:2.0.0")
 
                 //Log
                 implementation("io.github.aakira:napier:2.6.1")
@@ -79,10 +81,10 @@ kotlin {
                 implementation ("androidx.startup:startup-runtime:1.1.1")
 
                 //SqlDelight
-                implementation("com.squareup.sqldelight:android-driver:$sqlDelightVersion")
+                implementation("app.cash.sqldelight:android-driver:2.0.0")
             }
         }
-        val androidTest by getting
+        val androidUnitTest by getting
         val iosX64Main by getting
         val iosArm64Main by getting
         val iosSimulatorArm64Main by getting
@@ -96,7 +98,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-ios:$ktorVersion")
 
                 //SqlDelight
-                implementation("com.squareup.sqldelight:native-driver:$sqlDelightVersion")
+                implementation("app.cash.sqldelight:native-driver:2.0.0")
 
 
             }
@@ -114,17 +116,11 @@ kotlin {
 }
 
 sqldelight {
-
-    database("EsstuDatabase"){
-        packageName = "ru.esstu.student"
+    databases{
+        create("EsstuDatabase"){
+            packageName.set("ru.esstu.student")
+        }
     }
-
-
-
-
-
-   
-
 
 }
 

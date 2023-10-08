@@ -1,4 +1,5 @@
 import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.entities.GroupChatAuthorEntity;
+import kotlin.Boolean;
 
 CREATE TABLE GroupChatConversation(
     id INTEGER PRIMARY KEY NOT NULL ,

@@ -1,5 +1,9 @@
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.ReplyMessageEntity;
 import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity;
+import kotlin.Boolean;
+import kotlin.Int;
+
+
 CREATE TABLE MessageSuppotTable(
     messageId INTEGER PRIMARY KEY NOT NULL,
     fromUser TEXT AS UserEntity,

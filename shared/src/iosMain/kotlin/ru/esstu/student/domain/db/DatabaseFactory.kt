@@ -1,18 +1,21 @@
 package ru.esstu.student.domain.db
 
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
+import app.cash.sqldelight.driver.native.wrapConnection
 import co.touchlab.sqliter.DatabaseConfiguration
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
-import com.squareup.sqldelight.drivers.native.wrapConnection
+
 import ru.esstu.student.EsstuDatabase
 
 class DatabaseFactory: IDatabaseFactory {
 
-    val dbConfig = DatabaseConfiguration(
+    private val dbConfig = DatabaseConfiguration(
         name = "esstustudent.db",
         version = 1,
         create = { connection ->
-            wrapConnection(connection) { EsstuDatabase.Schema.create(it) }
+            wrapConnection(connection) {
+                EsstuDatabase.Schema.create(it)
+            }
         },
         extendedConfig = DatabaseConfiguration.Extended(foreignKeyConstraints = true)
     )

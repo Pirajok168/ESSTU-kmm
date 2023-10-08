@@ -1,7 +1,8 @@
 package ru.esstu.student.domain.db
 
-import com.squareup.sqldelight.ColumnAdapter
-import com.squareup.sqldelight.db.SqlDriver
+import app.cash.sqldelight.ColumnAdapter
+import app.cash.sqldelight.adapter.primitive.IntColumnAdapter
+import app.cash.sqldelight.db.SqlDriver
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -9,10 +10,14 @@ import ru.esstu.student.EsstuDatabase
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatMessageTableNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatReplyMessageTableNew
+import ru.esstu.student.messaging.dialogchat.datasources.db.erredmessages.ErredCachedFileTableNew
+import ru.esstu.student.messaging.dialogchat.datasources.db.usermessage.UserCachedFileTable
 import ru.esstu.student.messaging.group_chat.datasources.db.chat_history.entities.GroupChatAuthorEntity
 import ru.esstu.student.messaging.groupchat.datasources.db.chathistory.GroupChatMessage
 import ru.esstu.student.messaging.groupchat.datasources.db.chathistory.GroupChatReplyMessage
+import ru.esstu.student.messaging.groupchat.datasources.db.erredmessage.GroupChatErredCachedFile
 import ru.esstu.student.messaging.groupchat.datasources.db.header.GroupChatConversation
+import ru.esstu.student.messaging.groupchat.datasources.db.usermessages.GroupChatUserCachedFileEntity
 import ru.esstu.student.messaging.messanger.appeals.datasources.db.AppealTable
 import ru.esstu.student.messaging.messanger.appeals.datasources.db.MessageAppealsTable
 import ru.esstu.student.messaging.messanger.conversation.datasources.db.ConversationTable
@@ -114,19 +119,23 @@ class DatabaseStudent(sqlDriver: SqlDriver): IDatabaseStudent {
 
     private val database = EsstuDatabase(sqlDriver,
         NewsEntityDatabaseAdapter=NewsEntityDatabase.Adapter(adapter, listAdapter),
-        DialogTableNewAdapter = DialogTableNew.Adapter(adapter4),
-        MessageTableNewAdapter= MessageTableNew.Adapter(adapter4,adapter5),
+        DialogTableNewAdapter = DialogTableNew.Adapter(adapter4, IntColumnAdapter),
+        MessageTableNewAdapter= MessageTableNew.Adapter(adapter4,adapter5,IntColumnAdapter),
         DialogChatMessageTableNewAdapter = DialogChatMessageTableNew.Adapter(adapter2) ,
-        DialogChatReplyMessageTableNewAdapter =  DialogChatReplyMessageTableNew.Adapter(adapter3),
-        ConversationTableAdapter = ConversationTable.Adapter(adapter4),
-        MessageConversationTableAdapter = MessageConversationTable.Adapter(adapter4,adapter5),
+        DialogChatReplyMessageTableNewAdapter =  DialogChatReplyMessageTableNew.Adapter(adapter3,IntColumnAdapter),
+        ConversationTableAdapter = ConversationTable.Adapter(adapter4,IntColumnAdapter),
+        MessageConversationTableAdapter = MessageConversationTable.Adapter(adapter4,adapter5,IntColumnAdapter),
         GroupChatMessageAdapter = GroupChatMessage.Adapter(adapter6),
-        GroupChatReplyMessageAdapter = GroupChatReplyMessage.Adapter(adapter6),
+        GroupChatReplyMessageAdapter = GroupChatReplyMessage.Adapter(adapter6,IntColumnAdapter),
         GroupChatConversationAdapter = GroupChatConversation.Adapter(adapter6),
-        MessageSuppotTableAdapter = MessageSuppotTable.Adapter(adapter4, adapter5),
-        SuppotTableAdapter = SuppotTable.Adapter(adapter4),
-        AppealTableAdapter = AppealTable.Adapter(adapter4),
-        MessageAppealsTableAdapter = MessageAppealsTable.Adapter(adapter4, adapter5)
+        MessageSuppotTableAdapter = MessageSuppotTable.Adapter(adapter4, adapter5,IntColumnAdapter),
+        SuppotTableAdapter = SuppotTable.Adapter(adapter4,IntColumnAdapter),
+        AppealTableAdapter = AppealTable.Adapter(adapter4,IntColumnAdapter),
+        MessageAppealsTableAdapter = MessageAppealsTable.Adapter(adapter4, adapter5,IntColumnAdapter),
+        ErredCachedFileTableNewAdapter = ErredCachedFileTableNew.Adapter(IntColumnAdapter),
+        GroupChatErredCachedFileAdapter = GroupChatErredCachedFile.Adapter(IntColumnAdapter),
+        GroupChatUserCachedFileEntityAdapter =  GroupChatUserCachedFileEntity.Adapter(IntColumnAdapter),
+        UserCachedFileTableAdapter =  UserCachedFileTable.Adapter(IntColumnAdapter)
     )
 
     override fun getDataBase(): EsstuDatabase = database

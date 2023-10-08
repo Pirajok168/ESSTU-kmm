@@ -65,6 +65,9 @@ struct SelectorScreen: View {
             
             
         }
+        .onChange(of: offset, {
+            print(offset)
+        })
         //MARK: TOP BAR
         .overlay{
             ZStack{
@@ -92,15 +95,12 @@ struct SelectorScreen: View {
                     .frame(maxWidth: .infinity , maxHeight: topEdge + 80, alignment: .top)
                     .padding(.top, topEdge)
                     
-                    
-                    
+                
                     TextEditor(text: $text)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
-                        
                         .cornerRadius(25.0)
                         .padding(.horizontal)
-                        
                         .frame(height: isExpanSearchView ? 35.0 : getHightSearhView())
                         .frame(maxWidth: .infinity)
                         .lineLimit(1)
@@ -149,9 +149,10 @@ struct SelectorScreen: View {
                 
             }
            
-            .frame(height:  getHightTopBar() )
+            .frame(height:  getHightTopBar())
             
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        
 
         }
         .sheet(isPresented: $isExpandedSheet){

@@ -78,7 +78,6 @@ internal val domainApi = DI.Module(
                     url {
                         protocol = URLProtocol.HTTPS
                     }
-
                 }
             }.also { Napier.base(DebugAntilog()) }
         }

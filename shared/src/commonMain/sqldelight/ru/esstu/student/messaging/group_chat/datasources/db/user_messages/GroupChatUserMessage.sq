@@ -1,3 +1,6 @@
+import kotlin.Boolean;
+import kotlin.Int;
+
 CREATE TABLE GroupChatUserMessage (
     appUserId TEXT NOT NULL,
     conversationId INTEGER PRIMARY KEY NOT NULL,

@@ -197,113 +197,113 @@ struct FullScreenNews: View {
                 
         }
         //MARK: Foregroung image
-        .overlay{
-            if let expandedListImages = selectedImages, isExpand{
-                
-                
-                VStack{
-                    
-                    GeometryReader{
-                        proxy in
-                        let size = proxy.size
-                        TabView{
-                            ForEach(expandedListImages, id: \.self){
-                                image in
-                                AsyncImage(url: URL(string: image), content: {
-                                    image in
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                }, placeholder: {
-                                    
-                                })
-                            
-                                    
-                                    
-//                                    .offset(y: loadExpandedContent ? offsetGesture : .zero)
-//                                    .gesture(
-//                                       DragGesture()
-//                                        .onChanged({ value in
-//                                            offsetGesture = value.translation.height
+//        .overlay{
+//            if let expandedListImages = selectedImages, isExpand{
+//                
+//                
+//                VStack{
+//                    
+//                    GeometryReader{
+//                        proxy in
+//                        let size = proxy.size
+//                        TabView{
+//                            ForEach(expandedListImages, id: \.self){
+//                                image in
+//                                AsyncImage(url: URL(string: image), content: {
+//                                    image in
+//                                    image
+//                                        .resizable()
+//                                        .aspectRatio(contentMode: .fill)
+//                                }, placeholder: {
+//                                    
+//                                })
+//                            
+//                                    
+//                                    
+////                                    .offset(y: loadExpandedContent ? offsetGesture : .zero)
+////                                    .gesture(
+////                                       DragGesture()
+////                                        .onChanged({ value in
+////                                            offsetGesture = value.translation.height
+////
+////                                        })
+////                                        .onEnded({ value in
+////
+////                                            let height = value.translation.height
+////                                            if height < -150 || height > 150 {
+////                                                withAnimation(.easeInOut(duration: 0.4)){
+////                                                    loadExpandedContent = false
+////                                                    selectedImages = []
+////                                                }
+////                                                withAnimation(.easeInOut(duration: 0.4).delay(0.05)){
+////                                                    isExpand = false
+////                                                }
+////                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3){
+////                                                    offsetGesture = .zero
+////                                                    hiddenBackNavigationButton = false
+////                                                }
+////                                            }else{
+////                                                withAnimation(.easeInOut(duration: 0.4)){
+////                                                    offsetGesture = .zero
+////                                                }
+////                                            }
+////                                        })
+////                                    )
+//                                    
+//                            }
+//                          
+//                        }
+//                        .frame(width: size.width, height: size.height)
 //
-//                                        })
-//                                        .onEnded({ value in
-//
-//                                            let height = value.translation.height
-//                                            if height < -150 || height > 150 {
-//                                                withAnimation(.easeInOut(duration: 0.4)){
-//                                                    loadExpandedContent = false
-//                                                    selectedImages = []
-//                                                }
-//                                                withAnimation(.easeInOut(duration: 0.4).delay(0.05)){
-//                                                    isExpand = false
-//                                                }
-//                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3){
-//                                                    offsetGesture = .zero
-//                                                    hiddenBackNavigationButton = false
-//                                                }
-//                                            }else{
-//                                                withAnimation(.easeInOut(duration: 0.4)){
-//                                                    offsetGesture = .zero
-//                                                }
-//                                            }
-//                                        })
-//                                    )
-                                    
-                            }
-                          
-                        }
-                        .frame(width: size.width, height: size.height)
-
-                        .cornerRadius(loadExpandedContent ? 0 : 25)
-                        .tabViewStyle(.page)
-                       
-                        
-                    }
-                    .matchedGeometryEffect(id: urlImages.first, in: animation)
-                    .frame(height: 300)
-                    .frame(maxHeight: .infinity)
-                    
-                    
-                }
-                .overlay(alignment: .top, content: {
-                    HStack{
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.4)){
-                                loadExpandedContent = false
-                                
-                            }
-                            withAnimation(.easeInOut(duration: 0.4).delay(0.05)){
-                                isExpand = false
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3){
-                                hiddenBackNavigationButton = false
-                               
-                            }
-                        } label: {
-                            Image(systemName: "arrow.left")
-                            Text("Назад")
-                        }
-                       
-                        Spacer()
-                    }
-                    .padding(.leading)
-                    .opacity(loadExpandedContent ? 1 : 0)
-                    
-                
-                })
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding(.bottom, bottomEdge)
-                .padding(.top, topEdge)
-                .transition(.offset(x: 0, y: 1))
-                .onAppear{
-                    withAnimation(.easeInOut(duration: 0.4)){
-                        loadExpandedContent  = true
-                    }
-                }
-            }
-            
-        }
+//                        .cornerRadius(loadExpandedContent ? 0 : 25)
+//                        .tabViewStyle(.page)
+//                       
+//                        
+//                    }
+//                    .matchedGeometryEffect(id: urlImages.first, in: animation)
+//                    .frame(height: 300)
+//                    .frame(maxHeight: .infinity)
+//                    
+//                    
+//                }
+//                .overlay(alignment: .top, content: {
+//                    HStack{
+//                        Button {
+//                            withAnimation(.easeInOut(duration: 0.4)){
+//                                loadExpandedContent = false
+//                                
+//                            }
+//                            withAnimation(.easeInOut(duration: 0.4).delay(0.05)){
+//                                isExpand = false
+//                            }
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3){
+//                                hiddenBackNavigationButton = false
+//                               
+//                            }
+//                        } label: {
+//                            Image(systemName: "arrow.left")
+//                            Text("Назад")
+//                        }
+//                       
+//                        Spacer()
+//                    }
+//                    .padding(.leading)
+//                    .opacity(loadExpandedContent ? 1 : 0)
+//                    
+//                
+//                })
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                .padding(.bottom, bottomEdge)
+//                .padding(.top, topEdge)
+//                .transition(.offset(x: 0, y: 1))
+//                .onAppear{
+//                    withAnimation(.easeInOut(duration: 0.4)){
+//                        loadExpandedContent  = true
+//                    }
+//                }
+//            }
+//            
+//        }
         
       
     }

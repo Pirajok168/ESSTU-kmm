@@ -29,54 +29,9 @@ struct ContentView: View {
     @State var selectedMessage: Message?
     
     var body: some View {
-        NavigationView{
-            ScrollView(.vertical, showsIndicators: false){
-                VStack(spacing: 12){
-                    ForEach(chat){
-                        chat in
-                        
-                        ChatView(message: chat)
-                            .anchorPreference(key: BoundsPreferences.self, value: .bounds, transform: { anchor in
-                                return [chat.id : anchor]
-                            })
-                            .padding(chat.isReply ? .leading : .trailing, 60)
-                            .onLongPressGesture{
-                                withAnimation(.easeOut){
-                                    selectedMessage = chat
-                                }
-                            }
-                    }
-                }
-                .padding()
-                
-            }
-            .navigationTitle("Мессенджер")
-        }
-        .overlay{
-            if selectedMessage != nil {
-                Rectangle()
-                    .fill(.ultraThinMaterial)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        withAnimation{
-                            selectedMessage = nil
-                        }
-                    }
-            }
-        }
-        .overlayPreferenceValue(BoundsPreferences.self){
-                values in
-            if let selectedMessage, let preference = values.first(where: { item in
-                item.key == selectedMessage.id
-            }){
-                GeometryReader{
-                    proxy in
-                    let rect = proxy[preference.value]
-                    ChatView(message: selectedMessage)
-                        .frame(width: rect.width, height: rect.height)
-                        .offset(x: rect.minX, y: rect.minY)
-                }
-                
+        ScrollView(.vertical, showsIndicators: false){
+            ForEach(0..<100){ parametr in
+                Text("parametr")
             }
         }
     }

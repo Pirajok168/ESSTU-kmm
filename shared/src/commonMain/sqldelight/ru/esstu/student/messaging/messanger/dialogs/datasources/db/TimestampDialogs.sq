@@ -1,3 +1,4 @@
+import kotlin.Long;
 CREATE TABLE TimstampDialogs (
     appUserId TEXT PRIMARY KEY NOT NULL,
     timestamp INTEGER

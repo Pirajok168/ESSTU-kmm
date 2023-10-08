@@ -10,7 +10,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.flow.collectLatest
 import ru.esstu.android.auth.navigation.AuthRoutes
 import ru.esstu.android.auth.navigation.authNavGraph
@@ -26,7 +25,6 @@ import ru.esstu.android.student.navigation.studentNavGraph
 @ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
-@ExperimentalPagerApi
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
@@ -34,7 +32,7 @@ fun SetupNavGraph(
 ) {
     LaunchedEffect(Unit) {
         logoutViewModel.logoutFlow.collectLatest {
-           navController.backQueue.clear()
+            //Todo("")  navController.backQueue.clear()
            navController.navigate(AuthRoutes.LoginScreen.passRoute())
         }
     }
