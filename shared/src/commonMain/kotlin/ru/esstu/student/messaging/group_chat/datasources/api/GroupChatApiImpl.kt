@@ -29,7 +29,7 @@ class GroupChatApiImpl(
     override suspend fun getOpponent(authToken: String, userId: String): UserResponse {
         val response = portalApi.get{
             url{
-                path("mlk/api/v2/messenger/getUserFull")
+                path("lk/api/v2/messenger/getUserFull")
                 bearerAuth(authToken)
                 encodedParameters.append("id", userId)
             }
@@ -40,7 +40,7 @@ class GroupChatApiImpl(
     override suspend fun getConversation(authToken: String, id: String): ConversationResponse {
         val response = portalApi.get{
             url{
-                path("mlk/api/v2/messenger/getChatFull")
+                path("lk/api/v2/messenger/getChatFull")
                 bearerAuth(authToken)
                 encodedParameters.append("id", id)
             }
@@ -53,7 +53,7 @@ class GroupChatApiImpl(
     override suspend fun readMessages(authToken: String, body: ChatReadRequestBody): Boolean {
         val request = portalApi.post {
             url {
-                path("mlk/api/v2/messenger/readHistory")
+                path("lk/api/v2/messenger/readHistory")
                 bearerAuth(authToken)
                 contentType(ContentType.Application.Json)
                 setBody(body)
@@ -70,7 +70,7 @@ class GroupChatApiImpl(
     ): MessageResponse {
         val request = portalApi.get {
             url {
-                path("mlk/api/v2/messenger/getHistory")
+                path("lk/api/v2/messenger/getHistory")
                 bearerAuth(authToken)
                 encodedParameters.append("peerId", peerId)
                 encodedParameters.append("offset", offset.toString())
@@ -85,7 +85,7 @@ class GroupChatApiImpl(
     override suspend fun pickMessages(authToken: String, messageIds: String): List<MessagePreview> {
         val request = portalApi.get {
             url {
-                path("mlk/api/v2/messenger/getMessages")
+                path("lk/api/v2/messenger/getMessages")
                 bearerAuth(authToken)
                 encodedParameters.append("id", messageIds)
             }
@@ -96,7 +96,7 @@ class GroupChatApiImpl(
     override suspend fun pickUsers(authToken: String, usersIds: String): List<UserPreview> {
         val request = portalApi.get {
             url {
-                path("mlk/api/v1/users/getUsers")
+                path("lk/api/v1/users/getUsers")
                 bearerAuth(authToken)
                 encodedParameters.append("ids", usersIds)
             }
@@ -110,7 +110,7 @@ class GroupChatApiImpl(
     ): ChatMessageResponse {
         val request = portalApi.post {
             url {
-                path("mlk/api/v2/messenger/sendMessage")
+                path("lk/api/v2/messenger/sendMessage")
                 bearerAuth(authToken)
                 contentType(ContentType.Application.Json)
                 setBody(body)
@@ -132,7 +132,7 @@ class GroupChatApiImpl(
             }
 
             url {
-                path("mlk/api/v2/messenger/sendMessageMedia")
+                path("lk/api/v2/messenger/sendMessageMedia")
                 setBody(MultiPartFormDataContent(
                     formData {
                         append("requestSendMessage", value = Json{}.encodeToJsonElement(requestSendMessage).toString() , headers = Headers.build {
@@ -168,7 +168,7 @@ class GroupChatApiImpl(
             }
 
             url {
-                path("mlk/api/v2/messenger/sendMessageMedia")
+                path("lk/api/v2/messenger/sendMessageMedia")
                 setBody(MultiPartFormDataContent(
                     formData {
                         append("requestSendMessage", value = Json{}.encodeToJsonElement(requestSendMessage).toString() , headers = Headers.build {

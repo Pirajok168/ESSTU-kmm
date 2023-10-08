@@ -42,7 +42,7 @@ class NewDialogApiImpl(
     override suspend fun pickMessages(authToken: String, messageIds: String): List<MessagePreview> {
         val request = portalApi.get {
             url {
-                path("mlk/api/v2/messenger/getMessages")
+                path("lk/api/v2/messenger/getMessages")
                 bearerAuth(authToken)
                 encodedParameters.append("id", messageIds)
             }
@@ -67,7 +67,7 @@ class NewDialogApiImpl(
     ): ChatMessageResponse {
         val request = portalApi.post {
             url {
-                path("/mlk/api/v2/messenger/sendMessage")
+                path("/lk/api/v2/messenger/sendMessage")
                 bearerAuth(authToken)
                 contentType(ContentType.Application.Json)
                 setBody(body)
@@ -89,7 +89,7 @@ class NewDialogApiImpl(
             }
 
             url {
-                path("mlk/api/v2/messenger/sendMessageMedia")
+                path("lk/api/v2/messenger/sendMessageMedia")
                 setBody(MultiPartFormDataContent(
                     formData {
                         append("requestSendMessage", value = Json{}.encodeToJsonElement(requestSendMessage).toString() , headers = Headers.build {
@@ -125,7 +125,7 @@ class NewDialogApiImpl(
             }
 
             url {
-                path("mlk/api/v2/messenger/sendMessageMedia")
+                path("lk/api/v2/messenger/sendMessageMedia")
                 setBody(MultiPartFormDataContent(
                     formData {
                         append("requestSendMessage", value = Json{}.encodeToJsonElement(requestSendMessage).toString() , headers = Headers.build {

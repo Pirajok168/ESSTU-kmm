@@ -12,7 +12,7 @@ class AccountInfoApiImpl(
     override suspend fun getUser(authToken: String, userId: String): UserResponse {
         val response = portalApi.get {
             url {
-                path("mlk/api/v2/messenger/getUserFull")
+                path("lk/api/v2/messenger/getUserFull")
                 bearerAuth(authToken)
                 encodedParameters.append("id", userId)
             }

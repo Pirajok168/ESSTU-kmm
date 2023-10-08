@@ -51,7 +51,7 @@ class NewAppealApiImpl(
     ): DataResponse {
         val request = portalApi.post {
             url{
-                path("mlk/api/v2/messenger/createChat")
+                path("lk/api/v2/messenger/createChat")
                 bearerAuth(authToken)
                 contentType(ContentType.Application.Json)
                 setBody(body)
@@ -71,7 +71,7 @@ class NewAppealApiImpl(
             }
 
             url{
-                path("mlk/api/v2/messenger/createChatMedia")
+                path("lk/api/v2/messenger/createChatMedia")
                 setBody(
                     MultiPartFormDataContent(
                         formData{

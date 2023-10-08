@@ -38,7 +38,7 @@ class GroupChatRepositoryImpl constructor(
 ): IGroupChatRepository {
     override suspend fun getHeader(id: Int): Flow<FlowResponse<Conversation>> = flow{
         auth.provideToken { token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Error("unsupported user type")
+            val appUserId = token.owner.id ?: throw Error("unsupported user type")
             emit(FlowResponse.Loading())
 
             val cachedHeader = headerDao.getConversationWithParticipants(appUserId = appUserId, id = id)?.toConversation()
@@ -76,7 +76,7 @@ class GroupChatRepositoryImpl constructor(
         offset: Int
     ): Response<List<Message>> {
         val cached = auth.provideToken { token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Error("unsupported user type")
+            val appUserId = token.owner.id ?: throw Error("unsupported user type")
 
             historyCacheDao.getMessageHistory(
                 limit = limit,
@@ -113,7 +113,7 @@ class GroupChatRepositoryImpl constructor(
 
     override suspend fun setMessages(convId: Int, messages: List<Message>) {
         auth.provideToken { token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
+            val appUserId = token.owner.id ?: return@provideToken
 
             historyCacheDao.insertMessagesWithRelated(messages.map {
                 it.toMessageWithRelatedGroupChat(
@@ -127,7 +127,7 @@ class GroupChatRepositoryImpl constructor(
     override suspend fun getUserMessage(convId: Int): NewUserMessage {
 
         val message = auth.provideToken { token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
+            val appUserId = token.owner.id ?: return@provideToken null
             val a = userMsgDao.getUserMessageWithRelated(appUserId, convId.toLong())?.toSentUserMessage()
             return@provideToken a
         }
@@ -148,7 +148,7 @@ class GroupChatRepositoryImpl constructor(
 
     override suspend fun updateUserMessage(convId: Int, message: NewUserMessage) {
         auth.provideToken { token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
+            val appUserId = token.owner.id ?: return@provideToken
 
             userMsgDao.updateUserMessageWithRelated(
                 message = message.toUserMessageEntity(appUserId, convId),
@@ -159,7 +159,7 @@ class GroupChatRepositoryImpl constructor(
 
     override suspend fun updateLastMessageOnPreview(convId: Int, message: Message) {
         auth.provideToken { token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
+            val appUserId = token.owner.id ?: return@provideToken
             groupChatApi.readMessages(
                 "${token.access}",
                 ChatReadRequestBody(
@@ -255,7 +255,7 @@ class GroupChatRepositoryImpl constructor(
 
     override suspend fun getErredMessages(convId: Int): List<SentUserMessage> {
         val messages = auth.provideToken { token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken null
+            val appUserId = token.owner.id ?: return@provideToken null
             return@provideToken erredMsgDao.getErredMessageWithRelated(appUserId, convId).map { it.toSentUserMessage() }
         }.data ?: emptyList()
 
@@ -264,7 +264,7 @@ class GroupChatRepositoryImpl constructor(
 
     override suspend fun setErredMessage(convId: Int, message: SentUserMessage) {
         auth.provideToken { token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
+            val appUserId = token.owner.id ?: return@provideToken
             val erredMessage = message.toErredMessageEntity(appUserId, convId) ?: return@provideToken
             erredMsgDao.addMessage(erredMessage)
             erredMsgDao.addCachedFiles(message.attachments.map { it.toEntity(message.id) })

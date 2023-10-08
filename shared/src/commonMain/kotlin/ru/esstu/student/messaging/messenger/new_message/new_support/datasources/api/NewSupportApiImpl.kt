@@ -36,7 +36,7 @@ class NewSupportApiImpl(
     ): DataResponse {
         val request = portalApi.post {
             url{
-                path("mlk/api/v2/messenger/createChat")
+                path("lk/api/v2/messenger/createChat")
                 bearerAuth(authToken)
                 contentType(ContentType.Application.Json)
                 setBody(body)

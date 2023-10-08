@@ -23,7 +23,7 @@ class NewSupportRepositoryImpl(
     override fun getSupportThemes(): Flow<FlowResponse<List<SupportTheme>>>  = flow{
         emit(FlowResponse.Loading())
         val result = auth.provideToken { token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Exception("unsupported user type")
+            val appUserId = token.owner.id ?: throw Exception("unsupported user type")
 
             val responseGroups = api.getSupport("${token.access}").map { it.toSupportGroup() }
             emit(FlowResponse.Success(responseGroups))
@@ -76,7 +76,7 @@ class NewSupportRepositoryImpl(
 
     override suspend fun updateSupportsOnPreview(support: ConversationPreview): Response<Unit> {
        return auth.provideToken { token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Exception("unsupported User Type")
+            val appUserId = token.owner.id ?: throw Exception("unsupported User Type")
            cashSupportsCacheDao.updateDialogLastMessage(
                appUserId,
                support.id,

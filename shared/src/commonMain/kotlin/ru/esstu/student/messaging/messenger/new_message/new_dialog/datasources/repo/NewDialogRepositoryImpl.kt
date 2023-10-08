@@ -90,7 +90,7 @@ class NewDialogRepositoryImpl(
     override suspend fun updateDialogOnPreview(opponent: Sender, messageId: Long): Response<Unit> {
         return auth.provideToken {
                 token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Exception("unsupported user")
+            val appUserId = token.owner.id ?: throw Exception("unsupported user")
 
             val messageResponse = api
                 .pickMessages(token.access, messageId.toString())

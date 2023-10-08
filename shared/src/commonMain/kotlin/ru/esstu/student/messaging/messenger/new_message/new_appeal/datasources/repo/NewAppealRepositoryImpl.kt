@@ -24,7 +24,7 @@ class NewAppealRepositoryImpl(
     override fun loadDepartments(): Flow<FlowResponse<List<AppealTheme>>>  = flow{
         emit(FlowResponse.Loading())
         val result = auth.provideToken { token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Exception("unsupported user type")
+            val appUserId = token.owner.id ?: throw Exception("unsupported user type")
 
             val responseGroups = api.getDepartments("${token.access}").map { it.toAppeal() }
             emit(FlowResponse.Success(responseGroups))
@@ -40,7 +40,7 @@ class NewAppealRepositoryImpl(
         emit(FlowResponse.Loading())
 
         auth.provideToken { token ->
-            val appUserId = (token.owner as TokenOwners.Student).id
+            val appUserId = token.owner.id
             val authToken = "${token.access}"
 
             val remoteThemes = api.getDepartmentsThemes(authToken, departmentId).map { it.toAppeal() }
@@ -92,7 +92,7 @@ class NewAppealRepositoryImpl(
 
     override suspend fun updateAppealOnPreview(appeal: ConversationPreview): Response<Unit> {
         return auth.provideToken { token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Exception("unsupported User Type")
+            val appUserId = token.owner.id ?: throw Exception("unsupported User Type")
             appealsCacheDao.updateDialogLastMessage(
                 appUserId,
                 appeal.id,

@@ -4,10 +4,19 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class TokenOwners {
-    data class Teacher(val id: String) : TokenOwners()
-    data class Student(val id: String) : TokenOwners()
-    object Entrant : TokenOwners()
-    object Guest : TokenOwners()
+    abstract val id: String?
+
+    data class Teacher(override val id: String) : TokenOwners()
+    data class Student(override val id: String) : TokenOwners()
+    object Entrant : TokenOwners() {
+        override val id: String?
+            get() = null
+    }
+
+    object Guest : TokenOwners() {
+        override val id: String?
+            get() = null
+    }
 
     //region сереализация
     fun asString(): String {

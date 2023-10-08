@@ -25,7 +25,7 @@ class AnnouncementsUpdateRepositoryImpl(
             val callTimestamp = DateTime.now().unixMillisLong
             auth.provideToken { token ->
 
-                val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Exception("unsupported User Type")
+                val appUserId = token.owner.id ?: throw Exception("unsupported User Type")
 
                 val latestTimestamp = timestampDao.getTimestamp(appUserId)?.toTimeStamp() ?: 0L
 

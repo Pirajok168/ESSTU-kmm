@@ -14,7 +14,7 @@ class AppealsDbRepositoryImpl(
     override suspend fun getAppeals(limit: Int, offset: Int): List<ConversationPreview> {
         val dialogs = auth.provideToken {
                 token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Exception("unsupported User Type")
+            val appUserId = token.owner.id ?: throw Exception("unsupported User Type")
             cacheDao.getDialogWithLastMessage(appUserId, pageSize = limit, pageOffset = offset ).map {  it.toMessage() }
         }.data ?: emptyList()
         return dialogs
@@ -24,7 +24,7 @@ class AppealsDbRepositoryImpl(
 
     override suspend fun setAppeals(previewDialogs: List<ConversationPreview>) {
         auth.provideToken { token ->
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Exception("unsupported User Type")
+            val appUserId = token.owner.id ?: throw Exception("unsupported User Type")
             previewDialogs.forEach {
                 cacheDao.setLastMessage(it.lastMessage ?: return@provideToken)
                 cacheDao.setDialog(appUserId,it)

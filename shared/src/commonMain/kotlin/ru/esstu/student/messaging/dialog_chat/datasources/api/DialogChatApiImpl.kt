@@ -118,7 +118,7 @@ class DialogChatApiImpl(
             }
 
             url {
-                path("mlk/api/v2/messenger/sendMessageMedia")
+                path("lk/api/v2/messenger/sendMessageMedia")
                 setBody(MultiPartFormDataContent(
                     formData {
                         append("requestSendMessage", value = Json{}.encodeToJsonElement(requestSendMessage).toString() , headers = Headers.build {
@@ -157,7 +157,7 @@ class DialogChatApiImpl(
             }
 
             url {
-                path("mlk/api/v2/messenger/sendMessageMedia")
+                path("lk/api/v2/messenger/sendMessageMedia")
                 setBody(MultiPartFormDataContent(
                     formData {
                         append("requestSendMessage", value = Json{}.encodeToJsonElement(requestSendMessage).toString() , headers = Headers.build {

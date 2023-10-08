@@ -16,7 +16,7 @@ class ConversationsApiImpl(
     ): DataResponse {
         val response = portalApi.get {
             url {
-                path("/mlk/api/v2/messenger/getDialogs")
+                path("/lk/api/v2/messenger/getDialogs")
                 bearerAuth(authToken)
                 encodedParameters.append("type", "CHAT")
                 encodedParameters.append("offset", offset.toString())
