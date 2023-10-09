@@ -1,3 +1,3 @@
 plugins {
-   // id("multiplatform-data-convention")
+    id("multiplatform-data-convention")
 }

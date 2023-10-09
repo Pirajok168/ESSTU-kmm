@@ -23,12 +23,10 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
-                Dependencies.Ktor.allDependencies.forEach {
-                    implementation(it)
-                }
-
-                implementation(Dependencies.SqlDelight.primitive)
+                implementation(project(":lib:core"))
+                implementation(project(":shared"))
                 implementation(Dependencies.Kodein.kodein)
+                implementation(Dependencies.Ktor.ktore_client)
             }
         }
 
@@ -39,9 +37,9 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation(Dependencies.Ktor.Android.okhttpp)
 
-                implementation(Dependencies.SqlDelight.Android.driver)
+
+
             }
         }
         val androidUnitTest by getting
@@ -55,8 +53,7 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
-                implementation(Dependencies.Ktor.IOS.native_ios)
-                implementation(Dependencies.SqlDelight.Ios.driver)
+
             }
         }
     }

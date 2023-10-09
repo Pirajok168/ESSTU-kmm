@@ -7,16 +7,17 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.HttpResponsePipeline
 import io.ktor.http.HttpStatusCode
 import ru.esstu.domain.utill.wrappers.Response
+import ru.esstu.domain.utill.wrappers.ResponseError
+import ru.esstu.web_errors.ServerError
 
-class ApiClient(
+abstract class ApiClient(
     private val client: () -> HttpClient
 ) {
-    internal suspend inline fun <reified T> request(
+     internal suspend inline fun <reified T> request(
         method: HttpClient.() -> T
     ): Response<T> {
         var response: HttpResponse? = null
         var status: HttpStatusCode? = null
-
         return with(runCatching {
             val client = client()
             client.responsePipeline.intercept(HttpResponsePipeline.Parse) {
@@ -27,9 +28,14 @@ class ApiClient(
             client.method()
         }) {
             status?.also {
-                if (it == H)
+                if (ServerError.Unresponsive.isSuitable(it.value)) {
+                    Response.Error(ResponseError())
+                }
             }
+            Response.Success(getOrThrow())
         }
     }
+
+
 
 }
