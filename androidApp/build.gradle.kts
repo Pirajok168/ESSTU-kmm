@@ -2,9 +2,10 @@
 
 plugins {
     id("com.android.application")
-    id ("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+   // id ("kotlin-kapt")
+   // id("com.google.dagger.hilt.android")
     kotlin("android")
+    id("android-common-convention")
 }
 
 android {
@@ -88,15 +89,17 @@ dependencies {
     implementation ("androidx.work:work-runtime-ktx:2.8.1")
 
     //Hilt
-    implementation ("com.google.dagger:hilt-android:2.48.1")
+    /*implementation ("com.google.dagger:hilt-android:2.48.1")
     kapt ("com.google.dagger:hilt-compiler:2.48.1")
-    implementation ("androidx.hilt:hilt-work:1.0.0")
+    implementation ("androidx.hilt:hilt-work:1.0.0")*/
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
 
 
     implementation ("com.google.accompanist:accompanist-permissions:0.28.0")
 }
+/*
 
 kapt {
     correctErrorTypes = true
 }
+*/

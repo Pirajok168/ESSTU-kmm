@@ -30,6 +30,7 @@ object Versions {
 
     object Kotlin {
         const val kotlinVersion = "1.9.10"
+        const val dateTime = "0.4.0"
     }
 
     object SqlDelight {

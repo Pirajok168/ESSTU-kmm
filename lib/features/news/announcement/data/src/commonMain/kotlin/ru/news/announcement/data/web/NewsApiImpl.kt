@@ -2,7 +2,6 @@ package ru.news.announcement.data.web
 
 import io.ktor.client.request.bearerAuth
 import io.ktor.http.path
-import ru.esstu.core.ktor.AuthorizedHttpClient
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
 import ru.esstu.domain.utill.wrappers.Response
 

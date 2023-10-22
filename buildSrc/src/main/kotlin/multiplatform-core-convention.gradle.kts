@@ -29,6 +29,8 @@ kotlin {
 
                 implementation(Dependencies.SqlDelight.primitive)
                 implementation(Dependencies.Kodein.kodein)
+
+                implementation("com.russhwolf:multiplatform-settings-no-arg:0.9")
             }
         }
 
@@ -48,7 +50,6 @@ kotlin {
         val iosX64Main by getting
         val iosArm64Main by getting
         val iosSimulatorArm64Main by getting
-
         val iosMain by creating {
             dependsOn(commonMain)
             iosX64Main.dependsOn(this)
@@ -59,12 +60,16 @@ kotlin {
                 implementation(Dependencies.SqlDelight.Ios.driver)
             }
         }
+        val iosX64Test by getting
+        val iosArm64Test by getting
+        val iosSimulatorArm64Test by getting
+        val iosTest by creating {
+            dependsOn(commonTest)
+            iosX64Test.dependsOn(this)
+            iosArm64Test.dependsOn(this)
+            iosSimulatorArm64Test.dependsOn(this)
+        }
     }
-}
-
-
-sqldelight {
-
 }
 
 android {

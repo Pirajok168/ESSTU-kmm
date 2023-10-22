@@ -41,7 +41,6 @@ fun FileAttachmentResponse.toAttachment(): AttachmentNews {
     )
 }
 
-
 fun DataResponse.toAnnouncements(): List<NewsNode> {
 
     return conversations.filter { it.type == "ANNOUNCEMENT" }.mapNotNull { conversation ->

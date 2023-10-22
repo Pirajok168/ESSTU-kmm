@@ -4,7 +4,6 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("com.android.library")
-    id("app.cash.sqldelight")
 }
 
 kotlin {
@@ -23,10 +22,7 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
-                Dependencies.Ktor.allDependencies.forEach {
-                    implementation(it)
-                }
-                implementation("app.cash.sqldelight:primitive-adapters:2.0.0")
+                implementation(Dependencies.Kodein.kodein)
             }
         }
 
@@ -37,9 +33,9 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation(Dependencies.Ktor.Android.okhttpp)
 
-                implementation("app.cash.sqldelight:android-driver:2.0.0")
+
+
             }
         }
         val androidUnitTest by getting
@@ -53,13 +49,11 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
-                implementation(Dependencies.Ktor.IOS.native_ios)
-                implementation("app.cash.sqldelight:native-driver:2.0.0")
+
             }
         }
     }
 }
-
 
 android {
     namespace = "ru.esstu"

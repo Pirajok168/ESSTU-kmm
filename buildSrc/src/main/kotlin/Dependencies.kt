@@ -64,6 +64,7 @@ object Dependencies {
 
     object Kotlin {
         const val serialization = "org.jetbrains.kotlin:kotlin-serialization:${Versions.Kotlin.kotlinVersion}"
+        const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:${Versions.Kotlin.dateTime}"
     }
 
     object Kodein {

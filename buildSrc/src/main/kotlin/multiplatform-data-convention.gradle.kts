@@ -59,11 +59,6 @@ kotlin {
     }
 }
 
-
-sqldelight {
-
-}
-
 android {
     namespace = "ru.esstu"
     compileSdk = Versions.Android.compileSdk
