@@ -1,11 +1,7 @@
 package ru.esstu.android.domain.ui
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
-import android.util.Log
 
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -13,24 +9,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.graphics.Color
 
 import androidx.core.view.WindowCompat
-
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.google.accompanist.insets.statusBarsPadding
+
+import com.example.compose.AppEsstuTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+import ru.esstu.android.authorized.news.ui.MainScreen
 import ru.esstu.android.domain.navigation.SetupNavGraph
-import ru.esstu.android.domain.ui.theme.EsstuTheme
-
 
 
 @AndroidEntryPoint
@@ -50,22 +42,14 @@ class  MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            EsstuTheme {
-
-                val context = LocalContext.current
-
+            AppEsstuTheme {
                 val navController = rememberNavController()
-
-                //observe current destination
-                //SetupUiObserver(navController = navController, listener = uiStateObserver)
                 Surface(
-                    color = MaterialTheme.colors.background,
+                    modifier = Modifier.fillMaxSize(),
+                    color = Color.Transparent
                 ) {
-
                     SetupNavGraph(navController)
                 }
-
-
             }
         }
     }

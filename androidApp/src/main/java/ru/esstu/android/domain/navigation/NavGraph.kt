@@ -14,11 +14,11 @@ import kotlinx.coroutines.flow.collectLatest
 import ru.esstu.android.auth.navigation.AuthRoutes
 import ru.esstu.android.auth.navigation.authNavGraph
 import ru.esstu.android.auth.viewmodel.LogoutViewModel
+import ru.esstu.android.authorized.navigation.authorizedNavigationGraph
 import ru.esstu.android.domain.modules.image_viewer.navigation.ImageScreen
 import ru.esstu.android.domain.modules.image_viewer.navigation.ImageScreenArguments
 import ru.esstu.android.domain.modules.image_viewer.ui.ImageScreen
 import ru.esstu.android.student.navigation.StudentRoutes
-import ru.esstu.android.student.navigation.studentNavGraph
 
 
 @ExperimentalFoundationApi
@@ -41,13 +41,15 @@ fun SetupNavGraph(
             navController = navController,
           //  onNavToTeacher = { navController.navigate(TeacherRoutes.Root.passRoute()) },
             onNavToStudent = {
-
                 navController.navigate(StudentRoutes.Root.passRoute())
             },
             onNavToEntrant = { /* TODO */ },
             onNavToGuest = { /* TODO */ },
         )
-        studentNavGraph(navController)
+
+        authorizedNavigationGraph(navController)
+
+
 
         //крашит, если ссылаться на этот экран в studentNavGraph (хз почему)
         composable(route = ImageScreen.passRoute(), arguments = ImageScreen.passArguments()) {
@@ -66,16 +68,5 @@ fun SetupNavGraph(
                     onBackPress = { navController.popBackStack() }
                 )
         }
-       /* //TODO не настроен
-        guestNavGraph(navController)
-
-        //TODO не настроен
-        entrantNavGraph(navController)
-
-
-
-        teacherNavGraph(navController)
-
-        */
     }
 }

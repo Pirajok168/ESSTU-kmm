@@ -3,16 +3,13 @@ package ru.esstu.android.student.news.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
-
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import ru.esstu.android.domain.modules.image_viewer.navigation.ImageScreen
-import ru.esstu.android.student.news.announcement_screen.ui.AnnouncementScreen
-import ru.esstu.android.student.news.selector_screen.ui.DetailNewsScreen
-import ru.esstu.android.student.news.selector_screen.ui.NewsSelectorScreen
+import ru.esstu.android.authorized.news.ui.DetailNewsScreen
+import ru.esstu.android.authorized.news.ui.MainScreen
 
 
 fun NavGraphBuilder.newsNavGraph(
@@ -25,59 +22,26 @@ fun NavGraphBuilder.newsNavGraph(
         startDestination = NewsScreens.SelectorScreen.startDest()
     ) {
         composable(route = NewsScreens.SelectorScreen.passRoute()) {
-            NewsSelectorScreen(
+            MainScreen(
                 parentPadding = padding,
-                onNavToAnnouncements = {
-                    navController.navigate(NewsScreens.AnnouncementsScreen.navigate())
-                },
-                onNavToEvents = {
-                    navController.navigate(NewsScreens.EventsScreen.navigate())
-                },
-                onNavToNews = {
-                    navController.navigate(NewsScreens.NewsScreen.navigate())
-                },
-                onNavToDetailScreen = {
+                onDetailNews = {
                     navController.navigate(NewsScreens.DetailScreen.navigate())
-                },
-                onNavToScheduleScreen = {
-                    /*navController.navigate(ScheduleScreen.passRoute()) {
-                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }*/
                 }
             )
         }
 
         composable(route = NewsScreens.DetailScreen.passRoute()) {
-            val parent = remember {
+            val parent = remember(it) {
                 navController.getBackStackEntry(NewsScreens.SelectorScreen.popTo())
             }
 
             DetailNewsScreen(
                 parentPadding = padding,
                 onBackPressed = { navController.popBackStack() },
-                onNavToImageScreen = { selected, uris ->
-                    parentNavController.navigate(ImageScreen.navigate(images = uris, startImage = selected))
-                },
                 selectorViewModel = viewModel(parent)
             )
         }
 
-        composable(route = NewsScreens.AnnouncementsScreen.passRoute()) {
-            val parent = remember {
-                navController.getBackStackEntry(NewsScreens.SelectorScreen.popTo())
-            }
-
-            AnnouncementScreen(
-                parentPadding = padding,
-                onBackPressed = { navController.popBackStack() },
-                onNavToImageScreen = { selected, uris ->
-                    parentNavController.navigate(ImageScreen.navigate(images = uris, startImage = selected))
-                },
-                viewModel(parent)
-            )
-        }
         /*
         composable(route = NewsScreens.NewsScreen.passRoute()) {
 
