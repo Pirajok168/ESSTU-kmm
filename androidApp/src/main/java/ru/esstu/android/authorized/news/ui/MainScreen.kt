@@ -170,7 +170,7 @@ fun MainScreen(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = rememberRipple(),
                             ) {
-                                selectorViewModel.onEvent(SelectorScreenEvents.PassNode(news))
+                                selectorViewModel.onEvent(SelectorScreenEvents.PassNode(news, mainScreenState.selected))
                                 onDetailNews()
                             }
                         )
@@ -197,7 +197,7 @@ fun MainScreen(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = rememberRipple(),
                             ) {
-                                selectorViewModel.onEvent(SelectorScreenEvents.PassNode(news))
+                                selectorViewModel.onEvent(SelectorScreenEvents.PassNode(news, mainScreenState.selected))
                                 onDetailNews()
                             }
                         )

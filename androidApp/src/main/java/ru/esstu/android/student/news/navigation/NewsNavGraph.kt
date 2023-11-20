@@ -1,11 +1,15 @@
 package ru.esstu.android.student.news.navigation
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOut
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import ru.esstu.android.authorized.news.ui.DetailNewsScreen
@@ -21,7 +25,10 @@ fun NavGraphBuilder.newsNavGraph(
         route = NewsScreens.Root.passRoute(),
         startDestination = NewsScreens.SelectorScreen.startDest()
     ) {
-        composable(route = NewsScreens.SelectorScreen.passRoute()) {
+        composable(
+            route = NewsScreens.SelectorScreen.passRoute(),
+
+        ) {
             MainScreen(
                 parentPadding = padding,
                 onDetailNews = {
@@ -30,7 +37,21 @@ fun NavGraphBuilder.newsNavGraph(
             )
         }
 
-        composable(route = NewsScreens.DetailScreen.passRoute()) {
+        composable(
+            route = NewsScreens.DetailScreen.passRoute(),
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = {
+                        it / 2
+                    }
+                )
+            },
+            exitTransition = {
+                slideOutHorizontally {
+                    it / 2
+                }
+            }
+        ) {
             val parent = remember(it) {
                 navController.getBackStackEntry(NewsScreens.SelectorScreen.popTo())
             }

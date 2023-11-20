@@ -18,7 +18,7 @@ class SelectorViewModel : ViewModel() {
 
     fun onEvent(event: SelectorScreenEvents) {
         when (event) {
-            is SelectorScreenEvents.PassNode -> state = state.copy(node = event.node)
+            is SelectorScreenEvents.PassNode -> state = state.copy(node = event.node,selected =event.selectedFilterNews)
         }
     }
 
