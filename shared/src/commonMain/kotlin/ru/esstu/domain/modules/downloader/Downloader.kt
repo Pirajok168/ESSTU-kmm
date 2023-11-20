@@ -22,7 +22,7 @@ class Downloader(
     private val httpClient: HttpClient
 ): IDownloader {
     @OptIn(InternalAPI::class)
-    override suspend fun downloadFile(url: String): Flow<FlowResponse<Int>> = flow{
+    override suspend fun downloadFile(url: String, name: String, ext: String): Flow<FlowResponse<Int>> = flow{
         try {
             val response = httpClient.get {
                 url(url)
@@ -41,14 +41,12 @@ class Downloader(
 
             if (response.status.isSuccess()) {
 
-
-
-                fileSystem.write("${producePath().path}/file".toPath(), true){
+                val patch = "${producePath().path}/$name.$ext"
+                fileSystem.write(patch.toPath(), true){
                     write(data)
                 }
 
-
-                emit(FlowResponse.Success(100))
+                emit(FlowResponse.Success(100,patch))
             } else {
                 emit(FlowResponse.Error(ResponseError(message = "Ошибка скачивания")))
             }

@@ -6,8 +6,8 @@ import ru.esstu.android.R
 import ru.esstu.android.domain.navigation.bottom_navigation.util.NavItem
 import ru.esstu.android.student.messaging.messenger.navigation.MessengerScreens
 import ru.esstu.android.student.messaging.messenger.navigation.messengerNavGraph
-import ru.esstu.android.student.news.navigation.NewsScreens
-import ru.esstu.android.student.news.navigation.newsNavGraph
+import ru.esstu.android.authorized.news.navigation.NewsScreens
+import ru.esstu.android.authorized.news.navigation.newsNavGraph
 
 
 @Composable

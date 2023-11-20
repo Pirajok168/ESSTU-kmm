@@ -1,58 +1,55 @@
 package ru.esstu.android.authorized.news.ui
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
-import androidx.compose.ui.unit.lerp
-import androidx.compose.ui.unit.sp
-import androidx.core.text.HtmlCompat
-import com.google.android.material.animation.AnimationUtils.lerp
 import com.skydoves.landscapist.glide.GlideImage
 import ru.esstu.android.shared.clearWindowInsets
 import ru.esstu.android.authorized.news.viewModel.SelectorViewModel
-import ru.esstu.android.shared.openDialer
 import ru.esstu.android.shared.shimmer.ShimmerBox
 import ru.esstu.android.shared.shimmer.ShimmerLayout
-import kotlin.math.absoluteValue
+import ru.esstu.android.R
+import ru.esstu.android.authorized.news.events.SelectorScreenEvents
 
 
 @SuppressLint("RestrictedApi")
@@ -68,7 +65,12 @@ fun DetailNewsScreen(
     val node = state.node ?: return
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
-    val imageList =  node.attachments.filter { it.isImage }
+    val imageList by remember {
+        mutableStateOf(node.attachments.filter { it.isImage })
+    }
+    val filesList by remember(state) {
+        mutableStateOf(node.attachments)
+    }
     val pagerState = rememberPagerState { imageList.count() }
     Scaffold(
         modifier = Modifier
@@ -92,8 +94,8 @@ fun DetailNewsScreen(
             modifier = Modifier
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-        ){
-            if (imageList.isNotEmpty()){
+        ) {
+            if (imageList.isNotEmpty()) {
 
                 HorizontalPager(
                     state = pagerState,
@@ -106,10 +108,12 @@ fun DetailNewsScreen(
                             .height(250.dp)
                             .clip(RoundedCornerShape(8.dp))
                     ) {
-                        Box(modifier = Modifier
-                            .fillMaxWidth()
-                            .height(250.dp)){
-                            Box(modifier = Modifier.matchParentSize()){
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(250.dp)
+                        ) {
+                            Box(modifier = Modifier.matchParentSize()) {
                                 GlideImage(
                                     imageModel = imageList[page].fileUri,
                                     contentScale = ContentScale.Crop,
@@ -127,7 +131,7 @@ fun DetailNewsScreen(
                                     .matchParentSize()
                                     .padding(8.dp),
                                 contentAlignment = Alignment.TopEnd
-                            ){
+                            ) {
                                 ElevatedAssistChip(
                                     onClick = { },
                                     label = {
@@ -152,7 +156,7 @@ fun DetailNewsScreen(
             }
 
 
-            Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Text(
                     text = node.title,
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
@@ -163,7 +167,7 @@ fun DetailNewsScreen(
                 val annotatedString = buildAnnotatedString {
 
                     addStyle(
-                        style =  MaterialTheme.typography.bodyMedium.copy(
+                        style = MaterialTheme.typography.bodyMedium.copy(
                             color = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.background),
                         ).toSpanStyle(),
                         start = 0,
@@ -179,9 +183,10 @@ fun DetailNewsScreen(
                         val start = result.range.first
                         val end = result.range.last + 1
                         addStyle(
-                            style =  MaterialTheme.typography.bodyMedium.copy(
+                            style = MaterialTheme.typography.bodyMedium.copy(
                                 textDecoration = TextDecoration.Underline,
-                                color = MaterialTheme.colorScheme.secondary).toSpanStyle(),
+                                color = MaterialTheme.colorScheme.secondary
+                            ).toSpanStyle(),
                             start = start,
                             end = end
                         )
@@ -210,13 +215,59 @@ fun DetailNewsScreen(
                     )
                 }
 
+                filesList.forEach {
+                    FileRow(it.name ?: "Изображение", it.loadProgress ?: 1f, it.localFileUri) {
+                        selectorViewModel.onEvent(SelectorScreenEvents.LoadFile(it))
+                    }
+                    Spacer(modifier = Modifier.size(8.dp))
+                }
+                Spacer(modifier = Modifier.size(24.dp))
             }
-
-
-
-
 
         }
     }
+}
 
+@Composable
+private fun FileRow(
+    title: String,
+    loadProgress: Float,
+    localUri: String?,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = rememberRipple(),
+            ) {
+                onClick()
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Surface(
+            tonalElevation = 16.dp,
+            modifier = Modifier.size(40.dp),
+            shape = CircleShape
+        ) {
+            if (loadProgress < 1) {
+                CircularProgressIndicator()
+            } else {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Icon(
+                        painter =
+                        painterResource(id = if (localUri == null) R.drawable.ic_download else R.drawable.ic_chat_done),
+                        contentDescription = null
+                    )
+                }
+            }
+
+        }
+        Spacer(modifier = Modifier.padding(horizontal = 4.dp))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium
+        )
+    }
 }

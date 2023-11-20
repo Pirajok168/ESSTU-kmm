@@ -1,4 +1,4 @@
-package ru.esstu.android.student.news.navigation
+package ru.esstu.android.authorized.news.navigation
 
 import androidx.navigation.NavType
 import ru.esstu.android.domain.navigation.Route

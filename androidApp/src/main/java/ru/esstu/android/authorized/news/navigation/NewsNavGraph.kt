@@ -1,4 +1,4 @@
-package ru.esstu.android.student.news.navigation
+package ru.esstu.android.authorized.news.navigation
 
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOut
