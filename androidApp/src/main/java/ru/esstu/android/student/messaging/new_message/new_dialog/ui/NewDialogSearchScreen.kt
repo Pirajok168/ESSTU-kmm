@@ -28,7 +28,7 @@ import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.statusBarsPadding
 import ru.esstu.android.R
 import ru.esstu.android.domain.ui.theme.CompPreviewTheme
-import ru.esstu.android.student.messaging.messenger.dialogs.ui.components.MessengerCard
+import ru.esstu.android.authorized.messaging.messanger.dialogs.ui.components.MessengerCard
 import ru.esstu.android.student.messaging.new_message.new_dialog.ui.components.SearchCard
 import ru.esstu.android.student.messaging.new_message.new_dialog.viewmodel.NewDialogEvents
 import ru.esstu.android.student.messaging.new_message.new_dialog.viewmodel.NewDialogViewModel

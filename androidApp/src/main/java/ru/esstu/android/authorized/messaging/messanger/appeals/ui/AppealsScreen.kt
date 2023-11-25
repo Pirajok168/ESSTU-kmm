@@ -1,80 +1,72 @@
-package ru.esstu.android.student.messaging.messenger.conversations.ui
+package ru.esstu.android.authorized.messaging.messanger.appeals.ui
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.esstu.android.domain.ui.theme.CompPreviewTheme
 import ru.esstu.android.domain.modules.account.viewmodel.AccountInfoViewModel
-import ru.esstu.android.student.messaging.messenger.conversations.viewmodel.ConversationEvents
-import ru.esstu.android.student.messaging.messenger.conversations.viewmodel.ConversationViewModel
-import ru.esstu.android.student.messaging.messenger.dialogs.ui.components.MessengerCard
-import ru.esstu.android.student.messaging.messenger.dialogs.viewmodel.DialogEvents
+import ru.esstu.android.authorized.messaging.messanger.appeals.viewmodel.AppealEvents
+import ru.esstu.android.authorized.messaging.messanger.appeals.viewmodel.AppealsViewModel
+import ru.esstu.android.authorized.messaging.messanger.dialogs.ui.components.MessengerCard
+import ru.esstu.android.authorized.messaging.messanger.supports.viewmodel.SupportEvents
 import java.util.*
 
 @Composable
-fun ConversationScreen(
-    onNavToConversationChat: (conversationId: Int) -> Unit = { },
-    accountInfoViewModel: AccountInfoViewModel = viewModel(),
-    dialogViewModel: ConversationViewModel = viewModel()
+fun AppealsScreen(
+    onNavToAppealChat: (conversationId: Int) -> Unit = { },
+    accountInfoViewModel: AccountInfoViewModel = hiltViewModel(),
+    appealViewModel: AppealsViewModel = hiltViewModel()
 ) {
     val accInfoState = accountInfoViewModel.accountInfoState
-    val uiState = dialogViewModel.conversationState
-
+    val uiState = appealViewModel.appealsState
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START)
-                dialogViewModel.onEvent(ConversationEvents.Reload)
+                appealViewModel.onEvent(AppealEvents.Reload)
             if (event == Lifecycle.Event.ON_STOP)
-                dialogViewModel.onEvent(ConversationEvents.CancelObserving)
-
+                appealViewModel.onEvent(AppealEvents.CancelObserving)
         }
 
         lifecycleOwner.lifecycle.addObserver(observer)
 
         onDispose {
+            appealViewModel.onEvent(AppealEvents.CancelObserving)
             lifecycleOwner.lifecycle.removeObserver(observer)
-            dialogViewModel.onEvent(ConversationEvents.CancelObserving)
         }
     }
-
     LazyColumn(modifier = Modifier.fillMaxSize()) {
 
-        itemsIndexed(uiState.items, key = { index, item -> item.id }) { index, item ->
+        itemsIndexed(uiState.items) { index, item ->
 
             if (index == uiState.items.lastIndex && !uiState.isEndReached && !uiState.isLoading)
-                dialogViewModel.onEvent(ConversationEvents.GetNext)
+                appealViewModel.onEvent(AppealEvents.GetNext)
 
             var subtitle: String = if (accInfoState.user?.id == item.lastMessage?.from?.id) "вы: " else ""
-            // TODO: тоже костыль пока
             subtitle += when {
-                item.lastMessage?.attachments!! > 0 == true -> "[Вложение]"
+                item.lastMessage?.attachments!! > 0  == true -> "[Вложение]"
                 item.lastMessage?.message?.isNotBlank() == true -> item.lastMessage?.message
                 else -> ""
             }
 
             MessengerCard(
                 modifier = Modifier
-                    .clickable { onNavToConversationChat(item.id) }
+                    .clickable { onNavToAppealChat(item.id) }
                     .background(
-                        MaterialTheme.colors.secondary.copy(
+                        MaterialTheme.colorScheme.secondary.copy(
                             alpha = if (item.unreadMessageCount > 0)
                                 0.1f
                             else
@@ -99,7 +91,6 @@ fun ConversationScreen(
                 ) {
                     CircularProgressIndicator()
                 }
-
         }
     }
 }

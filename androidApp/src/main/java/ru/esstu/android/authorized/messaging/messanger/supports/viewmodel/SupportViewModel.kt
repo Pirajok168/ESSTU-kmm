@@ -1,4 +1,4 @@
-package ru.esstu.android.student.messaging.messenger.supports.viewmodel
+package ru.esstu.android.authorized.messaging.messanger.supports.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.esstu.ESSTUSdk
-import ru.esstu.android.student.messaging.messenger.dialogs.viewmodel.DialogEvents
+import ru.esstu.android.authorized.messaging.messanger.dialogs.viewmodel.DialogEvents
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError

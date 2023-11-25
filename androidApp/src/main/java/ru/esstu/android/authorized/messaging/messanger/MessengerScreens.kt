@@ -1,4 +1,4 @@
-package ru.esstu.android.student.messaging.messenger.navigation
+package ru.esstu.android.authorized.messaging.messanger
 
 import androidx.navigation.NavType
 import ru.esstu.android.domain.navigation.Route

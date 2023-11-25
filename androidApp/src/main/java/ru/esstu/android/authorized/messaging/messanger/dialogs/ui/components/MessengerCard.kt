@@ -1,12 +1,11 @@
-package ru.esstu.android.student.messaging.messenger.dialogs.ui.components
+package ru.esstu.android.authorized.messaging.messanger.dialogs.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -46,14 +45,14 @@ fun MessengerCard(
             Box(
                 modifier = Modifier
                     .size(60.dp)
-                    .clip(RoundedCornerShape(50))
-                    .background(MaterialTheme.colors.primary),
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = initials.take(2),
-                    style = MaterialTheme.typography.h6,
-                    color = MaterialTheme.colors.onPrimary
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 if (photoUri.isNotBlank())
                     GlideImage(
@@ -67,20 +66,20 @@ fun MessengerCard(
                     modifier = Modifier
                         .offset(y = (-4).dp, x = 4.dp)
                         .size(28.dp)
-                        .clip(RoundedCornerShape(50))
-                        .background(MaterialTheme.colors.background),
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.background),
                     contentAlignment = Alignment.Center
                 ) {
                     Box(
                         modifier = Modifier
                             .size(22.dp)
                             .clip(RoundedCornerShape(50))
-                            .background(MaterialTheme.colors.secondary),
+                            .background(MaterialTheme.colorScheme.secondary),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = if (unread < 100) unread.toString() else "+", style = TextStyle(
-                                color = MaterialTheme.colors.onSecondary,
+                                color = MaterialTheme.colorScheme.onSecondary,
                                 fontWeight = FontWeight.Normal,
                                 fontSize = 14.sp
                             )
@@ -95,15 +94,16 @@ fun MessengerCard(
                     text = title,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.bodyLarge
                 )
                 if (desc.isNotBlank())
                     Text(
                         text = " | $desc",
-                        modifier = Modifier.alpha(ContentAlpha.medium),
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
-                        style = MaterialTheme.typography.body1
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = FontWeight.Light
+                        )
                     )
             }
 
@@ -116,26 +116,25 @@ fun MessengerCard(
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         modifier = Modifier
-                            .alpha(ContentAlpha.medium)
                             .padding(end = 7.dp)
                             .alignByBaseline()
                             .weight(1f),
-                        style = MaterialTheme.typography.body2
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Light
+                        )
                     )
 
                     if (date != null){
-                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                            Text(
-                                text = date,
-                                modifier = Modifier
-                                    .alpha(ContentAlpha.medium)
-                                    .alignByBaseline(),
-                                maxLines = 1,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 14.sp
+                        Text(
+                            text = date,
+                            modifier = Modifier
+                                .alignByBaseline(),
+                            maxLines = 1,
+                            fontWeight = FontWeight.Normal,
+                            style = MaterialTheme.typography.labelLarge.copy(
+                                fontWeight = FontWeight.Light
                             )
-                        }
-
+                        )
                     }
 
                 }
@@ -144,10 +143,6 @@ fun MessengerCard(
                 
         }
 
-        /*if (onClose != null)
-            IconButton(onClick = onClose) {
-                Icon(imageVector = Icons.Rounded.Close, contentDescription = null)
-            }*/
     }
 }
 

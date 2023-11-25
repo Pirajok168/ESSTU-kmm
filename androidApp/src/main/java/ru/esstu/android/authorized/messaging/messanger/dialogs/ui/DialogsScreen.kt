@@ -1,4 +1,4 @@
-package ru.esstu.android.student.messaging.messenger.dialogs.ui
+package ru.esstu.android.authorized.messaging.messanger.dialogs.ui
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -7,8 +7,8 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -19,10 +19,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.esstu.android.student.messaging.messenger.conversations.viewmodel.ConversationEvents
-import ru.esstu.android.student.messaging.messenger.dialogs.ui.components.MessengerCard
-import ru.esstu.android.student.messaging.messenger.dialogs.viewmodel.DialogEvents
-import ru.esstu.android.student.messaging.messenger.dialogs.viewmodel.DialogsViewModel
+import ru.esstu.android.authorized.messaging.messanger.conversations.viewmodel.ConversationEvents
+import ru.esstu.android.authorized.messaging.messanger.dialogs.ui.components.MessengerCard
+import ru.esstu.android.authorized.messaging.messanger.dialogs.viewmodel.DialogEvents
+import ru.esstu.android.authorized.messaging.messanger.dialogs.viewmodel.DialogsViewModel
 import ru.esstu.domain.utill.workingDate.toFormatString
 import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 
@@ -91,14 +91,14 @@ fun DialogsScreen(
                     )
                     .background(
                         if (isEditing) {
-                            MaterialTheme.colors.primary.copy(
+                            MaterialTheme.colorScheme.primary.copy(
                                 alpha = if (selectedList.contains(item))
                                     0.1f
                                 else
                                     0f
                             )
                         } else {
-                            MaterialTheme.colors.secondary.copy(
+                            MaterialTheme.colorScheme.secondary.copy(
                                 alpha = if (item.unreadMessageCount > 0)
                                     0.1f
                                 else

@@ -1,4 +1,4 @@
-package ru.esstu.android.student.messaging.messenger.navigation.viewmodel
+package ru.esstu.android.authorized.messaging.messanger
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

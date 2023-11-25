@@ -1,4 +1,4 @@
-package ru.esstu.android.student.messaging.messenger.dialogs.viewmodel
+package ru.esstu.android.authorized.messaging.messanger.dialogs.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

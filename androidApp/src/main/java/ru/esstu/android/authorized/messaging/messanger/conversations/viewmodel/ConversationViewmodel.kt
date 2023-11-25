@@ -1,4 +1,4 @@
-package ru.esstu.android.student.messaging.messenger.conversations.viewmodel
+package ru.esstu.android.authorized.messaging.messanger.conversations.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.getValue
