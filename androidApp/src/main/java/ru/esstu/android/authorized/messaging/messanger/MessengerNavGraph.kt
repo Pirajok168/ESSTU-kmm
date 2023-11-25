@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import ru.esstu.android.authorized.messaging.dialog_chat.navigation.DialogChatScreen
 import ru.esstu.android.authorized.messaging.group_chat.navigation.GroupChatScreen
-import ru.esstu.android.student.messaging.new_message.selector.navigation.SelectorScreens
+import ru.esstu.android.authorized.messaging.new_message.selector.navigation.SelectorScreens
 
 fun NavGraphBuilder.messengerNavGraph(
     parentNavController: NavHostController,
