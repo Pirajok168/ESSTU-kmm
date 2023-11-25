@@ -1,10 +1,13 @@
-package ru.esstu.android.student.messaging.group_chat.ui
+package ru.esstu.android.authorized.messaging.dialog_chat.ui
 
 import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -18,8 +21,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import androidx.core.net.toUri
@@ -38,32 +46,37 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.google.accompanist.insets.statusBarsPadding
+
+
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.soywiz.klock.DateFormat
 import com.soywiz.klock.DateTime
+import com.soywiz.klock.DateTimeTz
 import com.soywiz.klock.parse
 import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
 import ru.esstu.android.R
-import ru.esstu.android.domain.ui.theme.CompPreviewTheme
-import ru.esstu.android.domain.modules.account.viewmodel.AccountInfoViewModel
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.ChatPreview
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.MessageCard
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.NewAttachment
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.NewMessageCard
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.ReplyPreview
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.SwipeableCard
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.TimeDivider
 import ru.esstu.android.domain.datasources.download_worker.FileDownloadWorker
-import ru.esstu.android.student.messaging.dialog_chat.ui.components.*
-import ru.esstu.android.student.messaging.dialog_chat.util.cacheToFile
-import ru.esstu.android.student.messaging.dialog_chat.util.withPermissions
-import ru.esstu.android.student.messaging.dialog_chat.viewmodel.DialogChatEvents
-import ru.esstu.android.student.messaging.group_chat.ui.components.ChatPreview
-import ru.esstu.android.student.messaging.group_chat.ui.components.MessageCard
-import ru.esstu.android.student.messaging.group_chat.ui.components.NewMessageCardGroupChat
-import ru.esstu.android.student.messaging.group_chat.viewmodel.GroupChatEvents
-import ru.esstu.android.student.messaging.group_chat.viewmodel.GroupChatViewModel
+
+import ru.esstu.android.authorized.messaging.dialog_chat.util.cacheToFile
+import ru.esstu.android.authorized.messaging.dialog_chat.viewmodel.DialogChatEvents
+import ru.esstu.android.authorized.messaging.dialog_chat.viewmodel.DialogChatViewModel
+//import ru.esstu.student.messaging.dialog_chat.util.cacheToFile
 import ru.esstu.student.messaging.dialog_chat.util.toAttachment
 import ru.esstu.student.messaging.dialog_chat.util.toReplyMessage
+//import ru.esstu.student.messaging.dialog_chat.util.withPermissions
+
 import ru.esstu.student.messaging.entities.DeliveryStatus
 
 
@@ -74,44 +87,43 @@ private val dateFormat: DateFormat = DateFormat("d MMM yyyy")
     ExperimentalMaterial3Api::class
 )
 @Composable
-fun GroupChatScreen(
+fun DialogChatScreen(
     onBackPressed: () -> Unit = {},
     onNavToImage: (startUri: String, uris: List<String>) -> Unit = { _, _ -> },
-    convId: Int,
-    showConvAuthor: Boolean = true,
-    viewModel: GroupChatViewModel = hiltViewModel(),
-    accInfoVM: AccountInfoViewModel = viewModel()
+    opponentId: String,
+    viewModel: DialogChatViewModel = hiltViewModel()
 ) {
 
     DisposableEffect(Unit) {
-        viewModel.onEvent(GroupChatEvents.PassConversation(convId))
+        viewModel.onEvent(DialogChatEvents.PassOpponent(opponentId))
+
         onDispose {
-            viewModel.onEvent(GroupChatEvents.CancelObserver)
+            viewModel.onEvent(DialogChatEvents.CancelObserver)
         }
     }
 
     //region activityResultApi
     val context = LocalContext.current
-    val fileLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val resultUris = result.data?.run {
-                when (val uris = clipData) {
-                    null ->
-                        listOfNotNull(data)
+    val fileLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val resultUris = result.data?.run {
+                    when (val uris = clipData) {
+                        null ->
+                            listOfNotNull(data)
 
-                    else ->
-                        (0 until uris.itemCount).mapNotNull { index -> uris.getItemAt(index).uri }
-                }
-            } ?: return@rememberLauncherForActivityResult
+                        else ->
+                            (0 until uris.itemCount).mapNotNull { index -> uris.getItemAt(index).uri }
+                    }
+                } ?: return@rememberLauncherForActivityResult
 
-            val files = resultUris.mapNotNull { it.cacheToFile(context) }
+                val files = resultUris.mapNotNull { it.cacheToFile(context) }
 
-            viewModel.onEvent(GroupChatEvents.PassAttachments(files))
+                viewModel.onEvent(DialogChatEvents.PassAttachments(files))
+            }
         }
-    }
     //endregion
 
-    val accInfoState = accInfoVM.accountInfoState
     val uiState = viewModel.dialogChatState
 
 
@@ -124,9 +136,10 @@ fun GroupChatScreen(
         )
     )
 
-    Scaffold(modifier = Modifier
-        .fillMaxSize()
-        .imePadding(),
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .imePadding(),
         topBar = {
             Surface(
                 shadowElevation = 8.dp
@@ -144,7 +157,7 @@ fun GroupChatScreen(
                             }
                             Spacer(modifier = Modifier.width(8.dp))
                             Box(modifier = Modifier.weight(1f)) {
-                                when (val conv = uiState.conversation) {
+                                when (val opponent = uiState.opponent) {
                                     null -> {
                                         Box(
                                             modifier = Modifier
@@ -155,10 +168,10 @@ fun GroupChatScreen(
                                         )
                                     }
                                     else -> ChatPreview(
-                                        abbreviation = conv.title,
-                                        title = conv.title,
-                                        subtitlePrev = "Автор ",
-                                        subtitle = if (showConvAuthor) conv.author?.fio ?: "Неизвестен" else ""
+                                        abbreviation = opponent.initials,
+                                        title = opponent.fio,
+                                        subtitle = opponent.summary,
+                                        photoUri = opponent.photo
                                     )
                                 }
                             }
@@ -191,7 +204,13 @@ fun GroupChatScreen(
                                         .padding(vertical = 16.dp),
                                     title = "${attachment.name}.${attachment.ext}",
                                     uri = if (attachment.isImage) attachment.uri else null,
-                                    onClose = { viewModel.onEvent(GroupChatEvents.RemoveAttachment(attachment)) }
+                                    onClose = {
+                                        viewModel.onEvent(
+                                            DialogChatEvents.RemoveAttachment(
+                                                attachment
+                                            )
+                                        )
+                                    }
                                 )
                             }
                         }
@@ -213,9 +232,9 @@ fun GroupChatScreen(
                                         .weight(1f),
                                     title = from.fio,
                                     subtitle = message.ifBlank { "[Вложение]" },
-                                    time = formatDate
+                                    time = DateTime(date)
                                 )
-                                IconButton(onClick = { viewModel.onEvent(GroupChatEvents.RemoveReplyMessage) }) {
+                                IconButton(onClick = { viewModel.onEvent(DialogChatEvents.RemoveReplyMessage) }) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.ic_baseline_close),
                                         contentDescription = null
@@ -269,9 +288,13 @@ fun GroupChatScreen(
                     placeholder = { Text(text = "Новое сообщение") },
                     trailingIcon = {
 
-                        val isValidMessage = uiState.message.text.any() || uiState.message.attachments.any()
+                        val isValidMessage =
+                            uiState.message.text.any() || uiState.message.attachments.any()
 
-                        IconButton(onClick = { viewModel.onEvent(GroupChatEvents.SendMessage) }, enabled = isValidMessage) {
+                        IconButton(
+                            onClick = { viewModel.onEvent(DialogChatEvents.SendMessage) },
+                            enabled = isValidMessage
+                        ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_chat_send_message),
                                 contentDescription = null,
@@ -281,7 +304,7 @@ fun GroupChatScreen(
                             )
                         }
                     },
-                    onValueChange = { viewModel.onEvent(GroupChatEvents.PassMessage(it)) })
+                    onValueChange = { viewModel.onEvent(DialogChatEvents.PassMessage(it)) })
                 Spacer(modifier = Modifier.navigationBarsPadding())
             }
         }
@@ -294,20 +317,23 @@ fun GroupChatScreen(
                 reverseLayout = true,
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
-
+                //<editor-fold desc="Только что отправленные сообщения">
                 uiState.sentMessages
-                    .groupBy {  dateFormat.parse(
-                        "${it.formatDate.local.dayOfMonth} " +
-                                "${it.formatDate.local.month.localShortName} ${it.formatDate.local.yearInt}"
-                    ) }
+                    .groupBy {
+                        dateFormat.parse(
+                            "${it.formatDate.local.dayOfMonth} " +
+                                    "${it.formatDate.local.month.localShortName} ${it.formatDate.local.yearInt}"
+                        )
+                    }
                     .forEach { (date, messages) ->
                         val isCurrentYear = date.year == todayYear
+
                         items(messages) { message ->
 
                             var sentMessageModifier: Modifier = Modifier
                             if (message.status == DeliveryStatus.ERRED)
                                 sentMessageModifier = sentMessageModifier.clickable {
-                                    viewModel.onEvent(GroupChatEvents.ResendMessage(message))
+                                    viewModel.onEvent(DialogChatEvents.ResendMessage(message))
                                 }
 
                             Row(Modifier.padding(horizontal = 24.dp)) {
@@ -336,7 +362,8 @@ fun GroupChatScreen(
                                             Box(modifier = Modifier.clickable {
 
                                                 if (file.localFileUri?.isNotBlank() == true) {
-                                                    val localUri = file.localFileUri.orEmpty().toUri()
+                                                    val localUri =
+                                                        file.localFileUri.orEmpty().toUri()
 
                                                     try {
                                                         val intent = Intent(Intent.ACTION_VIEW)
@@ -357,7 +384,8 @@ fun GroupChatScreen(
 
                                                     } catch (e: ActivityNotFoundException) {
                                                         scope.launch {
-                                                            /*scaffoldState.snackbarHostState.let { snackbarState ->
+                                                            // TODO("Не забыть")
+                                                           /* scaffoldState.snackbarHostState.let { snackbarState ->
                                                                 if (snackbarState.currentSnackbarData == null)
                                                                     scaffoldState.snackbarHostState.showSnackbar(
                                                                         message = "Неподдерживаемый формат файла",
@@ -382,40 +410,38 @@ fun GroupChatScreen(
                                 TimeDivider(date = date, isCurrentYear = isCurrentYear)
                             }
                     }
+                //</editor-fold>
+
 
                 uiState.pages
                     .mapIndexed { index, message -> index to message }
-                    .groupBy { dateFormat.parse(
-                        "${it.second.formatDate.local.dayOfMonth} " +
-                                "${it.second.formatDate.local.month.localShortName} ${it.second.formatDate.local.yearInt}"
-                    ) }
+                    .groupBy {
+                        dateFormat.parse(
+                            "${it.second.formatDate.local.dayOfMonth} " +
+                                    "${it.second.formatDate.local.month.localShortName} ${it.second.formatDate.local.yearInt}"
+                        )
+                    }
                     .forEach { (date, messages) ->
                         val isCurrentYear = date.year == todayYear
 
                         items(messages) { (index, message) ->
-                            if (index == uiState.pages.lastIndex && !uiState.isEndReached && !uiState.isPageLoading)
-                                viewModel.onEvent(GroupChatEvents.NextPage)
-
-                            val isMessageFromYou = accInfoState.user?.id == message.from.id
-
-                            val nextMessage = uiState.pages.getOrNull(index + 1)
-                            val isNextSameAuthorAndDate =
-                                nextMessage?.from?.id == message.from.id && nextMessage.date == message.date
+                            if (index == uiState.pages.lastIndex && !uiState.isEndReached && !uiState.isPageLoading && uiState.pages.size > 9)
+                                viewModel.onEvent(DialogChatEvents.NextPage)
 
                             Row(Modifier.padding(horizontal = 24.dp)) {
 
                                 val backgroundColor =
-                                    if (isMessageFromYou)
+                                    if (message.from.id != opponentId)
                                         MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
                                     else
                                         MaterialTheme.colorScheme.onBackground.copy(alpha = 0.08f)
 
-                                val alignment = if (isMessageFromYou)
-                                    Alignment.CenterEnd
-                                else
+                                val alignment = if (message.from.id == opponentId)
                                     Alignment.CenterStart
+                                else
+                                    Alignment.CenterEnd
 
-                                if (isMessageFromYou)
+                                if (message.from.id != opponentId)
                                     Spacer(modifier = Modifier.weight(1f))
                                 Box(
                                     contentAlignment = alignment,
@@ -427,7 +453,13 @@ fun GroupChatScreen(
 
                                     SwipeableCard(
                                         distance = 40.dp,
-                                        onDragged = { viewModel.onEvent(GroupChatEvents.PassReplyMessage(message)) },
+                                        onDragged = {
+                                            viewModel.onEvent(
+                                                DialogChatEvents.PassReplyMessage(
+                                                    message
+                                                )
+                                            )
+                                        },
                                         backLayerContent = {
                                             CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant) {
                                                 Icon(
@@ -437,25 +469,25 @@ fun GroupChatScreen(
                                                 )
                                             }
                                         }) {
-                                        NewMessageCardGroupChat(
-                                            from = if (!isNextSameAuthorAndDate && !isMessageFromYou)
-                                                message.from else null,
+                                        NewMessageCard(
                                             attachments = message.attachments,
                                             messageText = message.message,
                                             date = message.date,
                                             reply = message.replyMessage,
                                             sentStatus = message.status,
-                                            backgroundColor = backgroundColor, isShowStatus = isMessageFromYou,
+                                            backgroundColor = backgroundColor,
+                                            isShowStatus = message.from.id != opponentId,
                                             onImageClick = { id, attachments ->
                                                 onNavToImage(
                                                     attachments.firstOrNull { it.id == id }?.closestUri.orEmpty(),
                                                     attachments.map { it.closestUri }
                                                 )
                                             },
-                                            onFileClick = {
-                                                    file ->
+                                            onFileClick = { file ->
+
+
                                                 if (filesPermissionsState.permissions.all { it.status.isGranted }) {
-                                                    if(file.loadProgress == null && file.localFileUri.isNullOrBlank()){
+                                                    if (file.loadProgress == null && file.localFileUri.isNullOrBlank()) {
                                                         scope.launch {
                                                             workManager.getWorkInfosForUniqueWorkLiveData(
                                                                 file.id.toString()
@@ -475,7 +507,7 @@ fun GroupChatScreen(
                                                                                         localFileUri = null
                                                                                     )
                                                                                 viewModel.onEvent(
-                                                                                    GroupChatEvents.UpdateAttachment(
+                                                                                    DialogChatEvents.UpdateAttachment(
                                                                                         messageId = message.id,
                                                                                         fileCopy
                                                                                     )
@@ -495,7 +527,7 @@ fun GroupChatScreen(
                                                                                         loadProgress = null
                                                                                     )
                                                                                 viewModel.onEvent(
-                                                                                    GroupChatEvents.UpdateAttachment(
+                                                                                    DialogChatEvents.UpdateAttachment(
                                                                                         messageId = message.id,
                                                                                         fileCopy
                                                                                     )
@@ -511,7 +543,7 @@ fun GroupChatScreen(
                                                                                         localFileUri = null
                                                                                     )
                                                                                 viewModel.onEvent(
-                                                                                    GroupChatEvents.UpdateAttachment(
+                                                                                    DialogChatEvents.UpdateAttachment(
                                                                                         messageId = message.id,
                                                                                         fileCopy
                                                                                     )
@@ -526,22 +558,24 @@ fun GroupChatScreen(
                                                             }
                                                         }
                                                         viewModel.onEvent(
-                                                            GroupChatEvents.DownloadAttachment(
+                                                            DialogChatEvents.DownloadAttachment(
                                                                 message.id,
                                                                 file
                                                             )
                                                         )
                                                     }
+
                                                 } else {
                                                     filesPermissionsState.launchMultiplePermissionRequest()
-                                                    /*scope.launch {
-                                                        scaffoldState.snackbarHostState.showSnackbar(
+                                                    scope.launch {
+                                                        /*scaffoldState.snackbarHostState.showSnackbar(
                                                             "Нет разрешений"
-                                                        )
-                                                    }*/
+                                                        )*/
+                                                    }
 
                                                 }
-                                                if (file.localFileUri?.isNotBlank() == true && file.loadProgress == null){
+
+                                                if (file.localFileUri?.isNotBlank() == true && file.loadProgress == null) {
                                                     val localUri =
                                                         file.localFileUri.orEmpty().toUri()
 
@@ -570,8 +604,7 @@ fun GroupChatScreen(
 
                                                     } catch (e: ActivityNotFoundException) {
                                                         scope.launch {
-                                                            // TODO("Не забыть")
-                                                            /*scaffoldState.snackbarHostState.let { snackbarState ->
+                                                           /* scaffoldState.snackbarHostState.let { snackbarState ->
                                                                 if (snackbarState.currentSnackbarData == null)
                                                                     scaffoldState.snackbarHostState.showSnackbar(
                                                                         message = "Неподдерживаемый формат файла",
@@ -588,7 +621,7 @@ fun GroupChatScreen(
 
                                     }
                                 }
-                                if (!isMessageFromYou)
+                                if (message.from.id == opponentId)
                                     Spacer(modifier = Modifier.weight(1f))
                             }
                         }
@@ -609,15 +642,15 @@ fun GroupChatScreen(
                             CircularProgressIndicator()
                         }
                     }
+
+
             }
+
+
         }
+
+
     }
 }
 
-@Preview
-@Composable
-fun DCS() {
-    CompPreviewTheme {
-        GroupChatScreen(convId = 0)
-    }
-}
+

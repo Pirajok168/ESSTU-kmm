@@ -27,7 +27,7 @@ import androidx.core.content.ContextCompat
 
 import ru.esstu.android.R
 import ru.esstu.android.domain.ui.theme.EsstuTheme
-import ru.esstu.android.student.messaging.dialog_chat.viewmodel.DialogChatEvents
+import ru.esstu.android.authorized.messaging.dialog_chat.viewmodel.DialogChatEvents
 
 fun withPermissions(
     context: Context,

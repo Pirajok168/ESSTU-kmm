@@ -8,12 +8,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import ru.esstu.android.authorized.navigation.bottom_navigation.BottomAuthorizedNavigation
 import ru.esstu.android.domain.modules.image_viewer.navigation.ImageScreen
-import ru.esstu.android.student.messaging.dialog_chat.navigation.DialogChatArguments
-import ru.esstu.android.student.messaging.dialog_chat.navigation.DialogChatScreen
-import ru.esstu.android.student.messaging.dialog_chat.ui.DialogChatScreen
-import ru.esstu.android.student.messaging.group_chat.navigation.GroupChatArguments
-import ru.esstu.android.student.messaging.group_chat.navigation.GroupChatScreen
-import ru.esstu.android.student.messaging.group_chat.ui.GroupChatScreen
+import ru.esstu.android.authorized.messaging.dialog_chat.navigation.DialogChatArguments
+import ru.esstu.android.authorized.messaging.dialog_chat.navigation.DialogChatScreen
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.DialogChatScreen
+
+import ru.esstu.android.authorized.messaging.group_chat.navigation.GroupChatArguments
+import ru.esstu.android.authorized.messaging.group_chat.navigation.GroupChatScreen
+import ru.esstu.android.authorized.messaging.group_chat.ui.GroupChatScreen
 import ru.esstu.android.student.navigation.StudentRoutes
 
 fun NavGraphBuilder.authorizedNavigationGraph(

@@ -1,4 +1,4 @@
-package ru.esstu.android.student.messaging.group_chat.viewmodel
+package ru.esstu.android.authorized.messaging.group_chat.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

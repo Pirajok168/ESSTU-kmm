@@ -25,9 +25,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.statusBarsPadding
 import ru.esstu.android.R
-import ru.esstu.android.student.messaging.dialog_chat.ui.components.AddNewAttachment
-import ru.esstu.android.student.messaging.dialog_chat.ui.components.NewAttachment
-import ru.esstu.android.student.messaging.dialog_chat.util.cacheToFile
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.AddNewAttachment
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.NewAttachment
+import ru.esstu.android.authorized.messaging.dialog_chat.util.cacheToFile
 import ru.esstu.android.student.messaging.new_message.new_appeal.viewmodel.NewAppealEvents
 import ru.esstu.android.student.messaging.new_message.new_appeal.viewmodel.NewAppealViewModel
 

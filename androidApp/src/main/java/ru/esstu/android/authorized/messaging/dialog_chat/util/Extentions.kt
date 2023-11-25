@@ -1,4 +1,4 @@
-package ru.esstu.android.student.messaging.dialog_chat.util
+package ru.esstu.android.authorized.messaging.dialog_chat.util
 
 import android.content.Context
 import android.content.pm.PackageManager

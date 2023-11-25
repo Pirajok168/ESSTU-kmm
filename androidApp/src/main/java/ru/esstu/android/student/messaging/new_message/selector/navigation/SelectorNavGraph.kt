@@ -4,8 +4,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import ru.esstu.android.student.messaging.dialog_chat.navigation.DialogChatScreen
-import ru.esstu.android.student.messaging.group_chat.navigation.GroupChatScreen
+import ru.esstu.android.authorized.messaging.dialog_chat.navigation.DialogChatScreen
+import ru.esstu.android.authorized.messaging.group_chat.navigation.GroupChatScreen
 import ru.esstu.android.student.messaging.new_message.new_appeal.navigation.NewAppealsScreens
 import ru.esstu.android.student.messaging.new_message.new_appeal.navigation.newAppealNavGraph
 import ru.esstu.android.student.messaging.new_message.new_dialog.navigation.NewDialogScreens

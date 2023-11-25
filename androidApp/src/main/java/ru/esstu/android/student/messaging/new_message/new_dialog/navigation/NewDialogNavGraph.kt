@@ -1,13 +1,12 @@
 package ru.esstu.android.student.messaging.new_message.new_dialog.navigation
 
 import androidx.compose.runtime.remember
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import ru.esstu.android.student.messaging.dialog_chat.navigation.DialogChatScreen
+import ru.esstu.android.authorized.messaging.dialog_chat.navigation.DialogChatScreen
 import ru.esstu.android.student.messaging.new_message.new_dialog.ui.NewDialogScreen
 import ru.esstu.android.student.messaging.new_message.new_dialog.ui.NewDialogSearchScreen
 import ru.esstu.android.student.messaging.new_message.selector.navigation.SelectorScreens

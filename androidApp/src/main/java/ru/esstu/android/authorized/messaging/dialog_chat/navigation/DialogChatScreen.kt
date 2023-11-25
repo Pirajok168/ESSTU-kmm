@@ -1,6 +1,7 @@
-package ru.esstu.android.student.messaging.dialog_chat.navigation
+package ru.esstu.android.authorized.messaging.dialog_chat.navigation
 
 import androidx.navigation.NavType
+import ru.esstu.android.authorized.messaging.dialog_chat.navigation.DialogChatArguments
 import ru.esstu.android.domain.navigation.Route
 
 enum class DialogChatArguments {

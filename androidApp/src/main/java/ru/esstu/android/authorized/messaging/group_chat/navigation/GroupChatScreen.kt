@@ -1,4 +1,4 @@
-package ru.esstu.android.student.messaging.group_chat.navigation
+package ru.esstu.android.authorized.messaging.group_chat.navigation
 
 import androidx.navigation.NavType
 import ru.esstu.android.domain.navigation.Route

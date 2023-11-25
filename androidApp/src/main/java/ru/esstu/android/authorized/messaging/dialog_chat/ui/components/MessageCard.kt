@@ -1,4 +1,4 @@
-package ru.esstu.android.student.messaging.dialog_chat.ui.components
+package ru.esstu.android.authorized.messaging.dialog_chat.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

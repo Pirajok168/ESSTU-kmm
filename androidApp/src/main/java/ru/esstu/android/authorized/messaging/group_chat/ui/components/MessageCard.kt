@@ -1,4 +1,4 @@
-package ru.esstu.android.student.messaging.group_chat.ui.components
+package ru.esstu.android.authorized.messaging.group_chat.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,16 +12,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 import com.soywiz.klock.DateFormat
 import ru.esstu.android.R
-import ru.esstu.android.domain.ui.theme.CompPreviewTheme
-import ru.esstu.android.student.messaging.dialog_chat.ui.components.Attachment
-import ru.esstu.android.student.messaging.dialog_chat.ui.components.ImageGrid
-import ru.esstu.android.student.messaging.dialog_chat.ui.components.ReplyPreview
-import ru.esstu.android.student.messaging.dialog_chat.ui.components.TimePlaceholder
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.Attachment
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.ImageGrid
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.ReplyPreview
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.TimePlaceholder
 import ru.esstu.domain.utill.workingDate.toFormatString
 import ru.esstu.student.messaging.entities.DeliveryStatus
 import ru.esstu.student.messaging.entities.MessageAttachment

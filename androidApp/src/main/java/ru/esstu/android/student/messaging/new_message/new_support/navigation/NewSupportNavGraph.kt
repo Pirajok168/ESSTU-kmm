@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import ru.esstu.android.student.messaging.group_chat.navigation.GroupChatScreen
+import ru.esstu.android.authorized.messaging.group_chat.navigation.GroupChatScreen
 import ru.esstu.android.student.messaging.new_message.new_support.ui.NewSupportScreen
 import ru.esstu.android.student.messaging.new_message.new_support.ui.NewSupportThemeSelectorScreen
 import ru.esstu.android.student.messaging.new_message.selector.navigation.SelectorScreens

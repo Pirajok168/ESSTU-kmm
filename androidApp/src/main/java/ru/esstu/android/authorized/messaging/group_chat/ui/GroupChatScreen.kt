@@ -1,13 +1,10 @@
-package ru.esstu.android.student.messaging.dialog_chat.ui
+package ru.esstu.android.authorized.messaging.group_chat.ui
 
 import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -21,12 +18,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +30,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import androidx.core.net.toUri
@@ -46,33 +38,31 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-
-
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.soywiz.klock.DateFormat
 import com.soywiz.klock.DateTime
-import com.soywiz.klock.DateTimeTz
 import com.soywiz.klock.parse
 import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
 import ru.esstu.android.R
-import ru.esstu.android.domain.datasources.download_worker.FileDownloadWorker
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.NewAttachment
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.ReplyPreview
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.SwipeableCard
+import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.TimeDivider
 import ru.esstu.android.domain.ui.theme.CompPreviewTheme
-import ru.esstu.android.shared.clearWindowInsets
-
-import ru.esstu.android.student.messaging.dialog_chat.ui.components.*
-import ru.esstu.android.student.messaging.dialog_chat.util.cacheToFile
-import ru.esstu.android.student.messaging.dialog_chat.viewmodel.DialogChatEvents
-import ru.esstu.android.student.messaging.dialog_chat.viewmodel.DialogChatViewModel
-//import ru.esstu.student.messaging.dialog_chat.util.cacheToFile
+import ru.esstu.android.domain.modules.account.viewmodel.AccountInfoViewModel
+import ru.esstu.android.domain.datasources.download_worker.FileDownloadWorker
+import ru.esstu.android.authorized.messaging.dialog_chat.util.cacheToFile
+import ru.esstu.android.authorized.messaging.group_chat.ui.components.ChatPreview
+import ru.esstu.android.authorized.messaging.group_chat.ui.components.MessageCard
+import ru.esstu.android.authorized.messaging.group_chat.ui.components.NewMessageCardGroupChat
+import ru.esstu.android.authorized.messaging.group_chat.viewmodel.GroupChatEvents
+import ru.esstu.android.authorized.messaging.group_chat.viewmodel.GroupChatViewModel
 import ru.esstu.student.messaging.dialog_chat.util.toAttachment
 import ru.esstu.student.messaging.dialog_chat.util.toReplyMessage
-//import ru.esstu.student.messaging.dialog_chat.util.withPermissions
-
 import ru.esstu.student.messaging.entities.DeliveryStatus
 
 
@@ -83,43 +73,44 @@ private val dateFormat: DateFormat = DateFormat("d MMM yyyy")
     ExperimentalMaterial3Api::class
 )
 @Composable
-fun DialogChatScreen(
+fun GroupChatScreen(
     onBackPressed: () -> Unit = {},
     onNavToImage: (startUri: String, uris: List<String>) -> Unit = { _, _ -> },
-    opponentId: String,
-    viewModel: DialogChatViewModel = hiltViewModel()
+    convId: Int,
+    showConvAuthor: Boolean = true,
+    viewModel: GroupChatViewModel = hiltViewModel(),
+    accInfoVM: AccountInfoViewModel = viewModel()
 ) {
 
     DisposableEffect(Unit) {
-        viewModel.onEvent(DialogChatEvents.PassOpponent(opponentId))
-
+        viewModel.onEvent(GroupChatEvents.PassConversation(convId))
         onDispose {
-            viewModel.onEvent(DialogChatEvents.CancelObserver)
+            viewModel.onEvent(GroupChatEvents.CancelObserver)
         }
     }
 
     //region activityResultApi
     val context = LocalContext.current
-    val fileLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val resultUris = result.data?.run {
-                    when (val uris = clipData) {
-                        null ->
-                            listOfNotNull(data)
+    val fileLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val resultUris = result.data?.run {
+                when (val uris = clipData) {
+                    null ->
+                        listOfNotNull(data)
 
-                        else ->
-                            (0 until uris.itemCount).mapNotNull { index -> uris.getItemAt(index).uri }
-                    }
-                } ?: return@rememberLauncherForActivityResult
+                    else ->
+                        (0 until uris.itemCount).mapNotNull { index -> uris.getItemAt(index).uri }
+                }
+            } ?: return@rememberLauncherForActivityResult
 
-                val files = resultUris.mapNotNull { it.cacheToFile(context) }
+            val files = resultUris.mapNotNull { it.cacheToFile(context) }
 
-                viewModel.onEvent(DialogChatEvents.PassAttachments(files))
-            }
+            viewModel.onEvent(GroupChatEvents.PassAttachments(files))
         }
+    }
     //endregion
 
+    val accInfoState = accInfoVM.accountInfoState
     val uiState = viewModel.dialogChatState
 
 
@@ -132,10 +123,9 @@ fun DialogChatScreen(
         )
     )
 
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .imePadding(),
+    Scaffold(modifier = Modifier
+        .fillMaxSize()
+        .imePadding(),
         topBar = {
             Surface(
                 shadowElevation = 8.dp
@@ -153,7 +143,7 @@ fun DialogChatScreen(
                             }
                             Spacer(modifier = Modifier.width(8.dp))
                             Box(modifier = Modifier.weight(1f)) {
-                                when (val opponent = uiState.opponent) {
+                                when (val conv = uiState.conversation) {
                                     null -> {
                                         Box(
                                             modifier = Modifier
@@ -164,10 +154,10 @@ fun DialogChatScreen(
                                         )
                                     }
                                     else -> ChatPreview(
-                                        abbreviation = opponent.initials,
-                                        title = opponent.fio,
-                                        subtitle = opponent.summary,
-                                        photoUri = opponent.photo
+                                        abbreviation = conv.title,
+                                        title = conv.title,
+                                        subtitlePrev = "Автор ",
+                                        subtitle = if (showConvAuthor) conv.author?.fio ?: "Неизвестен" else ""
                                     )
                                 }
                             }
@@ -200,13 +190,7 @@ fun DialogChatScreen(
                                         .padding(vertical = 16.dp),
                                     title = "${attachment.name}.${attachment.ext}",
                                     uri = if (attachment.isImage) attachment.uri else null,
-                                    onClose = {
-                                        viewModel.onEvent(
-                                            DialogChatEvents.RemoveAttachment(
-                                                attachment
-                                            )
-                                        )
-                                    }
+                                    onClose = { viewModel.onEvent(GroupChatEvents.RemoveAttachment(attachment)) }
                                 )
                             }
                         }
@@ -228,9 +212,9 @@ fun DialogChatScreen(
                                         .weight(1f),
                                     title = from.fio,
                                     subtitle = message.ifBlank { "[Вложение]" },
-                                    time = DateTime(date)
+                                    time = formatDate
                                 )
-                                IconButton(onClick = { viewModel.onEvent(DialogChatEvents.RemoveReplyMessage) }) {
+                                IconButton(onClick = { viewModel.onEvent(GroupChatEvents.RemoveReplyMessage) }) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.ic_baseline_close),
                                         contentDescription = null
@@ -284,13 +268,9 @@ fun DialogChatScreen(
                     placeholder = { Text(text = "Новое сообщение") },
                     trailingIcon = {
 
-                        val isValidMessage =
-                            uiState.message.text.any() || uiState.message.attachments.any()
+                        val isValidMessage = uiState.message.text.any() || uiState.message.attachments.any()
 
-                        IconButton(
-                            onClick = { viewModel.onEvent(DialogChatEvents.SendMessage) },
-                            enabled = isValidMessage
-                        ) {
+                        IconButton(onClick = { viewModel.onEvent(GroupChatEvents.SendMessage) }, enabled = isValidMessage) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_chat_send_message),
                                 contentDescription = null,
@@ -300,7 +280,7 @@ fun DialogChatScreen(
                             )
                         }
                     },
-                    onValueChange = { viewModel.onEvent(DialogChatEvents.PassMessage(it)) })
+                    onValueChange = { viewModel.onEvent(GroupChatEvents.PassMessage(it)) })
                 Spacer(modifier = Modifier.navigationBarsPadding())
             }
         }
@@ -313,23 +293,20 @@ fun DialogChatScreen(
                 reverseLayout = true,
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
-                //<editor-fold desc="Только что отправленные сообщения">
+
                 uiState.sentMessages
-                    .groupBy {
-                        dateFormat.parse(
-                            "${it.formatDate.local.dayOfMonth} " +
-                                    "${it.formatDate.local.month.localShortName} ${it.formatDate.local.yearInt}"
-                        )
-                    }
+                    .groupBy {  dateFormat.parse(
+                        "${it.formatDate.local.dayOfMonth} " +
+                                "${it.formatDate.local.month.localShortName} ${it.formatDate.local.yearInt}"
+                    ) }
                     .forEach { (date, messages) ->
                         val isCurrentYear = date.year == todayYear
-
                         items(messages) { message ->
 
                             var sentMessageModifier: Modifier = Modifier
                             if (message.status == DeliveryStatus.ERRED)
                                 sentMessageModifier = sentMessageModifier.clickable {
-                                    viewModel.onEvent(DialogChatEvents.ResendMessage(message))
+                                    viewModel.onEvent(GroupChatEvents.ResendMessage(message))
                                 }
 
                             Row(Modifier.padding(horizontal = 24.dp)) {
@@ -358,8 +335,7 @@ fun DialogChatScreen(
                                             Box(modifier = Modifier.clickable {
 
                                                 if (file.localFileUri?.isNotBlank() == true) {
-                                                    val localUri =
-                                                        file.localFileUri.orEmpty().toUri()
+                                                    val localUri = file.localFileUri.orEmpty().toUri()
 
                                                     try {
                                                         val intent = Intent(Intent.ACTION_VIEW)
@@ -380,8 +356,7 @@ fun DialogChatScreen(
 
                                                     } catch (e: ActivityNotFoundException) {
                                                         scope.launch {
-                                                            // TODO("Не забыть")
-                                                           /* scaffoldState.snackbarHostState.let { snackbarState ->
+                                                            /*scaffoldState.snackbarHostState.let { snackbarState ->
                                                                 if (snackbarState.currentSnackbarData == null)
                                                                     scaffoldState.snackbarHostState.showSnackbar(
                                                                         message = "Неподдерживаемый формат файла",
@@ -406,38 +381,40 @@ fun DialogChatScreen(
                                 TimeDivider(date = date, isCurrentYear = isCurrentYear)
                             }
                     }
-                //</editor-fold>
-
 
                 uiState.pages
                     .mapIndexed { index, message -> index to message }
-                    .groupBy {
-                        dateFormat.parse(
-                            "${it.second.formatDate.local.dayOfMonth} " +
-                                    "${it.second.formatDate.local.month.localShortName} ${it.second.formatDate.local.yearInt}"
-                        )
-                    }
+                    .groupBy { dateFormat.parse(
+                        "${it.second.formatDate.local.dayOfMonth} " +
+                                "${it.second.formatDate.local.month.localShortName} ${it.second.formatDate.local.yearInt}"
+                    ) }
                     .forEach { (date, messages) ->
                         val isCurrentYear = date.year == todayYear
 
                         items(messages) { (index, message) ->
-                            if (index == uiState.pages.lastIndex && !uiState.isEndReached && !uiState.isPageLoading && uiState.pages.size > 9)
-                                viewModel.onEvent(DialogChatEvents.NextPage)
+                            if (index == uiState.pages.lastIndex && !uiState.isEndReached && !uiState.isPageLoading)
+                                viewModel.onEvent(GroupChatEvents.NextPage)
+
+                            val isMessageFromYou = accInfoState.user?.id == message.from.id
+
+                            val nextMessage = uiState.pages.getOrNull(index + 1)
+                            val isNextSameAuthorAndDate =
+                                nextMessage?.from?.id == message.from.id && nextMessage.date == message.date
 
                             Row(Modifier.padding(horizontal = 24.dp)) {
 
                                 val backgroundColor =
-                                    if (message.from.id != opponentId)
+                                    if (isMessageFromYou)
                                         MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
                                     else
                                         MaterialTheme.colorScheme.onBackground.copy(alpha = 0.08f)
 
-                                val alignment = if (message.from.id == opponentId)
-                                    Alignment.CenterStart
-                                else
+                                val alignment = if (isMessageFromYou)
                                     Alignment.CenterEnd
+                                else
+                                    Alignment.CenterStart
 
-                                if (message.from.id != opponentId)
+                                if (isMessageFromYou)
                                     Spacer(modifier = Modifier.weight(1f))
                                 Box(
                                     contentAlignment = alignment,
@@ -449,13 +426,7 @@ fun DialogChatScreen(
 
                                     SwipeableCard(
                                         distance = 40.dp,
-                                        onDragged = {
-                                            viewModel.onEvent(
-                                                DialogChatEvents.PassReplyMessage(
-                                                    message
-                                                )
-                                            )
-                                        },
+                                        onDragged = { viewModel.onEvent(GroupChatEvents.PassReplyMessage(message)) },
                                         backLayerContent = {
                                             CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant) {
                                                 Icon(
@@ -465,25 +436,25 @@ fun DialogChatScreen(
                                                 )
                                             }
                                         }) {
-                                        NewMessageCard(
+                                        NewMessageCardGroupChat(
+                                            from = if (!isNextSameAuthorAndDate && !isMessageFromYou)
+                                                message.from else null,
                                             attachments = message.attachments,
                                             messageText = message.message,
                                             date = message.date,
                                             reply = message.replyMessage,
                                             sentStatus = message.status,
-                                            backgroundColor = backgroundColor,
-                                            isShowStatus = message.from.id != opponentId,
+                                            backgroundColor = backgroundColor, isShowStatus = isMessageFromYou,
                                             onImageClick = { id, attachments ->
                                                 onNavToImage(
                                                     attachments.firstOrNull { it.id == id }?.closestUri.orEmpty(),
                                                     attachments.map { it.closestUri }
                                                 )
                                             },
-                                            onFileClick = { file ->
-
-
+                                            onFileClick = {
+                                                    file ->
                                                 if (filesPermissionsState.permissions.all { it.status.isGranted }) {
-                                                    if (file.loadProgress == null && file.localFileUri.isNullOrBlank()) {
+                                                    if(file.loadProgress == null && file.localFileUri.isNullOrBlank()){
                                                         scope.launch {
                                                             workManager.getWorkInfosForUniqueWorkLiveData(
                                                                 file.id.toString()
@@ -503,7 +474,7 @@ fun DialogChatScreen(
                                                                                         localFileUri = null
                                                                                     )
                                                                                 viewModel.onEvent(
-                                                                                    DialogChatEvents.UpdateAttachment(
+                                                                                    GroupChatEvents.UpdateAttachment(
                                                                                         messageId = message.id,
                                                                                         fileCopy
                                                                                     )
@@ -523,7 +494,7 @@ fun DialogChatScreen(
                                                                                         loadProgress = null
                                                                                     )
                                                                                 viewModel.onEvent(
-                                                                                    DialogChatEvents.UpdateAttachment(
+                                                                                    GroupChatEvents.UpdateAttachment(
                                                                                         messageId = message.id,
                                                                                         fileCopy
                                                                                     )
@@ -539,7 +510,7 @@ fun DialogChatScreen(
                                                                                         localFileUri = null
                                                                                     )
                                                                                 viewModel.onEvent(
-                                                                                    DialogChatEvents.UpdateAttachment(
+                                                                                    GroupChatEvents.UpdateAttachment(
                                                                                         messageId = message.id,
                                                                                         fileCopy
                                                                                     )
@@ -554,24 +525,22 @@ fun DialogChatScreen(
                                                             }
                                                         }
                                                         viewModel.onEvent(
-                                                            DialogChatEvents.DownloadAttachment(
+                                                            GroupChatEvents.DownloadAttachment(
                                                                 message.id,
                                                                 file
                                                             )
                                                         )
                                                     }
-
                                                 } else {
                                                     filesPermissionsState.launchMultiplePermissionRequest()
-                                                    scope.launch {
-                                                        /*scaffoldState.snackbarHostState.showSnackbar(
+                                                    /*scope.launch {
+                                                        scaffoldState.snackbarHostState.showSnackbar(
                                                             "Нет разрешений"
-                                                        )*/
-                                                    }
+                                                        )
+                                                    }*/
 
                                                 }
-
-                                                if (file.localFileUri?.isNotBlank() == true && file.loadProgress == null) {
+                                                if (file.localFileUri?.isNotBlank() == true && file.loadProgress == null){
                                                     val localUri =
                                                         file.localFileUri.orEmpty().toUri()
 
@@ -600,7 +569,8 @@ fun DialogChatScreen(
 
                                                     } catch (e: ActivityNotFoundException) {
                                                         scope.launch {
-                                                           /* scaffoldState.snackbarHostState.let { snackbarState ->
+                                                            // TODO("Не забыть")
+                                                            /*scaffoldState.snackbarHostState.let { snackbarState ->
                                                                 if (snackbarState.currentSnackbarData == null)
                                                                     scaffoldState.snackbarHostState.showSnackbar(
                                                                         message = "Неподдерживаемый формат файла",
@@ -617,7 +587,7 @@ fun DialogChatScreen(
 
                                     }
                                 }
-                                if (message.from.id == opponentId)
+                                if (!isMessageFromYou)
                                     Spacer(modifier = Modifier.weight(1f))
                             }
                         }
@@ -638,15 +608,15 @@ fun DialogChatScreen(
                             CircularProgressIndicator()
                         }
                     }
-
-
             }
-
-
         }
-
-
     }
 }
 
-
+@Preview
+@Composable
+fun DCS() {
+    CompPreviewTheme {
+        GroupChatScreen(convId = 0)
+    }
+}
