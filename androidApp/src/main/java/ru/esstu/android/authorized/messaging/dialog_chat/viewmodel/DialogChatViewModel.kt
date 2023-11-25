@@ -69,9 +69,6 @@ sealed class DialogChatEvents {
     object SendMessage : DialogChatEvents()
     data class ResendMessage(val message: SentUserMessage) : DialogChatEvents()
 
-    data class DownloadAttachment(val messageId: Long, val attachment: MessageAttachment) :
-        DialogChatEvents()
-
     data class UpdateAttachment(val messageId: Long, val attachment: MessageAttachment) :
         DialogChatEvents()
 }
@@ -112,9 +109,6 @@ class DialogChatViewModel @Inject constructor(
             is DialogChatEvents.SendMessage -> withCachedMsg { onSendMessage() }
             is DialogChatEvents.ResendMessage -> viewModelScope.launch { onResendMessage(event.message) }
 
-            is DialogChatEvents.DownloadAttachment -> {
-                downloaderAttachment.downloadFile(event.attachment)
-            }
             is DialogChatEvents.UpdateAttachment -> viewModelScope.launch {
                 onUpdateAttachment(
                     event.messageId,

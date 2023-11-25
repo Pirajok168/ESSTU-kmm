@@ -65,7 +65,6 @@ sealed class GroupChatEvents {
     object SendMessage : GroupChatEvents()
     data class ResendMessage(val message: SentUserMessage) : GroupChatEvents()
 
-    data class DownloadAttachment(val messageId: Long, val attachment: MessageAttachment) : GroupChatEvents()
     data class UpdateAttachment(val messageId: Long, val attachment: MessageAttachment) : GroupChatEvents()
 }
 
@@ -95,7 +94,6 @@ class GroupChatViewModel @Inject  constructor(
             is GroupChatEvents.SendMessage -> withCachedMsg { onSendMessage() }
             is GroupChatEvents.ResendMessage -> viewModelScope.launch { onResendMessage(event.message) }
 
-            is GroupChatEvents.DownloadAttachment -> { downloaderAttachment.downloadFile(event.attachment)}
             is GroupChatEvents.UpdateAttachment -> viewModelScope.launch { onUpdateAttachment(event.messageId, event.attachment) }
         }
     }
