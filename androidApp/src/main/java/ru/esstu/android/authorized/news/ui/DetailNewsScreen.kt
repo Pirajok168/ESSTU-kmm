@@ -217,7 +217,7 @@ fun DetailNewsScreen(
 
                 filesList.forEach {
                     FileRow(it.name ?: "Изображение", it.loadProgress ?: 1f, it.localFileUri) {
-                        selectorViewModel.onEvent(SelectorScreenEvents.LoadFile(it))
+                        uriHandler.openUri(it.fileUri)
                     }
                     Spacer(modifier = Modifier.size(8.dp))
                 }

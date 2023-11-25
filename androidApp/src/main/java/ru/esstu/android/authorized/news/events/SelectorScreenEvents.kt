@@ -7,5 +7,4 @@ import ru.esstu.student.news.entities.NewsNode
 sealed class SelectorScreenEvents {
     data class PassNode(val node: NewsNode, val selectedFilterNews: FilterNews) : SelectorScreenEvents()
 
-    data class LoadFile(val uri: AttachmentNews) : SelectorScreenEvents()
 }

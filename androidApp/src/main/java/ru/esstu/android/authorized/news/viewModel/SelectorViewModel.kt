@@ -20,9 +20,7 @@ import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.student.news.entities.AttachmentNews
 
 
-class SelectorViewModel(
-    private val dowloader: IDownloader = ESSTUSdk.accountModule.download
-) : ViewModel() {
+class SelectorViewModel() : ViewModel() {
     var state by mutableStateOf(SelectorScreenState())
         private set
 
@@ -32,51 +30,9 @@ class SelectorViewModel(
             is SelectorScreenEvents.PassNode -> state =
                 state.copy(node = event.node, selected = event.selectedFilterNews)
 
-            is SelectorScreenEvents.LoadFile -> downloadFile(event.uri)
         }
     }
 
     private val mutex = Mutex()
 
-    private fun downloadFile(file: AttachmentNews) {
-        if (file.ext == null) return
-        viewModelScope.launch(Dispatchers.IO) {
-            dowloader.downloadFile(file.fileUri, file.name ?: "", file.ext.orEmpty())
-                .collectLatest { response ->
-                    when (response) {
-                        is FlowResponse.Error -> {}
-                        is FlowResponse.Loading -> {
-                            val attachments = state.node?.attachments ?: emptyList()
-                            mutex.withLock {
-                                state = state.copy(
-                                    node = state.node?.copy(attachments = attachments.map {
-                                        if (it.fileUri == file.fileUri) {
-                                            it.copy(loadProgress = response.progress)
-                                        } else {
-                                            it
-                                        }
-                                    })
-                                )
-                            }
-
-                        }
-                        is FlowResponse.Success -> {
-                            val attachments = state.node?.attachments ?: emptyList()
-                            mutex.withLock {
-                                state = state.copy(
-                                    node = state.node?.copy(attachments = attachments.map {
-                                        if (it.fileUri == file.fileUri) {
-                                            it.copy(localFileUri = response.localUri)
-                                        } else {
-                                            it
-                                        }
-                                    })
-                                )
-                            }
-
-                        }
-                    }
-                }
-        }
-    }
 }
