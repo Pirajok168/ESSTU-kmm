@@ -2,13 +2,15 @@ package ru.esstu.android.student.messaging.new_message.new_dialog.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,27 +31,31 @@ fun AddNewParticipantCard(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(contentAlignment = Alignment.TopEnd) {
+        Surface(
+            modifier = Modifier
+                .size(60.dp),
+            shape = CircleShape,
+            tonalElevation = 16.dp
+        ){
             Box(
                 modifier = Modifier
-                    .size(60.dp)
-                    .clip(RoundedCornerShape(50))
-                    .background(MaterialTheme.colors.onBackground),
+                    .size(60.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     modifier = Modifier.size(30.dp),
                     imageVector = Icons.Rounded.Add,
                     contentDescription = null,
-                    tint = MaterialTheme.colors.primary
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
         }
+
         Spacer(modifier = Modifier.size(16.dp))
         Column {
-            Text(text = title, overflow = TextOverflow.Ellipsis, maxLines = 1, style = MaterialTheme.typography.body1)
+            Text(text = title, overflow = TextOverflow.Ellipsis, maxLines = 1, style = MaterialTheme.typography.bodyLarge)
             if (subtitle.isNotBlank())
-                Text(text = subtitle, overflow = TextOverflow.Ellipsis, maxLines = 1, modifier = Modifier.alpha(ContentAlpha.medium), style = MaterialTheme.typography.body2)
+                Text(text = subtitle, overflow = TextOverflow.Ellipsis, maxLines = 1, modifier = Modifier.alpha(ContentAlpha.medium), style = MaterialTheme.typography.bodyMedium)
         }
         Spacer(modifier = Modifier.weight(1f))
     }

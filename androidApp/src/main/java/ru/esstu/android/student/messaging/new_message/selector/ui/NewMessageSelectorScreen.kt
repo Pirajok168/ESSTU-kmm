@@ -5,7 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.Composable
@@ -17,9 +17,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
-import com.google.accompanist.insets.statusBarsPadding
 import ru.esstu.android.R
 import ru.esstu.android.domain.navigation.bottom_navigation.util.IconResource
 import ru.esstu.android.domain.ui.theme.CompPreviewTheme
@@ -35,6 +32,7 @@ enum class MessageButtons(val icon: IconResource, val caption: String) {
     APPEALS(icon = IconResource.DrawableResource(R.drawable.ic_new_message_info), "Обратиться к подразделению")
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewMessageSelectorScreen(
     onBackPressed: () -> Unit = {},
@@ -58,7 +56,9 @@ fun NewMessageSelectorScreen(
     }
 
     Scaffold(
-        modifier = Modifier.statusBarsPadding(),
+        modifier = Modifier
+            .fillMaxSize()
+            .imePadding(),
         topBar = {
             TopAppBar(
                 navigationIcon = {
@@ -72,16 +72,10 @@ fun NewMessageSelectorScreen(
                 title = {
                     Text(text = "Новое сообщение")
                 },
-                backgroundColor = MaterialTheme.colors.background
             )
         }) {
         LazyColumn(
-            modifier = Modifier.padding(it),
-            contentPadding = rememberInsetsPaddingValues(
-                insets = LocalWindowInsets.current.systemBars,
-                applyTop = false,
-                applyBottom = true,
-            )
+            modifier = Modifier.padding(it)
         ) {
             item {
                 Column {
@@ -123,7 +117,7 @@ fun NewMessageSelectorScreen(
                                 contentDescription = null
                             )
                             Spacer(modifier = Modifier.width(16.dp))
-                            Text(text = "Недавние чаты", style = MaterialTheme.typography.h6)
+                            Text(text = "Недавние чаты", style = MaterialTheme.typography.titleLarge)
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                     }
@@ -159,7 +153,7 @@ fun NewMessageSelectorScreen(
                                 contentDescription = null
                             )
                             Spacer(modifier = Modifier.width(16.dp))
-                            Text(text = "Обсуждения", style = MaterialTheme.typography.h6)
+                            Text(text = "Обсуждения", style = MaterialTheme.typography.titleLarge)
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                     }

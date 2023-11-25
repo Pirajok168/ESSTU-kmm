@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,22 +24,25 @@ import ru.esstu.android.domain.ui.theme.CompPreviewTheme
 @Composable
 fun AddNewAttachment(onClick: () -> Unit = {}) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-        Box(
-            Modifier
-                .padding(horizontal = 12.dp)
-                .size(60.dp)
-                .clip(CircleShape)
-                .clickable(onClick = onClick)
-                .background(MaterialTheme.colorScheme.onBackground),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                modifier = Modifier.size(30.dp),
-                imageVector = Icons.Rounded.Add,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
+        Surface(
+            modifier = Modifier
+                .size(60.dp),
+            shape = CircleShape,
+            tonalElevation = 16.dp,
+            onClick = onClick
+        ){
+            Box(
+                modifier = Modifier
+                    .size(60.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    modifier = Modifier.size(30.dp),
+                    imageVector = Icons.Rounded.Add,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(8.dp))

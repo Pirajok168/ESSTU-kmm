@@ -8,7 +8,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.Composable
@@ -31,7 +31,7 @@ import ru.esstu.android.authorized.messaging.dialog_chat.util.cacheToFile
 import ru.esstu.android.student.messaging.new_message.new_appeal.viewmodel.NewAppealEvents
 import ru.esstu.android.student.messaging.new_message.new_appeal.viewmodel.NewAppealViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun NewAppealScreen(
     onBackPressed: () -> Unit = {},
@@ -75,11 +75,9 @@ fun NewAppealScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsWithImePadding(),
+            .imePadding(),
         topBar = {
             TopAppBar(
-                backgroundColor = MaterialTheme.colors.background,
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
@@ -96,6 +94,7 @@ fun NewAppealScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
                     .padding(bottom = 16.dp)
+                    .navigationBarsPadding()
                     .height(54.dp),
                 enabled = !uiState.isNewAppealCreating && uiState.selectedTheme != null && uiState.message.isNotBlank(),
                 onClick = {
@@ -117,89 +116,66 @@ fun NewAppealScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Row(modifier = Modifier.padding(horizontal = 24.dp)) {
-                Image(
-                    modifier = Modifier
-                        .width(62.dp)
-                        .padding(top = 8.dp),
-                    contentScale = ContentScale.FillWidth,
-                    painter = painterResource(id = R.drawable.ic_new_dialog_pattern1),
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Отделение", style = MaterialTheme.typography.h6)
+                Text(text = "Отделение", style = MaterialTheme.typography.titleLarge)
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            Box(
+            Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .shadow(4.dp, shape = MaterialTheme.shapes.medium)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colors.background)
-                    .clickable(enabled = !uiState.isNewAppealCreating) { onNavToDepartmentSelector() }
-                    .padding(16.dp)
+                    .padding(horizontal = 24.dp),
+                shape = MaterialTheme.shapes.medium,
+                tonalElevation = 8.dp,
+                onClick = {
+                    onNavToDepartmentSelector()
+                }
             ) {
+                Box(modifier = Modifier.padding(16.dp)){
+                    if (uiState.selectedDepartment == null)
+                        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant) {
+                            Text(text = "Отдел не выбран", style = MaterialTheme.typography.bodyLarge)
+                        }
+                    else
+                        Text(text = uiState.selectedDepartment.name, style = MaterialTheme.typography.bodyLarge)
+                }
 
-                if (uiState.selectedDepartment == null)
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                        Text(text = "Отдел не выбран", style = MaterialTheme.typography.body1)
+            }
+
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Row(modifier = Modifier.padding(horizontal = 24.dp)) {
+                Text(text = "Тема", style = MaterialTheme.typography.titleLarge)
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+
+
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
+                shape = MaterialTheme.shapes.medium,
+                tonalElevation = 8.dp,
+                onClick = {
+                    if (!uiState.isNewAppealCreating && uiState.selectedDepartment != null){
+                        onNavToThemeSelector()
                     }
-                else
-                    Text(text = uiState.selectedDepartment.name, style = MaterialTheme.typography.body1)
-
+                }
+            ) {
+                Box(modifier = Modifier.padding(16.dp)) {
+                    if (uiState.selectedTheme == null)
+                        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant) {
+                            Text(text = if(uiState.isThemesLoading && uiState.themes.isEmpty()) "Загрузка" else "Тема не выбрана", style = MaterialTheme.typography.bodyLarge)
+                        }
+                    else
+                        Text(text = uiState.selectedTheme.name, style = MaterialTheme.typography.bodyLarge)
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
             Row(modifier = Modifier.padding(horizontal = 24.dp)) {
-                Image(
-                    modifier = Modifier
-                        .width(62.dp)
-                        .padding(top = 8.dp),
-                    contentScale = ContentScale.FillWidth,
-                    painter = painterResource(id = R.drawable.ic_new_conv_pattern1),
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Тема", style = MaterialTheme.typography.h6)
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .shadow(4.dp, shape = MaterialTheme.shapes.medium)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colors.background)
-                    .clickable(enabled = !uiState.isNewAppealCreating && uiState.selectedDepartment != null) { onNavToThemeSelector() }
-                    .padding(16.dp)
-            ) {
-
-                if (uiState.selectedTheme == null)
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                        Text(text = if(uiState.isThemesLoading && uiState.themes.isEmpty()) "Загрузка" else "Тема не выбрана", style = MaterialTheme.typography.body1)
-                    }
-                else
-                    Text(text = uiState.selectedTheme.name, style = MaterialTheme.typography.body1)
-
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(modifier = Modifier.padding(horizontal = 24.dp)) {
-                Image(
-                    modifier = Modifier
-                        .width(62.dp)
-                        .padding(top = 8.dp),
-                    contentScale = ContentScale.FillWidth,
-                    painter = painterResource(id = R.drawable.ic_new_dialog_pattern2),
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Подробности", style = MaterialTheme.typography.h6)
+                Text(text = "Подробности", style = MaterialTheme.typography.titleLarge)
             }
             Spacer(modifier = Modifier.height(8.dp))
 

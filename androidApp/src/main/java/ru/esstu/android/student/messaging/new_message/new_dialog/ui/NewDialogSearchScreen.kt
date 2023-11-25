@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Close
@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.compose.AppEsstuTheme
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.statusBarsPadding
 import ru.esstu.android.R
@@ -33,6 +34,31 @@ import ru.esstu.android.student.messaging.new_message.new_dialog.ui.components.S
 import ru.esstu.android.student.messaging.new_message.new_dialog.viewmodel.NewDialogEvents
 import ru.esstu.android.student.messaging.new_message.new_dialog.viewmodel.NewDialogViewModel
 
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.semantics.isTraversalGroup
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.traversalIndex
+import ru.esstu.android.shared.clearWindowInsets
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewDialogSearchScreen(
     onBackPress: () -> Unit = {},
@@ -41,7 +67,7 @@ fun NewDialogSearchScreen(
 
     val uiState = viewModel.state
     val focusManager = LocalFocusManager.current
-
+    var active by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(key1 = Unit, block = {
         if (!uiState.isRecentOpponentsLoading && uiState.recentOpponents.isEmpty())
             viewModel.onEvent(NewDialogEvents.LoadRecentOpponents)
@@ -56,102 +82,91 @@ fun NewDialogSearchScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsWithImePadding(),
-        topBar = {
-            TopAppBar(
-                backgroundColor = MaterialTheme.colors.background,
-                navigationIcon = {
-                    IconButton(onClick = onBackPress) {
-                        Icon(
-                            imageVector = Icons.Rounded.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
-                },
-                title = {
-                    TextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = uiState.query, onValueChange = { viewModel.onEvent(NewDialogEvents.PassQuery(it)) },
-                        singleLine = true,
-                        placeholder = {
-                            Text(text = "Поиск")
-                        },
-                        colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = MaterialTheme.colors.background,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        )
-                    )
-                },
-                actions = {
-                    AnimatedVisibility(visible = uiState.query.any()) {
-                        IconButton(onClick = { viewModel.onEvent(NewDialogEvents.DropQuery) }) {
-                            Icon(
-                                imageVector = Icons.Rounded.Close,
-                                contentDescription = null,
-                                tint = MaterialTheme.colors.primary
-                            )
-                        }
-                    }
-                }
-            )
-        }
+            .imePadding(),
+        contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Bottom)
     ) {
-        if (uiState.isQueryLoading || uiState.queryPages.any() || uiState.query.isNotBlank())
-            LazyColumn(
-                modifier = Modifier
-                    .padding(it)
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 8.dp)
-            ) {
-                itemsIndexed(uiState.queryPages, key = { index, item ->  item.id}) {index,  user ->
+        Column(
+            modifier = Modifier.padding(it)
+        ) {
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+                SearchBar(
+                    modifier = Modifier,
+                    query = uiState.query,
+                    onQueryChange = { viewModel.onEvent(NewDialogEvents.PassQuery(it))  },
+                    onSearch = { active = false },
+                    active = active,
+                    onActiveChange = {
+                        active = it
+                    },
+                    placeholder = { Text("Поиск собеседника") },
+                    leadingIcon = {
+                        Icon(Icons.Default.Search, contentDescription = null)
+                    },
+                    trailingIcon = {
+                        IconButton(onClick = { active = false }) {
+                            Icon(Icons.Default.Close, contentDescription = null)
+                        }
 
-                    if (index == uiState.queryPages.lastIndex && !uiState.isQueryPageEndReached && !uiState.isQueryLoading)
-                        viewModel.onEvent(NewDialogEvents.LoadNext)
+                    },
+                ) {
+                    if (uiState.isQueryLoading || uiState.queryPages.any() || uiState.query.isNotBlank()){
+                        LazyColumn(
+                            modifier = Modifier
+                                .padding(it)
+                                .fillMaxSize(),
+                            contentPadding = PaddingValues(vertical = 8.dp)
+                        ) {
+                            itemsIndexed(uiState.queryPages, key = { index, item ->  item.id}) {index,  user ->
 
-                    Box(modifier = Modifier.clickable {
-                        viewModel.onEvent(NewDialogEvents.SelectOpponent(user))
-                        onBackPress()
-                        viewModel.onEvent(NewDialogEvents.DropQuery)
-                    }) {
+                                if (index == uiState.queryPages.lastIndex && !uiState.isQueryPageEndReached && !uiState.isQueryLoading)
+                                    viewModel.onEvent(NewDialogEvents.LoadNext)
 
-                        SearchCard(
-                            modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp),
-                            initials = user.initials,
-                            title = user.fio,
-                            subtitle = user.summary,
-                            photoUri = user.photo.orEmpty()
-                        )
+                                Box(modifier = Modifier.clickable {
+                                    viewModel.onEvent(NewDialogEvents.SelectOpponent(user))
+                                    onBackPress()
+                                    viewModel.onEvent(NewDialogEvents.DropQuery)
+                                }) {
+
+                                    SearchCard(
+                                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp),
+                                        initials = user.initials,
+                                        title = user.fio,
+                                        subtitle = user.summary,
+                                        photoUri = user.photo.orEmpty()
+                                    )
+                                }
+                            }
+                            if (uiState.isQueryLoading)
+                                item {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 8.dp), contentAlignment = Alignment.Center
+                                    ) {
+                                        CircularProgressIndicator()
+                                    }
+                                }
+                            if (uiState.queryPages.isEmpty() && !uiState.isQueryLoading)
+                                item {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 8.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = "Ничего не найдено",
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+                        }
                     }
                 }
-                if (uiState.isQueryLoading)
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp), contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-                if (uiState.queryPages.isEmpty() && !uiState.isQueryLoading)
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                                Text(text = "Ничего не найдено")
-                            }
-                        }
-                    }
             }
-        else {
-            Column {
 
+
+            Column {
                 if (uiState.isRecentOpponentsLoading)
                     Box(
                         modifier = Modifier
@@ -163,22 +178,15 @@ fun NewDialogSearchScreen(
                     }
 
                 if (uiState.recentOpponents.any()) {
-                    LazyColumn {
+                    LazyColumn(
+                        modifier = Modifier.padding(it)
+                    ) {
 
                         item {
                             Spacer(modifier = Modifier.height(24.dp))
 
                             Row(modifier = Modifier.padding(horizontal = 24.dp)) {
-                                Image(
-                                    modifier = Modifier
-                                        .width(62.dp)
-                                        .padding(top = 6.dp),
-                                    contentScale = ContentScale.FillWidth,
-                                    painter = painterResource(id = R.drawable.ic_new_dialog_pattern1),
-                                    contentDescription = null
-                                )
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Text(text = "Недавние", style = MaterialTheme.typography.h6)
+                                Text(text = "Недавние", style = MaterialTheme.typography.titleLarge)
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                         }

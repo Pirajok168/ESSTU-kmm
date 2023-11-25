@@ -8,7 +8,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.Composable
@@ -34,7 +34,7 @@ import ru.esstu.android.student.messaging.new_message.new_dialog.ui.components.A
 import ru.esstu.android.student.messaging.new_message.new_dialog.viewmodel.NewDialogEvents
 import ru.esstu.android.student.messaging.new_message.new_dialog.viewmodel.NewDialogViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun NewDialogScreen(
     onBackPressed: () -> Unit = {},
@@ -77,11 +77,9 @@ fun NewDialogScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsWithImePadding(),
+            .imePadding(),
         topBar = {
             TopAppBar(
-                backgroundColor = MaterialTheme.colors.background,
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(
@@ -101,20 +99,23 @@ fun NewDialogScreen(
             var buttonModifier = Modifier.fillMaxWidth()
             if (uiState.isDialogCreating)
                 buttonModifier = buttonModifier.shimmer()
+            Column {
+                Button(
+                    enabled = (uiState.attachments.any() || uiState.message.isNotBlank()) &&
+                            !uiState.isDialogCreating && !uiState.isDialogCreated &&
+                            uiState.opponent != null,
 
-            Button(
-                enabled = (uiState.attachments.any() || uiState.message.isNotBlank()) &&
-                        !uiState.isDialogCreating && !uiState.isDialogCreated &&
-                        uiState.opponent != null,
+                    modifier = buttonModifier
+                        .padding(horizontal = 24.dp)
+                        .padding(bottom = 16.dp)
+                        .height(48.dp),
 
-                modifier = buttonModifier
-                    .padding(horizontal = 24.dp)
-                    .padding(bottom = 16.dp)
-                    .height(48.dp),
-
-                onClick = { viewModel.onEvent(NewDialogEvents.CreateDialog) }) {
-                Text(text = "Создать")
+                    onClick = { viewModel.onEvent(NewDialogEvents.CreateDialog) }) {
+                    Text(text = "Создать")
+                }
+                Spacer(modifier = Modifier.navigationBarsPadding())
             }
+            
         }
     ) {
         Column(
@@ -135,7 +136,7 @@ fun NewDialogScreen(
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Собеседник", style = MaterialTheme.typography.h6)
+                Text(text = "Собеседник", style = MaterialTheme.typography.titleLarge)
             }
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -182,7 +183,7 @@ fun NewDialogScreen(
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Новое сообщение", style = MaterialTheme.typography.h6)
+                Text(text = "Новое сообщение", style = MaterialTheme.typography.titleLarge)
             }
             Spacer(modifier = Modifier.height(8.dp))
 

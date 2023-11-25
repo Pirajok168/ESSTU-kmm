@@ -8,7 +8,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.Composable
@@ -34,7 +34,7 @@ import ru.esstu.android.student.messaging.new_message.new_support.viewmodel.NewS
 import ru.esstu.android.student.messaging.new_message.new_support.viewmodel.NewSupportViewModel
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun NewSupportScreen(
     onBackPress: () -> Unit = {},
@@ -74,11 +74,9 @@ fun NewSupportScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsWithImePadding(),
+            .imePadding(),
         topBar = {
             TopAppBar(
-                backgroundColor = MaterialTheme.colors.background,
                 navigationIcon = {
                     IconButton(onClick = onBackPress) {
                         Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
@@ -95,6 +93,7 @@ fun NewSupportScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
                     .padding(bottom = 16.dp)
+                    .navigationBarsPadding()
                     .height(54.dp),
                 enabled = !uiState.isNewSupportCreating && uiState.selectedTheme != null && uiState.message.isNotBlank(),
                 onClick = {
@@ -116,54 +115,44 @@ fun NewSupportScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Row(modifier = Modifier.padding(horizontal = 24.dp)) {
-                Image(
-                    modifier = Modifier
-                        .width(62.dp)
-                        .padding(top = 8.dp),
-                    contentScale = ContentScale.FillWidth,
-                    painter = painterResource(id = R.drawable.ic_new_dialog_pattern1),
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Тема", style = MaterialTheme.typography.h6)
+                Text(text = "Тема", style = MaterialTheme.typography.titleLarge)
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-
-
-            Box(
+            Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .shadow(4.dp, shape = MaterialTheme.shapes.medium)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colors.background)
-                    .clickable(enabled = !uiState.isNewSupportCreating) { onNavToThemeSelector() }
-                    .padding(16.dp)
-            ) {
-
-                if (uiState.selectedTheme == null)
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                        Text(text = "Тема не выбрана", style = MaterialTheme.typography.body1)
+                    .padding(horizontal = 24.dp),
+                shape = MaterialTheme.shapes.medium,
+                tonalElevation = 8.dp,
+                onClick = {
+                    if (!uiState.isNewSupportCreating) {
+                        onNavToThemeSelector()
                     }
-                else
-                    Text(text = uiState.selectedTheme.name, style = MaterialTheme.typography.body1)
 
+                }
+            ) {
+                Box(modifier = Modifier.padding(16.dp)) {
+                    if (uiState.selectedTheme == null)
+                        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant) {
+                            Text(
+                                text = "Тема не выбрана",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        }
+                    else
+                        Text(
+                            text = uiState.selectedTheme.name,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                }
             }
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
             Row(modifier = Modifier.padding(horizontal = 24.dp)) {
-                Image(
-                    modifier = Modifier
-                        .width(62.dp)
-                        .padding(top = 8.dp),
-                    contentScale = ContentScale.FillWidth,
-                    painter = painterResource(id = R.drawable.ic_new_dialog_pattern2),
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Подробности", style = MaterialTheme.typography.h6)
+                Text(text = "Подробности", style = MaterialTheme.typography.titleLarge)
             }
             Spacer(modifier = Modifier.height(8.dp))
 

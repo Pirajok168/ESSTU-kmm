@@ -4,8 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ContentAlpha
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Surface
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
@@ -20,17 +21,22 @@ import ru.esstu.android.domain.ui.theme.CompPreviewTheme
 @Composable
 fun NewMessageCard(modifier: Modifier = Modifier, icon: IconResource, text: String) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-        Box(
+        Surface(
             modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(
-                    MaterialTheme.colors.onBackground.copy(alpha = ContentAlpha.high)
-                ),
-            contentAlignment = Alignment.Center
+                .size(48.dp),
+            shape = CircleShape,
+            tonalElevation = 16.dp
         ) {
-            icon.AsIcon(MaterialTheme.colors.secondary)
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                icon.AsIcon(tintColor = MaterialTheme.colorScheme.onSurface)
+            }
         }
+
         Spacer(modifier = Modifier.width(16.dp))
         Text(text = text)
     }
