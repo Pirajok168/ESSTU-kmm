@@ -5,8 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
@@ -30,14 +30,14 @@ fun AddNewAttachment(onClick: () -> Unit = {}) {
                 .size(60.dp)
                 .clip(CircleShape)
                 .clickable(onClick = onClick)
-                .background(MaterialTheme.colors.onBackground),
+                .background(MaterialTheme.colorScheme.onBackground),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 modifier = Modifier.size(30.dp),
                 imageVector = Icons.Rounded.Add,
                 contentDescription = null,
-                tint = MaterialTheme.colors.primary
+                tint = MaterialTheme.colorScheme.primary
             )
         }
 
@@ -46,7 +46,7 @@ fun AddNewAttachment(onClick: () -> Unit = {}) {
             textAlign = TextAlign.Center,
             modifier = Modifier.widthIn(max = 88.dp),
             text = "Добавить вложение",
-            style = MaterialTheme.typography.subtitle2,
+            style = MaterialTheme.typography.titleSmall,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )

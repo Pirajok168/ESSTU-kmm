@@ -3,7 +3,7 @@ package ru.esstu.android.student.messaging.dialog_chat.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,20 +17,25 @@ import ru.esstu.android.R
 import ru.esstu.android.domain.ui.theme.CompPreviewTheme
 
 @Composable
-fun Attachment(modifier: Modifier = Modifier, fileName: String, fileDesc: String, loadProgress: Float?, isLoaded: Boolean = false) {
+fun Attachment(
+    modifier: Modifier = Modifier,
+    fileName: String,
+    fileDesc: String,
+    loadProgress: Float?,
+    isLoaded: Boolean = false
+) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-        Box(
+        Surface(
+            shape = CircleShape,
             modifier = Modifier
-                .size(42.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colors.primary/*.onBackground.copy(alpha = ContentAlpha.high)*/),
-            contentAlignment = Alignment.Center
+                .size(38.dp),
+            tonalElevation = 20.dp,
+            color = MaterialTheme.colorScheme.primary
         ) {
+
             Box(
                 modifier = Modifier
-                    .size(38.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colors.primary),
+                    .size(38.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -43,19 +48,23 @@ fun Attachment(modifier: Modifier = Modifier, fileName: String, fileDesc: String
                             else
                                 R.drawable.ic_chat_loading
                     ),
-                    contentDescription = null,
-                    tint = MaterialTheme.colors.background.copy(alpha = ContentAlpha.high)
+                    contentDescription = null
                 )
 
                 if (loadProgress != null)
-                    CircularProgressIndicator(progress = loadProgress, color = MaterialTheme.colors.background.copy(alpha = ContentAlpha.high))
+                    CircularProgressIndicator(progress = loadProgress)
             }
+
+
         }
         Spacer(modifier = Modifier.size(8.dp))
         Column {
-            Text(text = fileName, style = MaterialTheme.typography.body1.copy(fontSize = 14.sp), maxLines = 2, overflow = TextOverflow.Ellipsis)
+            Text(
+                text = fileName, style = MaterialTheme.typography.bodyMedium,
+                maxLines = 2, overflow = TextOverflow.Ellipsis
+            )
             if (fileDesc.isNotBlank())
-                Text(text = fileDesc, style = MaterialTheme.typography.body2.copy(fontSize = 14.sp), maxLines = 1)
+                Text(text = fileDesc, style = MaterialTheme.typography.bodyMedium, maxLines = 1)
         }
     }
 }

@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.*
@@ -70,7 +70,9 @@ import ru.esstu.student.messaging.entities.DeliveryStatus
 private val todayYear = DateTime.now().year
 private val dateFormat: DateFormat = DateFormat("d MMM yyyy")
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 fun GroupChatScreen(
     onBackPressed: () -> Unit = {},
@@ -112,7 +114,7 @@ fun GroupChatScreen(
     val accInfoState = accInfoVM.accountInfoState
     val uiState = viewModel.dialogChatState
 
-    val scaffoldState = rememberScaffoldState()
+
     val scope = rememberCoroutineScope()
     val workManager = remember { WorkManager.getInstance(context.applicationContext) }
     val filesPermissionsState = rememberMultiplePermissionsState(
@@ -124,45 +126,51 @@ fun GroupChatScreen(
 
     Scaffold(modifier = Modifier
         .fillMaxSize()
-        .statusBarsPadding()
-        .navigationBarsWithImePadding(),
-        scaffoldState = scaffoldState,
+        .imePadding(),
         topBar = {
-            Column {
-                TopAppBar(backgroundColor = MaterialTheme.colors.background) {
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
-                        IconButton(onClick = onBackPressed) {
-                            Icon(
-                                imageVector = Icons.Rounded.ArrowBack,
-                                contentDescription = null
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Box(modifier = Modifier.weight(1f)) {
-                            when (val conv = uiState.conversation) {
-                                null -> {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(height = 42.dp, width = 180.dp)
-                                            .clip(MaterialTheme.shapes.small)
-                                            .shimmer()
-                                            .background(Color.Gray)
-                                    )
-                                }
-                                else -> ChatPreview(
-                                    abbreviation = conv.title,
-                                    title = conv.title,
-                                    subtitlePrev = "Автор ",
-                                    subtitle = if (showConvAuthor) conv.author?.fio ?: "Неизвестен" else ""
+            Surface(
+                shadowElevation = 8.dp
+            ) {
+                TopAppBar(
+                    title = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            FilledTonalIconButton(onClick = onBackPressed) {
+                                Icon(
+                                    imageVector = Icons.Rounded.ArrowBack,
+                                    contentDescription = null
                                 )
                             }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Box(modifier = Modifier.weight(1f)) {
+                                when (val conv = uiState.conversation) {
+                                    null -> {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(height = 42.dp, width = 180.dp)
+                                                .clip(MaterialTheme.shapes.small)
+                                                .shimmer()
+                                                .background(Color.Gray)
+                                        )
+                                    }
+                                    else -> ChatPreview(
+                                        abbreviation = conv.title,
+                                        title = conv.title,
+                                        subtitlePrev = "Автор ",
+                                        subtitle = if (showConvAuthor) conv.author?.fio ?: "Неизвестен" else ""
+                                    )
+                                }
+                            }
                         }
-                    }
-                }
+                    },
+                )
             }
         },
         bottomBar = {
-            Column {
+            Column(
+                modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
+            ) {
                 AnimatedVisibility(
                     visible = uiState.message.attachments.any(),
                     enter = slideInVertically(initialOffsetY = { it })
@@ -223,10 +231,9 @@ fun GroupChatScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(max = 140.dp),
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.background,
+                    colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
+                        unfocusedIndicatorColor = Color.Transparent,
                     ),
                     value = uiState.message.text,
                     leadingIcon = {
@@ -243,10 +250,14 @@ fun GroupChatScreen(
                                 )
                             }
                             IconButton(onClick = {
-                                fileLauncher.launch(Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
-                                    type = "image/*"
-                                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                                })
+                                fileLauncher.launch(
+                                    Intent(
+                                        Intent.ACTION_PICK,
+                                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                                    ).apply {
+                                        type = "image/*"
+                                        putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                                    })
                             }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_chat_add_photo),
@@ -264,11 +275,14 @@ fun GroupChatScreen(
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_chat_send_message),
                                 contentDescription = null,
-                                tint = if (isValidMessage) MaterialTheme.colors.primary else LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
+                                tint = if (isValidMessage) MaterialTheme.colorScheme.primary else LocalContentColor.current.copy(
+                                    alpha = 0.5f
+                                )
                             )
                         }
                     },
                     onValueChange = { viewModel.onEvent(GroupChatEvents.PassMessage(it)) })
+                Spacer(modifier = Modifier.navigationBarsPadding())
             }
         }
     )
@@ -311,7 +325,7 @@ fun GroupChatScreen(
                                         date = message.date,
                                         sentStatus = message.status,
                                         reply = message.replyMessage?.toReplyMessage(),
-                                        backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.2f),
+                                        backgroundColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
                                         onImageClick = { id, attachments ->
                                             onNavToImage(
                                                 attachments.firstOrNull { it.id == id }?.closestUri.orEmpty(),
@@ -343,13 +357,13 @@ fun GroupChatScreen(
 
                                                     } catch (e: ActivityNotFoundException) {
                                                         scope.launch {
-                                                            scaffoldState.snackbarHostState.let { snackbarState ->
+                                                            /*scaffoldState.snackbarHostState.let { snackbarState ->
                                                                 if (snackbarState.currentSnackbarData == null)
                                                                     scaffoldState.snackbarHostState.showSnackbar(
                                                                         message = "Неподдерживаемый формат файла",
                                                                         duration = SnackbarDuration.Short
                                                                     )
-                                                            }
+                                                            }*/
 
                                                         }
                                                     }
@@ -392,9 +406,9 @@ fun GroupChatScreen(
 
                                 val backgroundColor =
                                     if (isMessageFromYou)
-                                        MaterialTheme.colors.primary.copy(alpha = 0.2f)
+                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
                                     else
-                                        MaterialTheme.colors.onBackground.copy(alpha = 0.08f)
+                                        MaterialTheme.colorScheme.onBackground.copy(alpha = 0.08f)
 
                                 val alignment = if (isMessageFromYou)
                                     Alignment.CenterEnd
@@ -415,7 +429,7 @@ fun GroupChatScreen(
                                         distance = 40.dp,
                                         onDragged = { viewModel.onEvent(GroupChatEvents.PassReplyMessage(message)) },
                                         backLayerContent = {
-                                            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                                            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant) {
                                                 Icon(
                                                     modifier = Modifier.alpha(it),
                                                     painter = painterResource(id = R.drawable.ic_chat_reply),
@@ -520,11 +534,11 @@ fun GroupChatScreen(
                                                     }
                                                 } else {
                                                     filesPermissionsState.launchMultiplePermissionRequest()
-                                                    scope.launch {
+                                                    /*scope.launch {
                                                         scaffoldState.snackbarHostState.showSnackbar(
                                                             "Нет разрешений"
                                                         )
-                                                    }
+                                                    }*/
 
                                                 }
                                                 if (file.localFileUri?.isNotBlank() == true && file.loadProgress == null){
@@ -556,13 +570,14 @@ fun GroupChatScreen(
 
                                                     } catch (e: ActivityNotFoundException) {
                                                         scope.launch {
-                                                            scaffoldState.snackbarHostState.let { snackbarState ->
+                                                            // TODO("Не забыть")
+                                                            /*scaffoldState.snackbarHostState.let { snackbarState ->
                                                                 if (snackbarState.currentSnackbarData == null)
                                                                     scaffoldState.snackbarHostState.showSnackbar(
                                                                         message = "Неподдерживаемый формат файла",
                                                                         duration = SnackbarDuration.Short
                                                                     )
-                                                            }
+                                                            }*/
 
                                                         }
                                                     }

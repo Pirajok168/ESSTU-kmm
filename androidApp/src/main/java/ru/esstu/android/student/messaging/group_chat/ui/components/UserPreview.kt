@@ -3,8 +3,8 @@ package ru.esstu.android.student.messaging.group_chat.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,10 +29,11 @@ fun UserPreview(
             modifier = Modifier
                 .size(42.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colors.primary),
+                .background(MaterialTheme.colorScheme.primary),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = initials.uppercase().take(2), style = MaterialTheme.typography.h6.copy(fontSize = 16.sp), color = MaterialTheme.colors.background)
+            Text(text = initials.uppercase().take(2), style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.background)
         }
     }
 
@@ -55,10 +56,12 @@ fun UserPreview(
         Spacer(modifier = Modifier.width(8.dp))
 
         Column {
-            Text(text = title, style = MaterialTheme.typography.body1.copy(fontSize = 14.sp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(text = title, style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (subtitle.isNotBlank())
 
-                Text(text = subtitle, style = MaterialTheme.typography.body2.copy(fontSize = 14.sp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(text = subtitle, style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 1, overflow = TextOverflow.Ellipsis)
 
 
         }
