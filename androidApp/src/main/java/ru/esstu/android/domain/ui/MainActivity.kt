@@ -18,10 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 
-import com.example.compose.AppEsstuTheme
+import ru.esstu.android.domain.ui.theme.AppEsstuTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-import ru.esstu.android.authorized.news.ui.MainScreen
 import ru.esstu.android.domain.navigation.SetupNavGraph
 
 
