@@ -8,6 +8,8 @@ import ru.esstu.android.authorized.messaging.messanger.MessengerScreens
 import ru.esstu.android.authorized.messaging.messanger.messengerNavGraph
 import ru.esstu.android.authorized.news.navigation.NewsScreens
 import ru.esstu.android.authorized.news.navigation.newsNavGraph
+import ru.esstu.android.authorized.student.profile.navigation.ProfileScreens
+import ru.esstu.android.authorized.student.profile.navigation.profileNavGraph
 
 
 @Composable
@@ -27,6 +29,13 @@ fun BottomAuthorizedNavigation(parentNavController: NavHostController) {
                 route = MessengerScreens.Root,
                 badges = 0
             ),
+
+            NavItem(
+                icon = R.drawable.ic_bottom_account,
+                label = "Профиль",
+                route = ProfileScreens.Root,
+                badges = 0
+            ),
         ), contentNavGraph = { padding, inlineNavController ->
             newsNavGraph(
                 padding = padding,
@@ -34,6 +43,11 @@ fun BottomAuthorizedNavigation(parentNavController: NavHostController) {
                 parentNavController = parentNavController
             )
             messengerNavGraph(
+                padding = padding,
+                NavController = inlineNavController,
+                parentNavController = parentNavController
+            )
+            profileNavGraph(
                 padding = padding,
                 NavController = inlineNavController,
                 parentNavController = parentNavController
