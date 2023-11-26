@@ -63,7 +63,7 @@ fun NewDialogSearchScreen(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Bottom)
     ) {
         Column(
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(top = it.calculateTopPadding(), bottom =  it.calculateBottomPadding())
         ) {
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
                 SearchBar(
@@ -156,7 +156,7 @@ fun NewDialogSearchScreen(
 
                 if (uiState.recentOpponents.any()) {
                     LazyColumn(
-                        modifier = Modifier.padding(it)
+                        contentPadding = it
                     ) {
 
                         item {
