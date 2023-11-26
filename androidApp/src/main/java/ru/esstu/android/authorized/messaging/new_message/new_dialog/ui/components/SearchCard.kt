@@ -2,8 +2,10 @@ package ru.esstu.android.authorized.messaging.new_message.new_dialog.ui.componen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,25 +31,31 @@ fun SearchCard(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
+        Surface(
             modifier = Modifier
-                .size(60.dp)
-                .clip(RoundedCornerShape(50))
-                .background(MaterialTheme.colorScheme.primary),
-            contentAlignment = Alignment.Center
+                .size(60.dp),
+            shape = CircleShape,
+            tonalElevation = 16.dp
         ) {
-            Text(
-                text = initials.take(2),
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-            if (photoUri.isNotBlank())
-                GlideImage(
-                    imageModel = photoUri,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+            Box(
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(RoundedCornerShape(50)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = initials.take(2),
+                    style = MaterialTheme.typography.titleLarge,
                 )
+                if (photoUri.isNotBlank())
+                    GlideImage(
+                        imageModel = photoUri,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+            }
         }
+
         Spacer(modifier = Modifier.size(16.dp))
         Column() {
             Text(

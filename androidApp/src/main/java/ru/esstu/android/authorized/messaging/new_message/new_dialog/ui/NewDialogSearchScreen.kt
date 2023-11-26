@@ -63,7 +63,7 @@ fun NewDialogSearchScreen(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Bottom)
     ) {
         Column(
-            modifier = Modifier.padding(top = it.calculateTopPadding(), bottom =  it.calculateBottomPadding())
+            modifier = Modifier.padding(top = it.calculateTopPadding())
         ) {
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
                 SearchBar(
@@ -89,9 +89,8 @@ fun NewDialogSearchScreen(
                     if (uiState.isQueryLoading || uiState.queryPages.any() || uiState.query.isNotBlank()){
                         LazyColumn(
                             modifier = Modifier
-                                .padding(it)
                                 .fillMaxSize(),
-                            contentPadding = PaddingValues(vertical = it.calculateBottomPadding())
+                            contentPadding = it
                         ) {
                             itemsIndexed(uiState.queryPages, key = { index, item ->  item.id}) {index,  user ->
 

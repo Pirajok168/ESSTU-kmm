@@ -110,13 +110,6 @@ fun NewMessageSelectorScreen(
                 item {
                     Column {
                         Row(modifier = Modifier.padding(horizontal = 24.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Image(
-                                modifier = Modifier.width(62.dp),
-                                contentScale = ContentScale.FillWidth,
-                                painter = painterResource(id = R.drawable.ic_schedule_weekday_ornament),
-                                contentDescription = null
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
                             Text(text = "Недавние чаты", style = MaterialTheme.typography.titleLarge)
                         }
                         Spacer(modifier = Modifier.height(8.dp))

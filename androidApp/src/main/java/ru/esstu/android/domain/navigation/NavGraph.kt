@@ -43,8 +43,15 @@ fun SetupNavGraph(
             onNavToStudent = {
                 navController.navigate(StudentRoutes.Root.passRoute())
             },
-            onNavToEntrant = { /* TODO */ },
-            onNavToGuest = { /* TODO */ },
+            onNavToEntrant = {
+
+            },
+            onNavToGuest = {
+                navController.navigate(StudentRoutes.Root.passRoute())
+            },
+            onNavToTeacher =  {
+                navController.navigate(StudentRoutes.Root.passRoute())
+            }
         )
 
         authorizedNavigationGraph(navController)

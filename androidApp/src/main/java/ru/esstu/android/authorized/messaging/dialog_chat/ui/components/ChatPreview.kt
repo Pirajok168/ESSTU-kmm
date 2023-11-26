@@ -29,19 +29,25 @@ fun ChatPreview(
 ) {
     @Composable
     fun PreviewPlaceHolder(initials: String) {
-        Box(
+        Surface(
             modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary),
-            contentAlignment = Alignment.Center
+                .size(48.dp),
+            shape = CircleShape,
+            tonalElevation = 16.dp
         ) {
-            Text(
-                text = initials.uppercase().take(2),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.background
-            )
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = initials.uppercase().take(2),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
         }
+
     }
 
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {

@@ -124,15 +124,6 @@ fun NewDialogScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Row(modifier = Modifier.padding(horizontal = 24.dp)) {
-                Image(
-                    modifier = Modifier
-                        .width(62.dp)
-                        .padding(top = 8.dp),
-                    contentScale = ContentScale.FillWidth,
-                    painter = painterResource(id = R.drawable.ic_new_dialog_pattern1),
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.width(16.dp))
                 Text(text = "Собеседник", style = MaterialTheme.typography.titleLarge)
             }
             Spacer(modifier = Modifier.height(8.dp))

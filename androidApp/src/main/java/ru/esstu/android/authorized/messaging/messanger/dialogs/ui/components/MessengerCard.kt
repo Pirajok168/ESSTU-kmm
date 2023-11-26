@@ -42,24 +42,30 @@ fun MessengerCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(contentAlignment = Alignment.TopEnd) {
-            Box(
+
+            Surface(
                 modifier = Modifier
-                    .size(60.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary),
-                contentAlignment = Alignment.Center
+                    .size(60.dp),
+                shape = CircleShape,
+                tonalElevation = 16.dp
             ) {
-                Text(
-                    text = initials.take(2),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                if (photoUri.isNotBlank())
-                    GlideImage(
-                        imageModel = photoUri,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
+                Box(
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clip(CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = initials.take(2),
+                        style = MaterialTheme.typography.titleLarge,
                     )
+                    if (photoUri.isNotBlank())
+                        GlideImage(
+                            imageModel = photoUri,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                }
             }
             if (unread > 0)
                 Box(

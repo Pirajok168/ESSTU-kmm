@@ -73,7 +73,7 @@ fun NavGraphBuilder.authNavGraph(
 
         composable(route = AuthRoutes.PasswordScreen.passRoute()) {
 
-            val parent = remember {
+            val parent = remember(it) {
                 navController.getBackStackEntry(AuthRoutes.LoginScreen.popTo())
             }
 
@@ -105,7 +105,7 @@ fun NavGraphBuilder.authNavGraph(
 
         composable(route = AuthRoutes.EntrantPasswordScreen.passRoute()) {
 
-            val parent = remember {
+            val parent = remember(it) {
                 navController.getBackStackEntry(AuthRoutes.EntrantLoginScreen.popTo())
             }
 
