@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PortfolioFileRequestResponse(
     val id: Int? = null,//
-    val type: String? = null,              // ACHIEVEMENT, CONFERENCE, AWARD, CONTEST, EXHIBITION, SCIENCEREPORT, WORK, TRAINEESHIP, REVIEWS, THEME, SCIENCEWORK,
+    val type: PortfolioTypeResponse? = null,              // ACHIEVEMENT, CONFERENCE, AWARD, CONTEST, EXHIBITION, SCIENCEREPORT, WORK, TRAINEESHIP, REVIEWS, THEME, SCIENCEWORK,
     val studentCode: String? = null,      // код студента
     val eventName: String? = null,         //
     val eventStatus: String? = null,            //

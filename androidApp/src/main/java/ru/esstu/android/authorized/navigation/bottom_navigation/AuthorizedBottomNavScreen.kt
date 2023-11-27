@@ -49,8 +49,8 @@ fun BottomAuthorizedNavigation(parentNavController: NavHostController) {
             )
             profileNavGraph(
                 padding = padding,
-                NavController = inlineNavController,
-                parentNavController = parentNavController
+                navController = inlineNavController,
+                parentNavController = parentNavController,
             )
         }
     )

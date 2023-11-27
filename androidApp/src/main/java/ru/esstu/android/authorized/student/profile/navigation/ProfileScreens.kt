@@ -7,7 +7,9 @@ sealed class ProfileScreens<T>(
     route: String? = null,
     navArgs: Map<T, NavType<*>> = emptyMap()
 ) : Route<T>(route, navArgs) {
-    object Root : ProfileScreens<Unit>()
+    data object Root : ProfileScreens<Unit>()
 
-    object Profile: ProfileScreens<Unit>()
+    data object Profile: ProfileScreens<Unit>()
+
+    data object Awards: ProfileScreens<Unit>()
 }

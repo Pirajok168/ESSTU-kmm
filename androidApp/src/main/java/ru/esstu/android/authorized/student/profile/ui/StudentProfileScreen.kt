@@ -4,6 +4,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -32,24 +33,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.esstu.android.R
 import ru.esstu.android.authorized.student.profile.viewmodel.StudentProfileScreenViewModel
-import ru.esstu.android.domain.ui.theme.AppEsstuTheme
 import ru.esstu.android.shared.clearWindowInsets
+import ru.esstu.student.profile.student.porfolio.domain.model.PortfolioType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudentProfileScreen(
-    viewModelProfile: StudentProfileScreenViewModel = viewModel()
+    paddingValues: PaddingValues,
+    viewModelProfile: StudentProfileScreenViewModel = viewModel(),
+    onNavigatePortfolio: (PortfolioType) -> Unit
 ) {
     val state = viewModelProfile.state
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         modifier = Modifier
-
+            .padding(bottom = paddingValues.calculateBottomPadding())
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = WindowInsets.clearWindowInsets(),
         topBar = {
@@ -197,7 +199,7 @@ fun StudentProfileScreen(
                         PreviewPortfolioCard(
                             title = "Награды",
                             onClick = {
-
+                                onNavigatePortfolio(PortfolioType.AWARD)
                             },
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
@@ -205,7 +207,7 @@ fun StudentProfileScreen(
                         PreviewPortfolioCard(
                             title = "Достижения",
                             onClick = {
-
+                                onNavigatePortfolio(PortfolioType.ACHIEVEMENT)
                             },
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
@@ -355,10 +357,3 @@ fun PreviewPortfolioCard(
     }
 }
 
-@Preview
-@Composable
-fun StudentProfilePreview() {
-    AppEsstuTheme {
-        StudentProfileScreen()
-    }
-}

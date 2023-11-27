@@ -1,9 +1,10 @@
-package ru.esstu.student.profile.student.porfolio.achivement.domain.model
+package ru.esstu.student.profile.student.porfolio.domain.model
 
-import ru.esstu.student.profile.student.porfolio.achivement.domain.ASIC_STORAGE_DEFAULT_PATH
+
 import ru.esstu.student.profile.student.porfolio.data.model.PortfolioFileRequestResponse
 import kotlin.random.Random
 
+const val ASIC_STORAGE_DEFAULT_PATH = "https://esstu.ru/aicstorages/publicDownload/"
 data class Attachment(
     val id: Int,
     val fileUri: String,
@@ -21,7 +22,7 @@ data class Attachment(
     val nameWithExt: String? get() = name?.let { "$it${ext?.let { ex -> ".$ex" }}" }
 }
 
-suspend fun PortfolioFileRequestResponse.toAttachment(): Attachment =
+fun PortfolioFileRequestResponse.toAttachment(): Attachment =
     Attachment(
         id = id ?: Random.nextInt() ,
         fileUri = "$ASIC_STORAGE_DEFAULT_PATH$fileCode",

@@ -30,7 +30,7 @@ object ESSTUSdk {
                 featureModuleNews,
                 featureModuleMessaging,
                 featureModuleProfile,
-                //featureModulePortfolio
+                featureModulePortfolio
             )
         }.direct
 
