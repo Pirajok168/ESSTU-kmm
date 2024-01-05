@@ -8,6 +8,14 @@ sealed class Response<T>(open val data: T?, open val error: ResponseError?) {
 
 
 
-inline fun<T> Response<T>.doOnSuccess(onSuccess: (T) -> Unit) =
+inline fun<T> Response<T>.doOnSuccess(onSuccess: (T) -> Unit): Response<T>{
     this.data?.let(onSuccess)
+    return this
+}
 
+
+
+inline fun<T> Response<T>.doOnError(doOnError: () -> Unit) =
+    this.error?.let{
+        doOnError()
+    }

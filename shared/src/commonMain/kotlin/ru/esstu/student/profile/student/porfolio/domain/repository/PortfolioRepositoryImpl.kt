@@ -1,12 +1,9 @@
 package ru.esstu.student.profile.student.porfolio.domain.repository
 
 import com.soywiz.klock.DateTime
-import kotlinx.coroutines.delay
 import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.student.news.announcement.datasources.toAnnouncements
-import ru.esstu.student.news.announcement.db.announcement.toTimeStamp
-import ru.esstu.student.news.announcement.db.announcement.toTimeStampEntity
+import ru.esstu.student.messaging.entities.CachedFile
 import ru.esstu.student.profile.student.porfolio.data.api.PortfolioApi
 import ru.esstu.student.profile.student.porfolio.data.model.PortfolioFileRequestResponse
 import ru.esstu.student.profile.student.porfolio.data.model.PortfolioTypeResponse
@@ -52,6 +49,60 @@ class PortfolioRepositoryImpl(
             }
         }
     }
+
+    override suspend fun saveFilePortfolio(
+        type: PortfolioType,
+        files: List<CachedFile>,
+        studentCode: String?,
+        eventName: String?,
+        eventStatus: String?,
+        eventPlace: String?,
+        eventStartDate: Long?,
+        eventEndDate: Long?,
+        eventUrl: String?,
+        workName: String?,
+        workType: String?,
+        result: String?,
+        coauthorsText: String?,
+        fileCode: String?,
+        status: String?
+    ): Response<PortfolioFileRequestResponse> {
+        val response = auth.provideToken { token ->
+
+            when (type) {
+                PortfolioType.ACHIEVEMENT -> PortfolioTypeResponse.ACHIEVEMENT
+                PortfolioType.AWARD -> PortfolioTypeResponse.AWARD
+                PortfolioType.CONFERENCE -> PortfolioTypeResponse.CONFERENCE
+                PortfolioType.CONTEST -> PortfolioTypeResponse.CONTEST
+                PortfolioType.EXHIBITION -> PortfolioTypeResponse.EXHIBITION
+                PortfolioType.SCIENCEREPORT -> PortfolioTypeResponse.SCIENCEREPORT
+                PortfolioType.WORK -> PortfolioTypeResponse.WORK
+                PortfolioType.TRAINEESHIP -> PortfolioTypeResponse.TRAINEESHIP
+                PortfolioType.REVIEWS -> PortfolioTypeResponse.REVIEWS
+                PortfolioType.THEME -> PortfolioTypeResponse.THEME
+                PortfolioType.SCIENCEWORK -> PortfolioTypeResponse.SCIENCEWORK
+            }.run {
+                api.saveFilePortfolio(PortfolioFileRequestResponse(
+                    id = null,
+                    type = this,
+                    studentCode = studentCode,
+                    eventName = eventName,
+                    eventStatus = eventStatus,
+                    eventPlace = eventPlace,
+                    eventStartDate = eventStartDate,
+                    eventEndDate = eventEndDate,
+                    eventUrl = eventUrl,
+                    workName = workName,
+                    workType = workType,
+                    result = result,
+                    coauthorsText = coauthorsText,
+                    fileCode = fileCode,
+                    status = status
+                ), files, token.access)
+            }
+        }
+        return response
+    }
 }
 
 
@@ -60,7 +111,7 @@ private fun List<PortfolioFileRequestResponse>.transform(): List<PortfolioFile> 
         when (it.type) {
             PortfolioTypeResponse.ACHIEVEMENT -> PortfolioFile.Achievement(
                 id = it.id ?: Random.nextInt(),
-                status = it.status.toString(),
+                status = it.eventStatus.toString(),
                 title = it.eventName.toString(),
                 attachment = it.toAttachment(),
                 date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
@@ -145,7 +196,7 @@ private fun List<PortfolioFileRequestResponse>.transform(): List<PortfolioFile> 
             )
             null -> PortfolioFile.Achievement(
                 it.id ?: Random.nextInt(),
-                it.status.toString(),
+                it.eventStatus.toString(),
                 it.eventName.toString(),
                 it.toAttachment(),
                 date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
