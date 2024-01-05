@@ -1,35 +1,63 @@
 package ru.esstu.android.authorized.student.profile.portfolio.ui
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.BottomSheetScaffoldState
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.toLowerCase
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
+import com.soywiz.klock.DateTime
 import com.soywiz.klock.KlockLocale
 import com.soywiz.klock.format
 import com.soywiz.klock.locale.russian
+import kotlinx.coroutines.launch
+import ru.esstu.android.R
 import ru.esstu.android.authorized.messaging.group_chat.navigation.GroupChatArguments
 import ru.esstu.android.authorized.student.profile.navigation.ProfileScreens
 import ru.esstu.android.authorized.student.profile.portfolio.viewmodel.PortfolioViewModel
@@ -48,6 +76,16 @@ fun PortfolioScreen(
 ) {
     val state = portfolioViewModel.state
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    var openBottomSheet by remember { mutableStateOf(false) }
+
+    val bottomSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+
+    var selectedType: PortfolioFile? by remember {
+        mutableStateOf(null)
+    }
+
     Scaffold(
         modifier = Modifier
             .padding(bottom = paddingValues.calculateBottomPadding())
@@ -97,13 +135,29 @@ fun PortfolioScreen(
                             Text(
                                 text = file.getOverlineContent()
                             )
+                        },
+                        modifier = Modifier.clickable {
+                            selectedType = file
+                            openBottomSheet = !openBottomSheet
                         }
                     )
                 }
             }
         }
     }
+
+    if (openBottomSheet){
+        PortfolioFileBottomSheet(
+            bottomSheetState,
+            selectedType,
+            onClose = {
+                openBottomSheet = false
+            }
+        )
+    }
 }
+
+
 
 private fun PortfolioFile.getOverlineContent() = when(this){
     is PortfolioFile.Achievement -> this.status

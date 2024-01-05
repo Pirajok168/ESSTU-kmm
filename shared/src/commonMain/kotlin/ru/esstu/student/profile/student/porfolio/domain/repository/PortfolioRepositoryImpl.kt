@@ -68,7 +68,7 @@ private fun List<PortfolioFileRequestResponse>.transform(): List<PortfolioFile> 
 
             PortfolioTypeResponse.AWARD -> PortfolioFile.Award(
                 id = it.id ?: Random.nextInt(),
-                status = it.status.toString(),
+                status = it.eventStatus.toString(),
                 title = it.eventName.toString(),
                 attachment = it.toAttachment(),
                 date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
@@ -76,7 +76,7 @@ private fun List<PortfolioFileRequestResponse>.transform(): List<PortfolioFile> 
             PortfolioTypeResponse.CONFERENCE -> PortfolioFile.Conference(
                 id = it.id ?: Random.nextInt(),
                 title = it.eventName.toString(),
-                status = it.status.toString(),
+                status = it.eventStatus.toString(),
                 attachment = it.toAttachment(),
                 startDate = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong),
                 endDate =  DateTime(it.eventEndDate ?: DateTime.now().unixMillisLong),
@@ -87,7 +87,7 @@ private fun List<PortfolioFileRequestResponse>.transform(): List<PortfolioFile> 
             PortfolioTypeResponse.CONTEST -> PortfolioFile.Contest(
                 id = it.id ?: Random.nextInt(),
                 title = it.eventName.toString(),
-                status = it.status.toString(),
+                status = it.eventStatus.toString(),
                 attachment = it.toAttachment(),
                 startDate = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong),
                 endDate =  DateTime(it.eventEndDate ?: DateTime.now().unixMillisLong),
