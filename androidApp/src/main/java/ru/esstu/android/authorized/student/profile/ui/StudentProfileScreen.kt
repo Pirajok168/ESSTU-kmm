@@ -214,6 +214,74 @@ fun StudentProfileScreen(
                     }
                 }
                 Spacer(modifier = Modifier.size(16.dp))
+                Surface(
+                    tonalElevation = 4.dp,
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.padding(vertical = 16.dp)
+                    ) {
+                        PreviewPortfolioCard(
+                            title = "Стажировки",
+                            onClick = {
+                                onNavigatePortfolio(PortfolioType.TRAINEESHIP)
+                            },
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.size(16.dp))
+                Surface(
+                    tonalElevation = 4.dp,
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.padding(vertical = 16.dp)
+                    ) {
+                        PreviewPortfolioCard(
+                            title = "Рецензии",
+                            onClick = {
+                                onNavigatePortfolio(PortfolioType.REVIEWS)
+                            },
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+
+                        PreviewPortfolioCard(
+                            title = "Курсовые, отчеты, рпз",
+                            onClick = {
+                                onNavigatePortfolio(PortfolioType.WORK)
+                            },
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+
+                        PreviewPortfolioCard(
+                            title = "Научные доклады",
+                            onClick = {
+                                onNavigatePortfolio(PortfolioType.SCIENCEREPORT)
+                            },
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+
+                        PreviewPortfolioCard(
+                            title = "Научные исследования",
+                            onClick = {
+                                onNavigatePortfolio(PortfolioType.THEME)
+                            },
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+
+                        PreviewPortfolioCard(
+                            title = "Диссертации",
+                            onClick = {
+                                onNavigatePortfolio(PortfolioType.SCIENCEWORK)
+                            },
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.size(16.dp))
 
                 Surface(
                     tonalElevation = 4.dp,
@@ -226,7 +294,7 @@ fun StudentProfileScreen(
                         PreviewPortfolioCard(
                             title = "Участие в научных конференциях, семинарах",
                             onClick = {
-
+                                onNavigatePortfolio(PortfolioType.CONFERENCE)
                             },
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
@@ -234,7 +302,7 @@ fun StudentProfileScreen(
                         PreviewPortfolioCard(
                             title = "Участие в конкурсах, олимпиадах, гранты",
                             onClick = {
-
+                                onNavigatePortfolio(PortfolioType.CONTEST)
                             },
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
@@ -242,7 +310,7 @@ fun StudentProfileScreen(
                         PreviewPortfolioCard(
                             title = "Участие в выставках",
                             onClick = {
-
+                                onNavigatePortfolio(PortfolioType.EXHIBITION)
                             },
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )

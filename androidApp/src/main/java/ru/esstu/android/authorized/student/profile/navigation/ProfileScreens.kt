@@ -11,5 +11,5 @@ sealed class ProfileScreens<T>(
 
     data object Profile: ProfileScreens<Unit>()
 
-    data object Awards: ProfileScreens<Unit>()
+    data object Portfolio: ProfileScreens<Unit>()
 }

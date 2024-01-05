@@ -73,68 +73,75 @@ private fun List<PortfolioFileRequestResponse>.transform(): List<PortfolioFile> 
                 attachment = it.toAttachment(),
                 date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
             )
-            PortfolioTypeResponse.CONFERENCE -> PortfolioFile.Achievement(
-                it.id ?: Random.nextInt(),
-                it.status.toString(),
-                it.eventName.toString(),
-                it.toAttachment(),
-                date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
+            PortfolioTypeResponse.CONFERENCE -> PortfolioFile.Conference(
+                id = it.id ?: Random.nextInt(),
+                title = it.eventName.toString(),
+                status = it.status.toString(),
+                attachment = it.toAttachment(),
+                startDate = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong),
+                endDate =  DateTime(it.eventEndDate ?: DateTime.now().unixMillisLong),
+                place = it.eventPlace.orEmpty(),
+                theme = it.workName.orEmpty(),
+                coauthors = it.coauthorsText.orEmpty()
             )
-            PortfolioTypeResponse.CONTEST -> PortfolioFile.Achievement(
-                it.id ?: Random.nextInt(),
-                it.status.toString(),
-                it.eventName.toString(),
-                it.toAttachment(),
-                date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
+            PortfolioTypeResponse.CONTEST -> PortfolioFile.Contest(
+                id = it.id ?: Random.nextInt(),
+                title = it.eventName.toString(),
+                status = it.status.toString(),
+                attachment = it.toAttachment(),
+                startDate = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong),
+                endDate =  DateTime(it.eventEndDate ?: DateTime.now().unixMillisLong),
+                place = it.eventPlace.orEmpty(),
+                result = it.result.orEmpty()
             )
-            PortfolioTypeResponse.EXHIBITION -> PortfolioFile.Achievement(
-                it.id ?: Random.nextInt(),
-                it.status.toString(),
-                it.eventName.toString(),
-                it.toAttachment(),
-                date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
+            PortfolioTypeResponse.EXHIBITION -> PortfolioFile.Exhibition(
+                id = it.id ?: Random.nextInt(),
+                title = it.eventName.toString(),
+                status = it.status.toString(),
+                attachment = it.toAttachment(),
+                startDate = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong),
+                endDate =  DateTime(it.eventEndDate ?: DateTime.now().unixMillisLong),
+                place = it.eventPlace.orEmpty(),
+                exhibit = it.workName.toString()
             )
-            PortfolioTypeResponse.SCIENCEREPORT -> PortfolioFile.Achievement(
-                it.id ?: Random.nextInt(),
-                it.status.toString(),
-                it.eventName.toString(),
-                it.toAttachment(),
-                date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
+
+            PortfolioTypeResponse.SCIENCEREPORT -> PortfolioFile.ScienceReport(
+                id = it.id ?: Random.nextInt(),
+                status = null,
+                title = it.eventName.toString(),
+                attachment = it.toAttachment(),
             )
-            PortfolioTypeResponse.WORK -> PortfolioFile.Achievement(
-                it.id ?: Random.nextInt(),
-                it.status.toString(),
-                it.eventName.toString(),
-                it.toAttachment(),
-                date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
+            PortfolioTypeResponse.WORK -> PortfolioFile.Work(
+                id = it.id ?: Random.nextInt(),
+                title = it.workName.orEmpty(),
+                attachment = it.toAttachment(),
+                type = it.workType.orEmpty()
             )
-            PortfolioTypeResponse.TRAINEESHIP -> PortfolioFile.Achievement(
-                it.id ?: Random.nextInt(),
-                it.status.toString(),
-                it.eventName.toString(),
-                it.toAttachment(),
-                date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
+            PortfolioTypeResponse.TRAINEESHIP -> PortfolioFile.Traineeship(
+                id = it.id ?: Random.nextInt(),
+                title = it.eventName.toString(),
+                attachment = it.toAttachment(),
+                startDate = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong),
+                endDate =  DateTime(it.eventEndDate ?: DateTime.now().unixMillisLong),
+                place = it.eventPlace.orEmpty(),
             )
-            PortfolioTypeResponse.REVIEWS -> PortfolioFile.Achievement(
-                it.id ?: Random.nextInt(),
-                it.status.toString(),
-                it.eventName.toString(),
-                it.toAttachment(),
-                date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
+            PortfolioTypeResponse.REVIEWS -> PortfolioFile.Reviews(
+                id = it.id ?: Random.nextInt(),
+                title = it.workName.toString(),
+                attachment = it.toAttachment(),
+                type = it.workType.orEmpty()
             )
-            PortfolioTypeResponse.THEME -> PortfolioFile.Achievement(
-                it.id ?: Random.nextInt(),
-                it.status.toString(),
-                it.eventName.toString(),
-                it.toAttachment(),
-                date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
+            PortfolioTypeResponse.THEME -> PortfolioFile.Theme(
+                id = it.id ?: Random.nextInt(),
+                title = it.workName.toString(),
+                attachment = it.toAttachment(),
             )
-            PortfolioTypeResponse.SCIENCEWORK -> PortfolioFile.Achievement(
-                it.id ?: Random.nextInt(),
-                it.status.toString(),
-                it.eventName.toString(),
-                it.toAttachment(),
-                date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
+            PortfolioTypeResponse.SCIENCEWORK -> PortfolioFile.ScienceWorks(
+                id = it.id,
+                title = it.workName.orEmpty(),
+                attachment = it.toAttachment(),
+                coauthors = it.coauthorsText.orEmpty(),
+                type = it.workType.orEmpty()
             )
             null -> PortfolioFile.Achievement(
                 it.id ?: Random.nextInt(),
