@@ -7,6 +7,8 @@ import ru.esstu.domain.featureModuleDomain
 import ru.esstu.student.domain.di.domainStudentModule
 import ru.esstu.student.messaging.featureModuleMessaging
 import ru.esstu.student.news.featureModuleNews
+import ru.esstu.student.profile.student.di.featureModuleProfile
+import ru.esstu.student.profile.student.porfolio.di.featureModulePortfolio
 
 import kotlin.native.concurrent.ThreadLocal
 
@@ -26,7 +28,9 @@ object ESSTUSdk {
                 domainStudentModule,
                 featureModuleDomain,
                 featureModuleNews,
-                featureModuleMessaging
+                featureModuleMessaging,
+                featureModuleProfile,
+                featureModulePortfolio
             )
         }.direct
 

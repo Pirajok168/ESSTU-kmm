@@ -91,7 +91,7 @@ dependencies {
     implementation ("androidx.hilt:hilt-work:1.0.0")
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
 
-
+    implementation ("com.airbnb.android:lottie-compose:6.1.0")
     implementation ("com.google.accompanist:accompanist-permissions:0.28.0")
 }
 
