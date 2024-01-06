@@ -1,6 +1,7 @@
 package ru.esstu.student.profile.student.porfolio.data.api
 
 import ru.esstu.student.messaging.entities.CachedFile
+import ru.esstu.student.profile.student.porfolio.data.model.AttestationResponse
 import ru.esstu.student.profile.student.porfolio.data.model.PortfolioFileRequestResponse
 import ru.esstu.student.profile.student.porfolio.data.model.PortfolioTypeResponse
 
@@ -13,4 +14,8 @@ interface PortfolioApi {
         files: List<CachedFile> = emptyList(),
         authToken: String
     ): PortfolioFileRequestResponse
+
+    suspend fun getAttestationMarks(
+        authToken: String,
+    ):List<AttestationResponse>
 }

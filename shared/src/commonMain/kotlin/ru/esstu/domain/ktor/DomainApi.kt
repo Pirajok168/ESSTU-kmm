@@ -2,15 +2,19 @@ package ru.esstu.domain.ktor
 
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.plugins.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpResponseValidator
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.ResponseException
+import io.ktor.client.plugins.UserAgent
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.URLProtocol
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.kodein.di.DI
@@ -18,7 +22,6 @@ import org.kodein.di.bind
 import org.kodein.di.instance
 import org.kodein.di.singleton
 import ru.esstu.debugBuild
-import ru.esstu.domain.utill.wrappers.ResponseError
 
 @Serializable
 data class Error(val code: Int, val message: String)
@@ -58,7 +61,9 @@ internal val domainApi = DI.Module(
                 }
 
                 install(HttpTimeout) {
-                    requestTimeoutMillis = 9000
+                    requestTimeoutMillis = Long.MAX_VALUE
+                    socketTimeoutMillis = Long.MAX_VALUE
+                    connectTimeoutMillis = Long.MAX_VALUE
                 }
 
                 HttpResponseValidator {

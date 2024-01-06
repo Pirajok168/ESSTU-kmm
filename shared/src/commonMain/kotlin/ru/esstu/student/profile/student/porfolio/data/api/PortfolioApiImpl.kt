@@ -20,6 +20,7 @@ import kotlinx.serialization.json.encodeToJsonElement
 import okio.FileSystem
 import okio.Path.Companion.toPath
 import ru.esstu.student.messaging.entities.CachedFile
+import ru.esstu.student.profile.student.porfolio.data.model.AttestationResponse
 import ru.esstu.student.profile.student.porfolio.data.model.PortfolioFileRequestResponse
 import ru.esstu.student.profile.student.porfolio.data.model.PortfolioTypeResponse
 
@@ -78,5 +79,16 @@ class PortfolioApiImpl(
         }
 
         return request.body()
+    }
+
+    override suspend fun getAttestationMarks(authToken: String): List<AttestationResponse> {
+        val response = portalApi.get {
+            url {
+                path("/lk/api/v1/student/portfolio/getAttestation")
+                bearerAuth(authToken)
+            }
+        }
+
+        return response.body()
     }
 }

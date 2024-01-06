@@ -5,10 +5,14 @@ import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.entities.CachedFile
 import ru.esstu.student.profile.student.porfolio.data.api.PortfolioApi
+import ru.esstu.student.profile.student.porfolio.data.model.AttestationResponse
 import ru.esstu.student.profile.student.porfolio.data.model.PortfolioFileRequestResponse
 import ru.esstu.student.profile.student.porfolio.data.model.PortfolioTypeResponse
+import ru.esstu.student.profile.student.porfolio.domain.model.Attestation
+import ru.esstu.student.profile.student.porfolio.domain.model.ControlType
 import ru.esstu.student.profile.student.porfolio.domain.model.PortfolioFile
 import ru.esstu.student.profile.student.porfolio.domain.model.PortfolioType
+import ru.esstu.student.profile.student.porfolio.domain.model.Subject
 import ru.esstu.student.profile.student.porfolio.domain.model.toAttachment
 import kotlin.random.Random
 
@@ -103,7 +107,33 @@ class PortfolioRepositoryImpl(
         }
         return response
     }
+
+    override suspend fun getAttestation(): Response<List<Attestation>> {
+        val response = auth.provideToken { token ->
+            api.getAttestationMarks(token.access).transformAttestation()
+                .sortedWith((compareBy({ it.eduYear }, { it.eduBlock })))
+        }
+        return response
+    }
 }
+
+private fun List<AttestationResponse>.transformAttestation(): List<Attestation> =
+    map {
+        Attestation(
+            year = it.year,
+            eduBlock = it.eduBlock ,
+            eduYear = it.eduYear,
+            nameMarks = it.nameMarks,
+            summaryGrade = it.summaryGrade,
+            countMarks = it.countMarks,
+            controlType =  it.controlType?.let {
+                ControlType(it.name)
+            },
+            subject = it.subject?.let {
+                Subject(it.name)
+            }
+        )
+    }
 
 
 private fun List<PortfolioFileRequestResponse>.transform(): List<PortfolioFile> =

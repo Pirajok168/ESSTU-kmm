@@ -3,6 +3,7 @@ package ru.esstu.student.profile.student.porfolio.domain.repository
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.entities.CachedFile
 import ru.esstu.student.profile.student.porfolio.data.model.PortfolioFileRequestResponse
+import ru.esstu.student.profile.student.porfolio.domain.model.Attestation
 import ru.esstu.student.profile.student.porfolio.domain.model.PortfolioFile
 import ru.esstu.student.profile.student.porfolio.domain.model.PortfolioType
 
@@ -26,4 +27,6 @@ interface IPortfolioRepository {
         fileCode: String? = null,
         status: String? = null,
     ): Response<PortfolioFileRequestResponse>
+
+    suspend fun getAttestation(): Response<List<Attestation>>
 }

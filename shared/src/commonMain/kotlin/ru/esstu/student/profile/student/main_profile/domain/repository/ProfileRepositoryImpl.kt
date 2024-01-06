@@ -18,7 +18,7 @@ class ProfileRepositoryImpl(
     override suspend fun getProfile(): Flow<FlowResponse<StudentProfile>> = flow {
         auth.provideToken { token ->
 
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: throw Error("unsupported user type")
+            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
             emit(FlowResponse.Loading())
 
             //val cachedProfile = profileDao.getProfile(appUserId)?.toStudentProfile()

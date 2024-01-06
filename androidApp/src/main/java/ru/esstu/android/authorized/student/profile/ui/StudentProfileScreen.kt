@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
@@ -45,7 +47,8 @@ import ru.esstu.student.profile.student.porfolio.domain.model.PortfolioType
 fun StudentProfileScreen(
     paddingValues: PaddingValues,
     viewModelProfile: StudentProfileScreenViewModel = viewModel(),
-    onNavigatePortfolio: (PortfolioType) -> Unit
+    onNavigateAttestation: () -> Unit,
+    onNavigatePortfolio: (PortfolioType) -> Unit,
 ) {
     val state = viewModelProfile.state
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -63,9 +66,16 @@ fun StudentProfileScreen(
             )
         }
     ) {
-        if (state.studentInfo == null){
-
-        }else {
+        if (state.studentInfo == null) {
+            Box(
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
             Column(
                 modifier = Modifier
                     .padding(it)
@@ -186,6 +196,26 @@ fun StudentProfileScreen(
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
                     }
+                }
+                Spacer(modifier = Modifier.size(32.dp))
+                Surface(
+                    tonalElevation = 4.dp,
+                    shape = MaterialTheme.shapes.medium,
+                ) {
+
+                    Column(
+                        modifier = Modifier.padding(vertical = 16.dp)
+                    ) {
+                        PreviewPortfolioCard(
+                            title = "Оценки",
+                            onClick = {
+                                onNavigateAttestation()
+                            },
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                    }
+
+
                 }
                 Spacer(modifier = Modifier.size(32.dp))
                 Surface(
