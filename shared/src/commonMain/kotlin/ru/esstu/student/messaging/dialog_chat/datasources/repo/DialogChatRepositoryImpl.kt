@@ -245,7 +245,6 @@ class DialogChatRepositoryImpl constructor(
             idAttachment = attachment.id.toLong(),
             localFileUri = attachment.localFileUri.orEmpty()
         )
-        //cacheDao.insertAttachments(listOf(attachment.toDialogChatAttachmentEntity(messageId)))
     }
 
 

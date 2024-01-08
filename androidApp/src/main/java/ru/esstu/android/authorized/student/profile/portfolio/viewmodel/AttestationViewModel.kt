@@ -10,6 +10,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.esstu.ESSTUSdk
 import ru.esstu.android.authorized.student.profile.portfolio.state.AttestationScreenState
+import ru.esstu.domain.handleError.ErrorHandler
+import ru.esstu.domain.ktor.domainApi
 import ru.esstu.domain.utill.wrappers.doOnError
 import ru.esstu.domain.utill.wrappers.doOnSuccess
 import ru.esstu.student.profile.student.porfolio.domain.di.portfolioModule
@@ -18,12 +20,17 @@ import ru.esstu.student.profile.student.porfolio.domain.repository.IPortfolioRep
 class AttestationViewModel: ViewModel() {
 
     private val portfolioRepository: IPortfolioRepository = ESSTUSdk.portfolioModule.repo
+    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
     var state by mutableStateOf(AttestationScreenState())
         private set
 
     init {
         viewModelScope.launch {
-            portfolioRepository.getAttestation()
+            errorHandler.makeRequest(
+                request =  {
+                    portfolioRepository.getAttestation()
+                }
+            )
                 .doOnSuccess {
                     withContext(Dispatchers.Main){
                         state = state.copy(loading = false, attestationList = it, savedAttestationList = it)

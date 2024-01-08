@@ -9,12 +9,15 @@ import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
 import ru.esstu.android.authorized.news.events.AnnouncementEvents
 import ru.esstu.android.authorized.news.state.AnnouncementState
+import ru.esstu.domain.handleError.ErrorHandler
+import ru.esstu.domain.ktor.domainApi
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.student.news.announcement.datasources.repo.IAnnouncementsRepository
 import ru.esstu.student.news.announcement.di.announcementsModule
 
 class AnnouncementViewModel(
-    private val repo: IAnnouncementsRepository = ESSTUSdk.announcementsModule.repo
+    private val repo: IAnnouncementsRepository = ESSTUSdk.announcementsModule.repo,
+    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
 ): ViewModel()  {
     var state by mutableStateOf(AnnouncementState())
         private set
@@ -23,7 +26,13 @@ class AnnouncementViewModel(
         onReset = { repo.clearCache() },
         initialKey = 0,
         getNextKey = { currentKey, _ -> currentKey + state.pageSize },
-        onRequest = { key -> repo.getAnnouncementsPage(key, state.pageSize) },
+        onRequest = { key ->
+            errorHandler.makeRequest(
+                request =  {
+                    repo.getAnnouncementsPage(key, state.pageSize)
+                }
+            )
+        },
         onLoad = { state = state.copy(isPagesLoading = it) },
         onError = { state = state.copy(pageLoadingError = it) },
         onRefresh = { page -> state = state.copy(pages = page, pageLoadingError = null, isEndReached = page.isEmpty()) },

@@ -1,6 +1,5 @@
 package ru.esstu.android.authorized.messaging.dialog_chat.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,22 +14,23 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.esstu.ESSTUSdk
 import ru.esstu.android.domain.datasources.download_worker.IFileDownloadRepository
-import ru.esstu.domain.utill.wrappers.FlowResponse
+import ru.esstu.domain.handleError.ErrorHandler
+import ru.esstu.domain.ktor.domainApi
 import ru.esstu.domain.utill.paginator.Paginator
+import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
-
-import ru.esstu.student.messaging.entities.CachedFile
-import ru.esstu.student.messaging.entities.NewUserMessage
-import ru.esstu.student.messaging.entities.SentUserMessage
-import ru.esstu.student.messaging.dialog_chat.util.toSentUserMessage
 import ru.esstu.student.messaging.dialog_chat.datasources.di.dialogChatModuleNew
 import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatRepository
 import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatUpdateRepository
-import ru.esstu.student.messaging.entities.MessageAttachment
+import ru.esstu.student.messaging.dialog_chat.util.toSentUserMessage
+import ru.esstu.student.messaging.entities.CachedFile
 import ru.esstu.student.messaging.entities.DeliveryStatus
 import ru.esstu.student.messaging.entities.Message
+import ru.esstu.student.messaging.entities.MessageAttachment
+import ru.esstu.student.messaging.entities.NewUserMessage
 import ru.esstu.student.messaging.entities.Sender
+import ru.esstu.student.messaging.entities.SentUserMessage
 import javax.inject.Inject
 
 
@@ -76,11 +76,12 @@ sealed class DialogChatEvents {
 @HiltViewModel
 class DialogChatViewModel @Inject constructor(
     private val downloaderAttachment: IFileDownloadRepository,
+
 ) : ViewModel() {
 
     private val dialogChatRepository: IDialogChatRepository = ESSTUSdk.dialogChatModuleNew.repo
     private val dialogChatUpdateRepository: IDialogChatUpdateRepository = ESSTUSdk.dialogChatModuleNew.update
-
+    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
     var dialogChatState by mutableStateOf(DialogChatState())
         private set
 
@@ -125,7 +126,10 @@ class DialogChatViewModel @Inject constructor(
             val opponent =
                 dialogChatState.opponent ?: return@Paginator Response.Error(ResponseError())
 
-            dialogChatRepository.getPage(opponent.id, dialogChatState.pageSize, key)
+            errorHandler.makeRequest(request = {
+                dialogChatRepository.getPage(opponent.id, dialogChatState.pageSize, key)
+            })
+
         },
 
         onRefresh = { page ->
@@ -243,9 +247,6 @@ class DialogChatViewModel @Inject constructor(
     private suspend fun onPassOpponent(id: String) {
         onCancelObserver()
 
-
-
-
         dialogChatRepository.getOpponent(id).collect { response ->
             when (response) {
                 is FlowResponse.Error -> dialogChatState =
@@ -302,12 +303,14 @@ class DialogChatViewModel @Inject constructor(
             sentMessages = listOf(sentUserMessage) + dialogChatState.sentMessages
         )
 
-        val result = dialogChatRepository.sendMessage(
-            dialogId = opponent.id,
-            message = sentUserMessage.text,
-            attachments = sentUserMessage.attachments,
-            replyMessage = sentUserMessage.replyMessage
-        )
+        val result = errorHandler.makeRequest(request = {
+            dialogChatRepository.sendMessage(
+                dialogId = opponent.id,
+                message = sentUserMessage.text,
+                attachments = sentUserMessage.attachments,
+                replyMessage = sentUserMessage.replyMessage
+            )
+        })
 
         mutex.withLock {
             dialogChatState = when (result) {

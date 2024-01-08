@@ -4,7 +4,9 @@ import com.russhwolf.settings.Settings
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.ResponseException
+import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
@@ -19,21 +21,30 @@ import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
 import org.kodein.di.singleton
+import ru.esstu.ESSTUSdk
 import ru.esstu.auth.datasources.local.TokenDSManagerImpl
 import ru.esstu.debugBuild
-
-@Serializable
-data class Error(val code: Int, val message: String)
-
-class CustomResponseException(response: HttpResponse, message: String) :
-    ResponseException(response, message) {
-    override val message: String = message
-}
+import ru.esstu.domain.handleError.ErrorHandler
+import ru.esstu.domain.handleError.ErrorProcessor
+import ru.esstu.domain.handleError.ErrorProcessorImpl
+import kotlin.native.concurrent.ThreadLocal
 
 
 internal val domainApi = DI.Module(
     name =  "DomainApi",
     init = {
+        bind<ErrorProcessor> {
+            singleton {
+                ErrorProcessorImpl()
+            }
+        }
+
+        bind {
+            singleton {
+                ErrorHandler(instance())
+            }
+        }
+
         bind<TokenDSManagerImpl>() with  singleton { TokenDSManagerImpl(
             authDataStore = Settings()
         ) }
@@ -50,9 +61,9 @@ internal val domainApi = DI.Module(
                         ignoreUnknownKeys = true
                     })
                 }
-//                install(UserAgent) {
-//                    agent = "Mobile client"
-//                }
+                install(UserAgent) {
+                    agent = "Mobile client"
+                }
 
                 install(Logging){
                     logger = object : Logger{
@@ -62,29 +73,13 @@ internal val domainApi = DI.Module(
                     }
                     level = LogLevel.HEADERS
                 }
-
-/*                install(HttpTimeout) {
-                    requestTimeoutMillis = Long.MAX_VALUE
-                    socketTimeoutMillis = Long.MAX_VALUE
-                    connectTimeoutMillis = Long.MAX_VALUE
+                install(HttpTimeout) {
+                    requestTimeoutMillis = 900000
+                    socketTimeoutMillis = 900000
+                    connectTimeoutMillis = 900000
                 }
-
-                HttpResponseValidator {
-                    validateResponse { response ->
-                        val error: Int = response.status.value
-                        if (error == 400 || error == 401) {
-                            throw CustomResponseException(response, "Неверный логин или пароль")
-                        }
-                        if(error == 500){
-                            throw CustomResponseException(response, "Сервер не работает")
-                        }
-                    }
-                }
-
-                */
 
                 defaultRequest {
-                    host = "esstu.ru"
                     url {
                         protocol = URLProtocol.HTTPS
                     }
@@ -113,3 +108,15 @@ internal val domainApi = DI.Module(
 
     }
 )
+
+@ThreadLocal
+object ErrorHandlerModule {
+    val errorHandler: ErrorHandler
+        get() = ESSTUSdk.di.instance()
+
+    val errorProcessor: ErrorProcessor
+        get() = ESSTUSdk.di.instance()
+}
+
+val ESSTUSdk.domainApi: ErrorHandlerModule
+    get() = ErrorHandlerModule

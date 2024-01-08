@@ -10,26 +10,29 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.conflate
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import ru.esstu.ESSTUSdk
 import ru.esstu.android.domain.datasources.download_worker.IFileDownloadRepository
+import ru.esstu.domain.handleError.ErrorHandler
+import ru.esstu.domain.ktor.domainApi
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatUpdateRepository
 import ru.esstu.student.messaging.dialog_chat.util.toSentUserMessage
-import ru.esstu.student.messaging.entities.*
+import ru.esstu.student.messaging.entities.CachedFile
+import ru.esstu.student.messaging.entities.DeliveryStatus
+import ru.esstu.student.messaging.entities.Message
+import ru.esstu.student.messaging.entities.MessageAttachment
+import ru.esstu.student.messaging.entities.NewUserMessage
+import ru.esstu.student.messaging.entities.SentUserMessage
 import ru.esstu.student.messaging.group_chat.datasources.repo.IGroupChatRepository
 import ru.esstu.student.messaging.group_chat.datasources.repo.IGroupChatUpdateRepository
 import ru.esstu.student.messaging.group_chat.di.groupChatModuleNew
 import ru.esstu.student.messaging.group_chat.entities.Conversation
-
 import javax.inject.Inject
 
 data class GroupChatState(
@@ -76,6 +79,7 @@ class GroupChatViewModel @Inject  constructor(
 ) : ViewModel() {
     private val groupChatRepository: IGroupChatRepository = ESSTUSdk.groupChatModuleNew.repo
     private val dialogChatUpdateRepository: IGroupChatUpdateRepository = ESSTUSdk.groupChatModuleNew.update
+    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
     var dialogChatState by mutableStateOf(GroupChatState())
         private set
 
@@ -103,8 +107,10 @@ class GroupChatViewModel @Inject  constructor(
 
         onRequest = { key ->
             val conv = dialogChatState.conversation ?: return@Paginator Response.Error(ResponseError())
+            errorHandler.makeRequest(request = {
+                groupChatRepository.getPage(conv.id, dialogChatState.pageSize, key)
+            })
 
-            groupChatRepository.getPage(conv.id, dialogChatState.pageSize, key)
         },
 
         onRefresh = { page ->
@@ -263,12 +269,15 @@ class GroupChatViewModel @Inject  constructor(
 
         dialogChatState = dialogChatState.copy(message = NewUserMessage(), sentMessages = listOf(sentUserMessage) + dialogChatState.sentMessages)
 
-        val result = groupChatRepository.sendMessage(
-            convId = conv.id,
-            message = sentUserMessage.text,
-            attachments = sentUserMessage.attachments,
-            replyMessage = sentUserMessage.replyMessage
-        )
+
+        val result = errorHandler.makeRequest(request = {
+            groupChatRepository.sendMessage(
+                convId = conv.id,
+                message = sentUserMessage.text,
+                attachments = sentUserMessage.attachments,
+                replyMessage = sentUserMessage.replyMessage
+            )
+        })
 
         mutex.withLock {
             dialogChatState = when (result) {
@@ -309,12 +318,16 @@ class GroupChatViewModel @Inject  constructor(
                 sent
         })
 
-        val result = groupChatRepository.sendMessage(
-            convId = conv.id,
-            message = message.text,
-            attachments = message.attachments,
-            replyMessage = message.replyMessage
-        )
+
+        val result = errorHandler.makeRequest(request = {
+            groupChatRepository.sendMessage(
+                convId = conv.id,
+                message = message.text,
+                attachments = message.attachments,
+                replyMessage = message.replyMessage
+            )
+        })
+
 
         mutex.withLock {
             dialogChatState = when (result) {

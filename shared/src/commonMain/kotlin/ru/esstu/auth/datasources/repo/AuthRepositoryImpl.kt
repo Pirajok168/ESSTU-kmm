@@ -12,7 +12,6 @@ import ru.esstu.auth.datasources.toToken
 import ru.esstu.auth.datasources.toTokenPair
 import ru.esstu.auth.entities.Token
 import ru.esstu.auth.entities.TokenOwners
-import ru.esstu.domain.ktor.CustomResponseException
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.domain.utill.wrappers.doOnSuccess
@@ -51,8 +50,6 @@ class AuthRepositoryImpl constructor(
 
         } catch (e: IOException) {
             Response.Error(ResponseError(message = e.message))
-        } catch (e: CustomResponseException){
-            Response.Error(ResponseError(message = e.message, code = e.response.status.value))
         } catch (e: ClientRequestException){
             Response.Error(ResponseError(message = e.message))
         } catch (e: HttpRequestTimeoutException){

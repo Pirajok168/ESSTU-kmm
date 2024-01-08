@@ -1,16 +1,16 @@
 package ru.esstu.android.authorized.messaging.messanger.conversations.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
+import ru.esstu.domain.handleError.ErrorHandler
+import ru.esstu.domain.ktor.domainApi
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
@@ -40,6 +40,7 @@ class ConversationViewModel  constructor(
     conversationApi: IConversationsApiRepository = ESSTUSdk.conversationModule.repo,
     conversationDb: IConversationsDbRepository = ESSTUSdk.conversationModule.db,
     private val conversationUpdates: IConversationUpdatesRepository =  ESSTUSdk.conversationModule.update,
+    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
 ) : ViewModel() {
     var conversationState by mutableStateOf(ConversationState())
         private set
@@ -54,7 +55,9 @@ class ConversationViewModel  constructor(
 
             val cachedConversations = conversationDb.getConversations(conversationState.pageSize, key)
             if (cachedConversations.isEmpty()) {
-                val loadedConversations = conversationApi.getConversations(conversationState.pageSize, key)
+                val loadedConversations = errorHandler.makeRequest(request = {
+                    conversationApi.getConversations(conversationState.pageSize, key)
+                })
 
                 if (loadedConversations is Response.Success)
                     conversationDb.setConversations(loadedConversations.data)
