@@ -1,23 +1,21 @@
 package ru.esstu.auth.datasources.repo
 
-import io.github.aakira.napier.Napier
-import io.ktor.client.plugins.*
-import io.ktor.utils.io.errors.*
-import kotlinx.coroutines.channels.Channel
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpRequestTimeoutException
+import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import ru.esstu.auth.datasources.api.student_teacher.AuthApi
+import ru.esstu.auth.datasources.local.ITokenDSManager
 import ru.esstu.auth.datasources.toToken
 import ru.esstu.auth.datasources.toTokenPair
-
-import ru.esstu.auth.entities.TokenOwners
-import ru.esstu.auth.datasources.local.ITokenDSManager
 import ru.esstu.auth.entities.Token
+import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.ktor.CustomResponseException
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
+import ru.esstu.domain.utill.wrappers.doOnSuccess
 
 
 class AuthRepositoryImpl constructor(
@@ -41,7 +39,7 @@ class AuthRepositoryImpl constructor(
 
             val newToken = when (token.owner) {
                 is TokenOwners.Teacher, is TokenOwners.Student -> {
-                    portalApi.refreshToken(token.refresh).toToken()
+                    portalApi.refreshToken(token.refresh).transform { it.toToken() }.data
                 }
                 TokenOwners.Entrant -> null
                 TokenOwners.Guest -> Token("", "", "", TokenOwners.Guest)
@@ -64,29 +62,21 @@ class AuthRepositoryImpl constructor(
 
 
     override suspend fun auth(login: String, Password: String): Response<Token> {
-
-        return try {
-            val response = portalApi.auth(login, Password)
-            val newToken = response.toToken()
-                ?: return Response.Error(ResponseError(message = "unsupported user type"))
-
-
-            val tok = newToken.toTokenPair()
-
-
-            cache.setToken(tok)
-
-            Response.Success(newToken)
-
-        } catch (e: IOException) {
-            Response.Error(ResponseError(message = e.message))
-        } catch (e: CustomResponseException){
-            Response.Error(ResponseError(message = e.message, code = e.response.status.value))
-        } catch (e: ClientRequestException){
-            Response.Error(ResponseError(message = e.message))
-        } catch (e: HttpRequestTimeoutException){
-            Response.Error(ResponseError(message = e.message))
+        val response = portalApi.auth(login, Password)
+        val newToken = response.transform {
+            it.toToken()
+        }.doOnSuccess {
+            it?.let {
+                cache.setToken(it.toTokenPair())
+            }
         }
+        return when (response){
+            is Response.Error -> Response.Error(response.error)
+            is Response.Success -> {
+                newToken.data?.let { Response.Success(it) } ?: Response.Error(ResponseError(message = "unsupported user type"))
+            }
+        }
+
     }
 
     override suspend fun entrantAuth(login: String, Password: String): Response<Token> {

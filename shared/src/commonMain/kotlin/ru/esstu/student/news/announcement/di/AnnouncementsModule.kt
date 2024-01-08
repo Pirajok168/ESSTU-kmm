@@ -22,7 +22,7 @@ import kotlin.native.concurrent.ThreadLocal
 internal val announcementsModule = DI.Module("AnnouncementsModule") {
     bind<NewsApi>() with singleton {
         NewsApiImpl(
-            portalApi = instance()
+            authorizedApi = instance()
         )
     }
 
@@ -41,7 +41,6 @@ internal val announcementsModule = DI.Module("AnnouncementsModule") {
 
     bind<IAnnouncementsRepository>() with singleton{
         AnnouncementsRepositoryImpl(
-            auth = instance(),
             newsApi = instance(),
             newsDao = instance()
         )

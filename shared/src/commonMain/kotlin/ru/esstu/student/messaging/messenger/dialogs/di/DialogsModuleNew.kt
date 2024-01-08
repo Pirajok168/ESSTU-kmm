@@ -1,8 +1,5 @@
 package ru.esstu.student.messaging.messenger.dialogs.di
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainCoroutineDispatcher
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
@@ -15,18 +12,24 @@ import ru.esstu.student.messaging.messenger.dialogs.datasources.db.CacheDao
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.CacheDatabase
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.DialogsTimestampDao
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.DialogsTimestampDatabase
-import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.*
+import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.DialogsApiRepositoryImpl
+import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.DialogsDbRepositoryImpl
+import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.DialogsRepositoryImpl
+import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.DialogsUpdatesRepositoryImpl
+import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsApiRepository
+import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsDbRepository
+import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsRepository
+import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsUpdatesRepository
 import kotlin.native.concurrent.ThreadLocal
 
-internal val dialogsModuleNew = DI.Module("dialogsModuleNew"){
+internal val dialogsModuleNew = DI.Module("dialogsModuleNew") {
     bind<DialogsApi>() with singleton {
         DialogsApiImpl(
-            portalApi = instance()
+            authorizedApi = instance()
         )
     }
     bind<IDialogsApiRepository>() with singleton {
         DialogsApiRepositoryImpl(
-            authRepository = instance(),
             dialogsApi = instance()
         )
     }
@@ -41,7 +44,7 @@ internal val dialogsModuleNew = DI.Module("dialogsModuleNew"){
         )
     }
 
-    bind<IDialogsDbRepository>() with  singleton {
+    bind<IDialogsDbRepository>() with singleton {
         DialogsDbRepositoryImpl(
             auth = instance(),
             cacheDao = instance()

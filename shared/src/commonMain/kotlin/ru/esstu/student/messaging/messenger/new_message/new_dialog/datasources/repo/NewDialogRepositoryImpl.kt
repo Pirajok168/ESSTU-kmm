@@ -1,11 +1,12 @@
 package ru.esstu.student.messaging.messenger.new_message.new_dialog.datasources.repo
 
-import ru.esstu.auth.datasources.repo.IAuthRepository
-import ru.esstu.auth.entities.TokenOwners
+import ru.esstu.auth.datasources.local.ITokenDSManager
+import ru.esstu.auth.datasources.toToken
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.IPeer_
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
+import ru.esstu.domain.utill.wrappers.ServerErrors
 import ru.esstu.student.messaging.dialog_chat.datasources.toMessage
 import ru.esstu.student.messaging.dialog_chat.datasources.toReplyMessage
 import ru.esstu.student.messaging.entities.CachedFile
@@ -17,15 +18,12 @@ import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 import ru.esstu.student.messaging.messenger.new_message.new_dialog.datasources.api.NewDialogApi
 
 class NewDialogRepositoryImpl(
-    private val auth: IAuthRepository,
     private val api: NewDialogApi,
-    private val dialogCacheDao: CacheDao
+    private val dialogCacheDao: CacheDao,
+    private val loginDataRepository: ITokenDSManager,
 ): INewDialogRepository {
-    override suspend fun findUsers(query: String, limit: Int, offset: Int): Response<List<Sender>> {
-        return auth.provideToken { type, token ->
-            api.findUsers("$token", query = query, offset = offset, limit = limit).mapNotNull { it.toUser() }
-        }
-    }
+    override suspend fun findUsers(query: String, limit: Int, offset: Int): Response<List<Sender>> =
+        api.findUsers(query = query, limit = limit, offset = offset).transform { it.mapNotNull { it.toUser() } }
 
     override suspend fun sendMessage(
         dialogId: String,
@@ -33,16 +31,13 @@ class NewDialogRepositoryImpl(
         attachments: List<CachedFile>
     ): Response<Long> {
         if (message.isNotBlank()  && attachments.any()) {
-            val result = auth.provideToken { type, token ->
-                api.sendAttachments(
-                    authToken = "$token",
-                    files = attachments,
-                    requestSendMessage = ChatMessageRequestBody(
-                        message,
-                        IPeer_.DialoguePeer(dialogId),
-                    )
+            val result = api.sendAttachments(
+                files = attachments,
+                requestSendMessage = ChatMessageRequestBody(
+                    message,
+                    IPeer_.DialoguePeer(dialogId),
                 )
-            }
+            )
 
             return when (result) {
                 is Response.Error -> Response.Error(result.error)
@@ -51,16 +46,13 @@ class NewDialogRepositoryImpl(
         }
 
         if (attachments.any()) {
-            val result = auth.provideToken { type, token ->
-                api.sendMessageWithAttachments(
-                    authToken = "$token",
-                    files = attachments,
-                    requestSendMessage = ChatMessageRequestBody(
-                        message,
-                        IPeer_.DialoguePeer(dialogId),
-                    )
+            val result =  api.sendMessageWithAttachments(
+                files = attachments,
+                requestSendMessage = ChatMessageRequestBody(
+                    message,
+                    IPeer_.DialoguePeer(dialogId),
                 )
-            }
+            )
             return when (result) {
                 is Response.Error -> Response.Error(result.error)
                 is Response.Success -> Response.Success(result.data.id)
@@ -68,15 +60,12 @@ class NewDialogRepositoryImpl(
         }
 
         if ((message.isNotBlank()) && attachments.isEmpty()) {
-            val result = auth.provideToken { type, token ->
-                api.sendMessage(
-                    authToken = "$token",
-                    body = ChatMessageRequestBody(
-                        message,
-                        IPeer_.DialoguePeer(dialogId),
-                    )
+            val result = api.sendMessage(
+                body = ChatMessageRequestBody(
+                    message,
+                    IPeer_.DialoguePeer(dialogId),
                 )
-            }
+            )
             return when (result) {
                 is Response.Error -> Response.Error(result.error)
                 is Response.Success -> Response.Success(result.data.id)
@@ -88,45 +77,44 @@ class NewDialogRepositoryImpl(
 
     // TODO: Потесить быть её 
     override suspend fun updateDialogOnPreview(opponent: Sender, messageId: Long): Response<Unit> {
-        return auth.provideToken {
-                token ->
-            val appUserId = token.owner.id ?: throw Exception("unsupported user")
+        val appUserId = loginDataRepository.getAccessToken()?.toToken()?.owner?.id ?: return Response.Error(
+            ResponseError(error = ServerErrors.Unauthorized)
+        )
+        val messageResponse = api
+            .pickMessages(messageId.toString())
+            .data
+            ?.firstOrNull()
 
-            val messageResponse = api
-                .pickMessages(token.access, messageId.toString())
-                .firstOrNull()
+        val replyResponse = if (messageResponse?.replyToMsgId != null)
+            api.pickMessages(messageResponse.replyToMsgId.toString()).data?.firstOrNull()
+        else
+            null
 
-            val replyResponse = if (messageResponse?.replyToMsgId != null)
-                api.pickMessages(token.access, messageResponse.replyToMsgId.toString()).firstOrNull()
-            else
-                null
+        val authors = api.pickUsers(
+            usersIds = listOfNotNull(replyResponse?.from, messageResponse?.from)
+                .joinToString()
+        ).transform { it.mapNotNull { it.toUser() } }
 
-            val authors = api.pickUsers(
-                authToken = "${token.access}",
-                usersIds = listOfNotNull(replyResponse?.from, messageResponse?.from)
-                    .joinToString()
-            ).mapNotNull { it.toUser() }
+        val replyMessage = replyResponse?.toReplyMessage(authors.data.orEmpty())
 
-            val replyMessage = replyResponse?.toReplyMessage(authors)
+        val message = messageResponse?.toMessage(
+            replyMessages = listOfNotNull(replyMessage),
+            authors = authors.data.orEmpty()
+        )
 
-            val message = messageResponse?.toMessage(
-                replyMessages = listOfNotNull(replyMessage),
-                authors = authors
-            )
-
-            val dialog = PreviewDialog(
-                id = opponent.id,
-                opponent,
-                lastMessage = message?.toPreviewLastMessage(),
-                notifyAboutIt = true,
-                unreadMessageCount = 0
-            )
-            dialogCacheDao.updateDialogLastMessage(
-                appUserId,
-                dialogId = opponent.id,
-                lastMessage = message?.toPreviewLastMessage()!!,
-                dialog
-            )
-        }
+        val dialog = PreviewDialog(
+            id = opponent.id,
+            opponent,
+            lastMessage = message?.toPreviewLastMessage(),
+            notifyAboutIt = true,
+            unreadMessageCount = 0
+        )
+        dialogCacheDao.updateDialogLastMessage(
+            appUserId,
+            dialogId = opponent.id,
+            lastMessage = message?.toPreviewLastMessage()!!,
+            dialog
+        )
+        return Response.Success(Unit)
     }
 }

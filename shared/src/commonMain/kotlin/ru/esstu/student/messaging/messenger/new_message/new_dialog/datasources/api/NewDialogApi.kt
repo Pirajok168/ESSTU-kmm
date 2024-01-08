@@ -4,48 +4,42 @@ import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_re
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.chat_message_response.ChatMessageResponse
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessagePreview
-import ru.esstu.domain.modules.account.datasources.api.response.UserResponse
+import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.entities.CachedFile
 
 interface NewDialogApi {
 
     suspend fun findUsers(
-        authToken: String,
         query: String,
         limit: Int,
         offset: Int
-    ): List<UserPreview>
+    ): Response<List<UserPreview>>
 
 
     suspend fun pickMessages(
-        authToken: String,
         messageIds: String,
-    ): List<MessagePreview>
+    ): Response<List<MessagePreview>>
 
 
     suspend fun pickUsers(
-        authToken: String,
         usersIds: String,
-    ): List<UserPreview>
+    ): Response<List<UserPreview>>
 
     //region отправка сообщений
 
     suspend fun sendMessage(
-        authToken: String,
         body: ChatMessageRequestBody
-    ): ChatMessageResponse
+    ): Response<ChatMessageResponse>
 
     suspend fun sendMessageWithAttachments(
-        authToken: String,
         files: List<CachedFile>,
         requestSendMessage: ChatMessageRequestBody
-    ): ChatMessageResponse
+    ): Response< ChatMessageResponse>
 
 
     suspend fun sendAttachments(
-         authToken: String,
          files: List<CachedFile>,
          requestSendMessage: ChatMessageRequestBody
-    ): ChatMessageResponse
+    ): Response<ChatMessageResponse>
     //endregion
 }

@@ -15,15 +15,14 @@ import kotlin.native.concurrent.ThreadLocal
 internal val portfolioModule = DI.Module("PorfolioModule"){
     bind<PortfolioApi>() with singleton {
         PortfolioApiImpl(
-            instance(),
-            storage().fileSystem
+            authorizedApi = instance(),
+            fileSystem = storage().fileSystem
         )
     }
 
     bind<IPortfolioRepository>() with singleton {
         PortfolioRepositoryImpl(
-            instance(),
-            instance()
+            api = instance()
         )
     }
 }

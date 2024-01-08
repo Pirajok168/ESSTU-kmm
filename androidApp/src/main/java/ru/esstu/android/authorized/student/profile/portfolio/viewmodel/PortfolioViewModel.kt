@@ -109,6 +109,7 @@ class PortfolioViewModel: ViewModel() {
                 },
                 result = state.result,
                 workType = state.typeWork,
+                files = state.attachments
             )
                 .doOnSuccess {
                     closeAddedBottomSheet()

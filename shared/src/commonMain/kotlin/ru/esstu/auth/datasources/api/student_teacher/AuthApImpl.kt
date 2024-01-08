@@ -1,54 +1,53 @@
 package ru.esstu.auth.datasources.api.student_teacher
 
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
-import io.ktor.http.*
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromJsonElement
+import io.ktor.client.request.forms.FormDataContent
+import io.ktor.client.request.setBody
+import io.ktor.http.Parameters
+import ru.esstu.domain.ktor.UnauthorizedApi
+import ru.esstu.domain.utill.wrappers.Response
 
 
 class AuthApImpl(
-    private val portalApi: HttpClient,
-): AuthApi {
-    override suspend fun refreshToken(refresh: String): Tokens {
-        val request = portalApi.post {
-            url{
-                path("/auth/oauth/token")
-                setBody(FormDataContent(Parameters.build {
-                    append("response_type", "token")
-                    append("grant_type", "refresh_token")
-                    append("scope", "trust")
-                    append("client_id", "personal_office_employee")
-                    append("client_secret", "0a36339cfb8136da2151301170a730d758a88c0f130bd15fc1abe583a91ccfae")
-                    append("refresh_token", refresh)
-                }))
-            }
+    private val unauthorizedApi: UnauthorizedApi
+) : AuthApi {
+    override suspend fun refreshToken(refresh: String): Response<Tokens> {
 
+        return unauthorizedApi.post(
+            path = "/auth/oauth/token",
+        ) {
+            setBody(FormDataContent(Parameters.build {
+                append("response_type", "token")
+                append("grant_type", "refresh_token")
+                append("scope", "trust")
+                append("client_id", "personal_office_employee")
+                append(
+                    "client_secret",
+                    "0a36339cfb8136da2151301170a730d758a88c0f130bd15fc1abe583a91ccfae"
+                )
+                append("refresh_token", refresh)
+            }))
         }
-        return request.body()
 
     }
 
-    override suspend fun auth(login: String, Password: String): Tokens {
-        val httpRequest = portalApi.post {
-            url {
-                path("/auth/oauth/token")
-                setBody(FormDataContent(Parameters.build {
-                    append("username", login)
-                    append("password", Password)
-                    append("response_type", "token")
-                    append("grant_type", "password")
-                    append("scope", "trust")
-                    append("client_id", "personal_office_employee")
-                    append("client_secret", "0a36339cfb8136da2151301170a730d758a88c0f130bd15fc1abe583a91ccfae")
-                }))
+    override suspend fun auth(login: String, Password: String): Response<Tokens> {
 
-            }
+        return unauthorizedApi.post(
+            path = "/auth/oauth/token",
+        ) {
+            setBody(FormDataContent(Parameters.build {
+                append("username", login)
+                append("password", Password)
+                append("response_type", "token")
+                append("grant_type", "password")
+                append("scope", "trust")
+                append("client_id", "personal_office_employee")
+                append(
+                    "client_secret",
+                    "0a36339cfb8136da2151301170a730d758a88c0f130bd15fc1abe583a91ccfae"
+                )
+            }))
         }
-
-        return httpRequest.body()
 
     }
 }

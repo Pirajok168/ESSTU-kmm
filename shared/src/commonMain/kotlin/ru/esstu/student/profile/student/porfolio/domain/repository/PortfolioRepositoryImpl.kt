@@ -1,7 +1,6 @@
 package ru.esstu.student.profile.student.porfolio.domain.repository
 
 import com.soywiz.klock.DateTime
-import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.entities.CachedFile
 import ru.esstu.student.profile.student.porfolio.data.api.PortfolioApi
@@ -17,41 +16,27 @@ import ru.esstu.student.profile.student.porfolio.domain.model.toAttachment
 import kotlin.random.Random
 
 class PortfolioRepositoryImpl(
-    private val api: PortfolioApi,
-    private val auth: IAuthRepository
+    private val api: PortfolioApi
 ) : IPortfolioRepository {
     override suspend fun getFilesPortfolioByType(type: PortfolioType): Response<List<PortfolioFile>> {
-        val response = auth.provideToken { token ->
-
-            when (type) {
-                PortfolioType.ACHIEVEMENT -> PortfolioTypeResponse.ACHIEVEMENT
-                PortfolioType.AWARD -> PortfolioTypeResponse.AWARD
-                PortfolioType.CONFERENCE -> PortfolioTypeResponse.CONFERENCE
-                PortfolioType.CONTEST -> PortfolioTypeResponse.CONTEST
-                PortfolioType.EXHIBITION -> PortfolioTypeResponse.EXHIBITION
-                PortfolioType.SCIENCEREPORT -> PortfolioTypeResponse.SCIENCEREPORT
-                PortfolioType.WORK -> PortfolioTypeResponse.WORK
-                PortfolioType.TRAINEESHIP -> PortfolioTypeResponse.TRAINEESHIP
-                PortfolioType.REVIEWS -> PortfolioTypeResponse.REVIEWS
-                PortfolioType.THEME -> PortfolioTypeResponse.THEME
-                PortfolioType.SCIENCEWORK -> PortfolioTypeResponse.SCIENCEWORK
-            }.run {
-                api.getFilesPortfolioByType(this, token.access)
-            }
+        val response =  when (type) {
+            PortfolioType.ACHIEVEMENT -> PortfolioTypeResponse.ACHIEVEMENT
+            PortfolioType.AWARD -> PortfolioTypeResponse.AWARD
+            PortfolioType.CONFERENCE -> PortfolioTypeResponse.CONFERENCE
+            PortfolioType.CONTEST -> PortfolioTypeResponse.CONTEST
+            PortfolioType.EXHIBITION -> PortfolioTypeResponse.EXHIBITION
+            PortfolioType.SCIENCEREPORT -> PortfolioTypeResponse.SCIENCEREPORT
+            PortfolioType.WORK -> PortfolioTypeResponse.WORK
+            PortfolioType.TRAINEESHIP -> PortfolioTypeResponse.TRAINEESHIP
+            PortfolioType.REVIEWS -> PortfolioTypeResponse.REVIEWS
+            PortfolioType.THEME -> PortfolioTypeResponse.THEME
+            PortfolioType.SCIENCEWORK -> PortfolioTypeResponse.SCIENCEWORK
+        }.run {
+            api.getFilesPortfolioByType(this)
         }
 
 
-        return when (response) {
-            is Response.Error -> {
-                Response.Error(response.error)
-            }
-
-            is Response.Success -> {
-                Response.Success(
-                    response.data.transform()
-                )
-            }
-        }
+        return response.transform { it.toPortfolioFile()  }
     }
 
     override suspend fun saveFilePortfolio(
@@ -71,48 +56,46 @@ class PortfolioRepositoryImpl(
         fileCode: String?,
         status: String?
     ): Response<PortfolioFileRequestResponse> {
-        val response = auth.provideToken { token ->
-
-            when (type) {
-                PortfolioType.ACHIEVEMENT -> PortfolioTypeResponse.ACHIEVEMENT
-                PortfolioType.AWARD -> PortfolioTypeResponse.AWARD
-                PortfolioType.CONFERENCE -> PortfolioTypeResponse.CONFERENCE
-                PortfolioType.CONTEST -> PortfolioTypeResponse.CONTEST
-                PortfolioType.EXHIBITION -> PortfolioTypeResponse.EXHIBITION
-                PortfolioType.SCIENCEREPORT -> PortfolioTypeResponse.SCIENCEREPORT
-                PortfolioType.WORK -> PortfolioTypeResponse.WORK
-                PortfolioType.TRAINEESHIP -> PortfolioTypeResponse.TRAINEESHIP
-                PortfolioType.REVIEWS -> PortfolioTypeResponse.REVIEWS
-                PortfolioType.THEME -> PortfolioTypeResponse.THEME
-                PortfolioType.SCIENCEWORK -> PortfolioTypeResponse.SCIENCEWORK
-            }.run {
-                api.saveFilePortfolio(PortfolioFileRequestResponse(
-                    id = null,
-                    type = this,
-                    studentCode = studentCode,
-                    eventName = eventName,
-                    eventStatus = eventStatus,
-                    eventPlace = eventPlace,
-                    eventStartDate = eventStartDate,
-                    eventEndDate = eventEndDate,
-                    eventUrl = eventUrl,
-                    workName = workName,
-                    workType = workType,
-                    result = result,
-                    coauthorsText = coauthorsText,
-                    fileCode = fileCode,
-                    status = status
-                ), files, token.access)
-            }
+        val response = when (type) {
+            PortfolioType.ACHIEVEMENT -> PortfolioTypeResponse.ACHIEVEMENT
+            PortfolioType.AWARD -> PortfolioTypeResponse.AWARD
+            PortfolioType.CONFERENCE -> PortfolioTypeResponse.CONFERENCE
+            PortfolioType.CONTEST -> PortfolioTypeResponse.CONTEST
+            PortfolioType.EXHIBITION -> PortfolioTypeResponse.EXHIBITION
+            PortfolioType.SCIENCEREPORT -> PortfolioTypeResponse.SCIENCEREPORT
+            PortfolioType.WORK -> PortfolioTypeResponse.WORK
+            PortfolioType.TRAINEESHIP -> PortfolioTypeResponse.TRAINEESHIP
+            PortfolioType.REVIEWS -> PortfolioTypeResponse.REVIEWS
+            PortfolioType.THEME -> PortfolioTypeResponse.THEME
+            PortfolioType.SCIENCEWORK -> PortfolioTypeResponse.SCIENCEWORK
+        }.run {
+            api.saveFilePortfolio(PortfolioFileRequestResponse(
+                id = null,
+                type = this,
+                studentCode = studentCode,
+                eventName = eventName,
+                eventStatus = eventStatus,
+                eventPlace = eventPlace,
+                eventStartDate = eventStartDate,
+                eventEndDate = eventEndDate,
+                eventUrl = eventUrl,
+                workName = workName,
+                workType = workType,
+                result = result,
+                coauthorsText = coauthorsText,
+                fileCode = fileCode,
+                status = status
+            ), files)
         }
         return response
     }
 
     override suspend fun getAttestation(): Response<List<Attestation>> {
-        val response = auth.provideToken { token ->
-            api.getAttestationMarks(token.access).transformAttestation()
-                .sortedWith((compareBy({ it.eduYear }, { it.eduBlock })))
-        }
+        val response = api.getAttestationMarks()
+            .transform {
+                it.transformAttestation()
+                    .sortedWith((compareBy({ it.eduYear }, { it.eduBlock })))
+            }
         return response
     }
 }
@@ -136,7 +119,7 @@ private fun List<AttestationResponse>.transformAttestation(): List<Attestation> 
     }
 
 
-private fun List<PortfolioFileRequestResponse>.transform(): List<PortfolioFile> =
+private fun List<PortfolioFileRequestResponse>.toPortfolioFile(): List<PortfolioFile> =
     map {
         when (it.type) {
             PortfolioTypeResponse.ACHIEVEMENT -> PortfolioFile.Achievement(

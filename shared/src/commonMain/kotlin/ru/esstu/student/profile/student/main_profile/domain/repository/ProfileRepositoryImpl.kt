@@ -21,23 +21,14 @@ class ProfileRepositoryImpl(
             val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
             emit(FlowResponse.Loading())
 
-            //val cachedProfile = profileDao.getProfile(appUserId)?.toStudentProfile()
-
-//            if (cachedProfile != null)
-//                emit(FlowResponse.Success(cachedProfile))
-
-            val remoteProfile = auth.provideToken { type, access ->
-                api.getStudentInfo("$access").toStudentProfile()
+            val remoteProfile = api.getStudentInfo().transform {
+                it.toStudentProfile()
             }
 
             when (remoteProfile) {
                 is Response.Error -> emit(FlowResponse.Error(remoteProfile.error))
                 is Response.Success -> {
                     emit(FlowResponse.Success(remoteProfile.data))
-                    /*if (remoteProfile.data != cachedProfile) {
-                        profileDao.updateProfile(remoteProfile.data.toEntity(appUserId))
-                        emit(FlowResponse.Success(remoteProfile.data))
-                    }*/
                 }
             }
             emit(FlowResponse.Loading(false))

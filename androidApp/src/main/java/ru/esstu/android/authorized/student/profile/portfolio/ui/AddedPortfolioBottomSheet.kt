@@ -124,16 +124,6 @@ fun AddedPortfolioBottomSheet(
                                 placeholder = if (it == PortfolioType.AWARD) "Статус награды" else "Статус достижения"
                             )
                             Spacer(modifier = Modifier.size(16.dp))
-                            FileCard(
-                                files = state.attachments,
-                                onChooseFile = {
-                                    portfolioViewModel.onPassAttachments(it)
-                                },
-                                onRemoveFile = {
-                                    portfolioViewModel.onRemoveAttachment(it)
-                                }
-                            )
-                            Spacer(modifier = Modifier.size(16.dp))
                         }
 
                         PortfolioType.CONFERENCE -> {
@@ -590,6 +580,18 @@ fun AddedPortfolioBottomSheet(
                             Spacer(modifier = Modifier.size(16.dp))
                         }
                     }
+
+                    Spacer(modifier = Modifier.size(16.dp))
+                    FileCard(
+                        files = state.attachments,
+                        onChooseFile = {
+                            portfolioViewModel.onPassAttachments(it)
+                        },
+                        onRemoveFile = {
+                            portfolioViewModel.onRemoveAttachment(it)
+                        }
+                    )
+                    Spacer(modifier = Modifier.size(16.dp))
                 }
 
                 DoneButton(

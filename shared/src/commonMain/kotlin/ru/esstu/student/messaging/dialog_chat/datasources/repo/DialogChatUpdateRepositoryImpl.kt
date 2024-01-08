@@ -2,7 +2,6 @@ package ru.esstu.student.messaging.dialog_chat.datasources.repo
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
-import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatApi
 import ru.esstu.student.messaging.dialog_chat.datasources.api.DialogChatUpdateApi
@@ -11,7 +10,6 @@ import ru.esstu.student.messaging.entities.DeliveryStatus
 
 
 class DialogChatUpdateRepositoryImpl constructor(
-    private val auth: IAuthRepository,
     private val updateApi: DialogChatUpdateApi,
     private val chatApi: DialogChatApi
 ) : IDialogChatUpdateRepository {
@@ -19,27 +17,23 @@ class DialogChatUpdateRepositoryImpl constructor(
         var latestMessageId = lastMessageId
         while (true) {
 
-            when (val result = auth.provideToken { type, token ->
-                val updates = updateApi.getUpdates(
-                    "$token",
-                    lastMessageId = latestMessageId,
-                    peerId = dialogId
-                )
 
-                updates.toMessages(
-                    provideUsers = { indices ->
-                        chatApi.pickUsers("$token", indices.joinToString())
-                    },
-                    provideReplies = { indices ->
-                        chatApi.pickMessages("$token", indices.joinToString())
-                    }
-                )
-
-            }) {
+            when (val result = updateApi.getUpdates(peerId = dialogId, lastMessageId = latestMessageId)
+                .transform {
+                    it.toMessages(
+                        provideUsers = { indices ->
+                            chatApi.pickUsers(indices.joinToString()).data.orEmpty()
+                        },
+                        provideReplies = { indices ->
+                            chatApi.pickMessages(indices.joinToString()).data.orEmpty()
+                        }
+                    )
+                }) {
                 is Response.Error -> {
                     emit(Response.Error(result.error))
                     delay(500)
                 }
+
                 is Response.Success -> {
                     val messages =
                         result.data

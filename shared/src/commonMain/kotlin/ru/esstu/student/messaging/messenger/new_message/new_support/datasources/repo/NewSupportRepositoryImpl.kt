@@ -2,10 +2,14 @@ package ru.esstu.student.messaging.messenger.new_message.new_support.datasources
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.esstu.auth.datasources.repo.IAuthRepository
-import ru.esstu.auth.entities.TokenOwners
+import ru.esstu.auth.datasources.local.ITokenDSManager
+import ru.esstu.auth.datasources.toToken
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
+import ru.esstu.domain.utill.wrappers.ResponseError
+import ru.esstu.domain.utill.wrappers.ServerErrors
+import ru.esstu.domain.utill.wrappers.doOnError
+import ru.esstu.domain.utill.wrappers.doOnSuccess
 import ru.esstu.student.messaging.entities.CachedFile
 import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
 import ru.esstu.student.messaging.messenger.new_message.new_support.datasources.api.NewSupportApi
@@ -16,21 +20,22 @@ import ru.esstu.student.messaging.messenger.supports.datasource.db.SupportsCache
 import ru.esstu.student.messaging.messenger.supports.toSupports
 
 class NewSupportRepositoryImpl(
-    private val auth: IAuthRepository,
     private val api: NewSupportApi,
-    private val cashSupportsCacheDao: SupportsCacheDao
-): INewSupportRepository {
-    override fun getSupportThemes(): Flow<FlowResponse<List<SupportTheme>>>  = flow{
+    private val cashSupportsCacheDao: SupportsCacheDao,
+    private val loginDataRepository: ITokenDSManager,
+) : INewSupportRepository {
+    override fun getSupportThemes(): Flow<FlowResponse<List<SupportTheme>>> = flow {
         emit(FlowResponse.Loading())
-        val result = auth.provideToken { token ->
-            val appUserId = token.owner.id ?: throw Exception("unsupported user type")
-
-            val responseGroups = api.getSupport("${token.access}").map { it.toSupportGroup() }
-            emit(FlowResponse.Success(responseGroups))
-        }
-
-        if (result is Response.Error)
-            emit(FlowResponse.Error(result.error))
+        api.getSupport()
+            .transform {
+                it.map { it.toSupportGroup() }
+            }
+            .doOnSuccess {
+                emit(FlowResponse.Success(it))
+            }
+            .doOnError {
+                emit(FlowResponse.Error(it))
+            }
 
         emit(FlowResponse.Loading(false))
     }
@@ -40,52 +45,66 @@ class NewSupportRepositoryImpl(
         message: String,
         attachments: List<CachedFile>
     ): Response<ConversationPreview> {
-        return auth.provideToken {  type, token ->
-            if (message.isNotBlank() && attachments.isNotEmpty()){
-                api.createSupportChatWithAttachments(
-                    authToken = token,
-                    files = attachments,
-                    body = NewSupportRequestBody(
-                        message = message,
-                        users = listOf(themeId),
-                        type = "SUPPORT"
-                    )
-                ).toSupports().firstOrNull() ?: throw Exception("cast exception")
-            }else if (message.isNotBlank()){
-                api.createSupportChat(
-                    authToken = token,
-                    body = NewSupportRequestBody(
-                        message = message,
-                        users = listOf(themeId),
-                        type = "SUPPORT"
-                    )
-                ).toSupports().firstOrNull() ?: throw Exception("cast exception")
-            }else if (attachments.isNotEmpty()){
-                api.createSupportChatWithAttachments(
-                    authToken = token,
-                    body = NewSupportRequestBody(
-                        users = listOf(themeId),
-                        type = "SUPPORT"
-                    ),
-                    files = attachments
-                ).toSupports().firstOrNull() ?: throw Exception("cast exception")
-            } else
-                throw Exception("неизвестное состояние")
+        val response = if (message.isNotBlank() && attachments.isNotEmpty()) {
+            api.createSupportChatWithAttachments(
+                files = attachments,
+                body = NewSupportRequestBody(
+                    message = message,
+                    users = listOf(themeId),
+                    type = "SUPPORT"
+                )
+            )
+                .transform {
+                    it.toSupports().firstOrNull()
+                }
+
+        } else if (message.isNotBlank()) {
+            api.createSupportChat(
+                body = NewSupportRequestBody(
+                    message = message,
+                    users = listOf(themeId),
+                    type = "SUPPORT"
+                )
+            ).transform {
+                it.toSupports().firstOrNull()
+            }
+        } else if (attachments.isNotEmpty()) {
+            api.createSupportChatWithAttachments(
+                files = attachments,
+                body = NewSupportRequestBody(
+                    users = listOf(themeId),
+                    type = "SUPPORT"
+                )
+            ).transform {
+                it.toSupports().firstOrNull()
+            }
+        } else
+            throw Exception("неизвестное состояние")
+
+        return when (response) {
+            is Response.Error -> Response.Error(response.error)
+            is Response.Success -> response.data?.let { Response.Success(it) } ?: Response.Error(
+                ResponseError(error = ServerErrors.Unknown)
+            )
         }
     }
 
     override suspend fun updateSupportsOnPreview(support: ConversationPreview): Response<Unit> {
-       return auth.provideToken { token ->
-            val appUserId = token.owner.id ?: throw Exception("unsupported User Type")
-           cashSupportsCacheDao.updateDialogLastMessage(
-               appUserId,
-               support.id,
-               support.lastMessage ?: return@provideToken,
-               support,
-               true
-           )
-       }
+        val appUserId =
+            loginDataRepository.getAccessToken()?.toToken()?.owner?.id ?: return Response.Error(
+                ResponseError(error = ServerErrors.Unknown)
+            )
+        cashSupportsCacheDao.updateDialogLastMessage(
+            appUserId,
+            support.id,
+            support.lastMessage ?: return Response.Error(
+                ResponseError(error = ServerErrors.Unknown)
+            ),
+            support,
+            true
+        )
 
+        return Response.Success(Unit)
 
     }
 }

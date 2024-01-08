@@ -17,8 +17,8 @@ import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.Oppone
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.OpponentDatabase
 import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.ErredMessageDao
 import ru.esstu.student.messaging.dialog_chat.datasources.db.erred_messages.ErredMessageDatabase
-import ru.esstu.student.messaging.dialog_chat.datasources.db.user_messages.UserMessageDatabase
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_messages.UserMessageDao
+import ru.esstu.student.messaging.dialog_chat.datasources.db.user_messages.UserMessageDatabase
 import ru.esstu.student.messaging.dialog_chat.datasources.repo.DialogChatRepositoryImpl
 import ru.esstu.student.messaging.dialog_chat.datasources.repo.DialogChatUpdateRepositoryImpl
 import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatRepository
@@ -28,8 +28,8 @@ import kotlin.native.concurrent.ThreadLocal
 internal val dialogChatModuleNew = DI.Module("DialogChatModuleNew"){
     bind<DialogChatApi>() with singleton {
         DialogChatApiImpl(
-            portalApi = instance(),
-            storage().fileSystem
+            authorizedApi = instance(),
+            fileSystem = storage().fileSystem
         )
     }
     bind<HistoryCacheDao>() with singleton {
@@ -55,13 +55,13 @@ internal val dialogChatModuleNew = DI.Module("DialogChatModuleNew"){
 
     bind<IDialogChatRepository>() with singleton {
         DialogChatRepositoryImpl(
-            instance(),
-            instance(),
-            instance(),
-            instance(),
-            instance(),
-            instance(),
-            historyCacheDaoNew = instance()
+            dialogChatApi = instance(),
+            cacheDao = instance(),
+            opponentDao = instance(),
+            userMsgDao = instance(),
+            erredMsgDao = instance(),
+            historyCacheDaoNew = instance(),
+            loginDataRepository = instance()
         )
     }
 
@@ -73,7 +73,6 @@ internal val dialogChatModuleNew = DI.Module("DialogChatModuleNew"){
 
     bind<IDialogChatUpdateRepository>() with singleton {
         DialogChatUpdateRepositoryImpl(
-            auth = instance(),
             updateApi = instance(),
             chatApi = instance()
         )

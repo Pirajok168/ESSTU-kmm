@@ -1,12 +1,10 @@
 package ru.esstu.auth.datasources.local
 
 
-import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.Settings
 
 
-
-class TokenDSManagerImpl  constructor(
+class TokenDSManagerImpl constructor(
     private val authDataStore: Settings
 ) : ITokenDSManager {
     private object PreferencesKeys {
@@ -16,6 +14,22 @@ class TokenDSManagerImpl  constructor(
         const val USER_TYPE_KEY = "USER_TYPE_KEY"
     }
 
+    override fun getAccessToken(): TokenPair? {
+        val sessionToken: String =
+            authDataStore.getStringOrNull(PreferencesKeys.SESSION_TOKEN_KEY) ?: return null
+        val refreshToken: String =
+            authDataStore.getStringOrNull(PreferencesKeys.REFRESH_TOKEN_KEY) ?: return null
+        val userType: String =
+            authDataStore.getStringOrNull(PreferencesKeys.USER_TYPE_KEY) ?: return null
+        val tokenType: String =
+            authDataStore.getStringOrNull(PreferencesKeys.TOKEN_TYPE_KEY) ?: return null
+        return TokenPair(
+            tokenType = tokenType,
+            refreshToken = refreshToken,
+            userType = userType,
+            accessToken = sessionToken
+        )
+    }
 
 
     override suspend fun getToken(): TokenPair? {

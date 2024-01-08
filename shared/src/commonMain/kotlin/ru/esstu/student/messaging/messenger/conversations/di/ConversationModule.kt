@@ -12,7 +12,14 @@ import ru.esstu.student.messaging.messenger.conversations.datasources.db.Convers
 import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsCacheDatabase
 import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsTimestampDao
 import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsTimestampDatabase
-import ru.esstu.student.messaging.messenger.conversations.datasources.repo.*
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.ConversationUpdatesRepositoryImpl
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.ConversationsApiRepositoryImpl
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.ConversationsDbRepositoryImpl
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.ConversationsRepositoryImpl
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationUpdatesRepository
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsApiRepository
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsDbRepository
+import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsRepository
 import kotlin.native.concurrent.ThreadLocal
 
 internal val conversationModule = DI.Module("ConversationModule") {
@@ -26,7 +33,6 @@ internal val conversationModule = DI.Module("ConversationModule") {
     bind<IConversationsApiRepository>() with singleton {
         ConversationsApiRepositoryImpl(
             instance(),
-            instance()
         )
     }
 
