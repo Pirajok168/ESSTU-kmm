@@ -1,7 +1,7 @@
 package ru.esstu.domain.modules.account.datasources.repo
 
 import kotlinx.coroutines.flow.firstOrNull
-import ru.esstu.auth.datasources.local.ITokenDSManager
+import ru.esstu.auth.datasources.local.ILoginDataRepository
 import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.datasources.toToken
 import ru.esstu.auth.entities.Token
@@ -18,7 +18,7 @@ import ru.esstu.student.messaging.entities.Sender
 
 
 class AccountInfoRepositoryImpl  constructor(
-    private val loginDataRepository: ITokenDSManager,
+    private val loginDataRepository: ILoginDataRepository,
     private val userCache: IAccountInfoDSManager,
     private val api: AccountInfoApi,
     private val auth: IAuthRepository

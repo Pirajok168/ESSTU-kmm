@@ -2,7 +2,7 @@ package ru.esstu.student.messaging.group_chat.datasources.repo
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.esstu.auth.datasources.local.ITokenDSManager
+import ru.esstu.auth.datasources.local.ILoginDataRepository
 import ru.esstu.auth.datasources.toToken
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatReadRequestBody
@@ -46,7 +46,7 @@ class GroupChatRepositoryImpl constructor(
     private val erredMsgDao: ErredMessageDao,
     private val supportMsgDao: SupportsCacheDao,
     private val appealMsgDao: AppealsCacheDao,
-    private val loginDataRepository: ITokenDSManager,
+    private val loginDataRepository: ILoginDataRepository,
 ): IGroupChatRepository {
     override suspend fun getHeader(id: Int): Flow<FlowResponse<Conversation>> = flow{
          loginDataRepository.getAccessToken()?.toToken()?.owner?.id?.let { appUserId->

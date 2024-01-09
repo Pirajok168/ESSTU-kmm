@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
 import ru.esstu.auth.datasources.di.repoAuth
-import ru.esstu.auth.datasources.local.ITokenDSManager
+import ru.esstu.auth.datasources.local.ILoginDataRepository
 import ru.esstu.auth.datasources.repo.IAuthRepository
 
 
@@ -22,7 +22,7 @@ data class LogoutState(
 
 class LogoutViewModel constructor(
     private val repo: IAuthRepository = ESSTUSdk.repoAuth.authModule,
-    private val cache: ITokenDSManager = ESSTUSdk.repoAuth.tokenDSManagerImpl
+    private val cache: ILoginDataRepository = ESSTUSdk.repoAuth.tokenDSManagerImpl
 ) : ViewModel() {
 
     val logoutFlow = repo.logoutFlow

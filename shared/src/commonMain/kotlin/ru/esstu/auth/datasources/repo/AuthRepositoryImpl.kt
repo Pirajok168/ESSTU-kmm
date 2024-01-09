@@ -1,59 +1,60 @@
 package ru.esstu.auth.datasources.repo
 
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.HttpRequestTimeoutException
+import com.soywiz.klock.DateTime
 import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import ru.esstu.auth.datasources.api.student_teacher.AuthApi
-import ru.esstu.auth.datasources.local.ITokenDSManager
+import ru.esstu.auth.datasources.local.ILoginDataRepository
 import ru.esstu.auth.datasources.toToken
 import ru.esstu.auth.datasources.toTokenPair
 import ru.esstu.auth.entities.Token
 import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
+import ru.esstu.domain.utill.wrappers.ServerErrors
 import ru.esstu.domain.utill.wrappers.doOnSuccess
 
 
 class AuthRepositoryImpl constructor(
     private val portalApi: AuthApi,
-    private val cache: ITokenDSManager,
+    private val cache: ILoginDataRepository,
 ) : IAuthRepository {
     private val sharedFlow = MutableSharedFlow<Token?>()
 
     override val logoutFlow: SharedFlow<Token?> = sharedFlow.asSharedFlow()
 
-    // TODO: ТУТ УБРАНО 
     override suspend fun refreshToken(): Response<Token> {
-        return try {
+        val token = cache.getToken()?.toToken()
 
-            val token = cache.getToken()?.toToken()
+        if (token == null) {
+            goToLoginScreen(null)
+            return Response.Error(ResponseError(error = ServerErrors.Unauthorized))
+        }
 
-            if (token == null) {
-                goToLoginScreen(null)
-                return Response.Error(ResponseError(code = 401, message = "unauthorised"))
+        val newToken: Response<Token?>  = when (token.owner) {
+            is TokenOwners.Teacher, is TokenOwners.Student -> {
+                portalApi.refreshToken(token.refresh).transform { it.toToken() }
+            }
+            TokenOwners.Entrant -> Response.Error(ResponseError(error= ServerErrors.Unknown))
+            TokenOwners.Guest -> Response.Success(Token("", "", "", TokenOwners.Guest, null))
+        }
+
+        newToken
+            .doOnSuccess {
+                it?.let {
+                    cache.setToken(it.toTokenPair())
+                    it.expiresIn?.let {
+                        cache.setExpiresDateToken(DateTime.nowUnixLong().plus(it))
+                    }
+                }
             }
 
-            val newToken = when (token.owner) {
-                is TokenOwners.Teacher, is TokenOwners.Student -> {
-                    portalApi.refreshToken(token.refresh).transform { it.toToken() }.data
-                }
-                TokenOwners.Entrant -> null
-                TokenOwners.Guest -> Token("", "", "", TokenOwners.Guest)
-            } ?: return Response.Error(ResponseError(message = "unsupported user type"))
 
-            cache.setToken(newToken.toTokenPair())
-
-            Response.Success(newToken)
-
-        } catch (e: IOException) {
-            Response.Error(ResponseError(message = e.message))
-        } catch (e: ClientRequestException){
-            Response.Error(ResponseError(message = e.message))
-        } catch (e: HttpRequestTimeoutException){
-            Response.Error(ResponseError(message = e.message))
+        return when(newToken){
+            is Response.Error -> Response.Error(newToken.error)
+            is Response.Success -> newToken.data?.let { Response.Success(it) } ?: Response.Error(ResponseError(error = ServerErrors.Unknown))
         }
     }
 
@@ -65,6 +66,9 @@ class AuthRepositoryImpl constructor(
         }.doOnSuccess {
             it?.let {
                 cache.setToken(it.toTokenPair())
+                it.expiresIn?.let {
+                    cache.setExpiresDateToken(DateTime.nowUnixLong().plus(it))
+                }
             }
         }
         return when (response){
@@ -133,7 +137,7 @@ class AuthRepositoryImpl constructor(
 
 
     override suspend fun guestAuth(): Response<Token> {
-        val newToken = Token("", "", "", TokenOwners.Guest)
+        val newToken = Token("", "", "", TokenOwners.Guest, null)
         return Response.Success(newToken)
     }
 

@@ -5,24 +5,21 @@ import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.ResponseException
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.statement.HttpResponse
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
 import org.kodein.di.singleton
 import ru.esstu.ESSTUSdk
-import ru.esstu.auth.datasources.local.TokenDSManagerImpl
+import ru.esstu.auth.datasources.local.LoginDataRepositoryImpl
 import ru.esstu.debugBuild
 import ru.esstu.domain.handleError.ErrorHandler
 import ru.esstu.domain.handleError.ErrorProcessor
@@ -45,7 +42,7 @@ internal val domainApi = DI.Module(
             }
         }
 
-        bind<TokenDSManagerImpl>() with  singleton { TokenDSManagerImpl(
+        bind<LoginDataRepositoryImpl>() with  singleton { LoginDataRepositoryImpl(
             authDataStore = Settings()
         ) }
 
@@ -99,9 +96,10 @@ internal val domainApi = DI.Module(
         bind {
             singleton {
                 AuthorizedApi(
-                    loginDataRepository = instance<TokenDSManagerImpl>(),
+                    loginDataRepository = instance<LoginDataRepositoryImpl>(),
                     client = { instance() },
-                    json = Json
+                    json = Json,
+                    portalApi = instance()
                 )
             }
         }

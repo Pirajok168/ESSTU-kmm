@@ -9,7 +9,7 @@ data class Tokens(
     @SerialName("access_token")
     val accessToken: String,
     @SerialName("expires_in")
-    val expiresIn: Int,
+    val expiresIn: Long,
     val firstName: String,
     val lastName: String,
     val patronymic: String,

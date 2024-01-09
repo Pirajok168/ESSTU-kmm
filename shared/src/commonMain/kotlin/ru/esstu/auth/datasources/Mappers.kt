@@ -2,8 +2,8 @@ package ru.esstu.auth.datasources
 
 import ru.esstu.auth.datasources.api.student_teacher.Tokens
 import ru.esstu.auth.datasources.local.TokenPair
-import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.auth.entities.Token
+import ru.esstu.auth.entities.TokenOwners
 
 /*fun EntrantTokens.toToken(): Token = Token(
     type = tokenType,
@@ -21,7 +21,8 @@ fun Tokens.toToken(): Token? {
             "STUDENT" -> TokenOwners.Student("${userType.lowercase().take(1)}$userId")
             "EMPLOYEE" -> TokenOwners.Teacher("${userType.lowercase().take(1)}$userId")
             else -> return null
-        }
+        },
+        expiresIn = expiresIn
     )
 }
 
@@ -29,12 +30,14 @@ fun Token.toTokenPair() = TokenPair(
     refreshToken = refresh,
     accessToken = access,
     userType = owner.asString(),
-    tokenType = type
+    tokenType = type,
+    expiresIn = expiresIn
 )
 
 fun TokenPair.toToken() = Token(
     access = accessToken,
     refresh = refreshToken,
     owner = TokenOwners.fromString(userType) ?: throw ClassCastException("unknown token type"),
-    type = tokenType
+    type = tokenType,
+    expiresIn = expiresIn
 )

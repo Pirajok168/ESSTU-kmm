@@ -2,6 +2,8 @@
 
 package ru.esstu.domain.ktor
 
+import com.soywiz.klock.DateTime
+import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
@@ -12,13 +14,18 @@ import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.utils.EmptyContent
 import kotlinx.serialization.json.Json
-import ru.esstu.auth.datasources.local.ITokenDSManager
+import ru.esstu.auth.datasources.api.student_teacher.AuthApi
+import ru.esstu.auth.datasources.local.ILoginDataRepository
+import ru.esstu.auth.datasources.toToken
+import ru.esstu.auth.datasources.toTokenPair
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.domain.utill.wrappers.ServerErrors
+import ru.esstu.domain.utill.wrappers.doOnSuccess
 
 class AuthorizedApi(
-    private val loginDataRepository: ITokenDSManager,
+    private val loginDataRepository: ILoginDataRepository,
+    private val portalApi: AuthApi,
     client: () -> HttpClient,
     json: Json
 ): Api(client, json) {
@@ -54,11 +61,36 @@ class AuthorizedApi(
     }
 
     internal suspend inline fun <reified T> checkedRequest(method: HttpClient.() -> T): Response<T> {
-        loginDataRepository.getToken()?.accessToken ?: return Response.Error(ResponseError(error = ServerErrors.Unknown))
-
+        if (!loginDataRepository.isUserAuthorized()) {
+            return tryRefreshAuthToken(method)
+        }
 
 
         return request(method)
+    }
+
+    internal suspend inline fun <reified T> tryRefreshAuthToken(method: HttpClient.() -> T): Response<T> {
+        Napier.d("tryRefreshAuthToken", tag = "tryRefreshAuthToken")
+        val token = loginDataRepository.getToken()?.toToken() ?: return Response.Error(ResponseError(error = ServerErrors.Unauthorized))
+        val response = portalApi.refreshToken(token.refresh).transform { it.toToken() }
+
+        response
+            .doOnSuccess {
+                it?.let {
+                    loginDataRepository.setToken(it.toTokenPair())
+                    it.expiresIn?.let {
+                        loginDataRepository.setExpiresDateToken(DateTime.nowUnixLong().plus(it))
+                    }
+                }
+            }
+        return when(response){
+            is Response.Error -> {
+                Response.Error(ResponseError(error = ServerErrors.Unauthorized))
+            }
+            is Response.Success -> {
+                request(method)
+            }
+        }
     }
 
 }

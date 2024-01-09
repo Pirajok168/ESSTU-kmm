@@ -1,6 +1,6 @@
 package ru.esstu.student.messaging.messenger.new_message.new_dialog.datasources.repo
 
-import ru.esstu.auth.datasources.local.ITokenDSManager
+import ru.esstu.auth.datasources.local.ILoginDataRepository
 import ru.esstu.auth.datasources.toToken
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.ChatMessageRequestBody
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_request.request_body.IPeer_
@@ -20,7 +20,7 @@ import ru.esstu.student.messaging.messenger.new_message.new_dialog.datasources.a
 class NewDialogRepositoryImpl(
     private val api: NewDialogApi,
     private val dialogCacheDao: CacheDao,
-    private val loginDataRepository: ITokenDSManager,
+    private val loginDataRepository: ILoginDataRepository,
 ): INewDialogRepository {
     override suspend fun findUsers(query: String, limit: Int, offset: Int): Response<List<Sender>> =
         api.findUsers(query = query, limit = limit, offset = offset).transform { it.mapNotNull { it.toUser() } }

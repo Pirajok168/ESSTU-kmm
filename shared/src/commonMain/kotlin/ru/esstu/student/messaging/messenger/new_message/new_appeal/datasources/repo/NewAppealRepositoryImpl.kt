@@ -2,7 +2,7 @@ package ru.esstu.student.messaging.messenger.new_message.new_appeal.datasources.
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.esstu.auth.datasources.local.ITokenDSManager
+import ru.esstu.auth.datasources.local.ILoginDataRepository
 import ru.esstu.auth.datasources.toToken
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
@@ -21,7 +21,7 @@ import ru.esstu.student.messaging.messenger.new_message.new_appeal.entities.Appe
 class NewAppealRepositoryImpl(
     private val api: NewAppealApi,
     private val appealsCacheDao: AppealsCacheDao,
-    private val loginDataRepository: ITokenDSManager,
+    private val loginDataRepository: ILoginDataRepository,
 ) : INewAppealRepository {
     override fun loadDepartments(): Flow<FlowResponse<List<AppealTheme>>> = flow {
         emit(FlowResponse.Loading())

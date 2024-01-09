@@ -5,7 +5,7 @@ import org.kodein.di.bind
 import org.kodein.di.instance
 import org.kodein.di.singleton
 import ru.esstu.ESSTUSdk
-import ru.esstu.auth.datasources.local.TokenDSManagerImpl
+import ru.esstu.auth.datasources.local.LoginDataRepositoryImpl
 import ru.esstu.domain.modules.account.datasources.api.AccountInfoApi
 import ru.esstu.domain.modules.account.datasources.api.AccountInfoApiImpl
 import ru.esstu.domain.modules.account.datasources.datastore.AccountInfoDSManager
@@ -33,7 +33,7 @@ internal val accountModule = DI.Module("AccountModule"){
 
     bind<IAccountInfoApiRepository>() with singleton {
         AccountInfoRepositoryImpl(
-            loginDataRepository = instance<TokenDSManagerImpl>(),
+            loginDataRepository = instance<LoginDataRepositoryImpl>(),
             userCache = instance(),
             api = instance(),
             instance()

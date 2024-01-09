@@ -4,15 +4,15 @@ plugins {
     id("com.android.library").version("7.2.2").apply(false)
     id("app.cash.sqldelight").version("2.0.0").apply(false)
     id ("org.jetbrains.kotlin.kapt") version "1.9.0" apply false
-    kotlin("android").version("1.9.10").apply(false)
-    kotlin("multiplatform").version("1.9.10").apply(false)
+    kotlin("android").version("1.9.20").apply(false)
+    kotlin("multiplatform").version("1.9.20").apply(false)
 
 
 }
 buildscript {
     val sqlDelightVersion = "1.5.3"
     dependencies{
-        classpath ("org.jetbrains.kotlin:kotlin-serialization:1.9.10")
+        classpath ("org.jetbrains.kotlin:kotlin-serialization:1.9.20")
 
         //classpath("app.cash.sqldelight:sqlite-driver:2.0.0")
 
@@ -20,7 +20,7 @@ buildscript {
         classpath("com.android.tools.build:gradle:8.1.2")
 
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.48.1")
-        classpath ("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10")
+        classpath ("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20")
     }
 }
 

@@ -2,7 +2,7 @@ package ru.esstu.student.messaging.messenger.new_message.new_support.datasources
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.esstu.auth.datasources.local.ITokenDSManager
+import ru.esstu.auth.datasources.local.ILoginDataRepository
 import ru.esstu.auth.datasources.toToken
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
@@ -22,7 +22,7 @@ import ru.esstu.student.messaging.messenger.supports.toSupports
 class NewSupportRepositoryImpl(
     private val api: NewSupportApi,
     private val cashSupportsCacheDao: SupportsCacheDao,
-    private val loginDataRepository: ITokenDSManager,
+    private val loginDataRepository: ILoginDataRepository,
 ) : INewSupportRepository {
     override fun getSupportThemes(): Flow<FlowResponse<List<SupportTheme>>> = flow {
         emit(FlowResponse.Loading())
