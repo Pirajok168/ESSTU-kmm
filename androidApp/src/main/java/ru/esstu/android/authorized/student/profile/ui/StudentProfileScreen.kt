@@ -34,11 +34,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.esstu.android.R
 import ru.esstu.android.authorized.student.profile.viewmodel.StudentProfileScreenViewModel
+import ru.esstu.android.domain.copyToClipboard
 import ru.esstu.android.shared.clearWindowInsets
 import ru.esstu.student.profile.student.porfolio.domain.model.PortfolioType
 
@@ -52,6 +54,7 @@ fun StudentProfileScreen(
 ) {
     val state = viewModelProfile.state
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val context = LocalContext.current
     Scaffold(
         modifier = Modifier
             .padding(bottom = paddingValues.calculateBottomPadding())
@@ -155,7 +158,7 @@ fun StudentProfileScreen(
                             title = "Направление",
                             content = "${state.studentInfo.directionCode} ${state.studentInfo.directionName}",
                             onClick = {
-
+                                context.copyToClipboard("${state.studentInfo.directionCode} ${state.studentInfo.directionName}")
                             },
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
@@ -164,7 +167,7 @@ fun StudentProfileScreen(
                             title = "Кафедра",
                             content = state.studentInfo.cathedra,
                             onClick = {
-
+                                context.copyToClipboard(state.studentInfo.cathedra)
                             },
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
@@ -173,7 +176,7 @@ fun StudentProfileScreen(
                             title = "Факультет",
                             content = state.studentInfo.faculty,
                             onClick = {
-
+                                context.copyToClipboard(state.studentInfo.faculty)
                             },
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
@@ -182,7 +185,7 @@ fun StudentProfileScreen(
                             title = "Профиль",
                             content = state.studentInfo.profile,
                             onClick = {
-
+                                context.copyToClipboard(state.studentInfo.profile)
                             },
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
@@ -191,7 +194,7 @@ fun StudentProfileScreen(
                             title = "Уровень образования",
                             content = state.studentInfo.studyLevel,
                             onClick = {
-
+                                context.copyToClipboard(state.studentInfo.studyLevel)
                             },
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )

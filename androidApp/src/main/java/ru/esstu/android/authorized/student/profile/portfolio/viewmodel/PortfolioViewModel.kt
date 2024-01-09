@@ -165,7 +165,7 @@ class PortfolioViewModel : ViewModel() {
             PortfolioType.THEME -> state.name.isNotBlank()
             PortfolioType.SCIENCEWORK -> state.name.isNotBlank() && state.typeWork.isNotBlank() && state.coathor.isNotBlank()
             null -> false
-        }
+        } && state.attachments.isNotEmpty()
     }
 
     fun openAddedBottomSheet() {

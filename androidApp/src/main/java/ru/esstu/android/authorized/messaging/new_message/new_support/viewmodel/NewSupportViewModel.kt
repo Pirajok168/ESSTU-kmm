@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
+import ru.esstu.domain.handleError.ErrorHandler
+import ru.esstu.domain.ktor.domainApi
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
 
@@ -43,7 +45,8 @@ sealed class NewSupportEvents {
 
 
 class NewSupportViewModel constructor(
-    private val repo: INewSupportRepository = ESSTUSdk.newSupportModule.repo
+    private val repo: INewSupportRepository = ESSTUSdk.newSupportModule.repo,
+    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
 ) : ViewModel() {
 
     var state by mutableStateOf(NewSupportState())
@@ -75,7 +78,7 @@ class NewSupportViewModel constructor(
         val theme = state.selectedTheme ?: return
         state = state.copy(isNewSupportCreating = true)
 
-        state = when (val support = repo.createNewSupport(themeId = theme.id, state.message, state.attachments)) {
+        state = when (val support = errorHandler.makeRequest(request = {repo.createNewSupport(themeId = theme.id, state.message, state.attachments)})) {
             is Response.Error -> state.copy(isNewSupportCreating = false, themeLoadingError = support.error)
             is Response.Success -> {
                 when (val response = repo.updateSupportsOnPreview(support = support.data)) {

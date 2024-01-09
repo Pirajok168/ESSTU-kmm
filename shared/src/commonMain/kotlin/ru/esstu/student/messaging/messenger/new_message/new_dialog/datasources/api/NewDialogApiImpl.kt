@@ -43,7 +43,7 @@ class NewDialogApiImpl(
     override suspend fun sendMessage(
         body: ChatMessageRequestBody
     ): Response<ChatMessageResponse>  {
-        return authorizedApi.get("/lk/api/v2/messenger/sendMessage", body = body){
+        return authorizedApi.post("/lk/api/v2/messenger/sendMessage", body = body){
             contentType(ContentType.Application.Json)
         }
     }

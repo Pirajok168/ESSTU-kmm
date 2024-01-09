@@ -32,13 +32,11 @@ class AuthorizedApi(
 
     suspend inline fun <reified T> get(
         path: String,
-        body: Any = EmptyContent,
         host: String = "esstu.ru",
         block: HttpRequestBuilder.() -> Unit = {}
     ) : Response<T> = checkedRequest {
         get {
             url(host = host, path = path) {
-                setBody(body)
                 bearerAuth(loginDataRepository.getAccessToken()?.accessToken ?: return@url)
             }
             block()

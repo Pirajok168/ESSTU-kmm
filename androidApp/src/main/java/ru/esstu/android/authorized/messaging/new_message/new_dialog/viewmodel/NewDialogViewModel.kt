@@ -9,6 +9,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
+import ru.esstu.domain.handleError.ErrorHandler
+import ru.esstu.domain.ktor.domainApi
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
@@ -55,6 +57,7 @@ sealed class NewDialogEvents {
 class NewDialogViewModel  constructor(
     private val repo: INewDialogRepository = ESSTUSdk.newDialogModule.repo,
     private val dialogDB: IDialogsDbRepository = ESSTUSdk.dialogsModuleNew.repoDialogs,
+    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
 ) : ViewModel() {
 
     var state by mutableStateOf(NewDialogState())
@@ -83,7 +86,13 @@ class NewDialogViewModel  constructor(
     private val paginator = Paginator(
         initialKey = 0,
         getNextKey = { key, _ -> key + state.queryPageSize },
-        onRequest = { key -> repo.findUsers(state.query, state.queryPageSize, key) },
+        onRequest = { key ->
+            errorHandler.makeRequest(
+                request = {
+                    repo.findUsers(state.query, state.queryPageSize, key)
+                }
+            )
+        },
         onError = { state = state.copy(queryError = it) },
         onLoad = { state = state.copy(isQueryLoading = it) },
         onRefresh = { state = state.copy(queryPages = it, queryError = null, isQueryPageEndReached = it.isEmpty()) },
@@ -104,7 +113,11 @@ class NewDialogViewModel  constructor(
     private suspend fun onCreateDialog() {
         val dialog = state.opponent ?: return
         state = state.copy(isDialogCreating = true, isDialogCreated = false)
-        val result = repo.sendMessage(dialog.id, message = state.message, attachments = state.attachments)
+        val result = errorHandler.makeRequest(
+            request =  {
+                repo.sendMessage(dialog.id, message = state.message, attachments = state.attachments)
+            }
+        )
         state = when (result) {
             is Response.Error -> state.copy(isDialogCreating = false, isDialogCreated = false, messageError = result.error)
             is Response.Success -> {
