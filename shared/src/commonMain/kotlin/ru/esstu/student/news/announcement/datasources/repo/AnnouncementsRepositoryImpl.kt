@@ -1,6 +1,7 @@
 package ru.esstu.student.news.announcement.datasources.repo
 
 
+import ru.esstu.domain.utill.workingDate.toInstant
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.doOnSuccess
 import ru.esstu.student.news.announcement.datasources.api.NewsApi
@@ -20,7 +21,7 @@ class AnnouncementsRepositoryImpl(
             return Response.Success(page)
 
         val response =
-            newsApi.getAnnouncements(offset, limit).transform { it.toAnnouncements().asReversed() }
+            newsApi.getAnnouncements(offset, limit).transform { it.toAnnouncements().sortedByDescending { it.date.toInstant().toEpochMilliseconds() } }
 
 
         return response

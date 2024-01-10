@@ -2,7 +2,6 @@
 
 package ru.esstu.domain.ktor
 
-import com.soywiz.klock.DateTime
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -13,6 +12,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.utils.EmptyContent
+import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 import ru.esstu.auth.datasources.api.student_teacher.AuthApi
 import ru.esstu.auth.datasources.local.ILoginDataRepository
@@ -77,7 +77,7 @@ class AuthorizedApi(
                 it?.let {
                     loginDataRepository.setToken(it.toTokenPair())
                     it.expiresIn?.let {
-                        loginDataRepository.setExpiresDateToken(DateTime.nowUnixLong().plus(it))
+                        loginDataRepository.setExpiresDateToken(Clock.System.now().toEpochMilliseconds().plus(it))
                     }
                 }
             }

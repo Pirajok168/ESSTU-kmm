@@ -34,11 +34,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
-import com.soywiz.klock.KlockLocale
-import com.soywiz.klock.format
-import com.soywiz.klock.locale.russian
 import ru.esstu.android.authorized.student.profile.portfolio.viewmodel.PortfolioViewModel
 import ru.esstu.android.shared.clearWindowInsets
+import ru.esstu.domain.utill.workingDate.format
 import ru.esstu.student.profile.student.porfolio.domain.model.PortfolioFile
 import ru.esstu.student.profile.student.porfolio.domain.model.PortfolioType
 
@@ -218,31 +216,28 @@ private fun PortfolioFile.getOverlineContent() = when (this) {
 }
 
 private fun PortfolioFile.getSupportingContent() = when (this) {
-    is PortfolioFile.Achievement -> this.date.format("dd MMMM yyyy", KlockLocale.russian)
-    is PortfolioFile.Award -> this.date.format("dd MMMM yyyy", KlockLocale.russian)
+    is PortfolioFile.Achievement -> this.date.format("dd MMMM yyyy")
+    is PortfolioFile.Award -> this.date.format("dd MMMM yyyy")
     is PortfolioFile.Conference ->
         "${
             this.startDate.format(
-                "dd MMMM yyyy",
-                KlockLocale.russian
+                "dd MMMM yyyy"
             )
-        } — ${this.endDate.format("dd MMMM yyyy", KlockLocale.russian)}"
+        } — ${this.endDate.format("dd MMMM yyyy")}"
 
     is PortfolioFile.Contest ->
         "${
             this.startDate.format(
-                "dd MMMM yyyy",
-                KlockLocale.russian
+                "dd MMMM yyyy"
             )
-        } — ${this.endDate.format("dd MMMM yyyy", KlockLocale.russian)}"
+        } — ${this.endDate.format("dd MMMM yyyy")}"
 
     is PortfolioFile.Exhibition ->
         "${
             this.startDate.format(
-                "dd MMMM yyyy",
-                KlockLocale.russian
+                "dd MMMM yyyy"
             )
-        } — ${this.endDate.format("dd MMMM yyyy", KlockLocale.russian)}"
+        } — ${this.endDate.format("dd MMMM yyyy")}"
 
     is PortfolioFile.Reviews -> this.type
     is PortfolioFile.ScienceReport -> this.status.orEmpty()
@@ -251,10 +246,9 @@ private fun PortfolioFile.getSupportingContent() = when (this) {
     is PortfolioFile.Traineeship ->
         "${
             this.startDate.format(
-                "dd MMMM yyyy",
-                KlockLocale.russian
+                "dd MMMM yyyy"
             )
-        } — ${this.endDate.format("dd MMMM yyyy", KlockLocale.russian)}"
+        } — ${this.endDate.format("dd MMMM yyyy")}"
 
     is PortfolioFile.Work -> this.type
 }

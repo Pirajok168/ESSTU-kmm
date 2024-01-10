@@ -1,6 +1,7 @@
 package ru.esstu.student.profile.student.porfolio.domain.model
 
-import com.soywiz.klock.DateTime
+import kotlinx.datetime.LocalDateTime
+
 
 sealed class PortfolioFile {
 
@@ -14,7 +15,7 @@ sealed class PortfolioFile {
         override val status: String,
         override val title:String,
         override val attachment: Attachment?,
-        val date: DateTime
+        val date: LocalDateTime
     ): PortfolioFile()
 
     data class Award(
@@ -22,7 +23,7 @@ sealed class PortfolioFile {
         override val status: String,
         override val title:String,
         override val attachment: Attachment?,
-        val date: DateTime
+        val date: LocalDateTime
     ): PortfolioFile()
 
     data class Conference(
@@ -36,8 +37,8 @@ sealed class PortfolioFile {
         val theme:String,
         val coauthors:String,
 
-        val startDate:DateTime,
-        val endDate:DateTime,
+        val startDate:LocalDateTime,
+        val endDate:LocalDateTime,
 
     ): PortfolioFile()
 
@@ -52,8 +53,8 @@ sealed class PortfolioFile {
 
         val result:String,
 
-        val startDate:DateTime,
-        val endDate:DateTime
+        val startDate:LocalDateTime,
+        val endDate:LocalDateTime
 
     ): PortfolioFile()
 
@@ -66,8 +67,8 @@ sealed class PortfolioFile {
 
         val exhibit:String,
 
-        val startDate:DateTime,
-        val endDate:DateTime,
+        val startDate:LocalDateTime,
+        val endDate:LocalDateTime,
 
     ): PortfolioFile()
 
@@ -96,8 +97,8 @@ sealed class PortfolioFile {
         override val attachment: Attachment?,
 
         val place:String,
-        val startDate: DateTime,
-        val endDate: DateTime,
+        val startDate: LocalDateTime,
+        val endDate: LocalDateTime,
     ): PortfolioFile()
 
     data class Reviews(

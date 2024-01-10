@@ -52,14 +52,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.soywiz.klock.DateTime
-import com.soywiz.klock.KlockLocale
-import com.soywiz.klock.format
-import com.soywiz.klock.locale.russian
 import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.NewAttachment
 import ru.esstu.android.authorized.messaging.dialog_chat.util.cacheToFile
 import ru.esstu.android.authorized.student.profile.portfolio.state.PortfolioState
 import ru.esstu.android.authorized.student.profile.portfolio.viewmodel.PortfolioViewModel
+import ru.esstu.domain.utill.workingDate.format
 import ru.esstu.student.messaging.entities.CachedFile
 import ru.esstu.student.profile.student.porfolio.domain.model.PortfolioType
 
@@ -701,7 +698,7 @@ private fun DateCard(
                 unfocusedIndicatorColor = Color.Transparent,
             ),
             value = datePickerState.selectedDateMillis?.let {
-                DateTime(it).format("dd MMMM yyyy", KlockLocale.russian)
+                kotlinx.datetime.Instant.fromEpochMilliseconds(it).format("dd MMMM yyyy")
             }.orEmpty(),
             onValueChange = {},
             placeholder = {

@@ -1,6 +1,8 @@
 package ru.esstu.student.messaging.entities
 
-import com.soywiz.klock.DateTime
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import ru.esstu.domain.utill.workingDate.toLocalDateTime
 
 
 data class ReplyMessage(
@@ -10,5 +12,5 @@ data class ReplyMessage(
     val message: String,
     val attachmentsCount: Int
 ){
-    val dateTim: DateTime = DateTime(date)
+    val dateTim: LocalDateTime = Instant.fromEpochMilliseconds(date).toLocalDateTime()
 }

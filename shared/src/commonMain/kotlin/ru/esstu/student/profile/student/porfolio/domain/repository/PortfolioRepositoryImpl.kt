@@ -1,6 +1,8 @@
 package ru.esstu.student.profile.student.porfolio.domain.repository
 
-import com.soywiz.klock.DateTime
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import ru.esstu.domain.utill.workingDate.toLocalDateTime
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.entities.CachedFile
 import ru.esstu.student.profile.student.porfolio.data.api.PortfolioApi
@@ -127,7 +129,7 @@ private fun List<PortfolioFileRequestResponse>.toPortfolioFile(): List<Portfolio
                 status = it.eventStatus.toString(),
                 title = it.eventName.toString(),
                 attachment = it.toAttachment(),
-                date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
+                date = Instant.fromEpochMilliseconds(it.eventStartDate ?: Clock.System.now().toEpochMilliseconds()).toLocalDateTime()
             )
 
             PortfolioTypeResponse.AWARD -> PortfolioFile.Award(
@@ -135,15 +137,15 @@ private fun List<PortfolioFileRequestResponse>.toPortfolioFile(): List<Portfolio
                 status = it.eventStatus.toString(),
                 title = it.eventName.toString(),
                 attachment = it.toAttachment(),
-                date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
+                date = Instant.fromEpochMilliseconds(it.eventStartDate ?: Clock.System.now().toEpochMilliseconds()).toLocalDateTime()
             )
             PortfolioTypeResponse.CONFERENCE -> PortfolioFile.Conference(
                 id = it.id ?: Random.nextInt(),
                 title = it.eventName.toString(),
                 status = it.eventStatus.toString(),
                 attachment = it.toAttachment(),
-                startDate = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong),
-                endDate =  DateTime(it.eventEndDate ?: DateTime.now().unixMillisLong),
+                startDate = Instant.fromEpochMilliseconds(it.eventStartDate ?: Clock.System.now().toEpochMilliseconds()).toLocalDateTime(),
+                endDate = Instant.fromEpochMilliseconds(it.eventEndDate ?: Clock.System.now().toEpochMilliseconds()).toLocalDateTime(),
                 place = it.eventPlace.orEmpty(),
                 theme = it.workName.orEmpty(),
                 coauthors = it.coauthorsText.orEmpty()
@@ -153,8 +155,8 @@ private fun List<PortfolioFileRequestResponse>.toPortfolioFile(): List<Portfolio
                 title = it.eventName.toString(),
                 status = it.eventStatus.toString(),
                 attachment = it.toAttachment(),
-                startDate = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong),
-                endDate =  DateTime(it.eventEndDate ?: DateTime.now().unixMillisLong),
+                startDate = Instant.fromEpochMilliseconds(it.eventStartDate ?: Clock.System.now().toEpochMilliseconds()).toLocalDateTime(),
+                endDate =  Instant.fromEpochMilliseconds(it.eventEndDate ?: Clock.System.now().toEpochMilliseconds()).toLocalDateTime(),
                 place = it.eventPlace.orEmpty(),
                 result = it.result.orEmpty()
             )
@@ -163,8 +165,8 @@ private fun List<PortfolioFileRequestResponse>.toPortfolioFile(): List<Portfolio
                 title = it.eventName.toString(),
                 status = it.status.toString(),
                 attachment = it.toAttachment(),
-                startDate = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong),
-                endDate =  DateTime(it.eventEndDate ?: DateTime.now().unixMillisLong),
+                startDate = Instant.fromEpochMilliseconds(it.eventStartDate ?: Clock.System.now().toEpochMilliseconds()).toLocalDateTime(),
+                endDate =  Instant.fromEpochMilliseconds(it.eventEndDate ?: Clock.System.now().toEpochMilliseconds()).toLocalDateTime(),
                 place = it.eventPlace.orEmpty(),
                 exhibit = it.workName.toString()
             )
@@ -185,8 +187,8 @@ private fun List<PortfolioFileRequestResponse>.toPortfolioFile(): List<Portfolio
                 id = it.id ?: Random.nextInt(),
                 title = it.eventName.toString(),
                 attachment = it.toAttachment(),
-                startDate = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong),
-                endDate =  DateTime(it.eventEndDate ?: DateTime.now().unixMillisLong),
+                startDate = Instant.fromEpochMilliseconds(it.eventStartDate ?: Clock.System.now().toEpochMilliseconds()).toLocalDateTime(),
+                endDate =  Instant.fromEpochMilliseconds(it.eventEndDate ?: Clock.System.now().toEpochMilliseconds()).toLocalDateTime(),
                 place = it.eventPlace.orEmpty(),
             )
             PortfolioTypeResponse.REVIEWS -> PortfolioFile.Reviews(
@@ -212,7 +214,7 @@ private fun List<PortfolioFileRequestResponse>.toPortfolioFile(): List<Portfolio
                 it.eventStatus.toString(),
                 it.eventName.toString(),
                 it.toAttachment(),
-                date = DateTime(it.eventStartDate ?: DateTime.now().unixMillisLong)
+                date = Instant.fromEpochMilliseconds(it.eventStartDate ?: Clock.System.now().toEpochMilliseconds()).toLocalDateTime(),
             )
         }
     }

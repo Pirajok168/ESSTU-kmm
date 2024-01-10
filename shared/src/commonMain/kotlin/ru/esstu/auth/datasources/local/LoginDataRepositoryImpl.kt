@@ -2,7 +2,7 @@ package ru.esstu.auth.datasources.local
 
 
 import com.russhwolf.settings.Settings
-import com.soywiz.klock.DateTime
+import kotlinx.datetime.Clock
 
 
 class LoginDataRepositoryImpl constructor(
@@ -78,7 +78,7 @@ class LoginDataRepositoryImpl constructor(
 
         authDataStore.getStringOrNull(PreferencesKeys.SESSION_TOKEN_KEY) ?: return false
 
-        return DateTime.nowUnixLong() < expiresIn
+        return Clock.System.now().toEpochMilliseconds() < expiresIn
     }
 
 }

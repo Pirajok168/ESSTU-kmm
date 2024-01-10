@@ -1,6 +1,5 @@
 package ru.esstu.student.messaging.messenger.supports.datasource.repo
 
-import com.soywiz.klock.DateTime
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -8,8 +7,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.datetime.Clock
 import ru.esstu.auth.datasources.repo.IAuthRepository
-import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.api.UpdatesApi
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
@@ -25,7 +24,7 @@ class SupportsUpdatesRepositoryImpl(
 ): ISupportsUpdatesRepository {
     override  fun installObserving(): Flow<Response<List<ConversationPreview>>> = flow {
         while (true){
-            val callTimestamp = DateTime.now().unixMillisLong
+            val callTimestamp = Clock.System.now().epochSeconds
             Napier.e("Идёт отслеживание", tag = "Support")
             auth.provideToken { token ->
                 val appUserId = token.owner.id ?: throw Exception("unsupported User Type")

@@ -1,10 +1,10 @@
 package ru.esstu.auth.datasources.repo
 
-import com.soywiz.klock.DateTime
 import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.datetime.Clock
 import ru.esstu.auth.datasources.api.student_teacher.AuthApi
 import ru.esstu.auth.datasources.local.ILoginDataRepository
 import ru.esstu.auth.datasources.toToken
@@ -46,7 +46,7 @@ class AuthRepositoryImpl constructor(
                 it?.let {
                     cache.setToken(it.toTokenPair())
                     it.expiresIn?.let {
-                        cache.setExpiresDateToken(DateTime.nowUnixLong().plus(it))
+                        cache.setExpiresDateToken(Clock.System.now().toEpochMilliseconds().plus(it))
                     }
                 }
             }
@@ -67,7 +67,7 @@ class AuthRepositoryImpl constructor(
             it?.let {
                 cache.setToken(it.toTokenPair())
                 it.expiresIn?.let {
-                    cache.setExpiresDateToken(DateTime.nowUnixLong().plus(it))
+                    cache.setExpiresDateToken(Clock.System.now().toEpochMilliseconds().plus(it))
                 }
             }
         }

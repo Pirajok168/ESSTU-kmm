@@ -29,11 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.soywiz.klock.DateTime
-import com.soywiz.klock.KlockLocale
-import com.soywiz.klock.format
-import com.soywiz.klock.locale.russian
+import kotlinx.datetime.LocalDateTime
 import ru.esstu.android.R
+import ru.esstu.domain.utill.workingDate.format
 import ru.esstu.student.profile.student.porfolio.domain.model.PortfolioFile
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,7 +83,7 @@ fun PortfolioFileBottomSheet(
                             ListItem(
                                 headlineContent = {
                                     Text(
-                                        text = it.date.format("dd MMMM yyyy", KlockLocale.russian),
+                                        text = it.date.format("dd MMMM yyyy"),
                                         style = MaterialTheme.typography.titleLarge,
 
                                         )
@@ -150,7 +148,7 @@ fun PortfolioFileBottomSheet(
                             ListItem(
                                 headlineContent = {
                                     Text(
-                                        text = it.date.format("dd MMMM yyyy", KlockLocale.russian),
+                                        text = it.date.format("dd MMMM yyyy"),
                                         style = MaterialTheme.typography.titleLarge,
 
                                         )
@@ -766,8 +764,8 @@ private fun FileRow(
 
 @Composable
 private fun DateElem(
-    startDate: DateTime,
-    endDate: DateTime
+    startDate: LocalDateTime,
+    endDate: LocalDateTime
 ) {
     Surface(
         tonalElevation = 32.dp,
@@ -777,7 +775,7 @@ private fun DateElem(
         ListItem(
             headlineContent = {
                 Text(
-                    text = startDate.format("dd MMMM yyyy", KlockLocale.russian),
+                    text = startDate.format("dd MMMM yyyy"),
                     style = MaterialTheme.typography.titleLarge,
 
                     )
@@ -798,7 +796,7 @@ private fun DateElem(
         ListItem(
             headlineContent = {
                 Text(
-                    text = endDate.format("dd MMMM yyyy", KlockLocale.russian),
+                    text = endDate.format("dd MMMM yyyy"),
                     style = MaterialTheme.typography.titleLarge,
 
                     )

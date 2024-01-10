@@ -21,19 +21,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skydoves.landscapist.glide.GlideImage
-import com.soywiz.klock.KlockLocale
-import com.soywiz.klock.format
-import com.soywiz.klock.locale.russian
 import ru.esstu.android.authorized.news.events.AnnouncementEvents
 import ru.esstu.android.authorized.news.events.MainScreenEvents
 import ru.esstu.android.authorized.news.events.SelectorScreenEvents
 import ru.esstu.android.authorized.news.viewModel.AnnouncementViewModel
 import ru.esstu.android.authorized.news.viewModel.MainScreenViewModel
+import ru.esstu.android.authorized.news.viewModel.SelectorViewModel
 import ru.esstu.android.shared.clearWindowInsets
 import ru.esstu.android.shared.component.AuthorChip
 import ru.esstu.android.shared.shimmer.ShimmerBox
 import ru.esstu.android.shared.shimmer.ShimmerLayout
-import ru.esstu.android.authorized.news.viewModel.SelectorViewModel
+import ru.esstu.domain.utill.workingDate.format
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,7 +56,8 @@ fun MainScreen(
         modifier = Modifier.padding(parentPadding).nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
-                title = { Text(text = "Главная ВСГУТУ") },
+                title = { Text(text = "" +
+                        "Главная ВСГУТУ") },
                 windowInsets = WindowInsets.clearWindowInsets(),
                 scrollBehavior = scrollBehavior
             )
@@ -142,7 +141,7 @@ fun MainScreen(
                             },
                             supportingContent = {
                                 Text(
-                                    text = news.date.format("dd MMMM yyyy", KlockLocale.russian),
+                                    text = news.date.format("dd MMMM yyyy"),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.outline
                                 )
@@ -185,7 +184,7 @@ fun MainScreen(
                             },
                             supportingContent = {
                                 Text(
-                                    text = news.date.format("dd MMMM yyyy", KlockLocale.russian),
+                                    text = news.date.format("dd MMMM yyyy"),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.outline
                                 )

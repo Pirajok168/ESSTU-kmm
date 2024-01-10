@@ -1,7 +1,15 @@
 package ru.esstu.android.authorized.messaging.dialog_chat.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentAlpha
@@ -14,22 +22,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.soywiz.klock.DateFormat
-import com.soywiz.klock.DateTime
-import ru.esstu.android.domain.ui.theme.CompPreviewTheme
-import ru.esstu.student.messaging.entities.Sender
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
+import ru.esstu.domain.utill.workingDate.format
+import ru.esstu.domain.utill.workingDate.toLocalDateTime
 
-private val yearFormatter: DateFormat = DateFormat("dd MMMM yyyy")
-private val dateFormatter: DateFormat = DateFormat("dd MMMM")
-private val timeFormatter: DateFormat = DateFormat("HH:mm")
 
 @Composable
 fun ReplyPreview(
     modifier: Modifier = Modifier,
-    time: DateTime,
+    time: LocalDateTime,
     title: String,
     subtitle: String
 ) {
@@ -63,12 +66,15 @@ fun ReplyPreview(
         Column {
             Row {
                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    val localDate = remember { DateTime.now() }
+                    val localDate = remember { Clock.System.now().toLocalDateTime() }
                     Text(
                         text = when {
-                            localDate.year == time.year && localDate.dayOfYear == time.dayOfYear -> timeFormatter.format(time.local)
-                            localDate.year == time.year && localDate.dayOfYear != time.dayOfYear -> dateFormatter.format(time.local)
-                            else -> yearFormatter.format(time.local)
+                            localDate.year == time.year && localDate.dayOfYear == time.dayOfYear ->
+                                time.format("HH:mm")
+                            localDate.year == time.year && localDate.dayOfYear != time.dayOfYear ->
+                                time.format("dd MMMM")
+                            else ->
+                                time.format("dd MMMM yyyy")
                         },
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -89,28 +95,5 @@ fun ReplyPreview(
             Text(text = subtitle, style = MaterialTheme.typography.bodyMedium, maxLines = 3, overflow = TextOverflow.Ellipsis)
         }
 
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun UP1P() {
-    CompPreviewTheme {
-        val opponent = Sender(
-            id = "",
-            patronymic = "Попович",
-            firstName = "Анатолий",
-            lastName = "Терентьев",
-            photo = null,//"https://media.wired.com/photos/5fb70f2ce7b75db783b7012c/master/w_2560%2Cc_limit/Gear-Photos-597589287.jpg",
-            summary = "Студент Б660"
-        )
-
-        ReplyPreview(
-            Modifier.padding(16.dp),
-            title = opponent.fio,
-            subtitle = "https://media.wired.com/photos/5fb70f2ce7b75db783b7012c/master/w_2560%2Cc_limit/Gear-Photos-597589287.jpg",
-
-            time = DateTime.now()
-        )
     }
 }

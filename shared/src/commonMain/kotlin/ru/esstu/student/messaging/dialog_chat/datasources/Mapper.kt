@@ -1,6 +1,5 @@
 package ru.esstu.student.messaging.dialog_chat.datasources
 
-import com.soywiz.klock.DateTime
 import okio.FileSystem
 import okio.Path.Companion.toPath
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
@@ -10,8 +9,6 @@ import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.messag
 import ru.esstu.domain.modules.account.datasources.datastore.producePath
 import ru.esstu.domain.modules.account.datasources.datastore.storage
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity
-import ru.esstu.student.messaging.entities.CachedFile
-import ru.esstu.student.messaging.entities.NewUserMessage
 import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.MessageWithRelatedNew
 import ru.esstu.student.messaging.dialog_chat.datasources.db.user_messages.entities.UserMessageWithRelatedNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatAttachmentTableNew
@@ -20,7 +17,13 @@ import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogCh
 import ru.esstu.student.messaging.dialogchat.datasources.db.chathistory.DialogChatReplyMessageTableNew
 import ru.esstu.student.messaging.dialogchat.datasources.db.usermessage.UserCachedFileTable
 import ru.esstu.student.messaging.dialogchat.datasources.db.usermessage.UserMessageEntityTable
-import ru.esstu.student.messaging.entities.*
+import ru.esstu.student.messaging.entities.CachedFile
+import ru.esstu.student.messaging.entities.DeliveryStatus
+import ru.esstu.student.messaging.entities.Message
+import ru.esstu.student.messaging.entities.MessageAttachment
+import ru.esstu.student.messaging.entities.NewUserMessage
+import ru.esstu.student.messaging.entities.ReplyMessage
+import ru.esstu.student.messaging.entities.Sender
 import ru.esstu.student.messaging.messenger.datasources.toUser
 import kotlin.random.Random
 
@@ -204,7 +207,7 @@ fun MessagePreview.toReplyMessage(authors: List<Sender>): ReplyMessage? {
         from = authors.firstOrNull { it.id == from } ?: return null,
         attachmentsCount = attachments.size,
         message = message.orEmpty(),
-        date = DateTime(date).unixMillisLong
+        date = date
     )
 }
 
@@ -214,7 +217,7 @@ fun MessagePreview.toMessage(
 ): Message? {
     return Message(
         id = id,
-        date = DateTime(date).unixMillisLong,
+        date = date,
         message = message.orEmpty(),
         attachments = attachments.map { it.toAttachment() },
         from = authors.firstOrNull { user -> user.id == this.from } ?: return null,

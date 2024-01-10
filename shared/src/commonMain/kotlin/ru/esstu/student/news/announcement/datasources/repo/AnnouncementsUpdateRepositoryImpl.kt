@@ -1,14 +1,11 @@
 package ru.esstu.student.news.announcement.datasources.repo
 
-import com.soywiz.klock.DateTime
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
-import ru.esstu.auth.entities.TokenOwners
+import kotlinx.datetime.Clock
 import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.domain.api.UpdatesApi
 import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.news.announcement.datasources.db.timestamp.TimestampDao
 import ru.esstu.student.news.announcement.datasources.toAnnouncements
 import ru.esstu.student.news.announcement.db.announcement.toTimeStamp
@@ -22,7 +19,7 @@ class AnnouncementsUpdateRepositoryImpl(
 ) : IAnnouncementsUpdateRepository{
     override fun getUpdates() = flow<Response<List<NewsNode>>> {
         while (true) {
-            val callTimestamp = DateTime.now().unixMillisLong
+            val callTimestamp = Clock.System.now().epochSeconds
             auth.provideToken { token ->
 
                 val appUserId = token.owner.id ?: throw Exception("unsupported User Type")

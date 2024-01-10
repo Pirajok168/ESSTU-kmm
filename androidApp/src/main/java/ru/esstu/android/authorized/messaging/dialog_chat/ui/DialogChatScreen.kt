@@ -1,13 +1,14 @@
 package ru.esstu.android.authorized.messaging.dialog_chat.ui
 
+
+//import ru.esstu.student.messaging.dialog_chat.util.cacheToFile
+//import ru.esstu.student.messaging.dialog_chat.util.withPermissions
+
 import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -16,18 +17,44 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.*
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -36,30 +63,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.work.WorkInfo
 import androidx.work.WorkManager
-
-
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.soywiz.klock.DateFormat
-import com.soywiz.klock.DateTime
-import com.soywiz.klock.DateTimeTz
-import com.soywiz.klock.parse
 import com.valentinilk.shimmer.shimmer
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
+import kotlinx.datetime.Clock
 import ru.esstu.android.R
 import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.ChatPreview
 import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.MessageCard
@@ -68,21 +82,16 @@ import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.NewMessag
 import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.ReplyPreview
 import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.SwipeableCard
 import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.TimeDivider
-import ru.esstu.android.domain.datasources.download_worker.FileDownloadWorker
-
 import ru.esstu.android.authorized.messaging.dialog_chat.util.cacheToFile
 import ru.esstu.android.authorized.messaging.dialog_chat.viewmodel.DialogChatEvents
 import ru.esstu.android.authorized.messaging.dialog_chat.viewmodel.DialogChatViewModel
-//import ru.esstu.student.messaging.dialog_chat.util.cacheToFile
+import ru.esstu.domain.utill.workingDate.toLocalDateTime
 import ru.esstu.student.messaging.dialog_chat.util.toAttachment
 import ru.esstu.student.messaging.dialog_chat.util.toReplyMessage
-//import ru.esstu.student.messaging.dialog_chat.util.withPermissions
-
 import ru.esstu.student.messaging.entities.DeliveryStatus
 
 
-private val todayYear = DateTime.now().year
-private val dateFormat: DateFormat = DateFormat("d MMM yyyy")
+private val todayYear = Clock.System.now().toLocalDateTime().year
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class,
     ExperimentalMaterial3Api::class
@@ -233,7 +242,7 @@ fun DialogChatScreen(
                                         .weight(1f),
                                     title = from.fio,
                                     subtitle = message.ifBlank { "[Вложение]" },
-                                    time = DateTime(date)
+                                    time = formatDate
                                 )
                                 IconButton(onClick = { viewModel.onEvent(DialogChatEvents.RemoveReplyMessage) }) {
                                     Icon(
@@ -321,10 +330,7 @@ fun DialogChatScreen(
                 //<editor-fold desc="Только что отправленные сообщения">
                 uiState.sentMessages
                     .groupBy {
-                        dateFormat.parse(
-                            "${it.formatDate.local.dayOfMonth} " +
-                                    "${it.formatDate.local.month.localShortName} ${it.formatDate.local.yearInt}"
-                        )
+                        it.formatDate
                     }
                     .forEach { (date, messages) ->
                         val isCurrentYear = date.year == todayYear
@@ -349,7 +355,7 @@ fun DialogChatScreen(
                                     MessageCard(
                                         attachments = message.attachments.map { it.toAttachment() },
                                         messageText = message.text,
-                                        date = message.date,
+                                        date = message.formatDate,
                                         sentStatus = message.status,
                                         reply = message.replyMessage?.toReplyMessage(),
                                         backgroundColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
@@ -406,7 +412,7 @@ fun DialogChatScreen(
                             }
                         }
 
-                        if (date != uiState.pages.firstOrNull()?.formatDate?.local)
+                        if (date != uiState.pages.firstOrNull()?.formatDate)
                             item {
                                 TimeDivider(date = date, isCurrentYear = isCurrentYear)
                             }
@@ -417,10 +423,7 @@ fun DialogChatScreen(
                 uiState.pages
                     .mapIndexed { index, message -> index to message }
                     .groupBy {
-                        dateFormat.parse(
-                            "${it.second.formatDate.local.dayOfMonth} " +
-                                    "${it.second.formatDate.local.month.localShortName} ${it.second.formatDate.local.yearInt}"
-                        )
+                        it.second.formatDate
                     }
                     .forEach { (date, messages) ->
                         val isCurrentYear = date.year == todayYear
