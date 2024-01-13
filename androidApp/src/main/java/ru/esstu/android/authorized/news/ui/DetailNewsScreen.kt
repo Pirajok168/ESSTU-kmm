@@ -44,12 +44,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
-import ru.esstu.android.shared.clearWindowInsets
+import ru.esstu.android.R
 import ru.esstu.android.authorized.news.viewModel.SelectorViewModel
+import ru.esstu.android.shared.clearWindowInsets
+import ru.esstu.android.shared.component.PersonPreview
 import ru.esstu.android.shared.shimmer.ShimmerBox
 import ru.esstu.android.shared.shimmer.ShimmerLayout
-import ru.esstu.android.R
-import ru.esstu.android.authorized.news.events.SelectorScreenEvents
 
 
 @SuppressLint("RestrictedApi")
@@ -164,10 +164,17 @@ fun DetailNewsScreen(
 
                 Spacer(modifier = Modifier.size(16.dp))
 
+                PersonPreview(
+                    abbreviation = node.from.initials,
+                    title = node.from.fio,
+                    subtitle = node.from.summary,
+                    photoUri = node.from.photo
+                )
+                Spacer(modifier = Modifier.size(16.dp))
                 val annotatedString = buildAnnotatedString {
 
                     addStyle(
-                        style = MaterialTheme.typography.bodyMedium.copy(
+                        style = MaterialTheme.typography.bodyLarge.copy(
                             color = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.background),
                         ).toSpanStyle(),
                         start = 0,
@@ -183,7 +190,7 @@ fun DetailNewsScreen(
                         val start = result.range.first
                         val end = result.range.last + 1
                         addStyle(
-                            style = MaterialTheme.typography.bodyMedium.copy(
+                            style = MaterialTheme.typography.bodyLarge.copy(
                                 textDecoration = TextDecoration.Underline,
                                 color = MaterialTheme.colorScheme.secondary
                             ).toSpanStyle(),
@@ -214,7 +221,7 @@ fun DetailNewsScreen(
                         },
                     )
                 }
-
+                Spacer(modifier = Modifier.size(16.dp))
                 filesList.forEach {
                     FileRow(it.name ?: "Изображение", it.loadProgress ?: 1f, it.localFileUri) {
                         uriHandler.openUri(it.fileUri)

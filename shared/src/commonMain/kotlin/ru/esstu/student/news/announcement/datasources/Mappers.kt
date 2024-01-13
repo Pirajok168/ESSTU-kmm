@@ -74,7 +74,7 @@ fun NewsNode.toNewsWithAttachments() = NewsWithAttachments(
     news = NewsEntity(
         id = id,
         from = from.toUserEntity(),
-        title = title, message = message, date = date.toInstant().epochSeconds
+        title = title, message = message, date = date.toInstant().toEpochMilliseconds()
     ),
     attachments = attachments.map { it.toNewsAttachmentEntity(id) }
 )

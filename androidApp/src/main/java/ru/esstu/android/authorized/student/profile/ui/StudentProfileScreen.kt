@@ -144,6 +144,7 @@ fun StudentProfileScreen(
                         title = "Образовательный стандарт",
                         content = state.studentInfo.standard
                     )
+                    AdditionalInfo(title = "Уровень образования" , content = state.studentInfo.studyLevel)
                 }
                 Spacer(modifier = Modifier.size(32.dp))
                 Surface(
@@ -159,6 +160,15 @@ fun StudentProfileScreen(
                             content = "${state.studentInfo.directionCode} ${state.studentInfo.directionName}",
                             onClick = {
                                 context.copyToClipboard("${state.studentInfo.directionCode} ${state.studentInfo.directionName}")
+                            },
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+
+                        MainInfoProfile(
+                            title = "Профиль",
+                            content = state.studentInfo.profile,
+                            onClick = {
+                                context.copyToClipboard(state.studentInfo.profile)
                             },
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
@@ -181,23 +191,6 @@ fun StudentProfileScreen(
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
 
-                        MainInfoProfile(
-                            title = "Профиль",
-                            content = state.studentInfo.profile,
-                            onClick = {
-                                context.copyToClipboard(state.studentInfo.profile)
-                            },
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
-
-                        MainInfoProfile(
-                            title = "Уровень образования",
-                            content = state.studentInfo.studyLevel,
-                            onClick = {
-                                context.copyToClipboard(state.studentInfo.studyLevel)
-                            },
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
                     }
                 }
                 Spacer(modifier = Modifier.size(32.dp))

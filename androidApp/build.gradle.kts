@@ -77,7 +77,7 @@ dependencies {
     implementation ("com.google.android.material:material:1.10.0")
 
     //Time https://docs.korge.org/klock/
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
 
     //landscapist glide
     implementation ("com.github.skydoves:landscapist-glide:1.5.2")

@@ -74,8 +74,10 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import ru.esstu.android.R
-import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.ChatPreview
 import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.MessageCard
 import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.NewAttachment
 import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.NewMessageCard
@@ -85,6 +87,7 @@ import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.TimeDivid
 import ru.esstu.android.authorized.messaging.dialog_chat.util.cacheToFile
 import ru.esstu.android.authorized.messaging.dialog_chat.viewmodel.DialogChatEvents
 import ru.esstu.android.authorized.messaging.dialog_chat.viewmodel.DialogChatViewModel
+import ru.esstu.android.shared.component.PersonPreview
 import ru.esstu.domain.utill.workingDate.toLocalDateTime
 import ru.esstu.student.messaging.dialog_chat.util.toAttachment
 import ru.esstu.student.messaging.dialog_chat.util.toReplyMessage
@@ -177,7 +180,7 @@ fun DialogChatScreen(
                                                 .background(Color.Gray)
                                         )
                                     }
-                                    else -> ChatPreview(
+                                    else -> PersonPreview(
                                         abbreviation = opponent.initials,
                                         title = opponent.fio,
                                         subtitle = opponent.summary,
@@ -423,7 +426,7 @@ fun DialogChatScreen(
                 uiState.pages
                     .mapIndexed { index, message -> index to message }
                     .groupBy {
-                        it.second.formatDate
+                        LocalDate(year = it.second.formatDate.year, monthNumber = it.second.formatDate.monthNumber, dayOfMonth = it.second.formatDate.dayOfMonth)
                     }
                     .forEach { (date, messages) ->
                         val isCurrentYear = date.year == todayYear
@@ -500,7 +503,7 @@ fun DialogChatScreen(
                         }
 
                         item {
-                            TimeDivider(date = date, isCurrentYear = isCurrentYear)
+                            TimeDivider(date = LocalDateTime(date , LocalTime(0,0,0,0)), isCurrentYear = isCurrentYear)
                         }
                     }
 

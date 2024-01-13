@@ -28,7 +28,7 @@ class ConversationUpdatesRepositoryImpl(
 
     override  fun installObserving(): Flow<Response<List<ConversationPreview>>>  = flow {
         while (true){
-            val callTimestamp =  Clock.System.now().epochSeconds
+            val callTimestamp =  Clock.System.now().toEpochMilliseconds()
             auth.provideToken { token ->
                 val appUserId = token.owner.id ?: throw Exception("unsupported User Type")
 

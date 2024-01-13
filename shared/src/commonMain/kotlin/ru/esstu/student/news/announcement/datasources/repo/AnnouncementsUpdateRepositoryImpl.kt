@@ -19,7 +19,7 @@ class AnnouncementsUpdateRepositoryImpl(
 ) : IAnnouncementsUpdateRepository{
     override fun getUpdates() = flow<Response<List<NewsNode>>> {
         while (true) {
-            val callTimestamp = Clock.System.now().epochSeconds
+            val callTimestamp = Clock.System.now().toEpochMilliseconds()
             auth.provideToken { token ->
 
                 val appUserId = token.owner.id ?: throw Exception("unsupported User Type")

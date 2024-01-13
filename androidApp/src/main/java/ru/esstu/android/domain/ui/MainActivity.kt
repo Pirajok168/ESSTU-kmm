@@ -2,7 +2,6 @@ package ru.esstu.android.domain.ui
 
 import android.os.Build
 import android.os.Bundle
-
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -14,14 +13,12 @@ import androidx.compose.material3.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
-
-import ru.esstu.android.domain.ui.theme.AppEsstuTheme
 import dagger.hilt.android.AndroidEntryPoint
-
+import ru.esstu.ContextApplication
 import ru.esstu.android.domain.navigation.SetupNavGraph
+import ru.esstu.android.domain.ui.theme.AppEsstuTheme
 
 
 @AndroidEntryPoint
@@ -36,10 +33,9 @@ class  MainActivity : AppCompatActivity() {
 
         //observe activity lifecycle
         //lifecycle.addObserver(uiStateObserver)
-
+        ContextApplication.init(applicationContext)
         //disables system insets
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
         setContent {
             AppEsstuTheme {
                 val navController = rememberNavController()

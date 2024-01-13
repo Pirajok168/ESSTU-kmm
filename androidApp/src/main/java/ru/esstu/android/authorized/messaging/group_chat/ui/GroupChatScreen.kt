@@ -72,6 +72,9 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import ru.esstu.android.R
 import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.NewAttachment
 import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.ReplyPreview
@@ -321,7 +324,7 @@ fun GroupChatScreen(
 
                 uiState.sentMessages
                     .groupBy {
-                        it.formatDate
+                        LocalDate(year = it.formatDate.year, monthNumber = it.formatDate.monthNumber, dayOfMonth = it.formatDate.dayOfMonth)
                     }
                     .forEach { (date, messages) ->
                         val isCurrentYear = date.year == todayYear
@@ -399,17 +402,17 @@ fun GroupChatScreen(
                                 }
                             }
                         }
-
-                        if (date != uiState.pages.firstOrNull()?.formatDate)
+                        val localDate = LocalDateTime(date , LocalTime(0,0,0,0))
+                        if (localDate != uiState.pages.firstOrNull()?.formatDate)
                             item {
-                                TimeDivider(date = date, isCurrentYear = isCurrentYear)
+                                TimeDivider(date = localDate, isCurrentYear = isCurrentYear)
                             }
                     }
 
                 uiState.pages
                     .mapIndexed { index, message -> index to message }
                     .groupBy {
-                        it.second.formatDate
+                        LocalDate(year = it.second.formatDate.year, monthNumber = it.second.formatDate.monthNumber, dayOfMonth = it.second.formatDate.dayOfMonth)
                     }
                     .forEach { (date, messages) ->
                         val isCurrentYear = date.year == todayYear
@@ -486,7 +489,7 @@ fun GroupChatScreen(
                         }
 
                         item {
-                            TimeDivider(date = date, isCurrentYear = isCurrentYear)
+                            TimeDivider(date = LocalDateTime(date , LocalTime(0,0,0,0)), isCurrentYear = isCurrentYear)
                         }
                     }
 

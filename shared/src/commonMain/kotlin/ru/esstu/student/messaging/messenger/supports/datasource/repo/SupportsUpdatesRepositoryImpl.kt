@@ -24,7 +24,7 @@ class SupportsUpdatesRepositoryImpl(
 ): ISupportsUpdatesRepository {
     override  fun installObserving(): Flow<Response<List<ConversationPreview>>> = flow {
         while (true){
-            val callTimestamp = Clock.System.now().epochSeconds
+            val callTimestamp = Clock.System.now().toEpochMilliseconds()
             Napier.e("Идёт отслеживание", tag = "Support")
             auth.provideToken { token ->
                 val appUserId = token.owner.id ?: throw Exception("unsupported User Type")

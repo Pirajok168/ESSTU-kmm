@@ -49,7 +49,7 @@ class DialogsUpdatesRepositoryImpl(
     override fun installObserving(): Flow<Response<List<PreviewDialog>>> = flow {
         while (true) {
             Napier.e("DialogsUpdatesRepositoryImpl", tag = "lifecycle")
-            val callTimestamp = Clock.System.now().epochSeconds
+            val callTimestamp = Clock.System.now().toEpochMilliseconds()
             auth.provideToken { token ->
 
                 val appUserId = token.owner.id ?: throw Exception("unsupported User Type")

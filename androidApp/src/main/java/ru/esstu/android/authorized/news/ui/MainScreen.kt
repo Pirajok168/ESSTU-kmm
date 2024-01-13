@@ -141,7 +141,7 @@ fun MainScreen(
                             },
                             supportingContent = {
                                 Text(
-                                    text = news.date.format("dd MMMM yyyy"),
+                                    text = news.date.format("dd MMMM yyyy, HH:mm"),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.outline
                                 )
@@ -184,7 +184,7 @@ fun MainScreen(
                             },
                             supportingContent = {
                                 Text(
-                                    text = news.date.format("dd MMMM yyyy"),
+                                    text = news.date.format("dd MMMM yyyy, HH:mm"),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.outline
                                 )
