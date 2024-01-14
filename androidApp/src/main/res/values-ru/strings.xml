@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ВСГУТУ</string>
+
     <string name="title_settings">Настройки</string>
 
 
@@ -20,21 +21,19 @@
     <string name="companion">Собеседник</string>
     <string name="add">Добавить</string>
     <string name="message_text">Текст сообщения</string>
-    <string name="add_attachments">Добавить вложение</string>
+    <string name="add_attachments">Добавить\nвложение</string>
     <string name="appeal_esstu">Обращение в ВСГУТУ</string>
     <string name="esstu_departament">Отделение</string>
     <string name="esstu_exist_departament">Отдел не выбран</string>
     <string name="theme">Тема</string>
-    <string name="esstu_exist_theme">Тема не выбрана</string>
     <string name="details">Подробности</string>
     <string name="appeal_tech_support">Обращение в тех. поддержку</string>
+    <string name="esstu_exist_theme">Тема не выбрана</string>
     <string name="search_companion">Поиск собеседника</string>
     <string name="locale_app">Язык приложения</string>
     <string name="locale_app_ru">Русский</string>
     <string name="locale_app_zh">Китайский</string>
     <string name="announcement">Объявления</string>
-
-
 
     <string name="profile">Профиль</string>
     <string name="group">Группа</string>
@@ -59,5 +58,4 @@
     <string name="CONTEST">Участие в конкурсах, олимпиадах, гранты</string>
     <string name="EXHIBITION">Участие в выставках</string>
     <string name="absent_data">Данные\nотсутствуют</string>
-
 </resources>

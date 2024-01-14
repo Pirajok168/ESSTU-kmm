@@ -33,7 +33,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import ru.esstu.android.R
 import ru.esstu.android.authorized.student.profile.portfolio.viewmodel.PortfolioViewModel
 import ru.esstu.android.shared.clearWindowInsets
 import ru.esstu.domain.utill.workingDate.format
@@ -138,7 +140,7 @@ fun PortfolioScreen(
                     .fillMaxSize(), contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Данные\nотсутствуют",
+                    text = stringResource(id = R.string.absent_data),
                     style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center
                 )
@@ -253,16 +255,17 @@ private fun PortfolioFile.getSupportingContent() = when (this) {
     is PortfolioFile.Work -> this.type
 }
 
+@Composable
 private fun PortfolioType.toTitle() = when (this) {
-    PortfolioType.ACHIEVEMENT -> "Достижения"
-    PortfolioType.CONFERENCE -> "Участия в научных конференциях"
-    PortfolioType.AWARD -> "Награды"
-    PortfolioType.CONTEST -> "Участия в конкурсах, олимпиадах"
-    PortfolioType.EXHIBITION -> "Участия в выставках"
-    PortfolioType.SCIENCEREPORT -> "Научные доклады"
-    PortfolioType.WORK -> "Курсовые, отчеты, рпз"
-    PortfolioType.TRAINEESHIP -> "Стажировки"
-    PortfolioType.REVIEWS -> "Рецензии"
-    PortfolioType.THEME -> "Научные исследования"
-    PortfolioType.SCIENCEWORK -> "Диссертации"
+    PortfolioType.ACHIEVEMENT -> stringResource(id = R.string.ACHIEVEMENT)
+    PortfolioType.CONFERENCE -> stringResource(id = R.string.CONFERENCE)
+    PortfolioType.AWARD -> stringResource(id = R.string.award)
+    PortfolioType.CONTEST -> stringResource(id = R.string.CONTEST)
+    PortfolioType.EXHIBITION -> stringResource(id = R.string.EXHIBITION)
+    PortfolioType.SCIENCEREPORT -> stringResource(id = R.string.SCIENCEREPORT)
+    PortfolioType.WORK -> stringResource(id = R.string.WORK)
+    PortfolioType.TRAINEESHIP -> stringResource(id = R.string.TRAINEESHIP)
+    PortfolioType.REVIEWS -> stringResource(id = R.string.REVIEWS)
+    PortfolioType.THEME -> stringResource(id = R.string.THEME)
+    PortfolioType.SCIENCEWORK -> stringResource(id = R.string.SCIENCEWORK)
 }

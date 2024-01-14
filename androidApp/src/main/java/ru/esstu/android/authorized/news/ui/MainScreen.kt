@@ -18,9 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skydoves.landscapist.glide.GlideImage
+import ru.esstu.android.R
 import ru.esstu.android.authorized.news.events.AnnouncementEvents
 import ru.esstu.android.authorized.news.events.MainScreenEvents
 import ru.esstu.android.authorized.news.events.SelectorScreenEvents
@@ -53,11 +55,12 @@ fun MainScreen(
 
     })
     Scaffold(
-        modifier = Modifier.padding(parentPadding).nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
+            .padding(parentPadding)
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
-                title = { Text(text = "" +
-                        "Главная ВСГУТУ") },
+                title = { Text(text = stringResource(id = R.string.app_name)) },
                 windowInsets = WindowInsets.clearWindowInsets(),
                 scrollBehavior = scrollBehavior
             )
@@ -117,7 +120,7 @@ fun MainScreen(
                                     },
                                     label = {
                                         Text(
-                                            text = it.title
+                                            text = stringResource(id = it.titleId)
                                         )
                                     }
                                 )

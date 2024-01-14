@@ -53,6 +53,7 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation ("androidx.core:core:1.12.0")
 
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
     //Initializer
     implementation ("androidx.startup:startup-runtime:1.1.1")
 

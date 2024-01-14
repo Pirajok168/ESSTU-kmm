@@ -39,6 +39,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -136,7 +137,7 @@ fun DetailNewsScreen(
                                     onClick = { },
                                     label = {
                                         Text(
-                                            text = state.selected?.title!!
+                                            text = stringResource(id = state.selected?.titleId!!)
                                         )
                                     },
                                     elevation = AssistChipDefaults.elevatedAssistChipElevation(

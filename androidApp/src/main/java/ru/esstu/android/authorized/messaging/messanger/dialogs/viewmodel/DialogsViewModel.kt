@@ -9,6 +9,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
+import ru.esstu.android.R
 import ru.esstu.domain.handleError.ErrorHandler
 import ru.esstu.domain.ktor.domainApi
 import ru.esstu.domain.utill.paginator.Paginator
@@ -27,7 +28,7 @@ data class DialogState(
     val isLoading: Boolean = false,
     val isEndReached: Boolean = false,
     val error: ResponseError? = null,
-    val title: String = "Мессенджер",
+    val title: Int = R.string.messanger,
 
     val cleanCacheOnRefresh: Boolean = true
 )
@@ -60,7 +61,7 @@ class DialogsViewModel constructor(
         },
         onLoad = {
             dialogState =
-                dialogState.copy(isLoading = it, title = if (it) "Обновление" else "Мессенджер")
+                dialogState.copy(isLoading = it, title = if (it) R.string.update else R.string.messanger)
         },
         onRequest = { key ->
             val cachedDialogs = dialogDB.getDialogs(dialogState.pageSize, key)

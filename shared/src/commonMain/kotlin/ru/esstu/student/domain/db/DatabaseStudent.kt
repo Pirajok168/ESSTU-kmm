@@ -112,6 +112,7 @@ class DatabaseStudent(sqlDriver: SqlDriver): IDatabaseStudent {
         }
 
         override fun encode(value: GroupChatAuthorEntity): String {
+
             return Json { }.encodeToString(value)
         }
 

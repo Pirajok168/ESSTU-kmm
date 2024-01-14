@@ -1,39 +1,31 @@
 package ru.esstu.android.authorized.messaging.new_message.new_dialog.ui
 
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.unit.dp
-import ru.esstu.android.authorized.messaging.new_message.new_dialog.ui.components.SearchCard
-import ru.esstu.android.authorized.messaging.new_message.new_dialog.viewmodel.NewDialogEvents
-import ru.esstu.android.authorized.messaging.new_message.new_dialog.viewmodel.NewDialogViewModel
-
-
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import ru.esstu.android.R
+import ru.esstu.android.authorized.messaging.new_message.new_dialog.ui.components.SearchCard
+import ru.esstu.android.authorized.messaging.new_message.new_dialog.viewmodel.NewDialogEvents
+import ru.esstu.android.authorized.messaging.new_message.new_dialog.viewmodel.NewDialogViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +67,7 @@ fun NewDialogSearchScreen(
                     onActiveChange = {
                         active = it
                     },
-                    placeholder = { Text("Поиск собеседника") },
+                    placeholder = { Text(stringResource(id = R.string.search_companion)) },
                     leadingIcon = {
                         Icon(Icons.Default.Search, contentDescription = null)
                     },
@@ -162,7 +154,7 @@ fun NewDialogSearchScreen(
                             Spacer(modifier = Modifier.height(24.dp))
 
                             Row(modifier = Modifier.padding(horizontal = 24.dp)) {
-                                Text(text = "Недавние", style = MaterialTheme.typography.titleLarge)
+                                Text(text = stringResource(id = R.string.recent_chat), style = MaterialTheme.typography.titleLarge)
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                         }

@@ -1,5 +1,6 @@
 package ru.esstu.android.authorized.messaging.messanger
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,12 +11,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.material3.*
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,25 +34,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import ru.esstu.android.R
-import ru.esstu.android.shared.clearWindowInsets
 import ru.esstu.android.authorized.messaging.messanger.appeals.ui.AppealsScreen
 import ru.esstu.android.authorized.messaging.messanger.conversations.ui.ConversationScreen
 import ru.esstu.android.authorized.messaging.messanger.dialogs.ui.DialogsScreen
 import ru.esstu.android.authorized.messaging.messanger.supports.ui.SupportScreen
+import ru.esstu.android.shared.clearWindowInsets
 
 @Stable
-enum class Pages(val description: String) {
+enum class Pages(@StringRes val descriptionId: Int) {
     @Stable
-    DIALOGS("Диалоги"),
+    DIALOGS(R.string.dialogs),
     @Stable
-    CONVERSATION("Обсуждения"),
+    CONVERSATION(R.string.conversation),
     @Stable
-    TECH_SUPPORT("Тех. поддержка"),
+    TECH_SUPPORT(R.string.tech_help),
     @Stable
-    APPEALS("Обращения"),
+    APPEALS(R.string.appeals),
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -64,13 +75,15 @@ fun MessengerScreen(
     }
     val scope = rememberCoroutineScope()
     val uiState = viewModel.dialogState
-    var title by remember { mutableStateOf("Мессенджер") }
+    var title by remember { mutableIntStateOf(R.string.messanger) }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
-        modifier = Modifier.padding(parentPadding).nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
+            .padding(parentPadding)
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
-                title = { Text(text = title) },
+                title = { Text(text = stringResource(id = title)) },
                 windowInsets = WindowInsets.clearWindowInsets(),
                 scrollBehavior = scrollBehavior
             )
@@ -101,7 +114,7 @@ fun MessengerScreen(
                 ) {
                     screens.value.forEachIndexed { index, title ->
                         Tab(
-                            text = { Text(title.description) },
+                            text = { Text(stringResource(id = title.descriptionId)) },
                             selected = pagerState.currentPage == index,
                             onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
                         )

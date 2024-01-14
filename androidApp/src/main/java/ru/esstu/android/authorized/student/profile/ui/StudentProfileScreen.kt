@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.esstu.android.R
@@ -63,7 +64,7 @@ fun StudentProfileScreen(
         topBar = {
             LargeTopAppBar(
                 title = {
-                    Text(text = "Профиль")
+                    Text(text = stringResource(id = R.string.profile))
                 },
                 scrollBehavior = scrollBehavior
             )
@@ -126,25 +127,25 @@ fun StudentProfileScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     AdditionalInfo(
-                        title = "Группа",
+                        title = stringResource(id = R.string.group),
                         content = state.studentInfo.group
                     )
 
                     AdditionalInfo(
-                        title = "Курс",
+                        title = stringResource(id = R.string.course),
                         content = state.studentInfo.course
                     )
 
                     AdditionalInfo(
-                        title = "Форма обучения",
+                        title = stringResource(id = R.string.form_education),
                         content = state.studentInfo.studyForm
                     )
 
                     AdditionalInfo(
-                        title = "Образовательный стандарт",
+                        title = stringResource(id = R.string.standart_education),
                         content = state.studentInfo.standard
                     )
-                    AdditionalInfo(title = "Уровень образования" , content = state.studentInfo.studyLevel)
+                    AdditionalInfo(title = stringResource(id = R.string.level_education) , content = state.studentInfo.studyLevel)
                 }
                 Spacer(modifier = Modifier.size(32.dp))
                 Surface(
@@ -156,7 +157,7 @@ fun StudentProfileScreen(
                         modifier = Modifier.padding(vertical = 16.dp)
                     ) {
                         MainInfoProfile(
-                            title = "Направление",
+                            title = stringResource(id = R.string.movement),
                             content = "${state.studentInfo.directionCode} ${state.studentInfo.directionName}",
                             onClick = {
                                 context.copyToClipboard("${state.studentInfo.directionCode} ${state.studentInfo.directionName}")
@@ -165,7 +166,7 @@ fun StudentProfileScreen(
                         )
 
                         MainInfoProfile(
-                            title = "Профиль",
+                            title = stringResource(id = R.string.profile_education),
                             content = state.studentInfo.profile,
                             onClick = {
                                 context.copyToClipboard(state.studentInfo.profile)
@@ -174,7 +175,7 @@ fun StudentProfileScreen(
                         )
 
                         MainInfoProfile(
-                            title = "Кафедра",
+                            title = stringResource(id = R.string.kafedra),
                             content = state.studentInfo.cathedra,
                             onClick = {
                                 context.copyToClipboard(state.studentInfo.cathedra)
@@ -183,7 +184,7 @@ fun StudentProfileScreen(
                         )
 
                         MainInfoProfile(
-                            title = "Факультет",
+                            title = stringResource(id = R.string.facultet),
                             content = state.studentInfo.faculty,
                             onClick = {
                                 context.copyToClipboard(state.studentInfo.faculty)
@@ -203,7 +204,7 @@ fun StudentProfileScreen(
                         modifier = Modifier.padding(vertical = 16.dp)
                     ) {
                         PreviewPortfolioCard(
-                            title = "Оценки",
+                            title = stringResource(id = R.string.attestation),
                             onClick = {
                                 onNavigateAttestation()
                             },
@@ -223,7 +224,7 @@ fun StudentProfileScreen(
                         modifier = Modifier.padding(vertical = 16.dp)
                     ) {
                         PreviewPortfolioCard(
-                            title = "Награды",
+                            title = stringResource(id = R.string.award),
                             onClick = {
                                 onNavigatePortfolio(PortfolioType.AWARD)
                             },
@@ -231,7 +232,7 @@ fun StudentProfileScreen(
                         )
 
                         PreviewPortfolioCard(
-                            title = "Достижения",
+                            title = stringResource(id = R.string.ACHIEVEMENT),
                             onClick = {
                                 onNavigatePortfolio(PortfolioType.ACHIEVEMENT)
                             },
@@ -249,7 +250,7 @@ fun StudentProfileScreen(
                         modifier = Modifier.padding(vertical = 16.dp)
                     ) {
                         PreviewPortfolioCard(
-                            title = "Стажировки",
+                            title = stringResource(id = R.string.TRAINEESHIP),
                             onClick = {
                                 onNavigatePortfolio(PortfolioType.TRAINEESHIP)
                             },
@@ -267,7 +268,7 @@ fun StudentProfileScreen(
                         modifier = Modifier.padding(vertical = 16.dp)
                     ) {
                         PreviewPortfolioCard(
-                            title = "Рецензии",
+                            title = stringResource(id = R.string.REVIEWS),
                             onClick = {
                                 onNavigatePortfolio(PortfolioType.REVIEWS)
                             },
@@ -275,7 +276,7 @@ fun StudentProfileScreen(
                         )
 
                         PreviewPortfolioCard(
-                            title = "Курсовые, отчеты, рпз",
+                            title = stringResource(id = R.string.WORK),
                             onClick = {
                                 onNavigatePortfolio(PortfolioType.WORK)
                             },
@@ -283,7 +284,7 @@ fun StudentProfileScreen(
                         )
 
                         PreviewPortfolioCard(
-                            title = "Научные доклады",
+                            title = stringResource(id = R.string.SCIENCEREPORT),
                             onClick = {
                                 onNavigatePortfolio(PortfolioType.SCIENCEREPORT)
                             },
@@ -291,7 +292,7 @@ fun StudentProfileScreen(
                         )
 
                         PreviewPortfolioCard(
-                            title = "Научные исследования",
+                            title = stringResource(id = R.string.THEME),
                             onClick = {
                                 onNavigatePortfolio(PortfolioType.THEME)
                             },
@@ -299,7 +300,7 @@ fun StudentProfileScreen(
                         )
 
                         PreviewPortfolioCard(
-                            title = "Диссертации",
+                            title = stringResource(id = R.string.SCIENCEWORK),
                             onClick = {
                                 onNavigatePortfolio(PortfolioType.SCIENCEWORK)
                             },
@@ -318,7 +319,7 @@ fun StudentProfileScreen(
                         modifier = Modifier.padding(vertical = 16.dp)
                     ) {
                         PreviewPortfolioCard(
-                            title = "Участие в научных конференциях, семинарах",
+                            title = stringResource(id = R.string.CONFERENCE),
                             onClick = {
                                 onNavigatePortfolio(PortfolioType.CONFERENCE)
                             },
@@ -326,7 +327,7 @@ fun StudentProfileScreen(
                         )
 
                         PreviewPortfolioCard(
-                            title = "Участие в конкурсах, олимпиадах, гранты",
+                            title = stringResource(id = R.string.CONTEST),
                             onClick = {
                                 onNavigatePortfolio(PortfolioType.CONTEST)
                             },
@@ -334,7 +335,7 @@ fun StudentProfileScreen(
                         )
 
                         PreviewPortfolioCard(
-                            title = "Участие в выставках",
+                            title = stringResource(id = R.string.EXHIBITION),
                             onClick = {
                                 onNavigatePortfolio(PortfolioType.EXHIBITION)
                             },
