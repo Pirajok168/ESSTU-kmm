@@ -33,7 +33,6 @@ abstract class Api(
 
             client.method()
         }) {
-
             status?.also {
                 if (it == HttpStatusCode.Unauthorized) {
 
@@ -70,7 +69,7 @@ abstract class Api(
     private fun processKnownServerError(errorBody: String): ServerErrors? =
         kotlin.runCatching {
             json.decodeFromString<SimpleError>(errorBody).let {
-                if (it.error_description == "Неверное имя пользователя или пароль") {
+                if (it.error_description == "Неверное имя пользователя или пароль" || it.error_description?.contains("Invalid refresh token") == true) {
                     ServerErrors.Unauthorized
                 } else {
                     ServerErrors.Unknown

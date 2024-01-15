@@ -11,6 +11,8 @@ import ru.esstu.ESSTUSdk
 import ru.esstu.auth.datasources.di.repoAuth
 import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.entities.Token
+import ru.esstu.domain.handleError.ErrorHandler
+import ru.esstu.domain.ktor.domainApi
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
 
@@ -33,6 +35,7 @@ sealed class AuthEvents {
 
 class AuthViewModel(
     private val repo: IAuthRepository = ESSTUSdk.repoAuth.authModule,
+    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
     //private val firebaseRepo: IFirebaseRepository
 ) : ViewModel() {
     var authState by mutableStateOf(AuthState())
@@ -42,8 +45,20 @@ class AuthViewModel(
         when (event) {
             is AuthEvents.SuppressError -> authState = authState.copy(error = null)
             is AuthEvents.PassLogin -> onPassLogin(event.login)
-            is AuthEvents.Authorise -> viewModelScope.launch { onAuth(login = event.login, pass = event.Pass) }
-            is AuthEvents.AuthoriseEntrant -> viewModelScope.launch { onEntrantAuth(login = event.login, pass = event.Pass) }
+            is AuthEvents.Authorise -> viewModelScope.launch {
+                onAuth(
+                    login = event.login,
+                    pass = event.Pass
+                )
+            }
+
+            is AuthEvents.AuthoriseEntrant -> viewModelScope.launch {
+                onEntrantAuth(
+                    login = event.login,
+                    pass = event.Pass
+                )
+            }
+
             is AuthEvents.AuthoriseGuest -> viewModelScope.launch { onGuestAuth() }
             is AuthEvents.RestoreSession -> viewModelScope.launch { onRestoreSession() }
         }
@@ -55,16 +70,27 @@ class AuthViewModel(
 
     private suspend fun onRestoreSession() {
         authState = authState.copy(isLoading = true)
-        authState = when (val result = repo.refreshToken()) {
-            is Response.Error -> authState.copy(token = null, isLoading = false, error = result.error)
-            is Response.Success -> authState.copy(token = result.data, isLoading = false)
-        }
+        authState =
+            when (val result = errorHandler.makeRequest(request = { repo.refreshToken() })) {
+                is Response.Error -> authState.copy(
+                    token = null,
+                    isLoading = false,
+                    error = result.error
+                )
+
+                is Response.Success -> authState.copy(token = result.data, isLoading = false)
+            }
     }
 
     private suspend fun onAuth(login: String, pass: String) {
         authState = authState.copy(isLoading = true)
         authState = when (val result = repo.auth(login, pass)) {
-            is Response.Error -> authState.copy(token = null, isLoading = false, error = result.error)
+            is Response.Error -> authState.copy(
+                token = null,
+                isLoading = false,
+                error = result.error
+            )
+
             is Response.Success -> {
                 authState.copy(token = result.data, isLoading = false)
                 /*when(val firebaseResult = firebaseRepo.registerFirebaseToken()){
@@ -77,8 +103,14 @@ class AuthViewModel(
 
     private suspend fun onEntrantAuth(login: String, pass: String) {
         authState = authState.copy(isLoading = true)
-        authState = when (val result = repo.entrantAuth(login, pass)) {
-            is Response.Error -> authState.copy(token = null, isLoading = false, error = result.error)
+        authState = when (val result =
+            errorHandler.makeRequest(request = { repo.entrantAuth(login, pass) })) {
+            is Response.Error -> authState.copy(
+                token = null,
+                isLoading = false,
+                error = result.error
+            )
+
             is Response.Success -> {
                 authState.copy(token = result.data, isLoading = false)
                 /*when(val firebaseResult = firebaseRepo.registerFirebaseToken()){
@@ -92,7 +124,12 @@ class AuthViewModel(
     private suspend fun onGuestAuth() {
         authState = authState.copy(isLoading = true)
         authState = when (val result = repo.guestAuth()) {
-            is Response.Error -> authState.copy(token = null, isLoading = false, error = result.error)
+            is Response.Error -> authState.copy(
+                token = null,
+                isLoading = false,
+                error = result.error
+            )
+
             is Response.Success -> authState.copy(token = result.data, isLoading = false)
         }
     }
