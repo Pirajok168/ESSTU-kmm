@@ -21,6 +21,7 @@ class ErrorHandler(
                     ServerErrors.Unauthorized -> errorProcessor.reportError(AppError.Unauthorized)
                     ServerErrors.Unresponsive -> errorProcessor.reportError(AppError.Unresponsive)
                     ServerErrors.Unknown -> errorProcessor.reportError(AppError.Unknown)
+                    ServerErrors.Uncheck -> errorProcessor.reportError(AppError.Uncheck)
                     null -> {}
                 }
             }

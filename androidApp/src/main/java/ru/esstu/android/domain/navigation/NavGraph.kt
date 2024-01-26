@@ -38,6 +38,10 @@ fun SetupNavGraph(
 ) {
 
     appErrorViewModel.state.errorProcessor?.let {
+        if (it == AppError.Uncheck) {
+            appErrorViewModel.onResetError()
+            return@let
+        }
         AppErrorDialog(appError = it, onResetError = {
             appErrorViewModel.onResetError()
             if (it == AppError.Unauthorized){

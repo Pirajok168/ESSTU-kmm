@@ -8,21 +8,26 @@ import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.entities.CachedFile
 import ru.esstu.student.profile.student.main_profile.data.api.ProfileApi
-import ru.esstu.student.profile.student.main_profile.domain.model.StudentProfile
+import ru.esstu.student.profile.student.main_profile.domain.model.Profile
+import ru.esstu.student.profile.student.main_profile.domain.toEmployeeProfile
 import ru.esstu.student.profile.student.main_profile.domain.toStudentProfile
 
 class ProfileRepositoryImpl(
     private val api: ProfileApi,
     private val auth: IAuthRepository,
 ): IProfileRepository {
-    override suspend fun getProfile(): Flow<FlowResponse<StudentProfile>> = flow {
+    override suspend fun getProfile(): Flow<FlowResponse<out Profile>> = flow {
         auth.provideToken { token ->
 
-            val appUserId = (token.owner as? TokenOwners.Student)?.id ?: return@provideToken
+            val owner = token.owner
             emit(FlowResponse.Loading())
 
-            val remoteProfile = api.getStudentInfo().transform {
-                it.toStudentProfile()
+            val remoteProfile = when(owner){
+                is TokenOwners.Student -> api.getStudentProfileInfo()
+                    .transform { it.toStudentProfile() }
+                is TokenOwners.Teacher -> api.getEmployeeProfileInfo()
+                    .transform { it.toEmployeeProfile() }
+                else -> null
             }
 
             when (remoteProfile) {
@@ -30,6 +35,7 @@ class ProfileRepositoryImpl(
                 is Response.Success -> {
                     emit(FlowResponse.Success(remoteProfile.data))
                 }
+                else -> {}
             }
             emit(FlowResponse.Loading(false))
         }

@@ -1,4 +1,4 @@
-package ru.esstu.android.authorized.student.profile.navigation
+package ru.esstu.android.authorized.profile.navigation
 
 import androidx.navigation.NavType
 import ru.esstu.android.domain.navigation.Route

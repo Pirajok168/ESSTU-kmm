@@ -1,5 +1,6 @@
 package ru.esstu.domain.ktor
 
+import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.HttpResponsePipeline
@@ -54,6 +55,7 @@ abstract class Api(
             }.onFailure {
                 exceptionOrNull()
                     ?.also { e ->
+                        Napier.e(message = e.message.orEmpty(), throwable = e.cause)
                         if (e !is kotlin.coroutines.cancellation.CancellationException) {
                             return Response.Error(
                                 ResponseError(error = ServerErrors.Unknown)

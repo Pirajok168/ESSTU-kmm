@@ -9,8 +9,8 @@ import ru.esstu.android.authorized.news.navigation.NewsScreens
 import ru.esstu.android.authorized.news.navigation.newsNavGraph
 import ru.esstu.android.authorized.settings.navigation.SettingsScreens
 import ru.esstu.android.authorized.settings.navigation.settingsNavGraph
-import ru.esstu.android.authorized.student.profile.navigation.ProfileScreens
-import ru.esstu.android.authorized.student.profile.navigation.profileNavGraph
+import ru.esstu.android.authorized.profile.navigation.ProfileScreens
+import ru.esstu.android.authorized.profile.navigation.profileNavGraph
 import ru.esstu.android.domain.navigation.bottom_navigation.util.NavItem
 
 

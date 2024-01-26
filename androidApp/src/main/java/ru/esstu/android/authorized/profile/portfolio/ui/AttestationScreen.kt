@@ -1,4 +1,4 @@
-package ru.esstu.android.authorized.student.profile.portfolio.ui
+package ru.esstu.android.authorized.profile.portfolio.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,7 +49,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import ru.esstu.android.R
-import ru.esstu.android.authorized.student.profile.portfolio.viewmodel.AttestationViewModel
+import ru.esstu.android.authorized.profile.portfolio.viewmodel.AttestationViewModel
 import ru.esstu.android.shared.clearWindowInsets
 
 

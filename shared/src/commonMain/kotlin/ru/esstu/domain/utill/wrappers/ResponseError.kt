@@ -12,5 +12,6 @@ data class ResponseError(
 enum class ServerErrors {
     Unauthorized,
     Unresponsive,
-    Unknown
+    Unknown,
+    Uncheck
 }

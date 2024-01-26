@@ -1,4 +1,4 @@
-package ru.esstu.android.authorized.student.profile.navigation
+package ru.esstu.android.authorized.profile.navigation
 
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -9,10 +9,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import ru.esstu.android.authorized.student.profile.portfolio.ui.AttestationScreen
-import ru.esstu.android.authorized.student.profile.portfolio.ui.PortfolioScreen
-import ru.esstu.android.authorized.student.profile.portfolio.viewmodel.PortfolioViewModel
-import ru.esstu.android.authorized.student.profile.ui.StudentProfileScreen
+import ru.esstu.android.authorized.profile.portfolio.ui.AttestationScreen
+import ru.esstu.android.authorized.profile.portfolio.ui.PortfolioScreen
+import ru.esstu.android.authorized.profile.portfolio.viewmodel.PortfolioViewModel
+import ru.esstu.android.authorized.profile.ui.ProfileScreen
 
 fun NavGraphBuilder.profileNavGraph(
     parentNavController: NavHostController,
@@ -27,7 +27,7 @@ fun NavGraphBuilder.profileNavGraph(
             route = ProfileScreens.Profile.passRoute(),
         ) {
             val portfolioViewModel: PortfolioViewModel = viewModel()
-            StudentProfileScreen(paddingValues = padding, onNavigateAttestation = {
+            ProfileScreen(paddingValues = padding, onNavigateAttestation = {
                 navController.navigate(ProfileScreens.Attestation.navigate())
             } ){
                 portfolioViewModel.preDisplayFile(it)

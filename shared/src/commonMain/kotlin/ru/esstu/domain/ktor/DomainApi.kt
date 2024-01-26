@@ -98,7 +98,11 @@ internal val domainApi = DI.Module(
                 AuthorizedApi(
                     loginDataRepository = instance<LoginDataRepositoryImpl>(),
                     client = { instance() },
-                    json = Json,
+                    json = Json {
+                        ignoreUnknownKeys = true
+                        prettyPrint = true
+                        isLenient = true
+                    },
                     portalApi = instance()
                 )
             }

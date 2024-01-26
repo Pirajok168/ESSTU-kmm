@@ -1,4 +1,4 @@
-package ru.esstu.android.authorized.student.profile.portfolio.ui
+package ru.esstu.android.authorized.profile.portfolio.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

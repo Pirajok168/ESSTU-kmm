@@ -1,4 +1,4 @@
-package ru.esstu.android.authorized.student.profile.portfolio.ui
+package ru.esstu.android.authorized.profile.portfolio.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -54,8 +54,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.NewAttachment
 import ru.esstu.android.authorized.messaging.dialog_chat.util.cacheToFile
-import ru.esstu.android.authorized.student.profile.portfolio.state.PortfolioState
-import ru.esstu.android.authorized.student.profile.portfolio.viewmodel.PortfolioViewModel
+import ru.esstu.android.authorized.profile.portfolio.state.PortfolioState
+import ru.esstu.android.authorized.profile.portfolio.viewmodel.PortfolioViewModel
 import ru.esstu.domain.utill.workingDate.format
 import ru.esstu.student.messaging.entities.CachedFile
 import ru.esstu.student.profile.student.porfolio.domain.model.PortfolioType

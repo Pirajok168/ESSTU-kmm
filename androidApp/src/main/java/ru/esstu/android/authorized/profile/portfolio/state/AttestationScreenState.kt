@@ -1,4 +1,4 @@
-package ru.esstu.android.authorized.student.profile.portfolio.state
+package ru.esstu.android.authorized.profile.portfolio.state
 
 import ru.esstu.student.profile.student.porfolio.domain.model.Attestation
 

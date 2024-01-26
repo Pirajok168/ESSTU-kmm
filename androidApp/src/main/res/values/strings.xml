@@ -59,5 +59,11 @@
     <string name="CONTEST">Участие в конкурсах, олимпиадах, гранты</string>
     <string name="EXHIBITION">Участие в выставках</string>
     <string name="absent_data">Данные\nотсутствуют</string>
+    <string name="info_work">Сведения о работе</string>
+    <string name="education">Образование</string>
+    <string name="speciality">специальность</string>
+    <string name="qualification">квалификация</string>
+    <string name="degrees">Ученая степень</string>
+
 
 </resources>

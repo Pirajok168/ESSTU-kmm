@@ -30,7 +30,7 @@ class AuthRepositoryImpl constructor(
 
         if (token == null) {
             goToLoginScreen(null)
-            return Response.Error(ResponseError(error = ServerErrors.Unauthorized))
+            return Response.Error(ResponseError(error = ServerErrors.Uncheck))
         }
 
         val newToken: Response<Token?>  = when (token.owner) {

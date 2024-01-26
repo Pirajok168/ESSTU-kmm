@@ -1,4 +1,4 @@
-package ru.esstu.android.authorized.student.profile.portfolio.viewmodel
+package ru.esstu.android.authorized.profile.portfolio.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.esstu.ESSTUSdk
-import ru.esstu.android.authorized.student.profile.portfolio.state.PortfolioState
+import ru.esstu.android.authorized.profile.portfolio.state.PortfolioState
 import ru.esstu.domain.handleError.ErrorHandler
 import ru.esstu.domain.ktor.domainApi
 import ru.esstu.domain.utill.wrappers.doOnError

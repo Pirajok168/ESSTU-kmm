@@ -4,10 +4,10 @@ import kotlinx.coroutines.flow.Flow
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.entities.CachedFile
-import ru.esstu.student.profile.student.main_profile.domain.model.StudentProfile
+import ru.esstu.student.profile.student.main_profile.domain.model.Profile
 
 interface IProfileRepository {
-    suspend fun getProfile(): Flow<FlowResponse<StudentProfile>>
+    suspend fun getProfile(): Flow<FlowResponse<out Profile>>
 
     suspend fun updatePhoto(photo: CachedFile): Response<String>
 }

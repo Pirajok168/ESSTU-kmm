@@ -58,4 +58,9 @@
     <string name="CONTEST">参加比赛</string>
     <string name="EXHIBITION">参与展览</string>
     <string name="absent_data">没有可用的数据</string>
+    <string name="info_work">职位资料</string>
+    <string name="education">教育</string>
+    <string name="speciality">专业化</string>
+    <string name="qualification">资历</string>
+    <string name="degrees">学术学位</string>
 </resources>
