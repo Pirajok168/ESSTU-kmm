@@ -1,12 +1,13 @@
 package ru.esstu.student.messaging.messenger.new_message.new_dialog.datasources.api
 
-import io.github.aakira.napier.Napier
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
+import io.ktor.http.append
+import io.ktor.http.contentType
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 import okio.FileSystem
@@ -15,139 +16,89 @@ import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.request.chat_message_re
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.chat_message_response.ChatMessageResponse
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu_entrant.response.message.MessagePreview
+import ru.esstu.domain.ktor.AuthorizedApi
+import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.entities.CachedFile
-import kotlin.collections.get
 
 class NewDialogApiImpl(
-    private val portalApi: HttpClient,
+    private val authorizedApi: AuthorizedApi,
     private val fileSystem: FileSystem,
 ): NewDialogApi {
     override suspend fun findUsers(
-        authToken: String,
         query: String,
         limit: Int,
         offset: Int
-    ): List<UserPreview> {
-        val response = portalApi.get("lk/api/v1/users/findUsers"){
-            url{
-                bearerAuth(authToken)
-                encodedParameters.append("query", query)
-                encodedParameters.append("limit", limit.toString())
-                encodedParameters.append("offset", offset.toString())
-            }
-        }
-        return response.body()
+    ): Response<List<UserPreview>>  {
+        return authorizedApi.get("lk/api/v1/users/findUsers?query=$query&limit=$limit&offset=$offset")
     }
 
-    override suspend fun pickMessages(authToken: String, messageIds: String): List<MessagePreview> {
-        val request = portalApi.get {
-            url {
-                path("lk/api/v2/messenger/getMessages")
-                bearerAuth(authToken)
-                encodedParameters.append("id", messageIds)
-            }
-        }
-        return request.body()
+    override suspend fun pickMessages(messageIds: String):Response<List<MessagePreview>>  {
+        return authorizedApi.get("lk/api/v2/messenger/getMessages?id=$messageIds")
     }
 
-    override suspend fun pickUsers(authToken: String, usersIds: String): List<UserPreview> {
-        val request = portalApi.get {
-            url {
-                path("lk/api/v1/users/getUsers")
-                bearerAuth(authToken)
-                encodedParameters.append("ids", usersIds)
-            }
-        }
-        return request.body()
+    override suspend fun pickUsers(usersIds: String): Response< List<UserPreview>> {
+        return authorizedApi.get("lk/api/v1/users/getUsers?ids=$usersIds")
     }
 
     override suspend fun sendMessage(
-        authToken: String,
         body: ChatMessageRequestBody
-    ): ChatMessageResponse {
-        val request = portalApi.post {
-            url {
-                path("/lk/api/v2/messenger/sendMessage")
-                bearerAuth(authToken)
-                contentType(ContentType.Application.Json)
-                setBody(body)
-
-            }
-
+    ): Response<ChatMessageResponse>  {
+        return authorizedApi.post("/lk/api/v2/messenger/sendMessage", body = body){
+            contentType(ContentType.Application.Json)
         }
-        return request.body()
     }
 
     override suspend fun sendMessageWithAttachments(
-        authToken: String,
         files: List<CachedFile>,
         requestSendMessage: ChatMessageRequestBody
-    ): ChatMessageResponse {
-        val request = portalApi.post {
-            headers {
-                append("Authorization", "Bearer $authToken")
-            }
+    ): Response<ChatMessageResponse > {
+        return authorizedApi.post("/lk/api/v2/messenger/sendMessage"){
+            setBody(MultiPartFormDataContent(
+                formData {
+                    append("requestSendMessage", value = Json{}.encodeToJsonElement(requestSendMessage).toString() , headers = Headers.build {
+                        append(HttpHeaders.ContentType, ContentType.Application.Json)
+                    })
 
-            url {
-                path("lk/api/v2/messenger/sendMessageMedia")
-                setBody(MultiPartFormDataContent(
-                    formData {
-                        append("requestSendMessage", value = Json{}.encodeToJsonElement(requestSendMessage).toString() , headers = Headers.build {
-                            append(HttpHeaders.ContentType, ContentType.Application.Json)
-                        })
-
-                        files.forEach {
-                            val array = fileSystem.read(it.sourceFile.toPath()){
-                                readByteArray()
-                            }
-                            append("files", array, Headers.build {
-                                append(HttpHeaders.ContentType, it.type)
-                                append(HttpHeaders.ContentDisposition, "filename=${it.name}.${it.ext}")
-                            })
+                    files.forEach {
+                        val array = fileSystem.read(it.sourceFile.toPath()){
+                            readByteArray()
                         }
+                        append("files", array, Headers.build {
+                            append(HttpHeaders.ContentType, it.type)
+                            append(HttpHeaders.ContentDisposition, "filename=${it.name}.${it.ext}")
+                        })
                     }
-                ))
-                contentType(ContentType.Application.Json)
-            }
+                }
+            ))
+            contentType(ContentType.Application.Json)
         }
-
-        return request.body()
     }
 
     override suspend fun sendAttachments(
-        authToken: String,
         files: List<CachedFile>,
         requestSendMessage: ChatMessageRequestBody
-    ): ChatMessageResponse {
-        val request = portalApi.post {
-            headers {
-                append("Authorization", "Bearer $authToken")
-            }
+    ): Response<ChatMessageResponse > {
 
-            url {
-                path("lk/api/v2/messenger/sendMessageMedia")
-                setBody(MultiPartFormDataContent(
-                    formData {
-                        append("requestSendMessage", value = Json{}.encodeToJsonElement(requestSendMessage).toString() , headers = Headers.build {
-                            append(HttpHeaders.ContentType, ContentType.Application.Json)
-                        })
+        return authorizedApi.post("lk/api/v2/messenger/sendMessageMedia"){
+            setBody(MultiPartFormDataContent(
+                formData {
+                    append("requestSendMessage", value = Json{}.encodeToJsonElement(requestSendMessage).toString() , headers = Headers.build {
+                        append(HttpHeaders.ContentType, ContentType.Application.Json)
+                    })
 
-                        files.forEach {
-                            val array = fileSystem.read(it.sourceFile.toPath()){
-                                readByteArray()
-                            }
-                            append("files", array, Headers.build {
-                                append(HttpHeaders.ContentType, it.type)
-                                append(HttpHeaders.ContentDisposition, "filename=${it.name}.${it.ext}")
-                            })
+                    files.forEach {
+                        val array = fileSystem.read(it.sourceFile.toPath()){
+                            readByteArray()
                         }
+                        append("files", array, Headers.build {
+                            append(HttpHeaders.ContentType, it.type)
+                            append(HttpHeaders.ContentDisposition, "filename=${it.name}.${it.ext}")
+                        })
                     }
-                ))
-                contentType(ContentType.Application.Json)
-            }
+                }
+            ))
+            contentType(ContentType.Application.Json)
         }
-
-        return request.body()
     }
 
 }

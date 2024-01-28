@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ESSTU</string>
+
+
+    <string name="title_settings">设置</string>
+    <string name="dialogs">对话</string>
+    <string name="conversation">讨论</string>
+    <string name="tech_help">技术支持</string>
+    <string name="appeals">上诉</string>
+    <string name="messanger">聊天记录</string>
+    <string name="update">更新资料</string>
+    <string name="new_message">新讯息</string>
+    <string name="new_dilog">新对话</string>
+    <string name="new_tech">联系技术支持</string>
+    <string name="new_appeal">联络本署</string>
+    <string name="recent_chat">最近的聊天</string>
+    <string name="attachments">档案</string>
+    <string name="create">要创建</string>
+    <string name="companion">对话者</string>
+    <string name="add">添加</string>
+    <string name="message_text">消息的文本</string>
+    <string name="add_attachments">添加附件</string>
+    <string name="appeal_esstu">呼吁ESSTU</string>
+    <string name="esstu_departament">学系</string>
+    <string name="esstu_exist_departament">系未选</string>
+    <string name="theme">题目</string>
+    <string name="details">详情</string>
+    <string name="appeal_tech_support">联系技术支持</string>
+    <string name="esstu_exist_theme">主题未选中</string>
+    <string name="search_companion">寻找对话者</string>
+    <string name="locale_app">应用语言</string>
+    <string name="announcement">公告</string>
+
+    <string name="locale_app_ru">俄语</string>
+    <string name="locale_app_zh">中文</string>
+
+    <string name="profile">个人资料</string>
+    <string name="group">团体</string>
+    <string name="course">学习课程</string>
+    <string name="form_education">教育的形式</string>
+    <string name="standart_education">教育标准</string>
+    <string name="level_education">教育水平</string>
+    <string name="movement">学习方向</string>
+    <string name="profile_education">培训简介</string>
+    <string name="kafedra">学系</string>
+    <string name="facultet">学院</string>
+    <string name="attestation">评估</string>
+    <string name="award">奖项</string>
+    <string name="ACHIEVEMENT">成就</string>
+    <string name="TRAINEESHIP">实习</string>
+    <string name="REVIEWS">检讨报告</string>
+    <string name="WORK">学期论文、报告</string>
+    <string name="SCIENCEREPORT">科学报告</string>
+    <string name="THEME">科学研究</string>
+    <string name="SCIENCEWORK">科学工作</string>
+    <string name="CONFERENCE">参加科学会议和研讨会</string>
+    <string name="CONTEST">参加比赛</string>
+    <string name="EXHIBITION">参与展览</string>
+    <string name="absent_data">没有可用的数据</string>
+    <string name="info_work">职位资料</string>
+    <string name="education">教育</string>
+    <string name="speciality">专业化</string>
+    <string name="qualification">资历</string>
+    <string name="degrees">学术学位</string>
+    <string name="add_education">专业发展</string>
+</resources>

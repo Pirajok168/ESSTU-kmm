@@ -1,14 +1,19 @@
 package ru.esstu.student.messaging.messenger.dialogs.datasources.repo
 
-import com.soywiz.klock.DateTime
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.datetime.Clock
 import ru.esstu.auth.datasources.repo.IAuthRepository
-import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.api.UpdatesApi
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.messenger.dialogs.datasources.db.DialogsTimestampDao
@@ -44,7 +49,7 @@ class DialogsUpdatesRepositoryImpl(
     override fun installObserving(): Flow<Response<List<PreviewDialog>>> = flow {
         while (true) {
             Napier.e("DialogsUpdatesRepositoryImpl", tag = "lifecycle")
-            val callTimestamp = DateTime.now().unixMillisLong
+            val callTimestamp = Clock.System.now().toEpochMilliseconds()
             auth.provideToken { token ->
 
                 val appUserId = token.owner.id ?: throw Exception("unsupported User Type")

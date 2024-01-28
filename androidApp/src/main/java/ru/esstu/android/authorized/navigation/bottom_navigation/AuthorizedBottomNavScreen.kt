@@ -7,8 +7,10 @@ import ru.esstu.android.authorized.messaging.messanger.MessengerScreens
 import ru.esstu.android.authorized.messaging.messanger.messengerNavGraph
 import ru.esstu.android.authorized.news.navigation.NewsScreens
 import ru.esstu.android.authorized.news.navigation.newsNavGraph
-import ru.esstu.android.authorized.student.profile.navigation.ProfileScreens
-import ru.esstu.android.authorized.student.profile.navigation.profileNavGraph
+import ru.esstu.android.authorized.settings.navigation.SettingsScreens
+import ru.esstu.android.authorized.settings.navigation.settingsNavGraph
+import ru.esstu.android.authorized.profile.navigation.ProfileScreens
+import ru.esstu.android.authorized.profile.navigation.profileNavGraph
 import ru.esstu.android.domain.navigation.bottom_navigation.util.NavItem
 
 
@@ -36,6 +38,12 @@ fun BottomAuthorizedNavigation(parentNavController: NavHostController) {
                 route = ProfileScreens.Root,
                 badges = 0
             ),
+
+            NavItem(
+                icon = R.drawable.baseline_settings_24,
+                label = "Настройки",
+                route = SettingsScreens.Root,
+            )
         ), contentNavGraph = { padding, inlineNavController ->
             newsNavGraph(
                 padding = padding,
@@ -48,6 +56,12 @@ fun BottomAuthorizedNavigation(parentNavController: NavHostController) {
                 parentNavController = parentNavController
             )
             profileNavGraph(
+                padding = padding,
+                navController = inlineNavController,
+                parentNavController = parentNavController,
+            )
+
+            settingsNavGraph(
                 padding = padding,
                 navController = inlineNavController,
                 parentNavController = parentNavController,

@@ -1,40 +1,51 @@
 package ru.esstu.domain.ktor
 
+import com.russhwolf.settings.Settings
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.ResponseException
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.statement.HttpResponse
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
 import org.kodein.di.singleton
+import ru.esstu.ESSTUSdk
+import ru.esstu.auth.datasources.local.LoginDataRepositoryImpl
 import ru.esstu.debugBuild
-
-@Serializable
-data class Error(val code: Int, val message: String)
-
-class CustomResponseException(response: HttpResponse, message: String) :
-    ResponseException(response, message) {
-    override val message: String = message
-}
+import ru.esstu.domain.handleError.ErrorHandler
+import ru.esstu.domain.handleError.ErrorProcessor
+import ru.esstu.domain.handleError.ErrorProcessorImpl
+import kotlin.native.concurrent.ThreadLocal
 
 
 internal val domainApi = DI.Module(
     name =  "DomainApi",
     init = {
+        bind<ErrorProcessor> {
+            singleton {
+                ErrorProcessorImpl()
+            }
+        }
+
+        bind {
+            singleton {
+                ErrorHandler(instance())
+            }
+        }
+
+        bind<LoginDataRepositoryImpl>() with  singleton { LoginDataRepositoryImpl(
+            authDataStore = Settings()
+        ) }
+
         bind<HttpClient>() with singleton {
             val engine = instance<HttpEngineFactory>().createEngine()
             HttpClient(engine) {
@@ -59,32 +70,55 @@ internal val domainApi = DI.Module(
                     }
                     level = LogLevel.HEADERS
                 }
-
                 install(HttpTimeout) {
-                    requestTimeoutMillis = Long.MAX_VALUE
-                    socketTimeoutMillis = Long.MAX_VALUE
-                    connectTimeoutMillis = Long.MAX_VALUE
-                }
-
-                HttpResponseValidator {
-                    validateResponse { response ->
-                        val error: Int = response.status.value
-                        if (error == 400 || error == 401) {
-                            throw CustomResponseException(response, "Неверный логин или пароль")
-                        }
-                        if(error == 500){
-                            throw CustomResponseException(response, "Сервер не работает")
-                        }
-                    }
+                    requestTimeoutMillis = 900000
+                    socketTimeoutMillis = 900000
+                    connectTimeoutMillis = 900000
                 }
 
                 defaultRequest {
-                    host = "esstu.ru"
                     url {
                         protocol = URLProtocol.HTTPS
                     }
                 }
             }.also { Napier.base(DebugAntilog()) }
         }
+
+        bind {
+            singleton {
+                UnauthorizedApi(
+                    client = { instance() },
+                    json = Json
+                )
+            }
+        }
+
+        bind {
+            singleton {
+                AuthorizedApi(
+                    loginDataRepository = instance<LoginDataRepositoryImpl>(),
+                    client = { instance() },
+                    json = Json {
+                        ignoreUnknownKeys = true
+                        prettyPrint = true
+                        isLenient = true
+                    },
+                    portalApi = instance()
+                )
+            }
+        }
+
     }
 )
+
+@ThreadLocal
+object ErrorHandlerModule {
+    val errorHandler: ErrorHandler
+        get() = ESSTUSdk.di.instance()
+
+    val errorProcessor: ErrorProcessor
+        get() = ESSTUSdk.di.instance()
+}
+
+val ESSTUSdk.domainApi: ErrorHandlerModule
+    get() = ErrorHandlerModule

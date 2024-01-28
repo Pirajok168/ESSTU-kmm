@@ -5,10 +5,13 @@ import org.kodein.di.bind
 import org.kodein.di.instance
 import org.kodein.di.singleton
 import ru.esstu.ESSTUSdk
-import ru.esstu.auth.datasources.di.AuthModule
+import ru.esstu.auth.datasources.local.LoginDataRepositoryImpl
 import ru.esstu.domain.modules.account.datasources.api.AccountInfoApi
 import ru.esstu.domain.modules.account.datasources.api.AccountInfoApiImpl
-import ru.esstu.domain.modules.account.datasources.datastore.*
+import ru.esstu.domain.modules.account.datasources.datastore.AccountInfoDSManager
+import ru.esstu.domain.modules.account.datasources.datastore.IAccountInfoDSManager
+import ru.esstu.domain.modules.account.datasources.datastore.create
+import ru.esstu.domain.modules.account.datasources.datastore.storage
 import ru.esstu.domain.modules.account.datasources.repo.AccountInfoRepositoryImpl
 import ru.esstu.domain.modules.account.datasources.repo.IAccountInfoApiRepository
 import ru.esstu.domain.modules.downloader.Downloader
@@ -18,7 +21,7 @@ import kotlin.native.concurrent.ThreadLocal
 internal val accountModule = DI.Module("AccountModule"){
     bind<AccountInfoApi>() with singleton {
         AccountInfoApiImpl(
-            portalApi = instance()
+            authorizedApi = instance()
         )
     }
 
@@ -30,9 +33,10 @@ internal val accountModule = DI.Module("AccountModule"){
 
     bind<IAccountInfoApiRepository>() with singleton {
         AccountInfoRepositoryImpl(
+            loginDataRepository = instance<LoginDataRepositoryImpl>(),
             userCache = instance(),
             api = instance(),
-            auth = instance()
+            instance()
         )
     }
 

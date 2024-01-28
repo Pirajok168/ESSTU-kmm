@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
+import ru.esstu.domain.handleError.ErrorHandler
+import ru.esstu.domain.ktor.domainApi
 import ru.esstu.domain.utill.wrappers.FlowResponse
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
@@ -50,7 +52,8 @@ sealed class NewAppealEvents {
 
 
 class NewAppealViewModel  constructor(
-    private val repo: INewAppealRepository = ESSTUSdk.newAppealModule.repo
+    private val repo: INewAppealRepository = ESSTUSdk.newAppealModule.repo,
+    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
 ) : ViewModel() {
 
     var state by mutableStateOf(NewAppealState())
@@ -110,10 +113,14 @@ class NewAppealViewModel  constructor(
         state = state.copy(isNewAppealCreating = true)
 
         val theme = state.selectedTheme ?: return
-        val appeal = repo.createNewAppeal(
-            themeId = theme.id,
-            message = state.message,
-            attachments = state.attachments
+        val appeal = errorHandler.makeRequest(
+            request =  {
+                repo.createNewAppeal(
+                    themeId = theme.id,
+                    message = state.message,
+                    attachments = state.attachments
+                )
+            }
         )
 
         state = when (appeal) {

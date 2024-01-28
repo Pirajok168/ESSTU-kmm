@@ -12,7 +12,14 @@ import ru.esstu.student.messaging.messenger.supports.datasource.db.SupportsCache
 import ru.esstu.student.messaging.messenger.supports.datasource.db.SupportsCacheDatabase
 import ru.esstu.student.messaging.messenger.supports.datasource.db.SupportsTimestampDao
 import ru.esstu.student.messaging.messenger.supports.datasource.db.SupportsTimestampDatabase
-import ru.esstu.student.messaging.messenger.supports.datasource.repo.*
+import ru.esstu.student.messaging.messenger.supports.datasource.repo.ISupportsApiRepository
+import ru.esstu.student.messaging.messenger.supports.datasource.repo.ISupportsDbRepository
+import ru.esstu.student.messaging.messenger.supports.datasource.repo.ISupportsRepository
+import ru.esstu.student.messaging.messenger.supports.datasource.repo.ISupportsUpdatesRepository
+import ru.esstu.student.messaging.messenger.supports.datasource.repo.SupportsApiRepositoryImpl
+import ru.esstu.student.messaging.messenger.supports.datasource.repo.SupportsDbRepositoryImpl
+import ru.esstu.student.messaging.messenger.supports.datasource.repo.SupportsRepositoryImpl
+import ru.esstu.student.messaging.messenger.supports.datasource.repo.SupportsUpdatesRepositoryImpl
 import kotlin.native.concurrent.ThreadLocal
 
 internal val supportsModule = DI.Module("SupportsModule") {
@@ -25,7 +32,6 @@ internal val supportsModule = DI.Module("SupportsModule") {
     bind<ISupportsApiRepository>() with singleton {
         SupportsApiRepositoryImpl(
             instance(),
-            instance()
         )
     }
 

@@ -2,7 +2,15 @@ package ru.esstu.android.authorized.messaging.dialog_chat.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +32,7 @@ import ru.esstu.android.domain.ui.theme.CompPreviewTheme
 @Composable
 fun NewAttachment(modifier: Modifier = Modifier, title: String, uri: String? = null, onClose: () -> Unit = {}) {
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Box(Modifier.padding(horizontal = 12.dp), contentAlignment = Alignment.TopEnd) {
+        Box(Modifier, contentAlignment = Alignment.TopEnd) {
             Box(
                 Modifier
                     .size(60.dp)
@@ -73,7 +81,7 @@ fun NewAttachment(modifier: Modifier = Modifier, title: String, uri: String? = n
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             textAlign = TextAlign.Center,
-            modifier = Modifier.widthIn(max = 88.dp),
+            modifier = Modifier.widthIn(max = 40.dp),
             text = title,
             style = MaterialTheme.typography.titleSmall,
             maxLines = 2,

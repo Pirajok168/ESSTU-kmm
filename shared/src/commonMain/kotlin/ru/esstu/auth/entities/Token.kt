@@ -8,5 +8,6 @@ data class Token(
     val type:String,
     val access: String,
     val refresh: String,
-    val owner: TokenOwners
+    val owner: TokenOwners,
+    val expiresIn: Long?
 )

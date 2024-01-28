@@ -1,7 +1,6 @@
 package ru.esstu.auth.datasources.di
 
 
-import com.russhwolf.settings.Settings
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
@@ -9,12 +8,10 @@ import org.kodein.di.singleton
 import ru.esstu.ESSTUSdk
 import ru.esstu.auth.datasources.api.student_teacher.AuthApImpl
 import ru.esstu.auth.datasources.api.student_teacher.AuthApi
-import ru.esstu.auth.datasources.local.ITokenDSManager
-import ru.esstu.auth.datasources.local.TokenDSManagerImpl
+import ru.esstu.auth.datasources.local.ILoginDataRepository
+import ru.esstu.auth.datasources.local.LoginDataRepositoryImpl
 import ru.esstu.auth.datasources.repo.AuthRepositoryImpl
-import ru.esstu.auth.datasources.repo.DataStore
 import ru.esstu.auth.datasources.repo.IAuthRepository
-import ru.esstu.auth.datasources.repo.getSettings
 import kotlin.native.concurrent.ThreadLocal
 
 internal val authProvidesModule = DI.Module(
@@ -24,20 +21,17 @@ internal val authProvidesModule = DI.Module(
 
         bind<AuthApi>() with singleton {
             AuthApImpl(
-                portalApi = instance()
+                unauthorizedApi = instance()
             )
         }
 
         bind<IAuthRepository>() with singleton {
             AuthRepositoryImpl(
                 portalApi = instance(),
-                cache = instance<TokenDSManagerImpl>()
+                cache = instance<LoginDataRepositoryImpl>()
             )
         }
 
-        bind<TokenDSManagerImpl>() with  singleton { TokenDSManagerImpl(
-            authDataStore = Settings()
-        ) }
     }
 )
 
@@ -46,7 +40,7 @@ object AuthModule {
     val authModule: IAuthRepository
         get() = ESSTUSdk.di.instance()
 
-    val tokenDSManagerImpl: ITokenDSManager
+    val tokenDSManagerImpl: ILoginDataRepository
         get() = ESSTUSdk.di.instance()
 }
 

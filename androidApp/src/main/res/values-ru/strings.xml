@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ВСГУТУ</string>
+
+    <string name="title_settings">Настройки</string>
+
+
+    <string name="dialogs">Диалоги</string>
+    <string name="conversation">Обсуждения</string>
+    <string name="tech_help">Тех. поддержка</string>
+    <string name="appeals">Обращения</string>
+    <string name="messanger">Мессенджер</string>
+    <string name="update">Обновление</string>
+    <string name="new_message">Новое сообщение</string>
+    <string name="new_dilog">Новый диалог</string>
+    <string name="new_tech">Обратиться в тех. поддержку</string>
+    <string name="new_appeal">Обратиться к подразделению</string>
+    <string name="recent_chat">Недавние чаты</string>
+    <string name="attachments">Вложение</string>
+    <string name="create">Создать</string>
+    <string name="companion">Собеседник</string>
+    <string name="add">Добавить</string>
+    <string name="message_text">Текст сообщения</string>
+    <string name="add_attachments">Добавить\nвложение</string>
+    <string name="appeal_esstu">Обращение в ВСГУТУ</string>
+    <string name="esstu_departament">Отделение</string>
+    <string name="esstu_exist_departament">Отдел не выбран</string>
+    <string name="theme">Тема</string>
+    <string name="details">Подробности</string>
+    <string name="appeal_tech_support">Обращение в тех. поддержку</string>
+    <string name="esstu_exist_theme">Тема не выбрана</string>
+    <string name="search_companion">Поиск собеседника</string>
+    <string name="locale_app">Язык приложения</string>
+    <string name="locale_app_ru">Русский</string>
+    <string name="locale_app_zh">Китайский</string>
+    <string name="announcement">Объявления</string>
+
+    <string name="profile">Профиль</string>
+    <string name="group">Группа</string>
+    <string name="course">Курс</string>
+    <string name="form_education">Форма обучения</string>
+    <string name="standart_education">Образовательный стандарт</string>
+    <string name="level_education">Уровень образования</string>
+    <string name="movement">Направление</string>
+    <string name="profile_education">Профиль</string>
+    <string name="kafedra">Кафедра</string>
+    <string name="facultet">Факультет</string>
+    <string name="attestation">Оценки</string>
+    <string name="award">Награды</string>
+    <string name="ACHIEVEMENT">Достижения</string>
+    <string name="TRAINEESHIP">Стажировки</string>
+    <string name="REVIEWS">Рецензии</string>
+    <string name="WORK">Курсовые, отчеты, рпз</string>
+    <string name="SCIENCEREPORT">Научные доклады</string>
+    <string name="THEME">Научные исследования</string>
+    <string name="SCIENCEWORK">Диссертации</string>
+    <string name="CONFERENCE">Участие в научных конференциях, семинарах</string>
+    <string name="CONTEST">Участие в конкурсах, олимпиадах, гранты</string>
+    <string name="EXHIBITION">Участие в выставках</string>
+    <string name="absent_data">Данные\nотсутствуют</string>
+    <string name="info_work">Сведения о работе</string>
+    <string name="education">Образование</string>
+    <string name="speciality">специальность</string>
+    <string name="qualification">квалификация</string>
+    <string name="degrees">Ученая степень</string>
+    <string name="add_education">Повышение квалификации</string>
+</resources>

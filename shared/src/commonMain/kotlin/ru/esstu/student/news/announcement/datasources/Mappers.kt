@@ -1,17 +1,18 @@
 package ru.esstu.student.news.announcement.datasources
 
-import com.soywiz.klock.DateTime
+import kotlinx.datetime.Instant
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.api_common.UserPreview
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.inner_classes.FileAttachmentResponse
-
+import ru.esstu.domain.utill.workingDate.toInstant
+import ru.esstu.domain.utill.workingDate.toLocalDateTime
 import ru.esstu.student.news.announcement.db.announcement.entities.NewsAttachmentEntity
 import ru.esstu.student.news.announcement.db.announcement.entities.NewsEntity
 import ru.esstu.student.news.announcement.db.announcement.entities.UserEntity
 import ru.esstu.student.news.announcement.db.announcement.entities.relations.NewsWithAttachments
 import ru.esstu.student.news.entities.AttachmentNews
-import ru.esstu.student.news.entities.NewsNode
 import ru.esstu.student.news.entities.Creator
+import ru.esstu.student.news.entities.NewsNode
 
 
 fun UserPreview.toUser(): Creator? {
@@ -56,7 +57,7 @@ fun DataResponse.toAnnouncements(): List<NewsNode> {
             from = creator,
             attachments = attachments,
             message = message?.message.orEmpty(),
-            date = DateTime(conversation.date)
+            date = Instant.fromEpochMilliseconds(conversation.date).toLocalDateTime()
         )
     }
 }
@@ -73,7 +74,7 @@ fun NewsNode.toNewsWithAttachments() = NewsWithAttachments(
     news = NewsEntity(
         id = id,
         from = from.toUserEntity(),
-        title = title, message = message, date = date.unixMillisLong
+        title = title, message = message, date = date.toInstant().toEpochMilliseconds()
     ),
     attachments = attachments.map { it.toNewsAttachmentEntity(id) }
 )

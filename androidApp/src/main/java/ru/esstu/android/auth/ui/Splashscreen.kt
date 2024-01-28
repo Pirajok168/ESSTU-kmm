@@ -1,9 +1,18 @@
 package ru.esstu.android.auth.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -12,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.esstu.android.R
-
 import ru.esstu.android.auth.viewmodel.AuthEvents
 import ru.esstu.android.auth.viewmodel.AuthViewModel
 import ru.esstu.auth.entities.TokenOwners
@@ -23,11 +31,9 @@ fun Splashscreen(
     onNavToTeacher: () -> Unit = {},
     onNavToEntrant: () -> Unit = {},
     onNavToGuest: () -> Unit = {},
-    onFinishApp: () -> Unit = {},
     authViewModel: AuthViewModel = viewModel()
 ) {
     val uiState = authViewModel.authState
-    var isServiceUnavailable by remember { mutableStateOf(false) }
     LaunchedEffect(uiState) {
         if (!uiState.isLoading) {
             when (uiState.error) {
@@ -41,10 +47,7 @@ fun Splashscreen(
                             TokenOwners.Guest -> onNavToGuest()
                         }
                     }
-                else -> {
-                    if (uiState.error.code != 400 && uiState.error.code != 401)
-                        isServiceUnavailable = true
-                }
+                else -> {}
             }
         }
     }
@@ -86,16 +89,5 @@ fun Splashscreen(
             Spacer(modifier = Modifier.weight(2f))
         }
     }
-
-    if (isServiceUnavailable)
-        AlertDialog(onDismissRequest = { isServiceUnavailable = false; onFinishApp() },
-            title = { Text(text = "Ошибка подключения") },
-            text = { Text(text = "К сожалению сервисы сайта ВСГУТУ сейчас недоступны. Попробуйте позже.") },
-            buttons = {
-                TextButton(onClick = { isServiceUnavailable = false; onFinishApp() }) {
-                    Text(text = "ок")
-                }
-            }
-        )
 }
 

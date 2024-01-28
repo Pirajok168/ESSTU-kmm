@@ -12,11 +12,12 @@ import ru.esstu.student.messaging.messenger.appeals.datasources.db.AppealsCacheD
 import ru.esstu.student.messaging.messenger.appeals.datasources.db.AppealsCacheDatabase
 import ru.esstu.student.messaging.messenger.appeals.datasources.db.AppealsTimestampDao
 import ru.esstu.student.messaging.messenger.appeals.datasources.db.AppealsTimestampDatabase
-import ru.esstu.student.messaging.messenger.appeals.datasources.repo.*
-import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationUpdatesRepository
-import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsApiRepository
-import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsDbRepository
-import ru.esstu.student.messaging.messenger.conversations.di.ConversationModule
+import ru.esstu.student.messaging.messenger.appeals.datasources.repo.AppealsApiRepositoryImpl
+import ru.esstu.student.messaging.messenger.appeals.datasources.repo.AppealsDbRepositoryImpl
+import ru.esstu.student.messaging.messenger.appeals.datasources.repo.AppealsUpdatesRepositoryImpl
+import ru.esstu.student.messaging.messenger.appeals.datasources.repo.IAppealUpdatesRepository
+import ru.esstu.student.messaging.messenger.appeals.datasources.repo.IAppealsApiRepository
+import ru.esstu.student.messaging.messenger.appeals.datasources.repo.IAppealsDbRepository
 import kotlin.native.concurrent.ThreadLocal
 
 internal val appealsModule = DI.Module("AppealsModule"){
@@ -28,7 +29,6 @@ internal val appealsModule = DI.Module("AppealsModule"){
 
     bind<IAppealsApiRepository>() with singleton {
         AppealsApiRepositoryImpl(
-            instance(),
             instance()
         )
     }

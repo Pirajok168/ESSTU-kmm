@@ -28,7 +28,7 @@ import kotlin.native.concurrent.ThreadLocal
 internal val groupChatModuleNew = DI.Module("groupChatModuleNew"){
     bind<GroupChatApi>() with singleton {
         GroupChatApiImpl(
-            portalApi = instance(),
+            authorizedApi = instance(),
             storage().fileSystem
         )
     }
@@ -66,15 +66,15 @@ internal val groupChatModuleNew = DI.Module("groupChatModuleNew"){
 
     bind<IGroupChatRepository>() with singleton {
         GroupChatRepositoryImpl(
-            instance(),
-            instance(),
-            instance(),
-            instance(),
-            instance(),
-            instance(),
-            instance(),
-            instance(),
-            instance()
+            groupChatApi = instance(),
+            historyCacheDao = instance(),
+            cache = instance(),
+            headerDao = instance(),
+            userMsgDao = instance(),
+            erredMsgDao = instance(),
+            supportMsgDao = instance(),
+            appealMsgDao = instance(),
+            loginDataRepository = instance()
         )
     }
 
@@ -82,7 +82,6 @@ internal val groupChatModuleNew = DI.Module("groupChatModuleNew"){
         GroupChatUpdateRepositoryImpl(
             instance(),
             instance(),
-            instance()
         )
     }
 

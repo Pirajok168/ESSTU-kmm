@@ -6,22 +6,20 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
-
 import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
+import ru.esstu.android.R
+import ru.esstu.domain.handleError.ErrorHandler
+import ru.esstu.domain.ktor.domainApi
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.student.messaging.messenger.di.messengerModule
-
 import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsApiRepository
-import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsDbRepository
 import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsUpdatesRepository
 import ru.esstu.student.messaging.messenger.dialogs.di.dialogsModuleNew
+import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 
 
 data class DialogState(
@@ -30,7 +28,7 @@ data class DialogState(
     val isLoading: Boolean = false,
     val isEndReached: Boolean = false,
     val error: ResponseError? = null,
-    val title: String = "Мессенджер",
+    val title: Int = R.string.messanger,
 
     val cleanCacheOnRefresh: Boolean = true
 )
@@ -45,7 +43,7 @@ sealed class DialogEvents {
 
 class DialogsViewModel constructor(
     private val dialogUpdate: IDialogsUpdatesRepository = ESSTUSdk.dialogsModuleNew.update,
-
+    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler,
     dialogApi: IDialogsApiRepository = ESSTUSdk.dialogsModuleNew.repo,
     dialogDB: IDialogsDbRepository = ESSTUSdk.dialogsModuleNew.repoDialogs,
 
@@ -63,13 +61,16 @@ class DialogsViewModel constructor(
         },
         onLoad = {
             dialogState =
-                dialogState.copy(isLoading = it, title = if (it) "Обновление" else "Мессенджер")
+                dialogState.copy(isLoading = it, title = if (it) R.string.update else R.string.messanger)
         },
         onRequest = { key ->
             val cachedDialogs = dialogDB.getDialogs(dialogState.pageSize, key)
 
             if (cachedDialogs.isEmpty()) {
-                val loadedDialogs = dialogApi.getDialogs(dialogState.pageSize, key)
+                val loadedDialogs = errorHandler.makeRequest(request = {
+                    dialogApi.getDialogs(dialogState.pageSize, key)
+                })
+
 
                 if (loadedDialogs is Response.Success)
                     dialogDB.setDialogs(loadedDialogs.data)

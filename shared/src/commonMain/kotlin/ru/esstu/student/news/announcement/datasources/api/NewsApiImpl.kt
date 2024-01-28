@@ -1,29 +1,13 @@
 package ru.esstu.student.news.announcement.datasources.api
 
-import io.github.aakira.napier.Napier
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
 import ru.esstu.domain.datasources.esstu_rest_dtos.esstu.response.data_response.DataResponse
+import ru.esstu.domain.ktor.AuthorizedApi
+import ru.esstu.domain.utill.wrappers.Response
 
 class NewsApiImpl(
-    private val portalApi: HttpClient,
-): NewsApi {
-    override suspend fun getAnnouncements(authToken: String, offset: Int, limit: Int): DataResponse {
+    private val authorizedApi: AuthorizedApi
+) : NewsApi {
+    override suspend fun getAnnouncements(offset: Int, limit: Int): Response<DataResponse> =
+        authorizedApi.get(path = "lk/api/v2/messenger/getDialogs?type=ANNOUNCEMENT&offset=${offset}&limit=${limit}")
 
-
-        val response = portalApi.get() {
-            url {
-                path("lk/api/v2/messenger/getDialogs")
-                bearerAuth(authToken)
-                encodedParameters.append("type", "ANNOUNCEMENT")
-                encodedParameters.append("offset", offset.toString())
-                encodedParameters.append("limit", limit.toString())
-            }
-        }
-
-        return response.body()
-    }
 }

@@ -28,6 +28,7 @@ kotlin {
                 //Coroutines
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
                 //serialization
 
                 implementation ("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.2.2")
@@ -45,12 +46,6 @@ kotlin {
                 // key-value data https://github.com/russhwolf/multiplatform-settings
                 implementation("com.russhwolf:multiplatform-settings-no-arg:0.9")
 
-                //Time https://docs.korge.org/klock/
-                implementation ("com.soywiz.korlibs.klock:klock:3.0.1")
-
-                //SqlDelight
-                //implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")
-                //implementation("app.cash.sqldelight:sqlite-driver:2.0.0")
 
                 implementation("app.cash.sqldelight:primitive-adapters:2.0.0")
 

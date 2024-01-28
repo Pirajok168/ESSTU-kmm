@@ -1,8 +1,6 @@
 package ru.esstu.android.auth.navigation
 
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -10,7 +8,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import ru.esstu.android.auth.ui.*
+import ru.esstu.android.auth.ui.EntrantLoginChooseScreen
+import ru.esstu.android.auth.ui.EntrantLoginScreen
+import ru.esstu.android.auth.ui.EntrantPasswordScreen
+import ru.esstu.android.auth.ui.LoginChooseScreen
+import ru.esstu.android.auth.ui.LoginScreen
+import ru.esstu.android.auth.ui.PasswordScreen
+import ru.esstu.android.auth.ui.Splashscreen
 
 
 fun NavGraphBuilder.authNavGraph(
@@ -37,18 +41,10 @@ fun NavGraphBuilder.authNavGraph(
             val context = LocalContext.current
 
             Splashscreen(
-                /*onNavToAuth = {
-                    navController.navigate(AuthRoutes.LoginChooseScreen.navigate()) {
-                        popUpTo(AuthRoutes.Splashscreen.popTo()) {
-                            inclusive = true
-                        }
-                    }
-                },*/
                 onNavToGuest = { popToStartDest(onNavToGuest) },
                 onNavToEntrant = { popToStartDest(onNavToEntrant) },
                 onNavToStudent = { popToStartDest(onNavToStudent) },
                 onNavToTeacher = { popToStartDest(onNavToTeacher) },
-                onFinishApp = { (context as? Activity)?.finish() }
             )
         }
 

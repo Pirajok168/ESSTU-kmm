@@ -1,6 +1,5 @@
 package ru.esstu.android.authorized.messaging.messanger.appeals.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,7 +11,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.esstu.ESSTUSdk
-import ru.esstu.android.authorized.messaging.messanger.supports.viewmodel.SupportEvents
+import ru.esstu.domain.handleError.ErrorHandler
+import ru.esstu.domain.ktor.domainApi
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
@@ -41,7 +41,8 @@ sealed class AppealEvents {
 class AppealsViewModel constructor(
     appealApi: IAppealsApiRepository = ESSTUSdk.appealsModule.repo,
     appealDb: IAppealsDbRepository = ESSTUSdk.appealsModule.db,
-    private val updates: IAppealUpdatesRepository = ESSTUSdk.appealsModule.update
+    private val updates: IAppealUpdatesRepository = ESSTUSdk.appealsModule.update,
+    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
 ) : ViewModel() {
     var appealsState by mutableStateOf(AppealState())
         private set
@@ -54,8 +55,11 @@ class AppealsViewModel constructor(
             val cachedConversations = appealDb.getAppeals(appealsState.pageSize, key)
 
             if (cachedConversations.isEmpty()) {
-                val loadedConversations = appealApi.getAppeals(appealsState.pageSize, key)
-
+                val loadedConversations = errorHandler.makeRequest(
+                    request = {
+                        appealApi.getAppeals(appealsState.pageSize, key)
+                    }
+                )
                 if (loadedConversations is Response.Success)
                     appealDb.setAppeals(loadedConversations.data)
 

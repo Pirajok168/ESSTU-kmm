@@ -1,6 +1,5 @@
 package ru.esstu.android.authorized.messaging.messanger.dialogs.ui
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -19,7 +18,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.esstu.android.authorized.messaging.messanger.conversations.viewmodel.ConversationEvents
 import ru.esstu.android.authorized.messaging.messanger.dialogs.ui.components.MessengerCard
 import ru.esstu.android.authorized.messaging.messanger.dialogs.viewmodel.DialogEvents
 import ru.esstu.android.authorized.messaging.messanger.dialogs.viewmodel.DialogsViewModel
@@ -31,7 +29,7 @@ import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 fun DialogsScreen(
     onNavToDialogChat: (dialogId: String) -> Unit = { },
     dialogsViewModel: DialogsViewModel = viewModel(),
-    updateTitle: (String) -> Unit,
+    updateTitle: (Int) -> Unit,
     onEditingDialogs: (PreviewDialog) -> Unit,
     isEditing: Boolean,
     selectedList: List<PreviewDialog>

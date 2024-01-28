@@ -4,19 +4,45 @@ import android.app.Activity
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import ru.esstu.android.R
 import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.AddNewAttachment
 import ru.esstu.android.authorized.messaging.dialog_chat.ui.components.NewAttachment
 import ru.esstu.android.authorized.messaging.dialog_chat.util.cacheToFile
@@ -76,7 +102,7 @@ fun NewAppealScreen(
                     }
                 },
                 title = {
-                    Text(text = "Обращение в ВСГУТУ")
+                    Text(text = stringResource(id = R.string.appeal_esstu))
                 }
             )
         },
@@ -93,7 +119,7 @@ fun NewAppealScreen(
                     viewModel.onEvent(NewAppealEvents.CreateNewAppeal)
                 }
             ) {
-                Text(text = "Создать")
+                Text(text = stringResource(id = R.string.create))
             }
         }
     ) { padding ->
@@ -108,7 +134,7 @@ fun NewAppealScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Row(modifier = Modifier.padding(horizontal = 24.dp)) {
-                Text(text = "Отделение", style = MaterialTheme.typography.titleLarge)
+                Text(text = stringResource(id = R.string.esstu_departament), style = MaterialTheme.typography.titleLarge)
             }
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -125,7 +151,7 @@ fun NewAppealScreen(
                 Box(modifier = Modifier.padding(16.dp)){
                     if (uiState.selectedDepartment == null)
                         CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant) {
-                            Text(text = "Отдел не выбран", style = MaterialTheme.typography.bodyLarge)
+                            Text(text = stringResource(id = R.string.esstu_exist_departament), style = MaterialTheme.typography.bodyLarge)
                         }
                     else
                         Text(text = uiState.selectedDepartment.name, style = MaterialTheme.typography.bodyLarge)
@@ -137,7 +163,7 @@ fun NewAppealScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Row(modifier = Modifier.padding(horizontal = 24.dp)) {
-                Text(text = "Тема", style = MaterialTheme.typography.titleLarge)
+                Text(text = stringResource(id = R.string.theme), style = MaterialTheme.typography.titleLarge)
             }
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -157,7 +183,11 @@ fun NewAppealScreen(
                 Box(modifier = Modifier.padding(16.dp)) {
                     if (uiState.selectedTheme == null)
                         CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant) {
-                            Text(text = if(uiState.isThemesLoading && uiState.themes.isEmpty()) "Загрузка" else "Тема не выбрана", style = MaterialTheme.typography.bodyLarge)
+                            Text(text = if(uiState.isThemesLoading && uiState.themes.isEmpty()) stringResource(
+                                id = R.string.update
+                            ) else stringResource(
+                                id = R.string.esstu_exist_theme
+                            ), style = MaterialTheme.typography.bodyLarge)
                         }
                     else
                         Text(text = uiState.selectedTheme.name, style = MaterialTheme.typography.bodyLarge)
@@ -167,13 +197,13 @@ fun NewAppealScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Row(modifier = Modifier.padding(horizontal = 24.dp)) {
-                Text(text = "Подробности", style = MaterialTheme.typography.titleLarge)
+                Text(text = stringResource(id = R.string.details), style = MaterialTheme.typography.titleLarge)
             }
             Spacer(modifier = Modifier.height(8.dp))
 
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp)
+                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp)
             ) {
                 items(uiState.attachments, key = { it.uri }) { attachment ->
                     NewAttachment(
@@ -186,7 +216,11 @@ fun NewAppealScreen(
                         }
                     )
                 }
-
+                if (uiState.attachments.isNotEmpty()){
+                    item {
+                        Spacer(modifier = Modifier.size(8.dp))
+                    }
+                }
                 item(key = "add") {
                     Box(modifier = Modifier.animateItemPlacement()) {
                         AddNewAttachment {
@@ -213,7 +247,7 @@ fun NewAppealScreen(
                 value = uiState.message,
                 onValueChange = { msg -> viewModel.onEvent(NewAppealEvents.PassMessage(msg)) },
                 placeholder = {
-                    Text(text = "Описание")
+                    Text(text = stringResource(id = R.string.message_text))
                 }
             )
 

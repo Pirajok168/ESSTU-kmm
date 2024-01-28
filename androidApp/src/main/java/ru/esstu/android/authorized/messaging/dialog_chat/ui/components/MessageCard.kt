@@ -2,9 +2,20 @@ package ru.esstu.android.authorized.messaging.dialog_chat.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,21 +23,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
-import com.soywiz.klock.DateFormat
-import com.soywiz.klock.DateTime
-import com.soywiz.klock.format
+import kotlinx.datetime.LocalDateTime
 import ru.esstu.android.R
-import ru.esstu.android.domain.ui.theme.CompPreviewTheme
+import ru.esstu.domain.utill.workingDate.format
 import ru.esstu.domain.utill.workingDate.toFormatString
-import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.DeliveryStatus
+import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.ReplyMessage
 
-
-private val formatter: DateFormat = DateFormat("HH:mm")
 
 @Composable
 fun NewMessageCard(
@@ -60,7 +66,7 @@ fun NewMessageCard(
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
                         .padding(top = 8.dp),
-                    time = DateTime(reply.date),
+                    time = reply.dateTim,
                     title = reply.from.fio,
                     subtitle = reply.message.ifBlank { "[Вложение]" })
 
@@ -237,7 +243,7 @@ fun MessageCard(
     attachments: List<MessageAttachment>,
     reply: ReplyMessage? = null,
     sentStatus: DeliveryStatus,
-    date: Long,
+    date: LocalDateTime,
 
     isShowStatus: Boolean = true,
     onImageClick: (selectedId: Int, images: List<MessageAttachment>) -> Unit = { _, _ -> },
@@ -261,7 +267,7 @@ fun MessageCard(
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
                         .padding(top = 8.dp),
-                    time = DateTime(reply.date),
+                    time = reply.dateTim,
                     title = reply.from.fio,
                     subtitle = reply.message.ifBlank { "[Вложение]" })
 
@@ -337,7 +343,7 @@ fun MessageCard(
 
                             Text(
                                 modifier = Modifier.padding(4.dp),
-                                text = formatter.format(date),
+                                text = date.format("HH:mm"),
                                 style = MaterialTheme.typography.titleSmall,
                                 color = MaterialTheme.colorScheme.background
                             )
@@ -412,7 +418,7 @@ fun MessageCard(
                 }
                 Text(
                     modifier = Modifier.padding(bottom = 8.dp, end = 8.dp),
-                    text = date.toFormatString("HH:mm"),
+                    text = date.format("HH:mm"),
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.outline
                 )

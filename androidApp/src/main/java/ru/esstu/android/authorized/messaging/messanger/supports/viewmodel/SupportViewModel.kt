@@ -12,7 +12,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.esstu.ESSTUSdk
-import ru.esstu.android.authorized.messaging.messanger.dialogs.viewmodel.DialogEvents
+import ru.esstu.domain.handleError.ErrorHandler
+import ru.esstu.domain.ktor.domainApi
 import ru.esstu.domain.utill.paginator.Paginator
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
@@ -41,7 +42,8 @@ sealed class SupportEvents {
 class SupportViewModel  constructor(
     supportApi: ISupportsApiRepository = ESSTUSdk.supportsModule.apiRepo,
     supportDb: ISupportsDbRepository = ESSTUSdk.supportsModule.dbRepo,
-    private val updates: ISupportsUpdatesRepository = ESSTUSdk.supportsModule.update
+    private val updates: ISupportsUpdatesRepository = ESSTUSdk.supportsModule.update,
+    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler,
 ) : ViewModel() {
     var supportState by mutableStateOf(SupportState())
         private set
@@ -54,7 +56,10 @@ class SupportViewModel  constructor(
             val cachedConversations = supportDb.getSupports(supportState.pageSize, key)
             Log.e("Support", cachedConversations.toString())
             if (cachedConversations.isEmpty()) {
-                val loadedConversations = supportApi.getSupports(supportState.pageSize, key)
+                val loadedConversations = errorHandler.makeRequest(request = {
+                    supportApi.getSupports(supportState.pageSize, key)
+                })
+
 
                 if (loadedConversations is Response.Success)
                     supportDb.setSupports(loadedConversations.data)

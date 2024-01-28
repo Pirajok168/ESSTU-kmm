@@ -21,7 +21,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = "1.5.4"
     }
     packaging {
         resources {
@@ -42,10 +42,10 @@ android {
 
 dependencies {
     implementation(project(":shared"))
-    implementation("androidx.compose.ui:ui:1.5.3")
-    implementation("androidx.compose.ui:ui-tooling:1.5.3")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.5.3")
-    implementation("androidx.compose.foundation:foundation:1.5.3")
+    implementation("androidx.compose.ui:ui:1.5.4")
+    implementation("androidx.compose.ui:ui-tooling:1.5.4")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.5.4")
+    implementation("androidx.compose.foundation:foundation:1.5.4")
     implementation("androidx.compose.material3:material3:1.1.2")
     implementation("androidx.activity:activity-compose:1.8.0")
     implementation ("androidx.appcompat:appcompat:1.6.1")
@@ -53,6 +53,7 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation ("androidx.core:core:1.12.0")
 
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
     //Initializer
     implementation ("androidx.startup:startup-runtime:1.1.1")
 
@@ -77,7 +78,7 @@ dependencies {
     implementation ("com.google.android.material:material:1.10.0")
 
     //Time https://docs.korge.org/klock/
-    implementation ("com.soywiz.korlibs.klock:klock-android:3.0.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
 
     //landscapist glide
     implementation ("com.github.skydoves:landscapist-glide:1.5.2")

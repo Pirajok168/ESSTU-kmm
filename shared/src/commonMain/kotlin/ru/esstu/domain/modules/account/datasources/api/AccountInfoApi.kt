@@ -1,13 +1,13 @@
 package ru.esstu.domain.modules.account.datasources.api
 
 import ru.esstu.domain.modules.account.datasources.api.response.UserResponse
+import ru.esstu.domain.utill.wrappers.Response
 
 interface AccountInfoApi {
 
 
     suspend fun getUser(
-        authToken: String,
-         userId: String,
-    ): UserResponse
+        userId: String,
+    ): Response<UserResponse>
 
 }

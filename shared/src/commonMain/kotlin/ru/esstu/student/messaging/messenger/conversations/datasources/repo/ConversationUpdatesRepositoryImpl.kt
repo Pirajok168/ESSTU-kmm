@@ -1,13 +1,13 @@
 package ru.esstu.student.messaging.messenger.conversations.datasources.repo
 
-import com.soywiz.klock.DateTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.datetime.Clock
 import ru.esstu.auth.datasources.repo.IAuthRepository
-import ru.esstu.auth.entities.TokenOwners
 import ru.esstu.domain.api.UpdatesApi
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.student.messaging.messenger.conversations.datasources.db.ConversationsTimestampDao
@@ -16,7 +16,6 @@ import ru.esstu.student.messaging.messenger.conversations.datasources.toTimeStam
 import ru.esstu.student.messaging.messenger.conversations.datasources.toTimeStampEntity
 import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
 import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.KotlinNativeFlowWrapper
-import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
 import kotlin.coroutines.CoroutineContext
 
 
@@ -29,7 +28,7 @@ class ConversationUpdatesRepositoryImpl(
 
     override  fun installObserving(): Flow<Response<List<ConversationPreview>>>  = flow {
         while (true){
-            val callTimestamp = DateTime.now().unixMillisLong
+            val callTimestamp =  Clock.System.now().toEpochMilliseconds()
             auth.provideToken { token ->
                 val appUserId = token.owner.id ?: throw Exception("unsupported User Type")
 

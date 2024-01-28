@@ -1,11 +1,25 @@
 package ru.esstu.android.authorized.messaging.new_message.new_appeal.ui
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -89,7 +103,7 @@ fun NewAppealDepartmentSelectorScreen(
                         CircularProgressIndicator()
                     else if (uiState.depLoadingError != null)
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "Возникда неизвестная ошибка")
+                            Text(text = "Возникла неизвестная ошибка")
                             Spacer(modifier = Modifier.height(8.dp))
                             Button(onClick = { viewModel.onEvent(NewAppealEvents.LoadThemes) }) {
                                 Text(text = "Перезагрузить")

@@ -1,5 +1,7 @@
 package ru.esstu.android.authorized.news.component
 
+import androidx.annotation.StringRes
+
 data class FilterNews(
-    val title: String
+    @StringRes val titleId: Int
 )
