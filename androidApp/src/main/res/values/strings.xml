@@ -64,6 +64,7 @@
     <string name="speciality">специальность</string>
     <string name="qualification">квалификация</string>
     <string name="degrees">Ученая степень</string>
+    <string name="add_education">Повышение квалификации</string>
 
 
 </resources>

@@ -11,7 +11,9 @@ sealed class ProfileScreens<T>(
 
     data object Profile: ProfileScreens<Unit>()
 
-    data object Portfolio: ProfileScreens<Unit>()
+    data object StudentPortfolio: ProfileScreens<Unit>()
+
+    data object EmployeePortfolio: ProfileScreens<Unit>()
 
     data object Attestation: ProfileScreens<Unit>()
 }

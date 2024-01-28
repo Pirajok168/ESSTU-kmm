@@ -10,8 +10,8 @@ import kotlinx.coroutines.launch
 import ru.esstu.ESSTUSdk
 import ru.esstu.android.authorized.profile.state.ProfileScreenState
 import ru.esstu.domain.utill.wrappers.FlowResponse
-import ru.esstu.student.profile.student.main_profile.domain.di.profileDIModule
-import ru.esstu.student.profile.student.main_profile.domain.repository.IProfileRepository
+import ru.esstu.student.profile.main_profile.domain.di.profileDIModule
+import ru.esstu.student.profile.main_profile.domain.repository.IProfileRepository
 
 
 class ProfileScreenViewModel(

@@ -9,9 +9,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import ru.esstu.android.authorized.profile.portfolio.ui.AttestationScreen
-import ru.esstu.android.authorized.profile.portfolio.ui.PortfolioScreen
-import ru.esstu.android.authorized.profile.portfolio.viewmodel.PortfolioViewModel
+import ru.esstu.android.authorized.profile.employee.portfolio.ui.EmployeePortfolioScreen
+import ru.esstu.android.authorized.profile.employee.portfolio.viewmodel.EmployeePortfolioViewModel
+import ru.esstu.android.authorized.profile.student.portfolio.ui.AttestationScreen
+import ru.esstu.android.authorized.profile.student.portfolio.ui.StudentPortfolioScreen
+import ru.esstu.android.authorized.profile.student.portfolio.viewmodel.StudentPortfolioViewModel
 import ru.esstu.android.authorized.profile.ui.ProfileScreen
 
 fun NavGraphBuilder.profileNavGraph(
@@ -26,17 +28,21 @@ fun NavGraphBuilder.profileNavGraph(
         composable(
             route = ProfileScreens.Profile.passRoute(),
         ) {
-            val portfolioViewModel: PortfolioViewModel = viewModel()
+            val studentPortfolioViewModel: StudentPortfolioViewModel = viewModel()
+            val employeePortfolioViewModel: EmployeePortfolioViewModel = viewModel()
             ProfileScreen(paddingValues = padding, onNavigateAttestation = {
                 navController.navigate(ProfileScreens.Attestation.navigate())
-            } ){
-                portfolioViewModel.preDisplayFile(it)
-                navController.navigate(ProfileScreens.Portfolio.navigate())
-            }
+            }, onNavigateStudentPortfolio = {
+                studentPortfolioViewModel.preDisplayFile(it)
+                navController.navigate(ProfileScreens.StudentPortfolio.navigate())
+            }, onNavigateEmployeePortfolio = {
+                employeePortfolioViewModel.preDisplayFile(it)
+                navController.navigate(ProfileScreens.EmployeePortfolio.navigate())
+            })
         }
 
         composable(
-            route  = ProfileScreens.Portfolio.passRoute(),
+            route  = ProfileScreens.StudentPortfolio.passRoute(),
             enterTransition = {
                 slideInHorizontally(
                     initialOffsetX = {
@@ -53,7 +59,33 @@ fun NavGraphBuilder.profileNavGraph(
             val parent = remember(it) {
                 navController.getBackStackEntry(ProfileScreens.Profile.popTo())
             }
-            PortfolioScreen(
+            StudentPortfolioScreen(
+                paddingValues = padding,
+                portfolioViewModel = viewModel(parent),
+                onBackPressed = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(
+            route  = ProfileScreens.EmployeePortfolio.passRoute(),
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = {
+                        it / 2
+                    }
+                )
+            },
+            exitTransition = {
+                slideOutHorizontally {
+                    it / 2
+                }
+            }
+        ){
+            val parent = remember(it) {
+                navController.getBackStackEntry(ProfileScreens.Profile.popTo())
+            }
+            EmployeePortfolioScreen(
                 paddingValues = padding,
                 portfolioViewModel = viewModel(parent),
                 onBackPressed = {
