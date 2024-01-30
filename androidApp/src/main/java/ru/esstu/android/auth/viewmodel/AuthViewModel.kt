@@ -1,10 +1,12 @@
 package ru.esstu.android.auth.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
 
 import ru.esstu.ESSTUSdk
@@ -13,8 +15,13 @@ import ru.esstu.auth.datasources.repo.IAuthRepository
 import ru.esstu.auth.entities.Token
 import ru.esstu.domain.handleError.ErrorHandler
 import ru.esstu.domain.ktor.domainApi
+import ru.esstu.domain.modules.firebase.domain.di.firebaseModule
+import ru.esstu.domain.modules.firebase.domain.repo.IFirebaseRepository
 import ru.esstu.domain.utill.wrappers.Response
 import ru.esstu.domain.utill.wrappers.ResponseError
+import ru.esstu.domain.utill.wrappers.doOnSuccess
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 data class AuthState(
     val token: Token? = null,
@@ -36,7 +43,6 @@ sealed class AuthEvents {
 class AuthViewModel(
     private val repo: IAuthRepository = ESSTUSdk.repoAuth.authModule,
     private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
-    //private val firebaseRepo: IFirebaseRepository
 ) : ViewModel() {
     var authState by mutableStateOf(AuthState())
         private set
@@ -93,10 +99,6 @@ class AuthViewModel(
 
             is Response.Success -> {
                 authState.copy(token = result.data, isLoading = false)
-                /*when(val firebaseResult = firebaseRepo.registerFirebaseToken()){
-                    is Response.Error -> authState.copy(token = null, isLoading = false, error = firebaseResult.error)
-                    is Response.Success -> authState.copy(token = result.data, isLoading = false)
-                }*/
             }
         }
     }
@@ -113,10 +115,6 @@ class AuthViewModel(
 
             is Response.Success -> {
                 authState.copy(token = result.data, isLoading = false)
-                /*when(val firebaseResult = firebaseRepo.registerFirebaseToken()){
-                    is Response.Error -> authState.copy(token = null, isLoading = false, error = firebaseResult.error)
-                    is Response.Success -> authState.copy(token = result.data, isLoading = false)
-                }*/
             }
         }
     }

@@ -64,4 +64,7 @@
     <string name="qualification">资历</string>
     <string name="degrees">学术学位</string>
     <string name="add_education">专业发展</string>
+    <string name="notifications_disabled_title">Перейти в настройки</string>
+    <string name="notifications_disabled_text">Разрешить отображение уведомлений можно в настройках</string>
+    <string name="go_to_settings">В настройки</string>
 </resources>

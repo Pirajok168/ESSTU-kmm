@@ -65,6 +65,9 @@
     <string name="qualification">квалификация</string>
     <string name="degrees">Ученая степень</string>
     <string name="add_education">Повышение квалификации</string>
+    <string name="notifications_disabled_title">Перейти в настройки</string>
+    <string name="notifications_disabled_text">Разрешить отображение уведомлений можно в настройках</string>
+    <string name="go_to_settings">В настройки</string>
 
 
 </resources>

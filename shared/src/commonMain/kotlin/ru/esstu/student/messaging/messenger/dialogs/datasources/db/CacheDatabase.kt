@@ -98,10 +98,10 @@ class CacheDatabase(
             }
         }else{
             setLastMessage(lastMessage)
-            setDialog(appUserId, newDialog!!)
+            newDialog?.let {
+                setDialog(appUserId, newDialog)
+            }
         }
-
-
     }
 
     override suspend fun deleteDialog(idDialog: Long) {

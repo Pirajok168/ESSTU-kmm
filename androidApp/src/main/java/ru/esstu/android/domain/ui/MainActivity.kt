@@ -1,11 +1,15 @@
 package ru.esstu.android.domain.ui
 
+import android.Manifest
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -14,16 +18,32 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.rememberPermissionState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import ru.esstu.ContextApplication
 import ru.esstu.android.domain.navigation.SetupNavGraph
 import ru.esstu.android.domain.ui.theme.AppEsstuTheme
+import ru.esstu.android.notification.DefaultNotificationManager
 import java.util.Locale
+import androidx.compose.material3.AlertDialog
+import ru.esstu.android.R
+
 
 val Context.activity: AppCompatActivity
     get() = when (this) {
@@ -48,7 +68,6 @@ class  MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         //observe activity lifecycle
         //lifecycle.addObserver(uiStateObserver)
         ContextApplication.init(applicationContext)
@@ -64,9 +83,71 @@ class  MainActivity : AppCompatActivity() {
                 ) {
                     SetupNavGraph(navController)
                 }
+                CheckNotificationsPermission(this)
+            }
+        }
+
+    }
+
+    @OptIn(ExperimentalPermissionsApi::class)
+    @Composable
+    private fun CheckNotificationsPermission(context: Context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            val notificationManagerCompat = NotificationManagerCompat.from(context)
+            val areNotificationsEnabled = notificationManagerCompat.areNotificationsEnabled()
+            if (!areNotificationsEnabled) {
+                ShowNotificationSettingsDialog()
+            }
+            return
+        }
+
+        val notificationPermissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+        if (notificationPermissionState.status is PermissionStatus.Denied) {
+            LaunchedEffect(Unit) {
+                launch {
+                    notificationPermissionState.launchPermissionRequest()
+                }
             }
         }
     }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    private fun ShowNotificationSettingsDialog() {
+        var showGoToSettingsDialog by remember { mutableStateOf(true) }
+        if (showGoToSettingsDialog) {
+            AlertDialog(
+                onDismissRequest = {
+                    showGoToSettingsDialog = false
+                },
+                title = { Text(text = stringResource(R.string.notifications_disabled_title)) },
+                text = { Text(text = stringResource(R.string.notifications_disabled_text)) },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            intent.data = Uri.fromParts("package", packageName, null)
+                            startActivity(intent)
+                            showGoToSettingsDialog = false
+                        }
+                    ) {
+                        Text(stringResource(R.string.go_to_settings))
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            showGoToSettingsDialog = false
+                        }
+                    ) {
+                        Text("Отмена")
+                    }
+                }
+            )
+        }
+    }
+
 
     override fun attachBaseContext(newBase: Context?) {
 
@@ -115,5 +196,6 @@ class MyContextWrapper {
             config.setLocale(locale)
         }
     }
+
 }
 

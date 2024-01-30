@@ -5,6 +5,8 @@ plugins {
     id ("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     kotlin("android")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -88,6 +90,9 @@ dependencies {
 
     //Hilt
     implementation ("com.google.dagger:hilt-android:2.48.1")
+    implementation("com.google.firebase:firebase-messaging:23.4.0")
+    implementation("com.google.firebase:firebase-crashlytics:18.6.1")
+    implementation("com.google.firebase:firebase-analytics:21.5.0")
     kapt ("com.google.dagger:hilt-compiler:2.48.1")
     implementation ("androidx.hilt:hilt-work:1.0.0")
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")

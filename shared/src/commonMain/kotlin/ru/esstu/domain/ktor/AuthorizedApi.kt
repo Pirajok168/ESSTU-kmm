@@ -12,6 +12,8 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.utils.EmptyContent
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 import ru.esstu.auth.datasources.api.student_teacher.AuthApi
@@ -52,6 +54,7 @@ class AuthorizedApi(
         post {
             url(host = host, path = path,) {
                 setBody(body)
+                contentType(ContentType.Application.Json)
                 bearerAuth(loginDataRepository.getAccessToken()?.accessToken ?: return@url)
             }
             block()
