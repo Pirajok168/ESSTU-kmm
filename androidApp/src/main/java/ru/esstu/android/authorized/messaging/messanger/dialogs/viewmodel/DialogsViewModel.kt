@@ -5,21 +5,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
+import kotlinx.coroutines.withContext
+import org.kodein.di.DI
+import org.kodein.di.instance
 import ru.esstu.android.R
-import ru.esstu.domain.handleError.ErrorHandler
-import ru.esstu.domain.ktor.domainApi
+import ru.esstu.data.web.api.model.Response
+import ru.esstu.data.web.api.model.ResponseError
+import ru.esstu.data.web.handleError.ErrorHandler
 import ru.esstu.domain.utill.paginator.Paginator
-import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsApiRepository
-import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsDbRepository
-import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsUpdatesRepository
-import ru.esstu.student.messaging.messenger.dialogs.di.dialogsModuleNew
-import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
+import ru.esstu.features.messanger.dialogs.data.repository.IDialogsUpdatesRepository
+import ru.esstu.features.messanger.dialogs.di.dialogsDi
+import ru.esstu.features.messanger.dialogs.domain.interactor.DialogsInteractor
+import ru.esstu.features.messanger.dialogs.domain.model.PreviewDialog
 
 
 data class DialogState(
@@ -41,13 +42,15 @@ sealed class DialogEvents {
 }
 
 
-class DialogsViewModel constructor(
-    private val dialogUpdate: IDialogsUpdatesRepository = ESSTUSdk.dialogsModuleNew.update,
-    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler,
-    dialogApi: IDialogsApiRepository = ESSTUSdk.dialogsModuleNew.repo,
-    dialogDB: IDialogsDbRepository = ESSTUSdk.dialogsModuleNew.repoDialogs,
+class DialogsViewModel : ViewModel() {
 
-    ) : ViewModel() {
+    private val di: DI by lazy { dialogsDi() }
+
+    private val dialogApi: DialogsInteractor by di.instance<DialogsInteractor>()
+
+    private val dialogUpdate: IDialogsUpdatesRepository by di.instance<IDialogsUpdatesRepository>()
+    private val errorHandler: ErrorHandler by di.instance<ErrorHandler>()
+
 
     var dialogState by mutableStateOf(DialogState())
         private set
@@ -57,27 +60,28 @@ class DialogsViewModel constructor(
         initialKey = 0,
         onReset = {
             if (dialogState.cleanCacheOnRefresh)
-                dialogDB.clear()
+                dialogApi.clearDialogs()
         },
         onLoad = {
             dialogState =
-                dialogState.copy(isLoading = it, title = if (it) R.string.update else R.string.messanger)
+                dialogState.copy(
+                    isLoading = it,
+                    title = if (it) R.string.update else R.string.messanger
+                )
         },
         onRequest = { key ->
-            val cachedDialogs = dialogDB.getDialogs(dialogState.pageSize, key)
-
-            if (cachedDialogs.isEmpty()) {
-                val loadedDialogs = errorHandler.makeRequest(request = {
-                    dialogApi.getDialogs(dialogState.pageSize, key)
-                })
-
-
-                if (loadedDialogs is Response.Success)
-                    dialogDB.setDialogs(loadedDialogs.data)
-
-                loadedDialogs
-            } else
-                Response.Success(cachedDialogs)
+            errorHandler.makeRequest(request = {
+                dialogApi.getDialogs(dialogState.pageSize, key)
+            })
+        },
+        onLocalData = { key ->
+            val local = dialogApi.getLocalDialogs(dialogState.pageSize, key)
+            withContext(Dispatchers.Main) {
+                if (local.isNotEmpty()) {
+                    dialogState =
+                        dialogState.copy(items = local)
+                }
+            }
         },
         getNextKey = { _, _ -> dialogState.items.size },
         onError = { dialogState = dialogState.copy(error = it) },
@@ -98,7 +102,6 @@ class DialogsViewModel constructor(
 
     private var job: Job? = null
     private fun installObserving() {
-
         if (job?.isActive != true) {
             job = viewModelScope.launch {
                 dialogUpdate
@@ -109,8 +112,6 @@ class DialogsViewModel constructor(
                             paginator.refresh()
                         }
                     }
-
-
             }
         }
     }
@@ -128,6 +129,7 @@ class DialogsViewModel constructor(
                 dialogState = dialogState.copy(cleanCacheOnRefresh = false)
                 paginator.refresh()
             }
+
             DialogEvents.CancelObserving -> cancelObserving()
         }
     }

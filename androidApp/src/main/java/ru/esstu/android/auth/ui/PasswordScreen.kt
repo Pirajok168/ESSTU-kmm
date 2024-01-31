@@ -1,14 +1,18 @@
 package ru.esstu.android.auth.ui
 
 import android.util.Log
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.lifecycle.viewmodel.compose.viewModel
-
 import ru.esstu.android.auth.ui.components.AuthScreenPattern
 import ru.esstu.android.auth.viewmodel.AuthEvents
 import ru.esstu.android.auth.viewmodel.AuthViewModel
-import ru.esstu.auth.entities.TokenOwners
+import ru.esstu.auth.domain.model.TokenOwners
 
 @Composable
 fun PasswordScreen(

@@ -8,26 +8,30 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.esstu.ESSTUSdk
+import org.kodein.di.DI
+import org.kodein.di.instance
 import ru.esstu.android.authorized.profile.student.portfolio.state.AttestationScreenState
-import ru.esstu.domain.handleError.ErrorHandler
-import ru.esstu.domain.ktor.domainApi
-import ru.esstu.domain.utill.wrappers.doOnError
-import ru.esstu.domain.utill.wrappers.doOnSuccess
-import ru.esstu.student.profile.porfolio.domain.di.portfolioModule
-import ru.esstu.student.profile.porfolio.domain.repository.IPortfolioRepository
+import ru.esstu.data.web.api.model.doOnError
+import ru.esstu.data.web.api.model.doOnSuccess
+import ru.esstu.data.web.handleError.ErrorHandler
+import ru.esstu.features.profile.porfolio.di.portfolioDi
+import ru.esstu.features.profile.porfolio.domain.repository.IPortfolioRepository
 
-class AttestationViewModel: ViewModel() {
 
-    private val portfolioRepository: IPortfolioRepository = ESSTUSdk.portfolioModule.repo
-    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
+class AttestationViewModel : ViewModel() {
+
+    private val di: DI by lazy { portfolioDi() }
+
+    private val portfolioRepository: IPortfolioRepository by di.instance<IPortfolioRepository>()
+    private val errorHandler: ErrorHandler by di.instance<ErrorHandler>()
+
     var state by mutableStateOf(AttestationScreenState())
         private set
 
     init {
         viewModelScope.launch {
             errorHandler.makeRequest(
-                request =  {
+                request = {
                     portfolioRepository.getAttestation()
                 }
             )

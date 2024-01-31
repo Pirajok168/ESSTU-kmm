@@ -1,0 +1,33 @@
+import kotlin.Boolean;
+import kotlin.Int;
+import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity;
+import ru.esstu.student.messaging.messenger.datasources.entities.PreviewLastMessage;
+
+CREATE TABLE Support(
+      idConversation INTEGER PRIMARY KEY NOT NULL,
+      title TEXT NOT NULL,
+      author TEXT AS UserEntity,
+      lastMessageId INTEGER,
+      notifyAboutIt INTEGER AS Boolean NOT NULL,
+      unread INTEGER AS Int DEFAULT 0 NOT NULL,
+      FOREIGN KEY (lastMessageId) REFERENCES PreviewLastMessage(messageId) ON DELETE CASCADE
+);
+
+
+setLastMessage:
+    INSERT OR REPLACE INTO PreviewLastMessage(messageId, author, date, message)
+       VALUES (?,?,?,?);
+
+setSupport:
+    INSERT OR REPLACE INTO Support(idConversation, title,  lastMessageId, author, unread, notifyAboutIt)
+        VALUES (?,?,?,?,?,?);
+
+
+getSupport:
+    SELECT d.*, m.* FROM Support d
+    LEFT JOIN PreviewLastMessage m ON d.lastMessageId == m.messageId
+    ORDER BY m.date DESC LIMIT :pageSize OFFSET :pageOffset;
+
+
+clear:
+    DELETE FROM Support;

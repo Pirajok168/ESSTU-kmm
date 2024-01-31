@@ -1,6 +1,6 @@
 package ru.esstu.android.authorized.profile.student.portfolio.state
 
-import ru.esstu.student.profile.porfolio.domain.model.Attestation
+import ru.esstu.features.profile.porfolio.domain.model.Attestation
 
 data class AttestationScreenState(
     val loading: Boolean = true,

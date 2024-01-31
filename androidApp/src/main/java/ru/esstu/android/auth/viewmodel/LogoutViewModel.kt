@@ -5,13 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-
 import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
-import ru.esstu.auth.datasources.di.repoAuth
-import ru.esstu.auth.datasources.local.ILoginDataRepository
-import ru.esstu.auth.datasources.repo.IAuthRepository
-
+import org.kodein.di.DI
+import org.kodein.di.instance
+import ru.esstu.auth.di.authorizationDi
+import ru.esstu.auth.domain.repo.IAuthRepository
+import ru.esstu.data.token.repository.ILoginDataRepository
 
 
 data class LogoutState(
@@ -20,10 +19,10 @@ data class LogoutState(
 )
 
 
-class LogoutViewModel constructor(
-    private val repo: IAuthRepository = ESSTUSdk.repoAuth.authModule,
-    private val cache: ILoginDataRepository = ESSTUSdk.repoAuth.tokenDSManagerImpl
-) : ViewModel() {
+class LogoutViewModel : ViewModel() {
+    private val di: DI by lazy { authorizationDi() }
+    private val repo: IAuthRepository by di.instance<IAuthRepository>()
+    private val cache: ILoginDataRepository by di.instance<ILoginDataRepository>()
 
     val logoutFlow = repo.logoutFlow
 

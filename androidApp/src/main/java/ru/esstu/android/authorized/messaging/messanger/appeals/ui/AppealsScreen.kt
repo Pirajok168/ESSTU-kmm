@@ -2,13 +2,18 @@ package ru.esstu.android.authorized.messaging.messanger.appeals.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
@@ -16,22 +21,27 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import ru.esstu.android.domain.modules.account.viewmodel.AccountInfoViewModel
 import ru.esstu.android.authorized.messaging.messanger.appeals.viewmodel.AppealEvents
 import ru.esstu.android.authorized.messaging.messanger.appeals.viewmodel.AppealsViewModel
 import ru.esstu.android.authorized.messaging.messanger.dialogs.ui.components.MessengerCard
-import ru.esstu.android.authorized.messaging.messanger.supports.viewmodel.SupportEvents
-import java.util.*
+import ru.esstu.android.domain.modules.account.viewmodel.AccountInfoViewModel
+import java.util.Locale
 
 @Composable
 fun AppealsScreen(
     onNavToAppealChat: (conversationId: Int) -> Unit = { },
+    updateTitle: (Int) -> Unit,
     accountInfoViewModel: AccountInfoViewModel = hiltViewModel(),
     appealViewModel: AppealsViewModel = hiltViewModel()
 ) {
     val accInfoState = accountInfoViewModel.accountInfoState
     val uiState = appealViewModel.appealsState
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(key1 = uiState.title, block = {
+
+        updateTitle(uiState.title)
+    })
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->

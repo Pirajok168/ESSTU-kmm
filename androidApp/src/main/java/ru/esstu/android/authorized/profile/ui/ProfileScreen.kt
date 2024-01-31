@@ -33,9 +33,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.esstu.android.R
 import ru.esstu.android.authorized.profile.viewmodel.ProfileScreenViewModel
 import ru.esstu.android.shared.clearWindowInsets
-import ru.esstu.student.profile.main_profile.domain.model.Profile
-import ru.esstu.student.profile.porfolio.domain.model.EmployeePortfolioType
-import ru.esstu.student.profile.porfolio.domain.model.StudentPortfolioType
+import ru.esstu.features.profile.main_profile.domain.model.Profile
+import ru.esstu.features.profile.porfolio.domain.model.EmployeePortfolioType
+import ru.esstu.features.profile.porfolio.domain.model.StudentPortfolioType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,6 +1,5 @@
 package ru.esstu.android.authorized.profile.employee.portfolio.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,9 +29,8 @@ import androidx.compose.ui.res.stringResource
 import ru.esstu.android.R
 import ru.esstu.android.authorized.profile.employee.portfolio.viewmodel.EmployeePortfolioViewModel
 import ru.esstu.android.shared.clearWindowInsets
-import ru.esstu.student.profile.porfolio.domain.model.EmployeePortfolioFile
-import ru.esstu.student.profile.porfolio.domain.model.EmployeePortfolioType
-import ru.esstu.student.profile.porfolio.domain.model.StudentPortfolioFile
+import ru.esstu.features.profile.porfolio.domain.model.EmployeePortfolioFile
+import ru.esstu.features.profile.porfolio.domain.model.EmployeePortfolioType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

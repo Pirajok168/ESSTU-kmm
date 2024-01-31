@@ -23,7 +23,7 @@ import ru.esstu.android.domain.modules.image_viewer.navigation.ImageScreenArgume
 import ru.esstu.android.domain.modules.image_viewer.ui.ImageScreen
 import ru.esstu.android.domain.viewmodel.AppErrorViewModel
 import ru.esstu.android.student.navigation.StudentRoutes
-import ru.esstu.domain.handleError.AppError
+import ru.esstu.data.web.handleError.AppError
 
 
 @ExperimentalFoundationApi

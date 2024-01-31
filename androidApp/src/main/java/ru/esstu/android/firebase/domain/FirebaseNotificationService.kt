@@ -4,10 +4,6 @@ import android.content.Intent
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
 import ru.esstu.android.authorized.messaging.dialog_chat.navigation.DialogChatArguments
 import ru.esstu.android.authorized.messaging.dialog_chat.navigation.DialogChatScreen
 import ru.esstu.android.authorized.messaging.group_chat.navigation.GroupChatArguments
@@ -16,19 +12,16 @@ import ru.esstu.android.firebase.domain.model.MessageType
 import ru.esstu.android.firebase.domain.model.determine
 import ru.esstu.android.notification.DefaultNotificationManager
 import ru.esstu.android.student.navigation.StudentRoutes
-import ru.esstu.domain.modules.firebase.domain.di.firebaseModule
-import ru.esstu.domain.modules.firebase.domain.repo.IFirebaseRepository
 
 class FirebaseNotificationService: FirebaseMessagingService()  {
-    private val firebaseRepo: IFirebaseRepository = ESSTUSdk.firebaseModule.repo
+
     override fun onNewToken(token: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            firebaseRepo.registerFirebaseToken(token)
-        }
+        Log.d("ffffffff", "$token")
         super.onNewToken(token)
     }
 
     override fun handleIntent(intent: Intent?) {
+        Log.d("weqweqwe", "handleIntent")
         val message = RemoteMessage(intent?.extras)
 
         val typedMessage = message.determine()

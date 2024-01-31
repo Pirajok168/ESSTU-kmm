@@ -1,7 +1,6 @@
 package ru.esstu.android.domain.datasources.download_worker
 
 import android.Manifest
-import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.ContentValues
@@ -11,14 +10,12 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
-import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.assisted.Assisted
@@ -27,8 +24,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.esstu.android.R
 import ru.esstu.android.domain.datasources.download_worker.entities.LoadingFile
-import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.domain.utill.wrappers.ResponseError
+import ru.esstu.data.web.api.model.Response
+import ru.esstu.data.web.api.model.ResponseError
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL

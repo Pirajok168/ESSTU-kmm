@@ -1,6 +1,5 @@
 package ru.esstu.android.auth.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,18 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
-
-import ru.esstu.ESSTUSdk
-import ru.esstu.auth.datasources.di.repoAuth
-import ru.esstu.auth.datasources.repo.IAuthRepository
-import ru.esstu.auth.entities.Token
-import ru.esstu.domain.handleError.ErrorHandler
-import ru.esstu.domain.ktor.domainApi
-import ru.esstu.domain.modules.firebase.domain.di.firebaseModule
-import ru.esstu.domain.modules.firebase.domain.repo.IFirebaseRepository
-import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.domain.utill.wrappers.doOnSuccess
+import org.kodein.di.DI
+import org.kodein.di.instance
+import ru.esstu.auth.di.authorizationDi
+import ru.esstu.auth.domain.model.Token
+import ru.esstu.auth.domain.repo.IAuthRepository
+import ru.esstu.data.web.api.model.Response
+import ru.esstu.data.web.api.model.ResponseError
+import ru.esstu.data.web.handleError.ErrorHandler
+import ru.esstu.features.firebase.domain.repo.IFirebaseRepository
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -40,14 +36,20 @@ sealed class AuthEvents {
 }
 
 
-class AuthViewModel(
-    private val repo: IAuthRepository = ESSTUSdk.repoAuth.authModule,
-    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
-) : ViewModel() {
+class AuthViewModel : ViewModel() {
+
+    private val di: DI by lazy { authorizationDi() }
+
+
+    private val repo: IAuthRepository by di.instance<IAuthRepository>()
+    private val errorHandler: ErrorHandler by di.instance<ErrorHandler>()
+    private val firebaseRepo: IFirebaseRepository by di.instance<IFirebaseRepository>()
+
     var authState by mutableStateOf(AuthState())
         private set
 
     fun onEvent(event: AuthEvents) {
+
         when (event) {
             is AuthEvents.SuppressError -> authState = authState.copy(error = null)
             is AuthEvents.PassLogin -> onPassLogin(event.login)
@@ -98,8 +100,32 @@ class AuthViewModel(
             )
 
             is Response.Success -> {
-                authState.copy(token = result.data, isLoading = false)
+                val firebaseToken = getFirebaseToken().data
+                if (firebaseToken != null) {
+                    when (errorHandler.makeRequest(request = {
+                        firebaseRepo.registerFirebaseToken(
+                            firebaseToken
+                        )
+                    })) {
+                        is Response.Error -> authState.copy(token = null, isLoading = false)
+                        is Response.Success -> authState.copy(
+                            token = result.data,
+                            isLoading = false
+                        )
+                    }
+                } else {
+                    authState.copy(token = result.data, isLoading = false)
+                }
             }
+        }
+    }
+
+    private suspend fun getFirebaseToken() = suspendCoroutine<Response<String>> { continuation ->
+        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+            if (it.isSuccessful)
+                continuation.resume(Response.Success(it.result))
+            else
+                continuation.resume(Response.Error(ResponseError(message = it.exception?.message)))
         }
     }
 

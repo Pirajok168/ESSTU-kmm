@@ -6,13 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
+import org.kodein.di.DI
+import org.kodein.di.instance
+import ru.esstu.features.messanger.conversations.domain.interactor.ConversationsInteractor
+import ru.esstu.features.messanger.conversations.domain.model.ConversationPreview
+import ru.esstu.features.messanger.dialogs.domain.interactor.DialogsInteractor
 import ru.esstu.student.messaging.entities.Sender
-import ru.esstu.student.messaging.messenger.conversations.datasources.repo.IConversationsDbRepository
-import ru.esstu.student.messaging.messenger.conversations.di.conversationModule
-import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
-import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsDbRepository
-import ru.esstu.student.messaging.messenger.dialogs.di.dialogsModuleNew
+import ru.esstu.student.messaging.group_chat.di.messangerDi
 
 
 data class NewMessageState(
@@ -27,10 +27,12 @@ sealed class NewMessageEvents {
     object LoadRecentConversations : NewMessageEvents()
 }
 
-class NewMessageViewModel  constructor(
-    private val dialogDB: IDialogsDbRepository = ESSTUSdk.dialogsModuleNew.repoDialogs,
-    private val conversationDB: IConversationsDbRepository = ESSTUSdk.conversationModule.db
-) : ViewModel() {
+class NewMessageViewModel : ViewModel() {
+
+    private val di: DI by lazy { messangerDi() }
+
+    private val dialogsInteractor: DialogsInteractor by di.instance<DialogsInteractor>()
+    private val conversationsInteractor: ConversationsInteractor by di.instance<ConversationsInteractor>()
 
     var newMessageState by mutableStateOf(NewMessageState())
         private set
@@ -44,13 +46,13 @@ class NewMessageViewModel  constructor(
 
     private suspend fun onLoadRecentConversations() {
         newMessageState = newMessageState.copy(isLoading = true)
-        val result = conversationDB.getConversations(newMessageState.recentCount, 0)
+        val result = conversationsInteractor.getLocalConversation(newMessageState.recentCount, 0)
         newMessageState = newMessageState.copy(isLoading = false, recentConversations = result)
     }
 
     private suspend fun onLoadRecentDialogs() {
         newMessageState = newMessageState.copy(isLoading = true)
-        val result = dialogDB.getDialogs(newMessageState.recentCount, 0)
+        val result = dialogsInteractor.getLocalDialogs(newMessageState.recentCount, 0)
         newMessageState = newMessageState.copy(isLoading = false, recentDialogUsers = result.map { it.opponent })
     }
 }

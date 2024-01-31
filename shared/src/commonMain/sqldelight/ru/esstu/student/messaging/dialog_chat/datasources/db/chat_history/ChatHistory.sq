@@ -1,7 +1,7 @@
 import kotlin.Boolean;
 import kotlin.Int;
-import ru.esstu.student.messaging.dialog_chat.datasources.db.chat_history.entities.DialogChatAuthorEntity;
-import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity;
+import ru.esstu.student.messaging.dialog_chat.data.db.chat_history.entities.DialogChatAuthorEntity;
+
 
 CREATE TABLE DialogChatMessageTableNew(
     appUserId TEXT NOT NULL,

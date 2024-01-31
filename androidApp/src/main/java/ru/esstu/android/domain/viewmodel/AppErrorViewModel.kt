@@ -9,9 +9,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.esstu.ESSTUSdk
-import ru.esstu.domain.handleError.AppError
-import ru.esstu.domain.handleError.ErrorProcessor
-import ru.esstu.domain.ktor.domainApi
+import ru.esstu.data.web.di.domainApi
+import ru.esstu.data.web.handleError.AppError
+import ru.esstu.data.web.handleError.ErrorProcessor
 
 data class AppErrorState(
     val errorProcessor: AppError? = null

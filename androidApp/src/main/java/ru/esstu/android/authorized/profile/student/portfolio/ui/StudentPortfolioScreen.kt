@@ -41,8 +41,8 @@ import ru.esstu.android.authorized.profile.student.portfolio.ui.bottomsheet.Port
 import ru.esstu.android.authorized.profile.student.portfolio.viewmodel.StudentPortfolioViewModel
 import ru.esstu.android.shared.clearWindowInsets
 import ru.esstu.domain.utill.workingDate.format
-import ru.esstu.student.profile.porfolio.domain.model.StudentPortfolioFile
-import ru.esstu.student.profile.porfolio.domain.model.StudentPortfolioType
+import ru.esstu.features.profile.porfolio.domain.model.StudentPortfolioFile
+import ru.esstu.features.profile.porfolio.domain.model.StudentPortfolioType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

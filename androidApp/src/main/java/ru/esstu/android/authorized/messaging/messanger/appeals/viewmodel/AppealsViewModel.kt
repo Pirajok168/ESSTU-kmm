@@ -1,5 +1,6 @@
 package ru.esstu.android.authorized.messaging.messanger.appeals.viewmodel
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,17 +11,17 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.esstu.ESSTUSdk
-import ru.esstu.domain.handleError.ErrorHandler
-import ru.esstu.domain.ktor.domainApi
+import org.kodein.di.DI
+import org.kodein.di.instance
+import ru.esstu.android.R
+import ru.esstu.data.web.api.model.Response
+import ru.esstu.data.web.api.model.ResponseError
+import ru.esstu.data.web.handleError.ErrorHandler
 import ru.esstu.domain.utill.paginator.Paginator
-import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.student.messaging.messenger.appeals.datasources.repo.IAppealUpdatesRepository
-import ru.esstu.student.messaging.messenger.appeals.datasources.repo.IAppealsApiRepository
-import ru.esstu.student.messaging.messenger.appeals.datasources.repo.IAppealsDbRepository
-import ru.esstu.student.messaging.messenger.appeals.di.appealsModule
-import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
+import ru.esstu.features.messanger.appeal.data.repository.IAppealUpdatesRepository
+import ru.esstu.features.messanger.appeal.di.appealDi
+import ru.esstu.features.messanger.appeal.domain.interactor.AppealsInteractor
+import ru.esstu.features.messanger.conversations.domain.model.ConversationPreview
 
 data class AppealState(
     val items: List<ConversationPreview> = emptyList(),
@@ -28,60 +29,77 @@ data class AppealState(
     val isLoading: Boolean = false,
     val isEndReached: Boolean = false,
     val error: ResponseError? = null,
-    val cleanCacheOnRefresh: Boolean = true
+    val cleanCacheOnRefresh: Boolean = true,
+    @StringRes val title: Int = R.string.messanger,
 )
 
 sealed class AppealEvents {
     object GetNext : AppealEvents()
     object Reload : AppealEvents()
-    object CancelObserving: AppealEvents()
+    object CancelObserving : AppealEvents()
 }
 
 
-class AppealsViewModel constructor(
-    appealApi: IAppealsApiRepository = ESSTUSdk.appealsModule.repo,
-    appealDb: IAppealsDbRepository = ESSTUSdk.appealsModule.db,
-    private val updates: IAppealUpdatesRepository = ESSTUSdk.appealsModule.update,
-    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
-) : ViewModel() {
+class AppealsViewModel : ViewModel() {
+    private val di: DI by lazy { appealDi() }
+
+    private val appealsInteractor: AppealsInteractor by di.instance<AppealsInteractor>()
+    private val updates: IAppealUpdatesRepository by di.instance<IAppealUpdatesRepository>()
+    private val errorHandler: ErrorHandler by di.instance<ErrorHandler>()
+
+
     var appealsState by mutableStateOf(AppealState())
         private set
 
     private val paginator = Paginator(
         initialKey = 0,
-        onReset = { if (appealsState.cleanCacheOnRefresh) appealDb.clear() },
-        onLoad = { appealsState = appealsState.copy(isLoading = it) },
+        onReset = { if (appealsState.cleanCacheOnRefresh) appealsInteractor.clearAppeals() },
+        onLoad = {
+            appealsState = appealsState.copy(
+                isLoading = it,
+                title = if (it) R.string.update else R.string.messanger
+            )
+        },
         onRequest = { key ->
-            val cachedConversations = appealDb.getAppeals(appealsState.pageSize, key)
-
-            if (cachedConversations.isEmpty()) {
-                val loadedConversations = errorHandler.makeRequest(
-                    request = {
-                        appealApi.getAppeals(appealsState.pageSize, key)
-                    }
+            errorHandler.makeRequest(request = {
+                appealsInteractor.getAppeals(
+                    appealsState.pageSize,
+                    key
                 )
-                if (loadedConversations is Response.Success)
-                    appealDb.setAppeals(loadedConversations.data)
-
-                loadedConversations
-            } else
-                Response.Success(cachedConversations)
+            })
         },
         getNextKey = { key, _ -> key + appealsState.pageSize },
         onError = { appealsState = appealsState.copy(error = it) },
+        onLocalData = {
+            withContext(Dispatchers.Main) {
+                appealsState =
+                    appealsState.copy(
+                        items = appealsInteractor.getLocalAppeals(
+                            appealsState.pageSize,
+                            it
+                        )
+                    )
+            }
 
+
+        },
         onRefresh = { items ->
-            appealsState = appealsState.copy(items = items, error = null, isEndReached = items.isEmpty())
+            appealsState =
+                appealsState.copy(items = items, error = null, isEndReached = items.isEmpty())
         },
         onNext = { _, items ->
-            appealsState = appealsState.copy(items = appealsState.items + items, error = null, isEndReached = items.isEmpty())
+            appealsState = appealsState.copy(
+                items = appealsState.items + items,
+                error = null,
+                isEndReached = items.isEmpty()
+            )
         }
     )
 
 
     private var job: Job? = null
 
-    private fun installObserving(){
+    private fun installObserving() {
 
         if (job?.isActive != true) {
             job = viewModelScope.launch(Dispatchers.IO) {
@@ -89,7 +107,7 @@ class AppealsViewModel constructor(
                     .installObserving()
                     .collectLatest {
                         if (it is Response.Success) {
-                            withContext(Dispatchers.Main){
+                            withContext(Dispatchers.Main) {
                                 appealsState = appealsState.copy(cleanCacheOnRefresh = true)
                                 paginator.refresh()
                             }
@@ -102,18 +120,20 @@ class AppealsViewModel constructor(
         }
     }
 
-    private fun cancelObserving(){
+    private fun cancelObserving() {
         if (job?.isActive == true)
             job?.cancel()
     }
+
     fun onEvent(event: AppealEvents) {
         when (event) {
             is AppealEvents.GetNext -> viewModelScope.launch { paginator.loadNext() }
             AppealEvents.Reload -> viewModelScope.launch {
                 installObserving()
-                appealsState = appealsState.copy(cleanCacheOnRefresh = true)
+                appealsState = appealsState.copy(cleanCacheOnRefresh = false)
                 paginator.refresh()
             }
+
             AppealEvents.CancelObserving -> cancelObserving()
         }
     }

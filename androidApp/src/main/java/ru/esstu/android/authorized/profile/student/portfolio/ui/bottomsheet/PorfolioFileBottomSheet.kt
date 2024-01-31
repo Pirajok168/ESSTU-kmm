@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.datetime.LocalDateTime
 import ru.esstu.android.R
 import ru.esstu.domain.utill.workingDate.format
-import ru.esstu.student.profile.porfolio.domain.model.StudentPortfolioFile
+import ru.esstu.features.profile.porfolio.domain.model.StudentPortfolioFile
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

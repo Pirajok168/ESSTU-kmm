@@ -8,18 +8,17 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
-import ru.esstu.domain.handleError.ErrorHandler
-import ru.esstu.domain.ktor.domainApi
+import org.kodein.di.DI
+import org.kodein.di.instance
+import ru.esstu.data.web.api.model.Response
+import ru.esstu.data.web.api.model.ResponseError
+import ru.esstu.data.web.handleError.ErrorHandler
 import ru.esstu.domain.utill.paginator.Paginator
-import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.domain.utill.wrappers.ResponseError
+import ru.esstu.features.messanger.dialogs.domain.interactor.DialogsInteractor
 import ru.esstu.student.messaging.entities.CachedFile
 import ru.esstu.student.messaging.entities.Sender
-import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsDbRepository
-import ru.esstu.student.messaging.messenger.dialogs.di.dialogsModuleNew
-import ru.esstu.student.messaging.messenger.new_message.new_dialog.datasources.repo.INewDialogRepository
-import ru.esstu.student.messaging.messenger.new_message.new_dialog.di.newDialogModule
+import ru.esstu.student.messaging.messenger.new_message.new_dialog.di.newDialogDi
+import ru.esstu.student.messaging.messenger.new_message.new_dialog.domain.repo.INewDialogRepository
 
 data class NewDialogState(
     val opponent: Sender? = null,
@@ -54,19 +53,23 @@ sealed class NewDialogEvents {
     object LoadRecentOpponents : NewDialogEvents()
 }
 
-class NewDialogViewModel  constructor(
-    private val repo: INewDialogRepository = ESSTUSdk.newDialogModule.repo,
-    private val dialogDB: IDialogsDbRepository = ESSTUSdk.dialogsModuleNew.repoDialogs,
-    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
-) : ViewModel() {
+class NewDialogViewModel : ViewModel() {
+    private val di: DI by lazy { newDialogDi() }
 
+    private val repo: INewDialogRepository by di.instance<INewDialogRepository>()
+    private val dialogsInteractor: DialogsInteractor by di.instance<DialogsInteractor>()
+    private val errorHandler: ErrorHandler by di.instance<ErrorHandler>()
     var state by mutableStateOf(NewDialogState())
         private set
 
     fun onEvent(event: NewDialogEvents) {
         when (event) {
-            is NewDialogEvents.PassAttachment -> state = state.copy(attachments = (state.attachments + event.attachments).distinct())
-            is NewDialogEvents.RemoveAttachment -> state = state.copy(attachments = state.attachments - event.attachment)
+            is NewDialogEvents.PassAttachment -> state =
+                state.copy(attachments = (state.attachments + event.attachments).distinct())
+
+            is NewDialogEvents.RemoveAttachment -> state =
+                state.copy(attachments = state.attachments - event.attachment)
+
             is NewDialogEvents.PassMessage -> state = state.copy(message = event.message)
             is NewDialogEvents.PassQuery -> onPassQuery(event.query)
             NewDialogEvents.DropQuery -> viewModelScope.launch { onDropQuery() }
@@ -134,7 +137,8 @@ class NewDialogViewModel  constructor(
 
     private suspend fun onLoadRecentOpponents() {
         state = state.copy(isRecentOpponentsLoading = true)
-        val opponents = dialogDB.getDialogs(state.queryPageSize, 0).map { it.opponent }
+        val opponents =
+            dialogsInteractor.getLocalDialogs(state.queryPageSize, 0).map { it.opponent }.orEmpty()
         state = state.copy(isRecentOpponentsLoading = false, recentOpponents = opponents)
     }
 }

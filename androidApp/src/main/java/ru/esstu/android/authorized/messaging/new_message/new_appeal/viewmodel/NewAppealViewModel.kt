@@ -7,16 +7,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
-import ru.esstu.domain.handleError.ErrorHandler
-import ru.esstu.domain.ktor.domainApi
-import ru.esstu.domain.utill.wrappers.FlowResponse
-import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.domain.utill.wrappers.ResponseError
+import org.kodein.di.DI
+import org.kodein.di.instance
+import ru.esstu.data.web.api.model.FlowResponse
+import ru.esstu.data.web.api.model.Response
+import ru.esstu.data.web.api.model.ResponseError
+import ru.esstu.data.web.handleError.ErrorHandler
+import ru.esstu.features.messanger.conversations.domain.model.ConversationPreview
 import ru.esstu.student.messaging.entities.CachedFile
-import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
-import ru.esstu.student.messaging.messenger.new_message.new_appeal.datasources.repo.INewAppealRepository
-import ru.esstu.student.messaging.messenger.new_message.new_appeal.di.newAppealModule
+import ru.esstu.student.messaging.messenger.new_message.new_appeal.di.newAppealChatDi
+import ru.esstu.student.messaging.messenger.new_message.new_appeal.domain.repo.INewAppealRepository
 import ru.esstu.student.messaging.messenger.new_message.new_appeal.entities.AppealTheme
 
 data class NewAppealState(
@@ -51,11 +51,11 @@ sealed class NewAppealEvents {
 }
 
 
-class NewAppealViewModel  constructor(
-    private val repo: INewAppealRepository = ESSTUSdk.newAppealModule.repo,
-    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
-) : ViewModel() {
+class NewAppealViewModel : ViewModel() {
 
+    private val di: DI by lazy { newAppealChatDi() }
+    private val repo: INewAppealRepository by di.instance<INewAppealRepository>()
+    private val errorHandler: ErrorHandler by di.instance<ErrorHandler>()
     var state by mutableStateOf(NewAppealState())
         private set
 

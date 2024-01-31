@@ -23,7 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.esstu.android.R
 import ru.esstu.android.auth.viewmodel.AuthEvents
 import ru.esstu.android.auth.viewmodel.AuthViewModel
-import ru.esstu.auth.entities.TokenOwners
+import ru.esstu.auth.domain.model.TokenOwners
 
 @Composable
 fun Splashscreen(

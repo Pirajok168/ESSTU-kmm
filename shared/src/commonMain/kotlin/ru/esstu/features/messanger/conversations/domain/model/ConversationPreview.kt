@@ -1,0 +1,14 @@
+package ru.esstu.features.messanger.conversations.domain.model
+
+
+import ru.esstu.student.messaging.entities.Sender
+import ru.esstu.student.messaging.messenger.datasources.entities.PreviewLastMessage
+
+data class ConversationPreview(
+    val id: Int,
+    val title: String,
+    val author: Sender?,
+    val lastMessage: PreviewLastMessage?,
+    val notifyAboutIt: Boolean,
+    val unreadMessageCount: Int
+)

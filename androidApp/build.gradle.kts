@@ -89,16 +89,18 @@ dependencies {
     implementation ("androidx.work:work-runtime-ktx:2.8.1")
 
     //Hilt
-    implementation ("com.google.dagger:hilt-android:2.48.1")
+    implementation("com.google.dagger:hilt-android:2.48.1")
     implementation("com.google.firebase:firebase-messaging:23.4.0")
     implementation("com.google.firebase:firebase-crashlytics:18.6.1")
     implementation("com.google.firebase:firebase-analytics:21.5.0")
-    kapt ("com.google.dagger:hilt-compiler:2.48.1")
-    implementation ("androidx.hilt:hilt-work:1.0.0")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
+    kapt("com.google.dagger:hilt-compiler:2.48.1")
+    implementation("androidx.hilt:hilt-work:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
-    implementation ("com.airbnb.android:lottie-compose:6.1.0")
-    implementation ("com.google.accompanist:accompanist-permissions:0.28.0")
+    implementation("com.airbnb.android:lottie-compose:6.1.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.28.0")
+
+    implementation("org.kodein.di:kodein-di:7.12.0")
 }
 
 kapt {

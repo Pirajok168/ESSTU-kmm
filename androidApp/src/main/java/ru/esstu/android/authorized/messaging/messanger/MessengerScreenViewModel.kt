@@ -6,10 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
-import ru.esstu.student.messaging.messenger.dialogs.datasources.repo.IDialogsDbRepository
-import ru.esstu.student.messaging.messenger.dialogs.di.dialogsModuleNew
-import ru.esstu.student.messaging.messenger.dialogs.entities.PreviewDialog
+import org.kodein.di.DI
+import ru.esstu.features.messanger.dialogs.di.dialogsDi
+import ru.esstu.features.messanger.dialogs.domain.model.PreviewDialog
 
 
 data class MessengerScreenState(
@@ -25,17 +24,18 @@ infix fun String.toNormalView(countChat: Int): String{
     }
 }
 
-class MessengerScreenViewModel(
-   private val dialogDB: IDialogsDbRepository = ESSTUSdk.dialogsModuleNew.repoDialogs,
-): ViewModel() {
+class MessengerScreenViewModel : ViewModel() {
+
+    private val di: DI by lazy { dialogsDi() }
+
     var dialogState by mutableStateOf(MessengerScreenState())
         private set
 
-    fun showAlertDialog(){
+    fun showAlertDialog() {
         dialogState = dialogState.copy(showAlertDialog = true)
     }
 
-    fun dismissDialog(){
+    fun dismissDialog() {
         dialogState = dialogState.copy(showAlertDialog = false)
     }
 
@@ -43,7 +43,7 @@ class MessengerScreenViewModel(
         dismissDialog()
         viewModelScope.launch {
             dialogState.selectedPreviewDialog.forEach {
-                dialogDB.deleteDialog(it.id)
+                //  dialogDB.deleteDialog(it.id)
             }
         }
         closeEditingMode()

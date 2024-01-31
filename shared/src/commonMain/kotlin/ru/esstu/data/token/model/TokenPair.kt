@@ -1,0 +1,13 @@
+package ru.esstu.data.token.model
+
+import kotlinx.serialization.Serializable
+
+
+@Serializable
+data class TokenPair(
+    val tokenType: String,
+    val accessToken: String,
+    val refreshToken: String,
+    val userType: String,
+    val expiresIn: Long?
+)

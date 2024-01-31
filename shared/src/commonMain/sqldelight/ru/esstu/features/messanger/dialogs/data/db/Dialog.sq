@@ -1,0 +1,26 @@
+import kotlin.Boolean;
+import kotlin.Int;
+import ru.esstu.student.messaging.messenger.datasources.db.cache.entities.UserEntity;
+import ru.esstu.student.messaging.messenger.datasources.entities.PreviewLastMessage;
+
+CREATE TABLE Dialog (
+    idDialog TEXT NOT NULL,
+    lastMessage TEXT AS PreviewLastMessage,
+    opponent TEXT AS UserEntity NOT NULL,
+    unread INTEGER AS Int DEFAULT 0 NOT NULL,
+    notifyAboutIt INTEGER AS Boolean NOT NULL
+);
+
+
+setDialog:
+    INSERT OR REPLACE INTO Dialog(idDialog,  lastMessage, opponent, unread, notifyAboutIt)
+        VALUES (?,?,?,?,?);
+
+
+getDialogs:
+    SELECT * FROM Dialog
+    LIMIT :pageSize OFFSET :pageOffset;
+
+
+clear:
+    DELETE FROM Dialog;

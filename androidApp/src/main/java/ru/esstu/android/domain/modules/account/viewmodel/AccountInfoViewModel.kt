@@ -6,12 +6,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
-
-import ru.esstu.domain.modules.account.datasources.repo.IAccountInfoApiRepository
-import ru.esstu.domain.modules.account.di.accountModule
-import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.domain.utill.wrappers.ResponseError
+import org.kodein.di.DI
+import org.kodein.di.instance
+import ru.esstu.data.web.api.model.Response
+import ru.esstu.data.web.api.model.ResponseError
+import ru.esstu.features.account.di.accountDi
+import ru.esstu.features.account.domain.repo.IAccountInfoApiRepository
 import ru.esstu.student.messaging.entities.Sender
 
 data class AccountInfoState(
@@ -26,10 +26,10 @@ sealed class AccountInfoEvents {
 }
 
 
-class AccountInfoViewModel  constructor(
-    private val repo: IAccountInfoApiRepository = ESSTUSdk.accountModule.repo
-) : ViewModel() {
+class AccountInfoViewModel : ViewModel() {
+    private val di: DI by lazy { accountDi() }
 
+    private val repo: IAccountInfoApiRepository by di.instance<IAccountInfoApiRepository>()
     var accountInfoState by mutableStateOf(AccountInfoState())
         private set
 

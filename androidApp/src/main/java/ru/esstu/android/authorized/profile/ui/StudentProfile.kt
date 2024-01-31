@@ -19,8 +19,8 @@ import ru.esstu.android.R
 import ru.esstu.android.authorized.profile.ui.component.MainInfoProfile
 import ru.esstu.android.authorized.profile.ui.component.PreviewPortfolioCard
 import ru.esstu.android.domain.copyToClipboard
-import ru.esstu.student.profile.main_profile.domain.model.Profile
-import ru.esstu.student.profile.porfolio.domain.model.StudentPortfolioType
+import ru.esstu.features.profile.main_profile.domain.model.Profile
+import ru.esstu.features.profile.porfolio.domain.model.StudentPortfolioType
 
 @Composable
 fun StudentProfile(

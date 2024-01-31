@@ -12,17 +12,17 @@ import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import ru.esstu.ESSTUSdk
+import org.kodein.di.DI
+import org.kodein.di.instance
 import ru.esstu.android.domain.datasources.download_worker.IFileDownloadRepository
-import ru.esstu.domain.handleError.ErrorHandler
-import ru.esstu.domain.ktor.domainApi
+import ru.esstu.data.web.api.model.FlowResponse
+import ru.esstu.data.web.api.model.Response
+import ru.esstu.data.web.api.model.ResponseError
+import ru.esstu.data.web.handleError.ErrorHandler
 import ru.esstu.domain.utill.paginator.Paginator
-import ru.esstu.domain.utill.wrappers.FlowResponse
-import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.student.messaging.dialog_chat.datasources.di.dialogChatModuleNew
-import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatRepository
-import ru.esstu.student.messaging.dialog_chat.datasources.repo.IDialogChatUpdateRepository
+import ru.esstu.student.messaging.dialog_chat.di.dialogChatDi
+import ru.esstu.student.messaging.dialog_chat.domain.repo.IDialogChatRepository
+import ru.esstu.student.messaging.dialog_chat.domain.repo.IDialogChatUpdateRepository
 import ru.esstu.student.messaging.dialog_chat.util.toSentUserMessage
 import ru.esstu.student.messaging.entities.CachedFile
 import ru.esstu.student.messaging.entities.DeliveryStatus
@@ -76,12 +76,13 @@ sealed class DialogChatEvents {
 @HiltViewModel
 class DialogChatViewModel @Inject constructor(
     private val downloaderAttachment: IFileDownloadRepository,
-
 ) : ViewModel() {
 
-    private val dialogChatRepository: IDialogChatRepository = ESSTUSdk.dialogChatModuleNew.repo
-    private val dialogChatUpdateRepository: IDialogChatUpdateRepository = ESSTUSdk.dialogChatModuleNew.update
-    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
+    private val di: DI by lazy { dialogChatDi() }
+
+    private val dialogChatRepository: IDialogChatRepository by di.instance<IDialogChatRepository>()
+    private val dialogChatUpdateRepository: IDialogChatUpdateRepository by di.instance<IDialogChatUpdateRepository>()
+    private val errorHandler: ErrorHandler by di.instance<ErrorHandler>()
     var dialogChatState by mutableStateOf(DialogChatState())
         private set
 

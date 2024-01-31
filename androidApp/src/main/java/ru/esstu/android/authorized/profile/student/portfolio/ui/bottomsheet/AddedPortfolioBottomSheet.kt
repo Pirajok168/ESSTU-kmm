@@ -57,8 +57,9 @@ import ru.esstu.android.authorized.messaging.dialog_chat.util.cacheToFile
 import ru.esstu.android.authorized.profile.student.portfolio.state.StudentPortfolioState
 import ru.esstu.android.authorized.profile.student.portfolio.viewmodel.StudentPortfolioViewModel
 import ru.esstu.domain.utill.workingDate.format
+import ru.esstu.features.profile.porfolio.domain.model.StudentPortfolioType
 import ru.esstu.student.messaging.entities.CachedFile
-import ru.esstu.student.profile.porfolio.domain.model.StudentPortfolioType
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

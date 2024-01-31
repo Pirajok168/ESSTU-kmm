@@ -7,17 +7,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
-import ru.esstu.domain.handleError.ErrorHandler
-import ru.esstu.domain.ktor.domainApi
-import ru.esstu.domain.utill.wrappers.FlowResponse
-import ru.esstu.domain.utill.wrappers.Response
-
-import ru.esstu.domain.utill.wrappers.ResponseError
+import org.kodein.di.DI
+import org.kodein.di.instance
+import ru.esstu.data.web.api.model.FlowResponse
+import ru.esstu.data.web.api.model.Response
+import ru.esstu.data.web.api.model.ResponseError
+import ru.esstu.data.web.handleError.ErrorHandler
+import ru.esstu.features.messanger.conversations.domain.model.ConversationPreview
 import ru.esstu.student.messaging.entities.CachedFile
-import ru.esstu.student.messaging.messenger.conversations.entities.ConversationPreview
-import ru.esstu.student.messaging.messenger.new_message.new_support.datasources.repo.INewSupportRepository
-import ru.esstu.student.messaging.messenger.new_message.new_support.di.newSupportModule
+import ru.esstu.student.messaging.messenger.new_message.new_support.di.newSupportChatDi
+import ru.esstu.student.messaging.messenger.new_message.new_support.domain.repo.INewSupportRepository
 import ru.esstu.student.messaging.messenger.new_message.new_support.entities.SupportTheme
 
 data class NewSupportState(
@@ -44,11 +43,12 @@ sealed class NewSupportEvents {
 }
 
 
-class NewSupportViewModel constructor(
-    private val repo: INewSupportRepository = ESSTUSdk.newSupportModule.repo,
-    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
-) : ViewModel() {
+class NewSupportViewModel : ViewModel() {
 
+    private val di: DI by lazy { newSupportChatDi() }
+
+    private val repo: INewSupportRepository by di.instance<INewSupportRepository>()
+    private val errorHandler: ErrorHandler by di.instance<ErrorHandler>()
     var state by mutableStateOf(NewSupportState())
         private set
 
@@ -58,7 +58,8 @@ class NewSupportViewModel constructor(
             is NewSupportEvents.PassTheme -> state = state.copy(selectedTheme = event.theme)
             is NewSupportEvents.PassMessage -> state = state.copy(message = event.message)
             NewSupportEvents.ClearMessage -> state = state.copy(message = "")
-            is NewSupportEvents.PassAttachments -> state = state.copy(attachments = (state.attachments + event.attachments).distinct())
+            is NewSupportEvents.PassAttachments -> state =
+                state.copy(attachments = (state.attachments + event.attachments).distinct())
             is NewSupportEvents.RemoveAttachment -> state = state.copy(attachments = state.attachments - event.attachment)
             NewSupportEvents.CreateNewSupport -> viewModelScope.launch { onCreateSupport() }
         }

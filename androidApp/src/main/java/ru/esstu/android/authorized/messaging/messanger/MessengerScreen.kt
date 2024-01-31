@@ -139,13 +139,22 @@ fun MessengerScreen(
                             selectedList = uiState.selectedPreviewDialog
                         )
                         Pages.CONVERSATION -> ConversationScreen(
-                            onNavToConversationChat = onNavToConversationChat
+                            onNavToConversationChat = onNavToConversationChat,
+                            updateTitle = {
+                                title = it
+                            }
                         )
                         Pages.TECH_SUPPORT -> SupportScreen(
-                            onNavToSupportChat = onNavToSupportChat
+                            onNavToSupportChat = onNavToSupportChat,
+                            updateTitle = {
+                                title = it
+                            }
                         )
                         Pages.APPEALS -> AppealsScreen(
-                            onNavToAppealChat = onNavToAppealChat
+                            onNavToAppealChat = onNavToAppealChat,
+                            updateTitle = {
+                                title = it
+                            }
                         )
                     }
                 }

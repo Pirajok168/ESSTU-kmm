@@ -6,6 +6,8 @@ import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
+import ru.esstu.data.datastore.dataStoreFileName
+import ru.esstu.data.fileSystem._FileSystem
 
 class _FileStorage: _FileSystem {
     override val fileSystem: FileSystem
@@ -26,7 +28,4 @@ class _FileStorage: _FileSystem {
 
 }
 
-actual fun storage(): _FileSystem = _FileStorage()
 
-
-actual fun producePath(): _FileSystem = _FileStorage()

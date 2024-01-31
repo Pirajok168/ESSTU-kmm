@@ -6,19 +6,22 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
+import org.kodein.di.DI
+import org.kodein.di.instance
 import ru.esstu.android.authorized.news.events.AnnouncementEvents
 import ru.esstu.android.authorized.news.state.AnnouncementState
-import ru.esstu.domain.handleError.ErrorHandler
-import ru.esstu.domain.ktor.domainApi
+import ru.esstu.data.web.handleError.ErrorHandler
 import ru.esstu.domain.utill.paginator.Paginator
-import ru.esstu.student.news.announcement.datasources.repo.IAnnouncementsRepository
-import ru.esstu.student.news.announcement.di.announcementsModule
+import ru.esstu.features.news.announcement.di.announcementDi
+import ru.esstu.features.news.announcement.domain.repo.IAnnouncementsRepository
 
-class AnnouncementViewModel(
-    private val repo: IAnnouncementsRepository = ESSTUSdk.announcementsModule.repo,
-    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
-): ViewModel()  {
+class AnnouncementViewModel : ViewModel() {
+
+    private val di: DI by lazy { announcementDi() }
+
+    private val repo: IAnnouncementsRepository by di.instance<IAnnouncementsRepository>()
+    private val errorHandler: ErrorHandler by di.instance<ErrorHandler>()
+
     var state by mutableStateOf(AnnouncementState())
         private set
 

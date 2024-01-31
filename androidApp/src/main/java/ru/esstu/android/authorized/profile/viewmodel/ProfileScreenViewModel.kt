@@ -7,25 +7,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.esstu.ESSTUSdk
+import org.kodein.di.DI
+import org.kodein.di.instance
 import ru.esstu.android.authorized.profile.state.ProfileScreenState
-import ru.esstu.domain.utill.wrappers.FlowResponse
-import ru.esstu.student.profile.main_profile.domain.di.profileDIModule
-import ru.esstu.student.profile.main_profile.domain.repository.IProfileRepository
+import ru.esstu.data.web.api.model.FlowResponse
+import ru.esstu.features.profile.main_profile.di.profileDi
+import ru.esstu.features.profile.main_profile.domain.repository.IProfileRepository
 
 
-class ProfileScreenViewModel(
+class ProfileScreenViewModel : ViewModel() {
+    private val di: DI by lazy { profileDi() }
 
-): ViewModel() {
-   private val profileRepository: IProfileRepository = ESSTUSdk.profileDIModule.repo
+    private val profileRepository: IProfileRepository by di.instance<IProfileRepository>()
     var state by mutableStateOf(ProfileScreenState())
         private set
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
             profileRepository.getProfile()
-                .collect{
-                    when(it){
+                .collect {
+                    when (it) {
                         is FlowResponse.Error -> {
 
                         }

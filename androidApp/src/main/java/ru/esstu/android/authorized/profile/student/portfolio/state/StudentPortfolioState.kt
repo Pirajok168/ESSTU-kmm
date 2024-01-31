@@ -1,8 +1,8 @@
 package ru.esstu.android.authorized.profile.student.portfolio.state
 
+import ru.esstu.features.profile.porfolio.domain.model.StudentPortfolioFile
+import ru.esstu.features.profile.porfolio.domain.model.StudentPortfolioType
 import ru.esstu.student.messaging.entities.CachedFile
-import ru.esstu.student.profile.porfolio.domain.model.StudentPortfolioFile
-import ru.esstu.student.profile.porfolio.domain.model.StudentPortfolioType
 
 data class StudentPortfolioState(
     val openAddPortfolioBottomSheet: Boolean = false,

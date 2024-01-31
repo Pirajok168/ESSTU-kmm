@@ -14,14 +14,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import ru.esstu.ESSTUSdk
-import ru.esstu.android.domain.datasources.download_worker.IFileDownloadRepository
-import ru.esstu.domain.handleError.ErrorHandler
-import ru.esstu.domain.ktor.domainApi
+import org.kodein.di.DI
+import org.kodein.di.instance
+import ru.esstu.data.web.api.model.FlowResponse
+import ru.esstu.data.web.api.model.Response
+import ru.esstu.data.web.api.model.ResponseError
+import ru.esstu.data.web.handleError.ErrorHandler
 import ru.esstu.domain.utill.paginator.Paginator
-import ru.esstu.domain.utill.wrappers.FlowResponse
-import ru.esstu.domain.utill.wrappers.Response
-import ru.esstu.domain.utill.wrappers.ResponseError
 import ru.esstu.student.messaging.dialog_chat.util.toSentUserMessage
 import ru.esstu.student.messaging.entities.CachedFile
 import ru.esstu.student.messaging.entities.DeliveryStatus
@@ -29,9 +28,9 @@ import ru.esstu.student.messaging.entities.Message
 import ru.esstu.student.messaging.entities.MessageAttachment
 import ru.esstu.student.messaging.entities.NewUserMessage
 import ru.esstu.student.messaging.entities.SentUserMessage
-import ru.esstu.student.messaging.group_chat.datasources.repo.IGroupChatRepository
-import ru.esstu.student.messaging.group_chat.datasources.repo.IGroupChatUpdateRepository
-import ru.esstu.student.messaging.group_chat.di.groupChatModuleNew
+import ru.esstu.student.messaging.group_chat.di.groupChatDi
+import ru.esstu.student.messaging.group_chat.domain.repo.IGroupChatRepository
+import ru.esstu.student.messaging.group_chat.domain.repo.IGroupChatUpdateRepository
 import ru.esstu.student.messaging.group_chat.entities.Conversation
 import javax.inject.Inject
 
@@ -72,14 +71,12 @@ sealed class GroupChatEvents {
 }
 
 @HiltViewModel
-class GroupChatViewModel @Inject  constructor(
-    private val downloaderAttachment: IFileDownloadRepository,
-    //private val dialogChatUpdateRepository: IDialogChatUpdateRepository,
-    //private val fileDownloadRepository: IFileDownloadRepository
-) : ViewModel() {
-    private val groupChatRepository: IGroupChatRepository = ESSTUSdk.groupChatModuleNew.repo
-    private val dialogChatUpdateRepository: IGroupChatUpdateRepository = ESSTUSdk.groupChatModuleNew.update
-    private val errorHandler: ErrorHandler = ESSTUSdk.domainApi.errorHandler
+class GroupChatViewModel @Inject constructor() : ViewModel() {
+
+    private val di: DI by lazy { groupChatDi() }
+    private val groupChatRepository: IGroupChatRepository by di.instance<IGroupChatRepository>()
+    private val dialogChatUpdateRepository: IGroupChatUpdateRepository by di.instance<IGroupChatUpdateRepository>()
+    private val errorHandler: ErrorHandler by di.instance<ErrorHandler>()
     var dialogChatState by mutableStateOf(GroupChatState())
         private set
 
@@ -89,7 +86,10 @@ class GroupChatViewModel @Inject  constructor(
             is GroupChatEvents.CancelObserver -> onCancelObserver()
             is GroupChatEvents.NextPage -> viewModelScope.launch { paginator.loadNext() }
 
-            is GroupChatEvents.PassMessage -> withCachedMsg { dialogChatState = dialogChatState.copy(message = dialogChatState.message.copy(text = event.message)) }
+            is GroupChatEvents.PassMessage -> withCachedMsg {
+                dialogChatState =
+                    dialogChatState.copy(message = dialogChatState.message.copy(text = event.message))
+            }
             is GroupChatEvents.PassReplyMessage -> withCachedMsg { dialogChatState = dialogChatState.copy(message = dialogChatState.message.copy(replyMessage = event.message)) }
             is GroupChatEvents.PassAttachments -> withCachedMsg { onPassAttachments(event.attachments) }
             is GroupChatEvents.RemoveAttachment -> withCachedMsg { onRemoveAttachment(event.attachment) }

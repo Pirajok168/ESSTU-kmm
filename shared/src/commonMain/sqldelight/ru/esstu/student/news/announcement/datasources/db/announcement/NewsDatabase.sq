@@ -1,6 +1,7 @@
-import ru.esstu.student.news.announcement.db.announcement.entities.NewsAttachmentEntity;
-import ru.esstu.student.news.announcement.db.announcement.entities.UserEntity;
 import kotlin.collections.List;
+import ru.esstu.features.news.announcement.data.db.entities.NewsAttachmentEntity;
+import ru.esstu.features.news.announcement.data.db.entities.UserEntity;
+
 
 
 

@@ -49,8 +49,8 @@ import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.shimmer
 import ru.esstu.android.R
 import ru.esstu.android.domain.ui.theme.tertiary
-import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.domain.utill.wrappers.ServerErrors
+import ru.esstu.data.web.api.model.ResponseError
+import ru.esstu.data.web.api.model.ServerErrors
 
 
 @Composable

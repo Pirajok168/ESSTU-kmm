@@ -1,7 +1,7 @@
 package ru.esstu.android.authorized.news.state
 
-import ru.esstu.domain.utill.wrappers.ResponseError
-import ru.esstu.student.news.entities.NewsNode
+import ru.esstu.data.web.api.model.ResponseError
+import ru.esstu.features.news.announcement.domain.model.NewsNode
 
 
 
